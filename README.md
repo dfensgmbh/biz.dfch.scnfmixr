@@ -3,7 +3,7 @@ PhoneTap running on Raspberry Pi OS (Pi 5)
 
 # Installation
 
-```python
+```sh
 
 admin@raspberrypi:~ $ pwd
 /home/admin
@@ -52,4 +52,12 @@ sudo systemctl status PhoneTap20.service
 sudo systemctl disable PhoneTap20.service
 sudo systemctl stop PhoneTap20.service
 sudo systemctl status PhoneTap20.service
+```
+
+# Testing
+```sh
+admin@raspberrypi:~ $ pwd
+/home/admin
+admin@raspberrypi:~ $ cd ~/PhoneTap20
+admin@raspberrypi:~ $ python -m unittest discover
 ```
