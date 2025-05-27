@@ -13,7 +13,6 @@ PhoneTap running on Raspberry Pi OS (Pi 5)
 # Installation
 
 ```sh
-
 admin@raspberrypi:~ $ pwd
 /home/admin
 
@@ -174,6 +173,11 @@ $ lsusb -t
     |__ Port 1: Dev 31, If 0, Class=Hub, Driver=hub/4p, 480M
         |__ Port 4: Dev 32, If 0, Class=Hub, Driver=hub/4p, 480M
 ```
+
+# Notes and Observations
+
+* Normally, when connecting a device to the USB hub, a blue LED turns on next to the connected device. However, when connecting a *UGREEN* USB audio adapter it only shows when there is a 3.5mm TRRS cable connected to its socket. (`12d1:0010 Huawei Technologies Co., Ltd. KT USB Audio`). The same happens with the *Atomos Connect 4K* when there is no HDMI cable connected.
+* The Speakerphone (or any device with a rechargeable battery) should be connected to port 7 on the USB hub as that port can provide the most power.
 
 # License and Copyright
 Everything in this repository (unless otherwise noted) is licensed under the MIT license (see [LICENSE](./LICENSE)) and copyright of 
