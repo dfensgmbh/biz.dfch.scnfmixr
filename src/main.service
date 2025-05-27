@@ -1,0 +1,13 @@
+[Unit]
+Description=Run PhoneTap20 main script at startup
+
+[Service]
+ExecStart=/bin/bash -c 'source /home/admin/PhoneTap20/venv/bin/activate && /home/admin/PhoneTap20/venv/bin/python /home/admin/PhoneTap20/src/main.py --startup'
+User=root
+WorkingDirectory=/home/admin/PhoneTap20
+StandardOutput=journal
+StandardError=journal
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
