@@ -140,6 +140,7 @@ The USB ports of the Icy Box IB-AC618 have the following numbering (when connect
 | Port 5  | USB 3.0  | `3-1.4.2`  | `/sys/bus/usb/devices/3-1.4.2/`  | as labelled on the hub, connected Top Left  |
 | Port 6  | USB 3.0  | `3-1.4.3`  | `/sys/bus/usb/devices/3-1.4.3/`  | as labelled on the hub, connected Top Left  |
 | Port 7  | USB 3.0  | `3-1.4.4`  | `/sys/bus/usb/devices/3-1.4.4/`  | as labelled on the hub, PD `5V @2.4A`, connected Top Left  |
+|  |  |  |  | |  
 | Port 1  | USB 3.0  | `1-1.1`    | `/sys/bus/usb/devices/1-1.1/  `  | as labelled on the hub, connected Bottom Left  |
 | Port 2  | USB 3.0  | `1-1.2`    | `/sys/bus/usb/devices/1-1.2/  `  | as labelled on the hub, connected Bottom Left  |
 | Port 3  | USB 3.0  | `1-1.3`    | `/sys/bus/usb/devices/1-1.3/  `  | as labelled on the hub, connected Bottom Left  |
