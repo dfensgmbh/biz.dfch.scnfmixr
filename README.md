@@ -1,6 +1,15 @@
 # biz.dfch.PhoneTap
 PhoneTap running on Raspberry Pi OS (Pi 5)
 
+# TOC
+
+- [Installation](#installation)
+- [Testing](#testing)
+- [Hardware and Software Requirements](#hardware-and-software-requirements)
+- [Pi USB Port Layout](#pi-usb-port-layout)
+- [Icy Box USB Port Layout](#icy-box-usb-port-layout)
+- [License and Copyright](#license-and-copyright)
+
 # Installation
 
 ```sh
