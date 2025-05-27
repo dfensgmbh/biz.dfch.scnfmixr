@@ -120,17 +120,24 @@ $ cat /proc/asound/cards
 
 ### Icy Box USB Port Layout
 
-The USB ports of the Icy Box IB-AC618 have the following numbering (when connected top left, `3-1`):
+The USB ports of the Icy Box IB-AC618 have the following numbering (when connected top left, `3-1` or to `1-1`):
 
 | Port  | Type  | USB id  | Path  | Remark  |
 |---------|----------|------------|----------------------------------|-------------------------|
-| Port 1  | USB 3.0  | `3-1.1`    | `/sys/bus/usb/devices/3-1.1/  `  | as labelled on the hub  |
-| Port 2  | USB 3.0  | `3-1.2`    | `/sys/bus/usb/devices/3-1.2/  `  | as labelled on the hub  |
-| Port 3  | USB 3.0  | `3-1.3`    | `/sys/bus/usb/devices/3-1.3/  `  | as labelled on the hub  |
-| Port 4  | USB 3.0  | `3-1.4.1`  | `/sys/bus/usb/devices/3-1.4.1/`  | as labelled on the hub  |
-| Port 5  | USB 3.0  | `3-1.4.2`  | `/sys/bus/usb/devices/3-1.4.2/`  | as labelled on the hub  |
-| Port 6  | USB 3.0  | `3-1.4.3`  | `/sys/bus/usb/devices/3-1.4.3/`  | as labelled on the hub  |
-| Port 7  | USB 3.0  | `3-1.4.4`  | `/sys/bus/usb/devices/3-1.4.4/`  | as labelled on the hub, PD `5V @2.4A`  |
+| Port 1  | USB 3.0  | `3-1.1`    | `/sys/bus/usb/devices/3-1.1/  `  | as labelled on the hub, connected Top Left  |
+| Port 2  | USB 3.0  | `3-1.2`    | `/sys/bus/usb/devices/3-1.2/  `  | as labelled on the hub, connected Top Left  |
+| Port 3  | USB 3.0  | `3-1.3`    | `/sys/bus/usb/devices/3-1.3/  `  | as labelled on the hub, connected Top Left  |
+| Port 4  | USB 3.0  | `3-1.4.1`  | `/sys/bus/usb/devices/3-1.4.1/`  | as labelled on the hub, connected Top Left  |
+| Port 5  | USB 3.0  | `3-1.4.2`  | `/sys/bus/usb/devices/3-1.4.2/`  | as labelled on the hub, connected Top Left  |
+| Port 6  | USB 3.0  | `3-1.4.3`  | `/sys/bus/usb/devices/3-1.4.3/`  | as labelled on the hub, connected Top Left  |
+| Port 7  | USB 3.0  | `3-1.4.4`  | `/sys/bus/usb/devices/3-1.4.4/`  | as labelled on the hub, PD `5V @2.4A`, connected Top Left  |
+| Port 1  | USB 3.0  | `1-1.1`    | `/sys/bus/usb/devices/1-1.1/  `  | as labelled on the hub, connected Bottom Left  |
+| Port 2  | USB 3.0  | `1-1.2`    | `/sys/bus/usb/devices/1-1.2/  `  | as labelled on the hub, connected Bottom Left  |
+| Port 3  | USB 3.0  | `1-1.3`    | `/sys/bus/usb/devices/1-1.3/  `  | as labelled on the hub, connected Bottom Left  |
+| Port 4  | USB 3.0  | `1-1.4.1`  | `/sys/bus/usb/devices/1-1.4.1/`  | as labelled on the hub, connected Bottom Left  |
+| Port 5  | USB 3.0  | `1-1.4.2`  | `/sys/bus/usb/devices/1-1.4.2/`  | as labelled on the hub, connected Bottom Left  |
+| Port 6  | USB 3.0  | `1-1.4.3`  | `/sys/bus/usb/devices/1-1.4.3/`  | as labelled on the hub, connected Bottom Left  |
+| Port 7  | USB 3.0  | `1-1.4.4`  | `/sys/bus/usb/devices/1-1.4.4/`  | as labelled on the hub, PD `5V @2.4A`, connected Bottom Left  |
 
 #### USB Tree Layout Top Left, 3-1
 ```
