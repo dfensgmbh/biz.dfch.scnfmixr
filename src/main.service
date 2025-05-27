@@ -1,5 +1,6 @@
 [Unit]
 Description=Run PhoneTap20 main script at startup
+After=sound.target
 
 [Service]
 ExecStart=/bin/bash -c 'source /home/admin/PhoneTap20/venv/bin/activate && /home/admin/PhoneTap20/venv/bin/python /home/admin/PhoneTap20/src/main.py --startup'
@@ -10,4 +11,4 @@ StandardError=journal
 Restart=always
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
