@@ -39,7 +39,5 @@ class test_TextUtils(unittest.TestCase):
             TextUtils().read_first_line("something")
 
     def test_reading_existing_file_succeeds(self):
-        script_dir = os.path.dirname(os.path.abspath(self.existing_file))
-        print(script_dir)
         result = TextUtils().read_first_line(os.path.join(self.existing_file))
         self.assertIsNotNone(result)

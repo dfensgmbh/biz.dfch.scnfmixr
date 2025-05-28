@@ -25,9 +25,6 @@ import os
 
 class TextUtils:
 
-    def __init__(self):
-        pass
-
     def read_first_line(self, file_path: str) -> str:
         """Reads the first text line of the specified file and returns it. File is opened ReadOnly.
         If file_path is not a file, a FileNotFoundError is thrown.
