@@ -35,6 +35,7 @@ class UsbDeviceInfo:
     idVendor: str
     idProduct: str
     serial: str
+    devnum: int
 
 
 @dataclass(frozen=True)
@@ -56,42 +57,67 @@ def read_first_line(file_path: str) -> str:
         return file.readline().strip()
 
 
-def get_usbid(usb_bus_number: str) -> str:
-    sys_bus_usb_devices_basepath = '/sys/bus/usb/devices/'
-    sys_bus_usb_device_path = os.path.join(sys_bus_usb_devices_basepath, 'usb_bus_number')
+def get_usbid(usbbus_id: str) -> str:
+
+    SYS_BUS_USB_DEVICES_BASEPATH = '/sys/bus/usb/devices/'
+
+    sys_bus_usb_device_path = os.path.join(SYS_BUS_USB_DEVICES_BASEPATH, usbbus_id)
     idVendor = read_first_line(os.join.path(sys_bus_usb_device_path, 'idVendor'))
     idProduct = read_first_line(os.path.join(sys_bus_usb_device_path, 'idProduct'))
     return f'{idVendor}:{idProduct}'
 
 
-def get_usb_device_info(usb_bus_number: str) -> UsbDeviceInfo:
-    sys_bus_usb_devices_basepath = '/sys/bus/usb/devices/'
-    sys_bus_usb_device_path = os.path.join(sys_bus_usb_devices_basepath, usb_bus_number)
+def get_usb_device_info(usbbus_id: str) -> UsbDeviceInfo:
+
+    SYS_BUS_USB_DEVICES_BASEPATH = '/sys/bus/usb/devices/'
+
+    sys_bus_usb_device_path = os.path.join(SYS_BUS_USB_DEVICES_BASEPATH, usbbus_id)
+
     idVendor = read_first_line(os.path.join(sys_bus_usb_device_path, 'idVendor'))
     idProduct = read_first_line(os.path.join(sys_bus_usb_device_path, 'idProduct'))
     serial = read_first_line(os.path.join(sys_bus_usb_device_path, 'serial'))
-    return UsbDeviceInfo(idVendor=idVendor, idProduct=idProduct, serial=serial)
+    devnum = int(read_first_line(os.path.join(sys_bus_usb_device_path, 'devnum')))
+
+    return UsbDeviceInfo(idVendor=idVendor, idProduct=idProduct, serial=serial, devnum=devnum)
 
 
-def get_asound_info(usbDeviceInfo: UsbDeviceInfo) -> AsoundCardInfo:
-    proc_asound_basepath = '/proc/asound/'
-    pattern = r'^card(\d+)$'
+def get_asound_info(usbDeviceInfo: UsbDeviceInfo) -> AsoundCardInfo | None:
+
+    PROC_ASOUND_BASEPATH = '/proc/asound/'
+    CARD_PATTERN = r'^card(\d+)$'
+    USBBUS_PATTERN = r'^(\d+)/(\d+)$'
+
     target_usbid = f'{usbDeviceInfo.idVendor}:{usbDeviceInfo.idProduct}'
-    for dir_name in os.listdir(proc_asound_basepath):
+
+    for card_dir_basename in os.listdir(PROC_ASOUND_BASEPATH):
         try:
-            match = re.match(pattern, dir_name)
+            match = re.match(CARD_PATTERN, card_dir_basename)
             if not match:
                 continue
 
-            card_path = os.path.join(proc_asound_basepath, dir_name)
-            print(card_path)
-            card_usbid_file = f'{card_path.rstrip(os.sep)}{os.sep}usbid'
-            usbid = read_first_line(card_usbid_file)
-            if usbid.lower() == target_usbid.lower():
-                return AsoundCardInfo(usbDeviceInfo=usbDeviceInfo, idCard=match.group(1))
+            card_id = int(match.group(1))
+            card_dir_fullpath = os.path.join(PROC_ASOUND_BASEPATH, card_dir_basename)
+
+            # Test if specified usbid matches current card.
+            usbid = read_first_line(os.path.join(card_dir_fullpath, 'usbid'))
+            if usbid.lower() != target_usbid.lower():
+                continue
+
+            # Test if specified devnum matches current card.
+            usbbus = read_first_line(os.path.join(card_dir_fullpath, 'usbbus'))
+            match = re.match(USBBUS_PATTERN, usbbus)
+            if not match:
+                continue
+            devnum = int(match.group(2))
+            if (devnum != usbDeviceInfo.devnum):
+                continue
+
+            return AsoundCardInfo(usbDeviceInfo=usbDeviceInfo, idCard=card_id)
 
         except Exception:
             continue
+
+    return None
 
 
 def run_loop():
@@ -118,33 +144,13 @@ logging.basicConfig(
 )
 
 
-def startup_loop():
-    print(f"Running script as startup ... '{time.localtime().tm_sec}'")
-    logging.info("Running script as startup ...")
-    run_loop()
-
-    if 5 == time.localtime().tm_sec:
-        try:
-            ASOUND_CARDS = '/proc/asound/cards'
-            # result = subprocess.run(['cat', ASOUND_CARDS], capture_output=True, text=True, check=True)
-            # contents = result.stdout
-            with open(ASOUND_CARDS, 'r') as file:
-                contents = file.read()
-            for line in contents.splitlines():
-                print(line)
-                logging.info(line)
-            raise Exception("Current second is 5. Raising an exception ...")
-
-        except subprocess.CalledProcessError:
-            raise
-
-    return
-
-
-def startup():
+def arg_startup():
     while True:
         try:
-            startup_loop()
+            message = f"Running script as startup ... '{time.localtime().tm_sec}'"
+            print(message)
+            logging.info(message)
+            run_loop()
             time.sleep(1)
         except Exception as e:
             logging.info(f"startup() FAILED with exception '{e}'. Restarting ...")
@@ -161,18 +167,13 @@ def main():
     args = parser.parse_args()
 
     if args.startup:
-        startup()
-        #print("Running script as part of startup ...")
-        #logging.info("Running script as part of startup ...")
-        # Add your startup logic here
+        arg_startup()
+        sys.exit(0)
 
-        sys.exit(8)
-    else:
-        print("Running script normally ...")
-        logging.info("Running script normally ...")
-        # Add normal script logic here
-
-        sys.exit(9)
+    message = "Nothing to do. Exiting ..."
+    print(message)
+    logging.info(message)
+    sys.exit(1)
 
 
 if __name__ == "__main__":
