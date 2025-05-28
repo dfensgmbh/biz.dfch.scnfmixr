@@ -20,27 +20,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import importlib
 import os
+import unittest
+
+from src.TextUtils import TextUtils
 
 
-class TextUtils:
+class test_TextUtils(unittest.TestCase):
 
-    def __init__(self):
-        pass
+    def setUp(self):
+        module_name = TextUtils.__module__
+        module = importlib.import_module(module_name)
+        self.existing_file = module.__file__
 
-    def read_first_line(self, file_path: str) -> str:
-        """Reads the first text line of the specified file and returns it. File is opened ReadOnly.
-        If file_path is not a file, a FileNotFoundError is thrown.
+    def test_reading_non_existing_file_throws(self):
+        with self.assertRaises(FileNotFoundError):
+            TextUtils().read_first_line("something")
 
-        Args:
-            file_path (str): file to read from in ReadOnly mode.
-
-        Returns:
-            str: the first line read from the specified file.
-        """
-
-        if not os.path.isfile(file_path):
-            raise FileNotFoundError(f"File does not exist: '{file_path}'.")
-
-        with open(file_path, 'r') as file:
-            return file.readline().strip()
+    def test_reading_existing_file_succeeds(self):
+        script_dir = os.path.dirname(os.path.abspath(self.existing_file))
+        print(script_dir)
+        result = TextUtils().read_first_line(os.path.join(self.existing_file))
+        self.assertIsNotNone(result)
