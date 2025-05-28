@@ -30,10 +30,10 @@ class TextUtils:
         If file_path is not a file, a FileNotFoundError is thrown.
 
         Args:
-            file_path (str): file to read from in ReadOnly mode.
+            file_path (str): File to read from in ReadOnly mode.
 
         Returns:
-            str: the first line read from the specified file.
+            str: The first line read from the specified file.
         """
 
         if not os.path.isfile(file_path):
@@ -43,4 +43,18 @@ class TextUtils:
             return file.readline().strip()
 
     def read_all_lines(self, file_path: str) -> list[str]:
-        pass
+        """Reads all lines of the specified file as text and returns it as a list. File is opened ReadOnly.
+        If file_path is not a file, a FileNotFoundError is thrown.
+
+        Args:
+            file_path (str): File to read from in ReadOnly mode.
+
+        Returns:
+            list[str]: The contents of file_path as a list of strings.
+        """
+
+        if not os.path.isfile(file_path):
+            raise FileNotFoundError(f"File does not exist: '{file_path}'.")
+
+        with open(file_path, 'r') as file:
+            return file.readlines()
