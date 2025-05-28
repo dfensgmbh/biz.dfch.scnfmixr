@@ -20,43 +20,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import unittest
-from unittest import mock
-from unittest.mock import patch
-
-from src.main import read_first_line
-from src.main import get_usbid
+import os
 
 
-class TestReadFirstLine(unittest.TestCase):
+class TextUtils:
 
-    # Arrange
-    expected = "This is a mock file content"
+    def __init__(self):
+        pass
 
-    @mock.patch("builtins.open", mock.mock_open(read_data=expected))
-    def test_read_first_file(self):
-        # Act
-        result = read_first_line("arbitrary_file.txt")
-        # Assert
-        self.assertEqual(result, self.expected)
+    def read_first_line(self, file_path: str) -> str:
+        """Reads the first text line of the specified file and returns it. File is opened ReadOnly.
+        No error checking is performed.
 
-    # Arrange
-    @patch('src.main.read_first_line')
-    def test_get_usbid_returns_usbid(self, mock_read):
-        expected_idVendor = '1234'
-        expected_idProduct = 'ABCD'
-        mock_read.side_effect = [
-            expected_idVendor,
-            expected_idProduct
-        ]
+        Args:
+            file_path (str): file to read from in ReadOnly mode.
 
-        # Act
-        result = get_usbid('arbitrary-usb-id')
+        Returns:
+            str: the first line read from the specified file.
+        """
 
-        # Assert
-        self.assertEqual(result, f'{expected_idVendor}:{expected_idProduct}')
-        self.assertEqual(mock_read.call_count, 2)
+        if not os.path.isfile(file_path):
+            raise FileNotFoundError(f"File does not exist: '{file_path}'.")
 
-
-if __name__ == "__main__":
-    unittest.main()
+        with open(file_path, 'r') as file:
+            return file.readline().strip()
