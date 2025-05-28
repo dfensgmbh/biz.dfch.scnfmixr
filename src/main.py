@@ -7,16 +7,19 @@ import subprocess
 import sys
 import time
 
+
 @dataclass(frozen=True)
 class UsbDeviceInfo:
     idVendor: str
     idProduct: str
-    serial : str
+    serial: str
+
 
 @dataclass(frozen=True)
 class AsoundCardInfo:
     usbDeviceInfo: UsbDeviceInfo
     idCard: int
+
 
 def read_first_line(file_path: str) -> str:
     """Reads the first text line of the specified file and returns it. File is opend ReadOnly. No error checking is performed.
@@ -30,6 +33,7 @@ def read_first_line(file_path: str) -> str:
     with open(file_path, 'r') as file:
         return file.readline().strip()
 
+
 def get_usbid(usb_bus_number: str) -> str:
     sys_bus_usb_devices_basepath = '/sys/bus/usb/devices/'
     sys_bus_usb_device_path = f'{sys_bus_usb_devices_basepath}{usb_bus_number}'
@@ -37,13 +41,19 @@ def get_usbid(usb_bus_number: str) -> str:
     idProduct = read_first_line(f'{sys_bus_usb_device_path}/idProduct')
     return f'{idVendor}:{idProduct}'
 
+
 def get_usb_device_info(usb_bus_number: str) -> UsbDeviceInfo:
     sys_bus_usb_devices_basepath = '/sys/bus/usb/devices/'
-    sys_bus_usb_device_path = f'{sys_bus_usb_devices_basepath.rstrip(os.sep)}{os.sep}{usb_bus_number}'
-    idVendor = read_first_line(f'{sys_bus_usb_device_path.rstrip(os.sep)}{os.sep}idVendor')
-    idProduct = read_first_line(f'{sys_bus_usb_device_path.rstrip(os.sep)}{os.sep}idProduct')
-    serial = read_first_line(f'{sys_bus_usb_device_path.rstrip(os.sep)}{os.sep}serial')
-    return UsbDeviceInfo(idVendor = idVendor, idProduct = idProduct, serial = serial)
+    # sys_bus_usb_device_path = f'{sys_bus_usb_devices_basepath.rstrip(os.sep)}{os.sep}{usb_bus_number}'
+    sys_bus_usb_device_path = os.path.join(sys_bus_usb_devices_basepath, usb_bus_number)
+    # idVendor = read_first_line(f'{sys_bus_usb_device_path.rstrip(os.sep)}{os.sep}idVendor')
+    idVendor = read_first_line(os.path.join(sys_bus_usb_device_path, 'idVendor'))
+    # idProduct = read_first_line(f'{sys_bus_usb_device_path.rstrip(os.sep)}{os.sep}idProduct')
+    idProduct = read_first_line(os.path.join(sys_bus_usb_device_path, 'idProduct'))
+    # serial = read_first_line(f'{sys_bus_usb_device_path.rstrip(os.sep)}{os.sep}serial')
+    serial = read_first_line(os.path.join(sys_bus_usb_device_path, 'serial'))
+    return UsbDeviceInfo(idVendor=idVendor, idProduct=idProduct, serial=serial)
+
 
 def get_asound_info(usbDeviceInfo: UsbDeviceInfo) -> AsoundCardInfo:
     proc_asound_basepath = '/proc/asound/'
@@ -59,9 +69,10 @@ def get_asound_info(usbDeviceInfo: UsbDeviceInfo) -> AsoundCardInfo:
             card_usbid_file = f'{card_path.rstrip(os.sep)}{os.sep}usbid'
             usbid = read_first_line(card_usbid_file)
             if usbid.lower() == target_usbid.lower():
-                return AsoundCardInfo(usbDeviceInfo = usbDeviceInfo, idCard = match.group(1))
-        except Exception as e:
+                return AsoundCardInfo(usbDeviceInfo=usbDeviceInfo, idCard=match.group(1))
+        except Exception:
             continue
+
 
 def run_loop():
     try:
@@ -69,20 +80,22 @@ def run_loop():
         asound_info = get_asound_info(device_info)
         wav_file = '/home/admin/PhoneTap20/src/snd/CardA.Connected.EN.wav'
         params = ['aplay', '-D', f'plughw:{asound_info.idCard}', wav_file]
-        result = subprocess.run(params)
+        _ = subprocess.run(params)
         time.sleep(5)
-    except Exception as e:
+    except Exception:
         # wav_file = '/home/admin/PhoneTap20/src/snd/CardA.Disconnected.EN.wav'
         # params = ['aplay', '-D', f'plughw:{asound_info.idCard}', wav_file]
         # result = subprocess.run(params)
         time.sleep(1)
         pass
 
+
 logging.basicConfig(
     filename='/home/admin/PhoneTap20/main.log',
     level=logging.INFO,
     format='%(asctime)s - %(process)d - %(levelname)s - %(message)s'
 )
+
 
 def startup_loop():
     print(f"Running script as startup ... '{time.localtime().tm_sec}'")
@@ -92,8 +105,8 @@ def startup_loop():
     if 5 == time.localtime().tm_sec:
         try:
             ASOUND_CARDS = '/proc/asound/cards'
-            #result = subprocess.run(['cat', ASOUND_CARDS], capture_output=True, text=True, check=True)
-            #contents = result.stdout
+            # result = subprocess.run(['cat', ASOUND_CARDS], capture_output=True, text=True, check=True)
+            # contents = result.stdout
             with open(ASOUND_CARDS, 'r') as file:
                 contents = file.read()
             for line in contents.splitlines():
@@ -101,10 +114,11 @@ def startup_loop():
                 logging.info(line)
             raise Exception("Current second is 5. Raising an exception ...")
 
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError:
             raise
 
     return
+
 
 def startup():
     while True:
@@ -114,6 +128,7 @@ def startup():
         except Exception as e:
             logging.info(f"startup() FAILED with exception '{e}'. Restarting ...")
             time.sleep(5)
+
 
 def main():
     parser = argparse.ArgumentParser(description="PhoneTap20 Main Script")
@@ -138,6 +153,6 @@ def main():
 
         sys.exit(9)
 
+
 if __name__ == "__main__":
     main()
-

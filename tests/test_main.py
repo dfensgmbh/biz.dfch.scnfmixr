@@ -1,7 +1,5 @@
 # test_main.py
 
-import os
-import sys
 import unittest
 from unittest import mock
 from unittest.mock import patch
@@ -9,10 +7,12 @@ from unittest.mock import patch
 from src.main import read_first_line
 from src.main import get_usbid
 
+
 class TestReadFirstLine(unittest.TestCase):
 
     # Arrange
     expected = "This is a mock file content"
+
     @mock.patch("builtins.open", mock.mock_open(read_data=expected))
     def test_read_first_file(self):
         # Act
@@ -36,6 +36,7 @@ class TestReadFirstLine(unittest.TestCase):
         # Assert
         self.assertEqual(result, f'{expected_idVendor}:{expected_idProduct}')
         self.assertEqual(mock_read.call_count, 2)
+
 
 if __name__ == "__main__":
     unittest.main()
