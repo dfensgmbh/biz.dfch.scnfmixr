@@ -124,7 +124,7 @@ def get_asound_info(usbDeviceInfo: UsbDeviceInfo) -> AsoundCardInfo | None:
 
 def run_loop():
     try:
-        device_info = get_usb_device_info('1-1.3')
+        device_info = get_usb_device_info('1-1.4.4')
         asound_info = get_asound_info(device_info)
         wav_file = '/home/admin/PhoneTap20/src/snd/CardA.Connected.EN.wav'
         params = ['aplay', '-D', f'plughw:{asound_info.idCard}', wav_file]
