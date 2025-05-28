@@ -112,11 +112,13 @@ def get_asound_info(usbDeviceInfo: UsbDeviceInfo) -> AsoundCardInfo | None:
             if (devnum != usbDeviceInfo.devnum):
                 continue
 
+            logging.info(f"Card '{card_id}' found for '{target_usbid}'")
             return AsoundCardInfo(usbDeviceInfo=usbDeviceInfo, idCard=card_id)
 
         except Exception:
             continue
 
+    logging.warning(f"Card id not found for '{target_usbid}'")
     return None
 
 
