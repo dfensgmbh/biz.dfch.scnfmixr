@@ -22,12 +22,14 @@
 
 import argparse
 from dataclasses import dataclass
-import logging
 import os
 import re
 import subprocess
 import sys
 import time
+
+from src.log import log
+from src.TextUtils import TextUtils
 
 
 @dataclass(frozen=True)
@@ -44,26 +46,13 @@ class AsoundCardInfo:
     idCard: int
 
 
-def read_first_line(file_path: str) -> str:
-    """Reads the first text line of the specified file and returns it. File is opend ReadOnly. No error checking is performed.
-
-    Args:
-        file_path (str): file to read from in ReadOnly mode.
-
-    Returns:
-        str: the first line read from the specified file.
-    """
-    with open(file_path, 'r') as file:
-        return file.readline().strip()
-
-
 def get_usbid(usbbus_id: str) -> str:
 
     SYS_BUS_USB_DEVICES_BASEPATH = '/sys/bus/usb/devices/'
 
     sys_bus_usb_device_path = os.path.join(SYS_BUS_USB_DEVICES_BASEPATH, usbbus_id)
-    idVendor = read_first_line(os.join.path(sys_bus_usb_device_path, 'idVendor'))
-    idProduct = read_first_line(os.path.join(sys_bus_usb_device_path, 'idProduct'))
+    idVendor = TextUtils().read_first_line(os.join.path(sys_bus_usb_device_path, 'idVendor'))
+    idProduct = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, 'idProduct'))
     return f'{idVendor}:{idProduct}'
 
 
@@ -73,10 +62,10 @@ def get_usb_device_info(usbbus_id: str) -> UsbDeviceInfo:
 
     sys_bus_usb_device_path = os.path.join(SYS_BUS_USB_DEVICES_BASEPATH, usbbus_id)
 
-    idVendor = read_first_line(os.path.join(sys_bus_usb_device_path, 'idVendor'))
-    idProduct = read_first_line(os.path.join(sys_bus_usb_device_path, 'idProduct'))
-    serial = read_first_line(os.path.join(sys_bus_usb_device_path, 'serial'))
-    devnum = int(read_first_line(os.path.join(sys_bus_usb_device_path, 'devnum')))
+    idVendor = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, 'idVendor'))
+    idProduct = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, 'idProduct'))
+    serial = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, 'serial'))
+    devnum = int(TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, 'devnum')))
 
     return UsbDeviceInfo(idVendor=idVendor, idProduct=idProduct, serial=serial, devnum=devnum)
 
@@ -99,12 +88,12 @@ def get_asound_info(usbDeviceInfo: UsbDeviceInfo) -> AsoundCardInfo | None:
             card_dir_fullpath = os.path.join(PROC_ASOUND_BASEPATH, card_dir_basename)
 
             # Test if specified usbid matches current card.
-            usbid = read_first_line(os.path.join(card_dir_fullpath, 'usbid'))
+            usbid = TextUtils().read_first_line(os.path.join(card_dir_fullpath, 'usbid'))
             if usbid.lower() != target_usbid.lower():
                 continue
 
             # Test if specified devnum matches current card.
-            usbbus = read_first_line(os.path.join(card_dir_fullpath, 'usbbus'))
+            usbbus = TextUtils().read_first_line(os.path.join(card_dir_fullpath, 'usbbus'))
             match = re.match(USBBUS_PATTERN, usbbus)
             if not match:
                 continue
@@ -112,13 +101,13 @@ def get_asound_info(usbDeviceInfo: UsbDeviceInfo) -> AsoundCardInfo | None:
             if (devnum != usbDeviceInfo.devnum):
                 continue
 
-            logging.info(f"Card '{card_id}' found for '{target_usbid}'")
+            log.info(f"Card '{card_id}' found for '{target_usbid}'")
             return AsoundCardInfo(usbDeviceInfo=usbDeviceInfo, idCard=card_id)
 
         except Exception:
             continue
 
-    logging.warning(f"Card id not found for '{target_usbid}'")
+    log.warning(f"Card id not found for '{target_usbid}'")
     return None
 
 
@@ -139,27 +128,26 @@ def run_loop():
         pass
 
 
-logging.basicConfig(
-    filename='/home/admin/PhoneTap20/main.log',
-    level=logging.INFO,
-    format='%(asctime)s - %(process)d - %(levelname)s - %(module)s - %(message)s'
-)
+# logging.basicConfig(
+#     filename='/home/admin/PhoneTap20/main.log',
+#     level=logging.INFO,
+#     format='%(asctime)s - %(process)d - %(levelname)s - %(module)s - %(message)s'
+# )
 
 
 def arg_startup():
     while True:
         try:
-            message = f"Running script as startup ... '{time.localtime().tm_sec}'"
-            print(message)
-            logging.info(message)
+            log.info(f"Running script as startup ... '{time.localtime().tm_sec}'")
             run_loop()
             time.sleep(1)
         except Exception as e:
-            logging.info(f"startup() FAILED with exception '{e}'. Restarting ...")
+            log.info(f"startup() FAILED with exception '{e}'. Restarting ...")
             time.sleep(5)
 
 
 def main():
+    log.info("Application started. Parsing command-line arguments ...")
     parser = argparse.ArgumentParser(description="PhoneTap20 Main Script")
     parser.add_argument(
         '--startup', '-s',
@@ -172,9 +160,7 @@ def main():
         arg_startup()
         sys.exit(0)
 
-    message = "Nothing to do. Exiting ..."
-    print(message)
-    logging.info(message)
+    log.info("Nothing to do. Exiting ...")
     sys.exit(1)
 
 
