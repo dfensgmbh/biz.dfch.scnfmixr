@@ -3,7 +3,7 @@ Description=Run PhoneTap20 main script at startup
 After=sound.target
 
 [Service]
-ExecStart=/bin/bash -c 'source /home/admin/PhoneTap20/venv/bin/activate && /home/admin/PhoneTap20/venv/bin/python /home/admin/PhoneTap20/src/main.py --startup'
+ExecStart=/home/admin/PhoneTap20/venv/bin/python -m src --startup
 User=root
 WorkingDirectory=/home/admin/PhoneTap20
 StandardOutput=journal
