@@ -58,21 +58,17 @@ def read_first_line(file_path: str) -> str:
 
 def get_usbid(usb_bus_number: str) -> str:
     sys_bus_usb_devices_basepath = '/sys/bus/usb/devices/'
-    sys_bus_usb_device_path = f'{sys_bus_usb_devices_basepath}{usb_bus_number}'
-    idVendor = read_first_line(f'{sys_bus_usb_device_path}/idVendor')
-    idProduct = read_first_line(f'{sys_bus_usb_device_path}/idProduct')
+    sys_bus_usb_device_path = os.path.join(sys_bus_usb_devices_basepath, 'usb_bus_number')
+    idVendor = read_first_line(os.join.path(sys_bus_usb_device_path, 'idVendor'))
+    idProduct = read_first_line(os.path.join(sys_bus_usb_device_path, 'idProduct'))
     return f'{idVendor}:{idProduct}'
 
 
 def get_usb_device_info(usb_bus_number: str) -> UsbDeviceInfo:
     sys_bus_usb_devices_basepath = '/sys/bus/usb/devices/'
-    # sys_bus_usb_device_path = f'{sys_bus_usb_devices_basepath.rstrip(os.sep)}{os.sep}{usb_bus_number}'
     sys_bus_usb_device_path = os.path.join(sys_bus_usb_devices_basepath, usb_bus_number)
-    # idVendor = read_first_line(f'{sys_bus_usb_device_path.rstrip(os.sep)}{os.sep}idVendor')
     idVendor = read_first_line(os.path.join(sys_bus_usb_device_path, 'idVendor'))
-    # idProduct = read_first_line(f'{sys_bus_usb_device_path.rstrip(os.sep)}{os.sep}idProduct')
     idProduct = read_first_line(os.path.join(sys_bus_usb_device_path, 'idProduct'))
-    # serial = read_first_line(f'{sys_bus_usb_device_path.rstrip(os.sep)}{os.sep}serial')
     serial = read_first_line(os.path.join(sys_bus_usb_device_path, 'serial'))
     return UsbDeviceInfo(idVendor=idVendor, idProduct=idProduct, serial=serial)
 
@@ -86,12 +82,14 @@ def get_asound_info(usbDeviceInfo: UsbDeviceInfo) -> AsoundCardInfo:
             match = re.match(pattern, dir_name)
             if not match:
                 continue
+
             card_path = os.path.join(proc_asound_basepath, dir_name)
             print(card_path)
             card_usbid_file = f'{card_path.rstrip(os.sep)}{os.sep}usbid'
             usbid = read_first_line(card_usbid_file)
             if usbid.lower() == target_usbid.lower():
                 return AsoundCardInfo(usbDeviceInfo=usbDeviceInfo, idCard=match.group(1))
+
         except Exception:
             continue
 
@@ -104,6 +102,7 @@ def run_loop():
         params = ['aplay', '-D', f'plughw:{asound_info.idCard}', wav_file]
         _ = subprocess.run(params)
         time.sleep(5)
+
     except Exception:
         # wav_file = '/home/admin/PhoneTap20/src/snd/CardA.Disconnected.EN.wav'
         # params = ['aplay', '-D', f'plughw:{asound_info.idCard}', wav_file]
@@ -115,7 +114,7 @@ def run_loop():
 logging.basicConfig(
     filename='/home/admin/PhoneTap20/main.log',
     level=logging.INFO,
-    format='%(asctime)s - %(process)d - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(process)d - %(levelname)s - %(module)s - %(message)s'
 )
 
 
