@@ -20,10 +20,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import logging
-import logging.config
+[Unit]
+Description=Run PhoneTap20 main script at startup
+After=sound.target
 
-logging.config.fileConfig('logging.conf')
+[Service]
+ExecStart=/home/admin/PhoneTap20/venv/bin/python -m src --startup
+User=root
+WorkingDirectory=/home/admin/PhoneTap20
+StandardOutput=journal
+StandardError=journal
+Restart=always
 
-log = logging.getLogger('biz.dfch.PhoneTap')
-log.info("Logging initialised.'")
+[Install]
+WantedBy=default.target

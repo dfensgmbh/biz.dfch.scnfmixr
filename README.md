@@ -36,21 +36,21 @@ pip install typing
 pip freeze > requirements.txt
 
 # Create script
-nano ~/PhoneTap20/src/main.py
+nano ~/PhoneTap20/src/__main__.py
 
 # Make script executable
-chmod +x ~/PhoneTap20/src/main.py
+chmod +x ~/PhoneTap20/src/__main__.py
 
 # Create log file and set permissions
-sudo touch ~/PhoneTap20/main.log
-sudo chown admin:root ~/PhoneTap20/main.log
-sudo chmod 660 ~/PhoneTap20/main.log
+sudo touch ~/PhoneTap20/app.log
+sudo chown admin:root ~/PhoneTap20/app.log
+sudo chmod 660 ~/PhoneTap20/app.log
 
 # Create service descriptor
-nano ~/PhoneTap20/src/main.service
+nano ~/PhoneTap20/src/app.service
 
 # Activate and start service
-sudo ln -s ~/PhoneTap20/src/main.service /etc/systemd/system/PhoneTap20.service
+sudo ln -s ~/PhoneTap20/src/app.service /etc/systemd/system/PhoneTap20.service
 sudo systemctl enable PhoneTap20.service
 sudo systemctl daemon-reload
 sudo systemctl start PhoneTap20.service
@@ -70,6 +70,7 @@ admin@raspberrypi:~ $ pwd
 /home/admin
 admin@raspberrypi:~ $ cd ~/PhoneTap20
 admin@raspberrypi:~ $ python -m unittest discover
+admin@raspberrypi:~ $ python -m unittest <path-to-module-file>
 ```
 
 # Hardware and Software Requirements

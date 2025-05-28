@@ -1,6 +1,6 @@
 # MIT License
 
-# Copyright (c) 2024, 2025 d-fens GmbH
+# Copyright (c) 2024, 2025 d-fens GmbH, http://d-fens.ch
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -41,3 +41,6 @@ class TextUtils:
 
         with open(file_path, 'r') as file:
             return file.readline().strip()
+
+    def read_all_lines(self, file_path: str) -> list[str]:
+        pass
