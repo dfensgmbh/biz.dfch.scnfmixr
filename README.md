@@ -55,6 +55,8 @@ sudo systemctl enable PhoneTap20.service
 sudo systemctl daemon-reload
 sudo systemctl start PhoneTap20.service
 sudo systemctl status PhoneTap20.service
+journalctl -u PhoneTap20.service
+# tail -f application.log
 
 # Deactivate service
 sudo systemctl disable PhoneTap20.service
