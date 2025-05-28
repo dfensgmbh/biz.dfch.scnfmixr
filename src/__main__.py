@@ -30,6 +30,7 @@ import time
 
 from src.log import log
 from src.TextUtils import TextUtils
+from src.Version import Version
 
 
 @dataclass(frozen=True)
@@ -147,6 +148,8 @@ def arg_startup():
 
 
 def main():
+    Version().ensure_minimum_version(3, 10)
+
     log.info("Application started. Parsing command-line arguments ...")
     parser = argparse.ArgumentParser(description="PhoneTap20 Main Script")
     parser.add_argument(
