@@ -28,10 +28,16 @@ from src.MultiLineTextParserContext import MultiLineTextParserContext
 
 class AlsaStreamParser:
 
-    _playback_interfaces: list[AlsaStreamInterfaceInfo] = []
-    _capture_interfaces: list[AlsaStreamInterfaceInfo] = []
-    _current_interfaces: list[AlsaStreamInterfaceInfo] = None
-    _current_interface: AlsaStreamInterfaceInfo = None
+    _playback_interfaces: list[AlsaStreamInterfaceInfo]
+    _capture_interfaces: list[AlsaStreamInterfaceInfo]
+    _current_interfaces: list[AlsaStreamInterfaceInfo]
+    _current_interface: AlsaStreamInterfaceInfo
+
+    def __init__(self):
+        self._playback_interfaces = []
+        self._capture_interfaces = []
+        self._current_interfaces = None
+        self._current_interface = None
 
     def get_interfaces(self) -> list[AlsaStreamInterfaceInfo]:
         return self._playback_interfaces + self._capture_interfaces
@@ -51,6 +57,9 @@ class AlsaStreamParser:
         self._current_interfaces = self._capture_interfaces
 
     def process_interface(self, ctx: MultiLineTextParserContext) -> None:
+        if ctx.level_previous < ctx.level:
+            return
+
         self._current_interface = AlsaStreamInterfaceInfo()
         self._current_interface.state = (
             AlsaStreamInfoState.PLAYBACK
