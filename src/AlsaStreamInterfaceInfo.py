@@ -20,27 +20,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from typing import Dict, Any
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from src.AlsaStreamInfoState import AlsaStreamInfoState
 
 
 @dataclass
-class AlsaStreamInfoParserContext:
-    """Provides context for the ``AlsaStreamInfoParser`.
-    Attributes:
-        line (int): Line number in the source text.
-        level (int): Indentation or hierarchical level.
-        keyword (str): The current keyword being parsed.
-        text (str): Associated text including the keyword.
-    """
+class AlsaStreamInterfaceInfo:
+    state: AlsaStreamInfoState = AlsaStreamInfoState.DEFAULT
+    format: str = None
+    channel_count: int = 0
+    bit_depth: int = 0
+    map: list[str] = field(default_factory=list)
+    rates: list[int] = field(default_factory=list)
 
-    # def __init__(self):
-    #     self.line = 0
-    #     self.level = 0
-    #     self.keyword = None
-    #     self.text = None
-
-    line: int
-    level: int
-    keyword: str
-    text: str
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "state": self.state,
+            "format": self.format,
+            "channels": self.channel_count,
+            "bit_depth": self.bit_depth,
+            "map": self.map,
+            "rates": self.rates,
+        }

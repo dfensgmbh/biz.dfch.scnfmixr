@@ -25,19 +25,19 @@ from dataclasses import replace
 import os
 from typing import Callable, Dict
 
-from src.AlsaStreamInfoParserContext import AlsaStreamInfoParserContext
+from src.MultiLineTextParserContext import MultiLineTextParserContext
 from src.TextUtils import TextUtils
 from src.log import log
 
 
-class AlsaStreamInfoParser:
+class MultiLineTextParser:
     """Parses an ALSA stream info and invokes callbacks based on parsed keywords."""
 
     def __init__(
         self,
         text: list[str],
-        map: Dict[str, Callable[[AlsaStreamInfoParserContext], None]],
-        default: Callable[[AlsaStreamInfoParserContext], None],
+        map: Dict[str, Callable[[MultiLineTextParserContext], None]],
+        default: Callable[[MultiLineTextParserContext], None],
     ):
         """Initialises an ALSA stream info parser.
         Args:
@@ -92,7 +92,7 @@ class AlsaStreamInfoParser:
 
         assert stream_info_data is not None
 
-        ctx = AlsaStreamInfoParserContext(0, 0, None, None)
+        ctx = MultiLineTextParserContext()
 
         for line in stream_info_data:
             ctx.line += 1
@@ -106,6 +106,7 @@ class AlsaStreamInfoParser:
             assert 0 == leading_spaces % 2, f"[{ctx.level}] Invalid spacing on #{line} '{line}' [{leading_spaces}]."
 
             # Upate indentation.
+            ctx.level_previous = ctx.level
             ctx.level = int(leading_spaces / 2)
 
             # Now parse the actual line.
@@ -119,6 +120,7 @@ class AlsaStreamInfoParser:
                     func = self.map[key]
                     ctx.keyword = key
                     break
+
             # Or use default func if not keyword matches.
             if func is None:
                 func = self.default

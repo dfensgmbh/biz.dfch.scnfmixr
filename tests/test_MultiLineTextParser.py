@@ -1,0 +1,136 @@
+# MIT License
+
+# Copyright (c) 2024, 2025 d-fens GmbH, http://d-fens.ch
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+from dataclasses import asdict
+import json
+from typing import Callable
+import unittest
+
+from src.AlsaStreamInfoState import AlsaStreamInfoState
+from src.AlsaStreamParser import AlsaStreamParser
+from src.MultiLineTextParser import MultiLineTextParser
+from src.MultiLineTextParserContext import MultiLineTextParserContext
+from src.log import log
+
+
+class MultiLineTextParserTest(unittest.TestCase):
+
+    def test_parsing_stream_data_succeeds(self):
+
+        # Arrange
+        text = """\
+KTMicro KT USB Audio at usb-xhci-hcd.0-1.1, full speed : USB Audio
+
+Playback:
+  Status: Stop
+  Interface 2
+    Altset 1
+    Format: S16_LE
+    Channels: 2
+    Endpoint: 0x01 (1 OUT) (ADAPTIVE)
+    Rates: 44100, 48000, 96000
+    Bits: 16
+    Channel map: FL FR
+  Interface 2
+    Altset 2
+    Format: S24_3LE
+    Channels: 2
+    Endpoint: 0x01 (1 OUT) (ADAPTIVE)
+    Rates: 44100, 48000, 96000
+    Bits: 24
+    Channel map: FL FR
+
+Capture:
+  Status: Stop
+  Interface 1
+    Altset 1
+    Format: S16_LE
+    Channels: 1
+    Endpoint: 0x81 (1 IN) (ASYNC)
+    Rates: 44100, 48000
+    Bits: 16
+    Channel map: MONO
+""".splitlines()
+
+        default: Callable[[MultiLineTextParserContext], None] = lambda ctx: log.debug(
+            f"[#{ctx.line}][{ctx.level_previous}>{ctx.level}] default: {ctx.text}"
+        )
+
+        # map = {
+        #     "Playback:": lambda ctx: log.info(f"[#{ctx.line}][{ctx.level_previous}>{ctx.level}] Playback: {ctx.text}"),
+        #     "Capture:": lambda ctx: log.info(f"[#{ctx.line}][{ctx.level_previous}>{ctx.level}] Capture: {ctx.text}"),
+        #     "Interface ": lambda ctx: log.info(f"[#{ctx.line}][{ctx.level_previous}>{ctx.level}] Interface: {ctx.text}"),
+        #     "Format:": lambda ctx: log.info(f"[#{ctx.line}][{ctx.level_previous}>{ctx.level}] Format: {ctx.text}"),
+        #     "Channels:": lambda ctx: log.info(f"[#{ctx.line}][{ctx.level_previous}>{ctx.level}] Channels: {ctx.text}"),
+        #     "Rates:": lambda ctx: log.info(f"[#{ctx.line}][{ctx.level_previous}>{ctx.level}] Rates: {ctx.text}"),
+        #     "Bits:": lambda ctx: log.info(f"[#{ctx.line}][{ctx.level_previous}>{ctx.level}] Bits: {ctx.text}"),
+        #     "Channel map:": lambda ctx: log.info(f"[#{ctx.line}][{ctx.level_previous}>{ctx.level}] Map: {ctx.text}"),
+        # }
+
+        alsa_stream_parser = AlsaStreamParser()
+        map = {
+            "Playback:": alsa_stream_parser.process_playback,
+            "Capture:": alsa_stream_parser.process_capture,
+            "Interface ": alsa_stream_parser.process_interface,
+            "Format:": alsa_stream_parser.process_format,
+            "Channels:": alsa_stream_parser.process_channels,
+            "Rates:": alsa_stream_parser.process_rates,
+            "Bits:": alsa_stream_parser.process_bits,
+            "Channel map:": alsa_stream_parser.process_map,
+        }
+
+        parser = MultiLineTextParser(text, map, default)
+
+        # Act
+        parser.Parse(text)
+
+        # Assert
+        self.assertEqual(len(alsa_stream_parser.get_playback_interfaces()), 2)
+        self.assertEqual(len(alsa_stream_parser.get_capture_interfaces()), 1)
+
+        # Tests for later
+        for interface in alsa_stream_parser.get_interfaces():
+            log.info(interface.to_dict())
+
+        filtered = [
+            interface
+            for interface in alsa_stream_parser.get_interfaces()
+            if interface.state == AlsaStreamInfoState.PLAYBACK
+            and interface.bit_depth == 16 or interface.bit_depth == 24
+            and 48000 in interface.rates
+        ]
+        best_playback = sorted(filtered, key=lambda interface: interface.format)[0].to_dict()
+        log.info(f"best_playback: {best_playback}")
+
+        filtered = [
+            interface
+            for interface in alsa_stream_parser.get_interfaces()
+            if interface.state == AlsaStreamInfoState.CAPTURE
+            and interface.bit_depth == 16 or interface.bit_depth == 24
+            and 48000 in interface.rates
+        ]
+        best_capture = sorted(filtered, key=lambda interface: interface.format)[0].to_dict()
+        log.info(f"best_capture: {best_capture}")
+
+
+if __name__ == "__main__":
+    unittest.main()
