@@ -27,7 +27,7 @@ import unittest
 from src.TextUtils import TextUtils
 
 
-class test_TextUtils(unittest.TestCase):
+class TextUtilsTest(unittest.TestCase):
 
     def setUp(self):
         module_name = TextUtils.__module__

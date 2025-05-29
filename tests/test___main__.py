@@ -28,7 +28,7 @@ from src.__main__ import read_first_line
 from src.__main__ import get_usbid
 
 
-class TestReadFirstLine(unittest.TestCase):
+class MainTest(unittest.TestCase):
 
     # Arrange
     expected = "This is a mock file content"
