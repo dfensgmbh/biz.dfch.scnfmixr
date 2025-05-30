@@ -50,13 +50,13 @@ sudo chmod 660 ~/PhoneTap20/app.log
 nano ~/PhoneTap20/src/app.service
 
 # Activate and start service
-sudo ln -s ~/PhoneTap20/src/app.service /etc/systemd/system/PhoneTap20.service
+sudo ln -fs ~/PhoneTap20/src/app.service /etc/systemd/system/PhoneTap20.service
 sudo systemctl enable PhoneTap20.service
 sudo systemctl daemon-reload
 sudo systemctl start PhoneTap20.service
 sudo systemctl status PhoneTap20.service
 journalctl -u PhoneTap20.service
-# tail -f application.log
+# tail -f app.log
 
 # Deactivate service
 sudo systemctl disable PhoneTap20.service
