@@ -37,13 +37,13 @@ class MultiLineTextParser:
         self,
         text: list[str],
         map: Dict[str, Callable[[MultiLineTextParserContext], None]],
-        default: Callable[[MultiLineTextParserContext], None],
+        default: Callable[[MultiLineTextParserContext], None] = None,
     ):
         """Initialises an ALSA stream info parser.
         Args:
             text (str): An array of strings containing the ALSA stream info.
             map: A dictionary of keyword / func to be invoked when specified keywords are parsed.
-            default: A default func to be invoked when no keyword is defined.
+            default: A default func to be invoked when no keyword is defined. Can be None.
 
         Returns:
             An instance of the class.
@@ -51,7 +51,6 @@ class MultiLineTextParser:
 
         assert text is not None
         assert map is not None
-        assert default is not None
 
         self.text = text
         self.map = map
@@ -122,9 +121,10 @@ class MultiLineTextParser:
                     break
 
             # Or use default func if not keyword matches.
-            if func is None:
+            if func is None and self.default is not None:
                 func = self.default
 
-            # Invoke function.
-            log.debug(f"Invoke '{ctx.keyword}' on '{ctx.text}'.")
-            func(replace(ctx))
+            if func is not None:
+                # Invoke function.
+                log.debug(f"Invoke '{ctx.keyword}' on '{ctx.text}'.")
+                func(replace(ctx))

@@ -26,7 +26,7 @@ from src.log import log
 from src.MultiLineTextParserContext import MultiLineTextParserContext
 
 
-class AlsaStreamParser:
+class AlsaStreamInfo:
 
     _playback_interfaces: list[AlsaStreamInterfaceInfo]
     _capture_interfaces: list[AlsaStreamInterfaceInfo]
@@ -83,7 +83,14 @@ class AlsaStreamParser:
 
     def process_rates(self, ctx: MultiLineTextParserContext) -> None:
         result = ctx.text[len(ctx.keyword) :].strip()
-        self._current_interface.rates = [int(rate.strip()) for rate in result.split(",")]
+        try:
+            self._current_interface.rates = [int(rate.strip()) for rate in result.split(",")]
+        except Exception:
+            DELIMITER = "-"
+            if DELIMITER in result:
+                self._current_interface.rates = [int(result.split(DELIMITER)[0].strip())]
+            else:
+                raise
         log.info(f"#{ctx.line} [{ctx.level_previous}>{ctx.level}] {ctx.keyword} '{self._current_interface.rates}'")
 
     def process_bits(self, ctx: MultiLineTextParserContext) -> None:
