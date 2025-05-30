@@ -22,7 +22,7 @@
 
 import sys
 
-import log
+from src.log import log
 
 
 class Version:
