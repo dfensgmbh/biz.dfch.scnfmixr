@@ -113,8 +113,7 @@ Capture:
             interface
             for interface in alsa_stream_parser.get_interfaces()
             if interface.state == AlsaStreamInfoState.PLAYBACK
-            and interface.bit_depth == 16
-            or interface.bit_depth == 24
+            and (interface.bit_depth == 16 or interface.bit_depth == 24)
             and 48000 in interface.rates
         ]
         best_playback = sorted(filtered, key=lambda interface: interface.format)[0].to_dict()
@@ -124,8 +123,7 @@ Capture:
             interface
             for interface in alsa_stream_parser.get_interfaces()
             if interface.state == AlsaStreamInfoState.CAPTURE
-            and interface.bit_depth == 16
-            or interface.bit_depth == 24
+            and (interface.bit_depth == 16 or interface.bit_depth == 24)
             and 48000 in interface.rates
         ]
         best_capture = sorted(filtered, key=lambda interface: interface.format)[0].to_dict()
@@ -230,8 +228,7 @@ Capture:
             interface
             for interface in alsa_stream_parser.get_interfaces()
             if interface.state == AlsaStreamInfoState.PLAYBACK
-            and interface.bit_depth == 16
-            or interface.bit_depth == 24
+            and (interface.bit_depth == 16 or interface.bit_depth == 24)
             and 48000 in interface.rates
         ]
         best_playback = sorted(filtered, key=lambda interface: interface.format)[0].to_dict()
@@ -241,8 +238,7 @@ Capture:
             interface
             for interface in alsa_stream_parser.get_interfaces()
             if interface.state == AlsaStreamInfoState.CAPTURE
-            and interface.bit_depth == 16
-            or interface.bit_depth == 24
+            and (interface.bit_depth == 16 or interface.bit_depth == 24)
             and 48000 in interface.rates
         ]
         best_capture = sorted(filtered, key=lambda interface: interface.format)[0].to_dict()
