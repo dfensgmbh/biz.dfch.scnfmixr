@@ -52,7 +52,7 @@ def get_usbid(usbbus_id: str) -> str:
     SYS_BUS_USB_DEVICES_BASEPATH = '/sys/bus/usb/devices/'
 
     sys_bus_usb_device_path = os.path.join(SYS_BUS_USB_DEVICES_BASEPATH, usbbus_id)
-    idVendor = TextUtils().read_first_line(os.join.path(sys_bus_usb_device_path, 'idVendor'))
+    idVendor = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, 'idVendor'))
     idProduct = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, 'idProduct'))
     return f'{idVendor}:{idProduct}'
 
