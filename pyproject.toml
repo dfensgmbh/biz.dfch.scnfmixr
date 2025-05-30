@@ -20,6 +20,37 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "PhoneTap20"
+version = "2.0.0"
+description = "PhoneTap running on Raspberry Pi OS (Pi 5)"
+requires-python = ">=3.10"
+dependencies = [
+    "iniconfig>=2.1.0",
+    "packaging>=25.0",
+    "pluggy>=1.6.0"
+]
+
+# PEP 621
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "flake8>=5.0.0",
+    "mypy>=1.0.0",
+    "black>=23.0.0"
+]
+
 [tool.black]
 line-length = 120
 target-version = ['py310']
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

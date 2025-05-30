@@ -1,2 +1,12 @@
 [flake8]
 max-line-length = 120
+
+extend-ignore = E203, W503
+
+# E203: white-space before colon
+# result = text[len("abcd") :].strip()
+
+# W503: operators at start of line
+#     if x == y
+#>>>     and (a == 16 or b == 24)
+#     and c == d
