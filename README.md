@@ -199,22 +199,22 @@ The USB ports of the Icy Box IB-AC618 have the following numbering (when connect
 
 This is the typical contact layout for a (OMTP) TRRS adaptetr that splits the TRRS signal into headphones and mic signal.
 
-|        |         | LEFT | RIGHT | MIC | GND |        | LEFT | RIGHT | GND |        | LEFT | RIGHT | GND |
-|--------|---------|------|-------|-----|-----|--------|------|--------|-----|--------|------|--------|-----|
-|        |         | A Plug | Tip | Ring | Ring | Sleeve | HP Socket | Tip | Ring | Sleeve | MIC Socket | Tip | (Ring) | Sleeve |
-| A Plug |         |      |      |     |     |        |      |        |     |        |      |        |     |
-| LEFT   | Tip     |      |      |     |     |        |      | X      |     |        |      |        |     |
-| RIGHT  | Ring    |      |      |     |     |        |      |        |  X  |        |      |        |     |
-| MIC    | Ring    |      |      |     |     |        |      |        |     |        |  X   |        |     |
-| GND    | Sleeve  |      |      |     |     |        |      |        |     |   X    |      |        |  X  |
-|        | HP Socket |     |      |     |     |        |      |        |     |        |      |        |     |
-| LEFT   | Tip     |      |  X   |     |     |        |      |        |     |        |      |        |     |
-| RIGHT  | Ring    |      |      |  X  |     |        |      |        |     |        |      |        |     |
-| GND    | Sleeve  |      |      |     |     |    X   |      |        |     |        |      |        |  X  |
-|        | MIC Socket |   |      |     |     |        |      |        |     |        |      |        |     |
-| MIC    | Tip     |      |      |     |  X  |        |      |        |     |        |      |        |     |
-|        | (Ring)    |      |      |     |     |        |      |        |     |        |      |        |     |
-| GND    | Sleeve  |      |      |     |     |    X   |      |        |  X  |        |      |        |     |
+|        | Plug | LEFT | RIGHT | MIC | GND | Socket | LEFT | RIGHT | GND | Socket | LEFT |  | GND |
+|--------|-----|--------|-------|-----|-----|--------|------|--------|-----|--------|------|--------|-----|
+|        |     | X | T | R | R | S | HP | T | R | S | MIC | T | (R) | S |
+| Plug   | X   |        |      |     |     |        |      |        |     |        |      |        |     |
+| LEFT   | T   |        |      |     |     |        |      | X      |     |        |      |        |     |
+| RIGHT  | R   |        |      |     |     |        |      |        |  X  |        |      |        |     |
+| MIC    | R   |        |      |     |     |        |      |        |     |        |  X   |        |     |
+| GND    | S   |        |      |     |     |        |      |        |     |   X    |      |        |  X  |
+| Socket | HP  |     |      |     |     |        |      |        |     |        |      |        |     |
+| LEFT   | T   |      |  X   |     |     |        |      |        |     |        |      |        |     |
+| RIGHT  | R   |      |      |  X  |     |        |      |        |     |        |      |        |     |
+| GND    | S   |      |      |     |     |    X   |      |        |     |        |      |        |  X  |
+| Socket | MIC |   |      |     |     |        |      |        |     |        |      |        |     |
+| MIC    | T   |      |      |     |  X  |        |      |        |     |        |      |        |     |
+|        | (R) |      |      |     |     |        |      |        |     |        |      |        |     |
+| GND    | S   |      |      |     |     |    X   |      |        |  X  |        |      |        |     |
 
 # Notes and Observations
 
