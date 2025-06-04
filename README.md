@@ -182,17 +182,39 @@ $ lsusb -t
 The USB ports of the Icy Box IB-AC618 have the following numbering (when connected top left, `3-1`, or to bottom left, `1-1`):
 
 | Port  | Type  | USB id  | Path  | Remark  |
-|---------|----------|------------|----------------------------------|-------------------------|
-| Port 1  | USB 3.0  | `3-1.1`  | `/sys/bus/usb/devices/3-1.1/  `  | as labelled on the hub, connected Top Left  |
-| Port 2  | USB 3.0  | `3-1.2`  | `/sys/bus/usb/devices/3-1.2/  `  | as labelled on the hub, connected Top Left  |
-| Port 3  | USB 3.0  | `3-1.3`  | `/sys/bus/usb/devices/3-1.3/  `  | as labelled on the hub, connected Top Left  |
-| Port 4  | USB 3.0  | `3-1.4`  | `/sys/bus/usb/devices/3-1.4/  `  | as labelled on the hub, connected Top Left  |
+|---------|----------|------------|------------------------------|-------------------------|
+| Port 1  | USB 3.0  | `3-1.1`  | `/sys/bus/usb/devices/3-1.1/`  | as labelled on the hub, connected Top Left  |
+| Port 2  | USB 3.0  | `3-1.2`  | `/sys/bus/usb/devices/3-1.2/`  | as labelled on the hub, connected Top Left  |
+| Port 3  | USB 3.0  | `3-1.3`  | `/sys/bus/usb/devices/3-1.3/`  | as labelled on the hub, connected Top Left  |
+| Port 4  | USB 3.0  | `3-1.4`  | `/sys/bus/usb/devices/3-1.4/`  | as labelled on the hub, connected Top Left  |
 |  |  |  |  | |  
-| Port 1  | USB 3.0  | `1-1.1`  | `/sys/bus/usb/devices/1-1.1/  `  | as labelled on the hub, connected Bottom Left  |
-| Port 2  | USB 3.0  | `1-1.2`  | `/sys/bus/usb/devices/1-1.2/  `  | as labelled on the hub, connected Bottom Left  |
-| Port 3  | USB 3.0  | `1-1.3`  | `/sys/bus/usb/devices/1-1.3/  `  | as labelled on the hub, connected Bottom Left  |
-| Port 4  | USB 3.0  | `1-1.4`  | `/sys/bus/usb/devices/1-1.4/  `  | as labelled on the hub, connected Bottom Left  |
+| Port 1  | USB 3.0  | `1-1.1`  | `/sys/bus/usb/devices/1-1.1/`  | as labelled on the hub, connected Bottom Left  |
+| Port 2  | USB 3.0  | `1-1.2`  | `/sys/bus/usb/devices/1-1.2/`  | as labelled on the hub, connected Bottom Left  |
+| Port 3  | USB 3.0  | `1-1.3`  | `/sys/bus/usb/devices/1-1.3/`  | as labelled on the hub, connected Bottom Left  |
+| Port 4  | USB 3.0  | `1-1.4`  | `/sys/bus/usb/devices/1-1.4/`  | as labelled on the hub, connected Bottom Left  |
 
+# Pin Layout
+
+## TRRS plug to TRS socket "headphones splitter"
+
+This is the typical contact layout for a (OMTP) TRRS adaptetr that splits the TRRS signal into headphones and mic signal.
+
+|        |         | LEFT | RIGHT | MIC | GND |        | LEFT | RIGHT | GND |        | LEFT | RIGHT | GND |
+|--------|---------|------|-------|-----|-----|--------|------|--------|-----|--------|------|--------|-----|
+|        |         | A Plug | Tip | Ring | Ring | Sleeve | HP Socket | Tip | Ring | Sleeve | MIC Socket | Tip | (Ring) | Sleeve |
+| A Plug |         |      |      |     |     |        |      |        |     |        |      |        |     |
+| LEFT   | Tip     |      |      |     |     |        |      | X      |     |        |      |        |     |
+| RIGHT  | Ring    |      |      |     |     |        |      |        |  X  |        |      |        |     |
+| MIC    | Ring    |      |      |     |     |        |      |        |     |        |  X   |        |     |
+| GND    | Sleeve  |      |      |     |     |        |      |        |     |   X    |      |        |  X  |
+|        | HP Socket |     |      |     |     |        |      |        |     |        |      |        |     |
+| LEFT   | Tip     |      |  X   |     |     |        |      |        |     |        |      |        |     |
+| RIGHT  | Ring    |      |      |  X  |     |        |      |        |     |        |      |        |     |
+| GND    | Sleeve  |      |      |     |     |    X   |      |        |     |        |      |        |  X  |
+|        | MIC Socket |   |      |     |     |        |      |        |     |        |      |        |     |
+| MIC    | Tip     |      |      |     |  X  |        |      |        |     |        |      |        |     |
+|        | (Ring)    |      |      |     |     |        |      |        |     |        |      |        |     |
+| GND    | Sleeve  |      |      |     |     |    X   |      |        |  X  |        |      |        |     |
 
 # Notes and Observations
 
