@@ -129,9 +129,9 @@ $ cat /proc/asound/cards
                       KTMicro KT USB Audio at usb-xhci-hcd.0-2, full speed
 ```
 
-### Icy Box USB Port Layout
+### Icy Box IB-AC618 USB Port Layout
 
-The USB ports of the Icy Box IB-AC618 have the following numbering (when connected top left, `3-1` or to `1-1`):
+The USB ports of the Icy Box IB-AC618 have the following numbering (when connected top left, `3-1`, or to bottom left, `1-1`):
 
 | Port  | Type  | USB id  | Path  | Remark  |
 |---------|----------|------------|----------------------------------|-------------------------|
@@ -176,6 +176,23 @@ $ lsusb -t
     |__ Port 1: Dev 31, If 0, Class=Hub, Driver=hub/4p, 480M
         |__ Port 4: Dev 32, If 0, Class=Hub, Driver=hub/4p, 480M
 ```
+
+### Icy Box IB-AC6104-B USB Port Layout
+
+The USB ports of the Icy Box IB-AC618 have the following numbering (when connected top left, `3-1`, or to bottom left, `1-1`):
+
+| Port  | Type  | USB id  | Path  | Remark  |
+|---------|----------|------------|----------------------------------|-------------------------|
+| Port 1  | USB 3.0  | `3-1.1`  | `/sys/bus/usb/devices/3-1.1/  `  | as labelled on the hub, connected Top Left  |
+| Port 2  | USB 3.0  | `3-1.2`  | `/sys/bus/usb/devices/3-1.2/  `  | as labelled on the hub, connected Top Left  |
+| Port 3  | USB 3.0  | `3-1.3`  | `/sys/bus/usb/devices/3-1.3/  `  | as labelled on the hub, connected Top Left  |
+| Port 4  | USB 3.0  | `3-1.4`  | `/sys/bus/usb/devices/3-1.4/  `  | as labelled on the hub, connected Top Left  |
+|  |  |  |  | |  
+| Port 1  | USB 3.0  | `1-1.1`  | `/sys/bus/usb/devices/1-1.1/  `  | as labelled on the hub, connected Bottom Left  |
+| Port 2  | USB 3.0  | `1-1.2`  | `/sys/bus/usb/devices/1-1.2/  `  | as labelled on the hub, connected Bottom Left  |
+| Port 3  | USB 3.0  | `1-1.3`  | `/sys/bus/usb/devices/1-1.3/  `  | as labelled on the hub, connected Bottom Left  |
+| Port 4  | USB 3.0  | `1-1.4`  | `/sys/bus/usb/devices/1-1.4/  `  | as labelled on the hub, connected Bottom Left  |
+
 
 # Notes and Observations
 
