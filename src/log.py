@@ -23,7 +23,16 @@
 import logging
 import logging.config
 
-logging.config.fileConfig('logging.conf')
+_LOGGER_NAME = "biz.dfch.PhoneTap"
+# Note: When using `pyinstaller --onefile` make sure this file is available.
+_LOGGER_FILE = "logging.conf"
 
-log = logging.getLogger('biz.dfch.PhoneTap')
-log.info("Logging initialised.'")
+try:
+
+    logging.config.fileConfig(_LOGGER_FILE)
+    log = logging.getLogger(_LOGGER_NAME)
+    log.info(f"Logging configuration initialised from '{_LOGGER_FILE}'.'")
+
+except Exception as ex:
+
+    print(f"{_LOGGER_NAME}: An error occurred while trying to load '{_LOGGER_FILE}': '{ex}'")
