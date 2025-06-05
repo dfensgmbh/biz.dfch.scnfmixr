@@ -199,7 +199,7 @@ The USB ports of the Icy Box IB-AC618 have the following numbering (when connect
 
 This is the typical contact layout for a (OMTP) TRRS adaptetr that splits the TRRS signal into headphones and mic signal.
 
-
+*tbd*
 
 # Notes and Observations
 
