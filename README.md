@@ -236,6 +236,8 @@ user@system:~/{project-root} $ pyinstaller --onefile --add-data "logging.conf:."
         - PhoneTap-v{maj}.{min}.{rev}
 ```
 
+Note: naming for the executable does not have to follow [SemVer](http://semver.org). To allow multiple installed versions the programme directory can be changed from `PhoneTap` to `PhoneTap-v{maj}.{min}.{rev}` and then the executable obviously can be named without version information (which is optional anyway).
+
 # Notes and Observations
 
 * Normally, when connecting a device to the USB hub, a blue LED turns on next to the connected device. However, when connecting a *UGREEN* USB audio adapter it only shows when there is a 3.5mm TRRS cable connected to its socket. (`12d1:0010 Huawei Technologies Co., Ltd. KT USB Audio`). The same happens with the *Atomos Connect 4K* when there is no HDMI cable connected.
