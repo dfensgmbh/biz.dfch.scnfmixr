@@ -201,6 +201,41 @@ This is the typical contact layout for a (OMTP) TRRS adaptetr that splits the TR
 
 *tbd*
 
+# Build and Installation
+
+The programme should be built with `pyinstaller` as `--onefile``. The resulting executable will be copied into `/opt/...` and started from there. As it is `--onefile` it will be unpacked on start into `/tmp/_MEI...` Technically `-add-data` for `logging.conf` is not needed, as it is read from `/opt/PhoneTap` (relative via `./bin/..` , not absolute), but serves a template (it will be unpacked into `/tmp/_MEI...`). Logs will by default be written to `/opt/PhoneTap/app.log` (relative via `./bin/..` , not absolute); this can be changed in `logging.conf`.
+
+## Source Directory
+```
+~/project-root
+|
+- app.log
+- logging.conf
++ src
+    |
+    - __main__.py
++ tests
++ venv
++ dist
+    |
+    - PhoneTap-v{maj}.{min}.{rev}
+
+user@system:~/{project-root} $ pyinstaller --onefile --add-data "logging.conf:." --name=PhoneTap-v{maj}.{min}.{rev} src/__main__.py
+```
+
+## Target Directory
+```
+/opt
+|
++ PhoneTap
+    |
+    - logging.conf
+    - app.conf
+    + bin
+        | 
+        - PhoneTap-v{maj}.{min}.{rev}
+```
+
 # Notes and Observations
 
 * Normally, when connecting a device to the USB hub, a blue LED turns on next to the connected device. However, when connecting a *UGREEN* USB audio adapter it only shows when there is a 3.5mm TRRS cable connected to its socket. (`12d1:0010 Huawei Technologies Co., Ltd. KT USB Audio`). The same happens with the *Atomos Connect 4K* when there is no HDMI cable connected.
