@@ -28,9 +28,10 @@ from src.log import log
 class Version:
 
     def ensure_minimum_version(self, major: int = 3, minor: int = 10) -> None:
-        if (sys.version_info <= (major, minor)):
+
+        if sys.version_info >= (major, minor):
             return
 
-        message = f"'{sys.version_info}' > '{major}.{minor}'"
+        message = f"'{sys.version_info}' < '{major}.{minor}'"
         log.critical(message)
         raise EnvironmentError(message)
