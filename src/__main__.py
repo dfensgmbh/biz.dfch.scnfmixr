@@ -49,35 +49,35 @@ class AsoundCardInfo:
 
 def get_usbid(usbbus_id: str) -> str:
 
-    SYS_BUS_USB_DEVICES_BASEPATH = '/sys/bus/usb/devices/'
+    SYS_BUS_USB_DEVICES_BASEPATH = "/sys/bus/usb/devices/"
 
     sys_bus_usb_device_path = os.path.join(SYS_BUS_USB_DEVICES_BASEPATH, usbbus_id)
-    idVendor = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, 'idVendor'))
-    idProduct = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, 'idProduct'))
-    return f'{idVendor}:{idProduct}'
+    idVendor = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, "idVendor"))
+    idProduct = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, "idProduct"))
+    return f"{idVendor}:{idProduct}"
 
 
 def get_usb_device_info(usbbus_id: str) -> UsbDeviceInfo:
 
-    SYS_BUS_USB_DEVICES_BASEPATH = '/sys/bus/usb/devices/'
+    SYS_BUS_USB_DEVICES_BASEPATH = "/sys/bus/usb/devices/"
 
     sys_bus_usb_device_path = os.path.join(SYS_BUS_USB_DEVICES_BASEPATH, usbbus_id)
 
-    idVendor = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, 'idVendor'))
-    idProduct = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, 'idProduct'))
-    serial = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, 'serial'))
-    devnum = int(TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, 'devnum')))
+    idVendor = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, "idVendor"))
+    idProduct = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, "idProduct"))
+    serial = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, "serial"))
+    devnum = int(TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, "devnum")))
 
     return UsbDeviceInfo(idVendor=idVendor, idProduct=idProduct, serial=serial, devnum=devnum)
 
 
 def get_asound_info(usbDeviceInfo: UsbDeviceInfo) -> AsoundCardInfo | None:
 
-    PROC_ASOUND_BASEPATH = '/proc/asound/'
-    CARD_PATTERN = r'^card(\d+)$'
-    USBBUS_PATTERN = r'^(\d+)/(\d+)$'
+    PROC_ASOUND_BASEPATH = "/proc/asound/"
+    CARD_PATTERN = r"^card(\d+)$"
+    USBBUS_PATTERN = r"^(\d+)/(\d+)$"
 
-    target_usbid = f'{usbDeviceInfo.idVendor}:{usbDeviceInfo.idProduct}'
+    target_usbid = f"{usbDeviceInfo.idVendor}:{usbDeviceInfo.idProduct}"
 
     for card_dir_basename in os.listdir(PROC_ASOUND_BASEPATH):
         try:
@@ -89,17 +89,17 @@ def get_asound_info(usbDeviceInfo: UsbDeviceInfo) -> AsoundCardInfo | None:
             card_dir_fullpath = os.path.join(PROC_ASOUND_BASEPATH, card_dir_basename)
 
             # Test if specified usbid matches current card.
-            usbid = TextUtils().read_first_line(os.path.join(card_dir_fullpath, 'usbid'))
+            usbid = TextUtils().read_first_line(os.path.join(card_dir_fullpath, "usbid"))
             if usbid.lower() != target_usbid.lower():
                 continue
 
             # Test if specified devnum matches current card.
-            usbbus = TextUtils().read_first_line(os.path.join(card_dir_fullpath, 'usbbus'))
+            usbbus = TextUtils().read_first_line(os.path.join(card_dir_fullpath, "usbbus"))
             match = re.match(USBBUS_PATTERN, usbbus)
             if not match:
                 continue
             devnum = int(match.group(2))
-            if (devnum != usbDeviceInfo.devnum):
+            if devnum != usbDeviceInfo.devnum:
                 continue
 
             log.info(f"Card '{card_id}' found for '{target_usbid}' ['{devnum}']")
@@ -114,10 +114,11 @@ def get_asound_info(usbDeviceInfo: UsbDeviceInfo) -> AsoundCardInfo | None:
 
 def run_loop():
     try:
-        device_info = get_usb_device_info('1-1.4.4')
-        asound_info = get_asound_info(device_info)
-        wav_file = '/home/admin/PhoneTap20/src/snd/CardA.Connected.EN.wav'
-        params = ['aplay', '-D', f'plughw:{asound_info.idCard}', wav_file]
+        # Detect Jabra SPEAK 510
+        device_info_lcl = get_usb_device_info("1-1")
+        asound_info_lcl = get_asound_info(device_info_lcl)
+        wav_file = "/home/admin/PhoneTap20/src/snd/CardA.Connected.EN.wav"
+        params = ["aplay", "-D", f"plughw:{asound_info_lcl.idCard}", wav_file]
         _ = subprocess.run(params)
         time.sleep(5)
 
@@ -126,7 +127,6 @@ def run_loop():
         # params = ['aplay', '-D', f'plughw:{asound_info.idCard}', wav_file]
         # result = subprocess.run(params)
         time.sleep(1)
-        pass
 
 
 # logging.basicConfig(
