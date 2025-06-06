@@ -23,7 +23,7 @@
 from enum import Enum
 
 
-class AlsaStreamInfoState(Enum):
+class AlsaStreamInfoVisitorState(Enum):
     DEFAULT = 0
     PLAYBACK = 1
     CAPTURE = 2

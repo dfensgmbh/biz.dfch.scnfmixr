@@ -28,9 +28,9 @@ import subprocess
 import sys
 import time
 
-from src.log import log
-from src.TextUtils import TextUtils
-from src.Version import Version
+from log import log
+from Text import TextUtils
+from Version import Version
 
 
 @dataclass(frozen=True)

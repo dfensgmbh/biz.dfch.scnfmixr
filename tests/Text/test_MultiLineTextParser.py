@@ -23,11 +23,8 @@
 from typing import Callable
 import unittest
 
-from src.AlsaStreamInfoState import AlsaStreamInfoState
-from src.AlsaStreamInfo import AlsaStreamInfo
-from src.MultiLineTextParser import MultiLineTextParser
-from src.MultiLineTextParserContext import MultiLineTextParserContext
-from src.log import log
+from Text import MultiLineTextParser, MultiLineTextParserContext
+from log import log
 
 
 class MultiLineTextParserTest(unittest.TestCase):

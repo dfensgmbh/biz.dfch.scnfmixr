@@ -20,18 +20,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import sys
 
-from log import log
+from dataclasses import dataclass
+
+__all__ = ["MultiLineTextParserContext"]
 
 
-class Version:
+@dataclass
+class MultiLineTextParserContext:
+    """Provides context for the `MultiLineTextParser`.
+    Attributes:
+        line (int): Line number in the source text.
+        level (int): Hierarchical level of current line.
+        levelPrevious (int): Hierarchical level of previous line.
+        keyword (str): The current keyword being parsed.
+        text (str): Associated text including the keyword.
+    """
 
-    def ensure_minimum_version(self, major: int = 3, minor: int = 10) -> None:
-
-        if sys.version_info >= (major, minor):
-            return
-
-        message = f"'{sys.version_info}' < '{major}.{minor}'"
-        log.critical(message)
-        raise EnvironmentError(message)
+    line: int = 0
+    level: int = 0
+    level_previous: int = 0
+    keyword: str = None
+    text: str = None

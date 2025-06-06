@@ -19,19 +19,3 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-import sys
-
-from log import log
-
-
-class Version:
-
-    def ensure_minimum_version(self, major: int = 3, minor: int = 10) -> None:
-
-        if sys.version_info >= (major, minor):
-            return
-
-        message = f"'{sys.version_info}' < '{major}.{minor}'"
-        log.critical(message)
-        raise EnvironmentError(message)

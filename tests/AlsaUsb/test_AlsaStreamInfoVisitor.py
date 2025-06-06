@@ -23,14 +23,13 @@
 from typing import Callable
 import unittest
 
-from src.AlsaStreamInfoState import AlsaStreamInfoState
-from src.AlsaStreamInfo import AlsaStreamInfo
-from src.MultiLineTextParser import MultiLineTextParser
-from src.MultiLineTextParserContext import MultiLineTextParserContext
-from src.log import log
+from AlsaUsb import AlsaStreamInfoVisitor, AlsaStreamInfoVisitorState
+from log import log
+from Text.MultiLineTextParser import MultiLineTextParser
+from Text.MultiLineTextParserContext import MultiLineTextParserContext
 
 
-class AlsaStreamInfoTest(unittest.TestCase):
+class TestAlsaStreamInfoVisitor(unittest.TestCase):
 
     def test_parsing_stream_data_atomos_continuous_returns_single_capture_interface(self):
 
@@ -50,7 +49,7 @@ Capture:
     Bits: 0
 """.splitlines()
 
-        alsa_stream_info = AlsaStreamInfo()
+        alsa_stream_info = AlsaStreamInfoVisitor()
         map = {
             "Playback:": alsa_stream_info.process_playback,
             "Capture:": alsa_stream_info.process_capture,
@@ -77,7 +76,7 @@ Capture:
         filtered = [
             interface
             for interface in alsa_stream_info.get_interfaces()
-            if interface.state == AlsaStreamInfoState.CAPTURE
+            if interface.state == AlsaStreamInfoVisitorState.CAPTURE
             and interface.bit_depth == 0
             and 48000 in interface.rates
         ]
@@ -102,7 +101,7 @@ Capture:
     Bits: 0
 """.splitlines()
 
-        alsa_stream_info = AlsaStreamInfo()
+        alsa_stream_info = AlsaStreamInfoVisitor()
         map = {
             "Playback:": alsa_stream_info.process_playback,
             "Capture:": alsa_stream_info.process_capture,
@@ -129,7 +128,7 @@ Capture:
         filtered = [
             interface
             for interface in alsa_stream_info.get_interfaces()
-            if interface.state == AlsaStreamInfoState.CAPTURE
+            if interface.state == AlsaStreamInfoVisitorState.CAPTURE
             and (interface.bit_depth == 16 or interface.bit_depth == 24)
             and 48000 in interface.rates
         ]
@@ -176,7 +175,7 @@ Capture:
             f"[#{ctx.line}][{ctx.level_previous}>{ctx.level}] default: {ctx.text}"
         )
 
-        alsa_stream_parser = AlsaStreamInfo()
+        alsa_stream_parser = AlsaStreamInfoVisitor()
         map = {
             "Playback:": alsa_stream_parser.process_playback,
             "Capture:": alsa_stream_parser.process_capture,
@@ -203,7 +202,7 @@ Capture:
         filtered = [
             interface
             for interface in alsa_stream_parser.get_interfaces()
-            if interface.state == AlsaStreamInfoState.PLAYBACK
+            if interface.state == AlsaStreamInfoVisitorState.PLAYBACK
             and (interface.bit_depth == 16 or interface.bit_depth == 24)
             and 48000 in interface.rates
         ]
@@ -213,7 +212,7 @@ Capture:
         filtered = [
             interface
             for interface in alsa_stream_parser.get_interfaces()
-            if interface.state == AlsaStreamInfoState.CAPTURE
+            if interface.state == AlsaStreamInfoVisitorState.CAPTURE
             and (interface.bit_depth == 16 or interface.bit_depth == 24)
             and 48000 in interface.rates
         ]
@@ -286,7 +285,7 @@ Capture:
     Channel map: FL FR
 """.splitlines()
 
-        alsa_stream_parser = AlsaStreamInfo()
+        alsa_stream_parser = AlsaStreamInfoVisitor()
         map = {
             "Playback:": alsa_stream_parser.process_playback,
             "Capture:": alsa_stream_parser.process_capture,
@@ -313,7 +312,7 @@ Capture:
         filtered = [
             interface
             for interface in alsa_stream_parser.get_interfaces()
-            if interface.state == AlsaStreamInfoState.PLAYBACK
+            if interface.state == AlsaStreamInfoVisitorState.PLAYBACK
             and (interface.bit_depth == 16 or interface.bit_depth == 24)
             and 48000 in interface.rates
         ]
@@ -323,7 +322,7 @@ Capture:
         filtered = [
             interface
             for interface in alsa_stream_parser.get_interfaces()
-            if interface.state == AlsaStreamInfoState.CAPTURE
+            if interface.state == AlsaStreamInfoVisitorState.CAPTURE
             and (interface.bit_depth == 16 or interface.bit_depth == 24)
             and 48000 in interface.rates
         ]

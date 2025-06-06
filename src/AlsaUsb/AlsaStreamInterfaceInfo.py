@@ -20,23 +20,29 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from dataclasses import dataclass, field
+from typing import Dict, Any
 
-from dataclasses import dataclass
+from .AlsaStreamInfoVisitorState import AlsaStreamInfoVisitorState
+
+__all__ = ["AlsaStreamInterfaceInfo"]
 
 
 @dataclass
-class MultiLineTextParserContext:
-    """Provides context for the ``MultiLineTextParser`.
-    Attributes:
-        line (int): Line number in the source text.
-        level (int): Hierarchical level of current line.
-        levelPrevious (int): Hierarchical level of previous line.
-        keyword (str): The current keyword being parsed.
-        text (str): Associated text including the keyword.
-    """
+class AlsaStreamInterfaceInfo:
+    state: AlsaStreamInfoVisitorState = AlsaStreamInfoVisitorState.DEFAULT
+    format: str = None
+    channel_count: int = 0
+    bit_depth: int = 0
+    map: list[str] = field(default_factory=list)
+    rates: list[int] = field(default_factory=list)
 
-    line: int = 0
-    level: int = 0
-    level_previous: int = 0
-    keyword: str = None
-    text: str = None
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "state": self.state,
+            "format": self.format,
+            "channels": self.channel_count,
+            "bit_depth": self.bit_depth,
+            "map": self.map,
+            "rates": self.rates,
+        }

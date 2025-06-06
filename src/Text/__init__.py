@@ -20,24 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import importlib
-import os
-import unittest
+from .MultiLineTextParser import MultiLineTextParser
+from .MultiLineTextParserContext import MultiLineTextParserContext
+from .TextUtils import TextUtils
 
-from src.TextUtils import TextUtils
-
-
-class TextUtilsTest(unittest.TestCase):
-
-    def setUp(self):
-        module_name = TextUtils.__module__
-        module = importlib.import_module(module_name)
-        self.existing_file = module.__file__
-
-    def test_reading_non_existing_file_throws(self):
-        with self.assertRaises(FileNotFoundError):
-            TextUtils().read_first_line("something")
-
-    def test_reading_existing_file_succeeds(self):
-        result = TextUtils().read_first_line(os.path.join(self.existing_file))
-        self.assertIsNotNone(result)
+__all__ = [
+    "MultiLineTextParser",
+    "MultiLineTextParserContext",
+    "TextUtils",
+]

@@ -23,7 +23,7 @@
 import unittest
 from unittest.mock import MagicMock, mock_open, patch
 
-from src.TextUtils import TextUtils
+from src.Text.TextUtils import TextUtils
 from src.__main__ import get_usbid
 
 

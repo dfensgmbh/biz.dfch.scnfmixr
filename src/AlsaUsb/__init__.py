@@ -1,6 +1,6 @@
 # MIT License
 
-# Copyright (c) 2024, 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,18 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import sys
+from .AlsaStreamInfoVisitor import AlsaStreamInfoVisitor
+from .AlsaStreamInfoVisitorState import AlsaStreamInfoVisitorState
+from .AlsaStreamInterfaceInfo import AlsaStreamInterfaceInfo
 
-from log import log
-
-
-class Version:
-
-    def ensure_minimum_version(self, major: int = 3, minor: int = 10) -> None:
-
-        if sys.version_info >= (major, minor):
-            return
-
-        message = f"'{sys.version_info}' < '{major}.{minor}'"
-        log.critical(message)
-        raise EnvironmentError(message)
+__all__ = [
+    "AlsaStreamInfoVisitor",
+    "AlsaStreamInfoVisitorState",
+    "AlsaStreamInterfaceInfo",
+]

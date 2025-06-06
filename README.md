@@ -70,8 +70,8 @@ admin@raspberrypi:~ $ pwd
 /home/admin
 admin@raspberrypi:~ $ cd ~/PhoneTap20
 admin@raspberrypi:~ $ python -m unittest discover
-admin@raspberrypi:~ $ python -m unittest -s tests .
-admin@raspberrypi:~ $ python -m unittest -s <path-to-module-file> .
+admin@raspberrypi:~ $ python -m unittest discover -s tests .
+admin@raspberrypi:~ $ python -m unittest discover -v -s <package-path> .
 ```
 
 # Hardware and Software Requirements

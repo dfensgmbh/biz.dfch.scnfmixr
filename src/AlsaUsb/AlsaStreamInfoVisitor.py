@@ -20,13 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from src.AlsaStreamInfoState import AlsaStreamInfoState
-from src.AlsaStreamInterfaceInfo import AlsaStreamInterfaceInfo
-from src.log import log
-from src.MultiLineTextParserContext import MultiLineTextParserContext
+from .AlsaStreamInfoVisitorState import AlsaStreamInfoVisitorState
+from .AlsaStreamInterfaceInfo import AlsaStreamInterfaceInfo
+from log import log
+from Text import MultiLineTextParserContext
+
+__all__ = ["AlsaStreamInfoVisitor"]
 
 
-class AlsaStreamInfo:
+class AlsaStreamInfoVisitor:
+    """ALSA stream info visitor."""
 
     _playback_interfaces: list[AlsaStreamInterfaceInfo]
     _capture_interfaces: list[AlsaStreamInterfaceInfo]
@@ -62,9 +65,9 @@ class AlsaStreamInfo:
 
         self._current_interface = AlsaStreamInterfaceInfo()
         self._current_interface.state = (
-            AlsaStreamInfoState.PLAYBACK
+            AlsaStreamInfoVisitorState.PLAYBACK
             if self._current_interfaces is self._playback_interfaces
-            else AlsaStreamInfoState.CAPTURE
+            else AlsaStreamInfoVisitorState.CAPTURE
         )
         self._current_interfaces.append(self._current_interface)
         log.info(f"#{ctx.line} [{ctx.level_previous}>{ctx.level}] {ctx.keyword}Creating interface ...")

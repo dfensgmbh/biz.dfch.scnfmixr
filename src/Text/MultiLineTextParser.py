@@ -25,9 +25,11 @@ from dataclasses import replace
 import os
 from typing import Callable, Dict
 
-from src.MultiLineTextParserContext import MultiLineTextParserContext
-from src.TextUtils import TextUtils
-from src.log import log
+from .MultiLineTextParserContext import MultiLineTextParserContext
+from .TextUtils import TextUtils
+from log import log
+
+__all__ = ["MultiLineTextParser"]
 
 
 class MultiLineTextParser:
@@ -56,6 +58,7 @@ class MultiLineTextParser:
         self.map = map
         self.default = default
 
+    # DFTODO - must be moved out of this class.
     @staticmethod
     def get_stream_info_data(id: int) -> list[str]:
         """Reads stream data from `stream0` for a given ALSA card id and returns an array of strings.
