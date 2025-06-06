@@ -31,8 +31,10 @@ try:
 
     logging.config.fileConfig(_LOGGER_FILE)
     log = logging.getLogger(_LOGGER_NAME)
-    log.info(f"Logging configuration initialised from '{_LOGGER_FILE}'.'")
+    log.info(f"Logging configuration initialised from '{_LOGGER_FILE}'.")
 
 except Exception as ex:
 
     print(f"{_LOGGER_NAME}: An error occurred while trying to load '{_LOGGER_FILE}': '{ex}'")
+
+    raise
