@@ -21,9 +21,6 @@
 # SOFTWARE.
 
 import argparse
-from dataclasses import dataclass
-import os
-import re
 import subprocess
 import sys
 import time
@@ -33,93 +30,112 @@ from log import log
 from Version import Version
 
 
-@dataclass(frozen=True)
-class UsbDeviceInfo:
-    idVendor: str
-    idProduct: str
-    serial: str
-    devnum: int
-
-
-@dataclass(frozen=True)
-class AsoundCardInfo:
-    usbDeviceInfo: UsbDeviceInfo
-    idCard: int
-
-
-def get_usbid(usbbus_id: str) -> str:
-
-    SYS_BUS_USB_DEVICES_BASEPATH = "/sys/bus/usb/devices/"
-
-    sys_bus_usb_device_path = os.path.join(SYS_BUS_USB_DEVICES_BASEPATH, usbbus_id)
-    idVendor = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, "idVendor"))
-    idProduct = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, "idProduct"))
-    return f"{idVendor}:{idProduct}"
-
-
-def get_usb_device_info(usbbus_id: str) -> UsbDeviceInfo:
-
-    SYS_BUS_USB_DEVICES_BASEPATH = "/sys/bus/usb/devices/"
-
-    sys_bus_usb_device_path = os.path.join(SYS_BUS_USB_DEVICES_BASEPATH, usbbus_id)
-
-    idVendor = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, "idVendor"))
-    idProduct = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, "idProduct"))
-    serial = TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, "serial"))
-    devnum = int(TextUtils().read_first_line(os.path.join(sys_bus_usb_device_path, "devnum")))
-
-    return UsbDeviceInfo(idVendor=idVendor, idProduct=idProduct, serial=serial, devnum=devnum)
-
-
-def get_asound_info(usbDeviceInfo: UsbDeviceInfo) -> AsoundCardInfo | None:
-
-    PROC_ASOUND_BASEPATH = "/proc/asound/"
-    CARD_PATTERN = r"^card(\d+)$"
-    USBBUS_PATTERN = r"^(\d+)/(\d+)$"
-
-    target_usbid = f"{usbDeviceInfo.idVendor}:{usbDeviceInfo.idProduct}"
-
-    for card_dir_basename in os.listdir(PROC_ASOUND_BASEPATH):
-        try:
-            match = re.match(CARD_PATTERN, card_dir_basename)
-            if not match:
-                continue
-
-            card_id = int(match.group(1))
-            card_dir_fullpath = os.path.join(PROC_ASOUND_BASEPATH, card_dir_basename)
-
-            # Test if specified usbid matches current card.
-            usbid = TextUtils().read_first_line(os.path.join(card_dir_fullpath, "usbid"))
-            if usbid.lower() != target_usbid.lower():
-                continue
-
-            # Test if specified devnum matches current card.
-            usbbus = TextUtils().read_first_line(os.path.join(card_dir_fullpath, "usbbus"))
-            match = re.match(USBBUS_PATTERN, usbbus)
-            if not match:
-                continue
-            devnum = int(match.group(2))
-            if devnum != usbDeviceInfo.devnum:
-                continue
-
-            log.info(f"Card '{card_id}' found for '{target_usbid}' ['{devnum}']")
-            return AsoundCardInfo(usbDeviceInfo=usbDeviceInfo, idCard=card_id)
-
-        except Exception:
-            continue
-
-    log.warning(f"Card id not found for '{target_usbid}' ['{devnum}']")
-    return None
-
-
 def run_loop():
     try:
         # Detect Jabra SPEAK 510
-        device_info_lcl = get_usb_device_info("1-1")
-        asound_info_lcl = get_asound_info(device_info_lcl)
+        device_info_lcl = Usb.get_usb_device_info("1-1")
+        asound_info_lcl = Asound.get_info(device_info_lcl)
         wav_file = "/home/admin/PhoneTap20/src/snd/CardA.Connected.EN.wav"
         params = ["aplay", "-D", f"plughw:{asound_info_lcl.idCard}", wav_file]
         _ = subprocess.run(params)
+
+        try:
+            # Detect Sound Devices MixPre-3 II
+            device_info_rec = Usb.get_usb_device_info("3-1")
+            asound_info_ex1 = Asound.get_info(device_info_rec)
+            wav_file = "/home/admin/PhoneTap20/src/snd/CardA.Connected.DE.wav"
+            params = ["aplay", "-D", f"plughw:{asound_info_ex1.idCard}", wav_file]
+            _ = subprocess.run(params)
+
+            try:
+                # /usr/bin/jackd -ddummy -r48000 -p1024
+                params = ["/usr/bin/jackd", "-ddummy", "-r48000", "-p1024"]
+                log.info(params)
+                _ = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                # _ = subprocess.run(params)
+                time.sleep(10)
+
+                # Jabra
+                params = [
+                    "/usr/bin/zita-a2j",
+                    "-j",
+                    "LCL_IN",
+                    "-d",
+                    f"hw:{asound_info_lcl.idCard},0",
+                    "-c",
+                    "1",
+                    "-r",
+                    "16000",
+                ]
+                log.info(params)
+                _ = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                params = [
+                    "/usr/bin/zita-j2a",
+                    "-j",
+                    "LCL_OUT",
+                    "-d",
+                    f"hw:{asound_info_lcl.idCard},0",
+                    "-c",
+                    "2",
+                    "-r",
+                    "48000",
+                ]
+                log.info(params)
+                _ = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+                # MixPre-3
+                params = [
+                    "/usr/bin/zita-a2j",
+                    "-j",
+                    "REC_IN",
+                    "-d",
+                    f"hw:{asound_info_ex1.idCard},0",
+                    "-c",
+                    "2",
+                    "-r",
+                    "48000",
+                ]
+                log.info(params)
+                _ = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                params = [
+                    "/usr/bin/zita-j2a",
+                    "-j",
+                    "REC_OUT",
+                    "-d",
+                    f"hw:{asound_info_ex1.idCard},0",
+                    "-c",
+                    "2",
+                    "-r",
+                    "48000",
+                ]
+                log.info(params)
+                _ = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+                time.sleep(10)
+
+                params = ["/usr/bin/jack_connect", "LCL_IN:capture_1", "REC_OUT:playback_1"]
+                log.info(params)
+                _ = subprocess.run(params)
+                params = ["/usr/bin/jack_connect", "LCL_IN:capture_1", "REC_OUT:playback_2"]
+                log.info(params)
+                _ = subprocess.run(params)
+
+                params = ["/usr/bin/jack_connect", "REC_IN:capture_1", "LCL_OUT:playback_1"]
+                log.info(params)
+                _ = subprocess.run(params)
+                params = ["/usr/bin/jack_connect", "REC_IN:capture_2", "LCL_OUT:playback_2"]
+                log.info(params)
+                _ = subprocess.run(params)
+
+                time.sleep(60)
+
+            except Exception:
+                log.error("Could not start jackd")
+                time.sleep(1)
+
+        except Exception:
+            time.sleep(1)
+
         time.sleep(5)
 
     except Exception:
@@ -127,13 +143,6 @@ def run_loop():
         # params = ['aplay', '-D', f'plughw:{asound_info.idCard}', wav_file]
         # result = subprocess.run(params)
         time.sleep(1)
-
-
-# logging.basicConfig(
-#     filename='/home/admin/PhoneTap20/main.log',
-#     level=logging.INFO,
-#     format='%(asctime)s - %(process)d - %(levelname)s - %(module)s - %(message)s'
-# )
 
 
 def arg_startup():
@@ -152,18 +161,14 @@ def main():
 
     log.info("Application started. Parsing command-line arguments ...")
     parser = argparse.ArgumentParser(description="PhoneTap20 Main Script")
-    parser.add_argument(
-        '--startup', '-s',
-        action='store_true',
-        help='PhoneTap20 startup loop'
-    )
+    parser.add_argument("--startup", "-s", action="store_true", help="PhoneTap20 startup loop")
     args = parser.parse_args()
 
     if args.startup:
         arg_startup()
         sys.exit(0)
 
-    log.info("Nothing to do. Exiting ...")
+    log.info("Use '-h' or '--help' to see the help text.")
     sys.exit(1)
 
 
