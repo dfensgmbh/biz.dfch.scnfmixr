@@ -56,7 +56,7 @@ class MainTest(unittest.TestCase):
             MagicMock(__enter__=lambda s: MagicMock(readline=lambda: expected_idProduct)),
         ]
         # Act
-        result = Usb().get_usbid("arbitrary-usb-id")
+        result = Usb.get_usbid("arbitrary-usb-id")
 
         # Assert
         self.assertEqual(result, f"{expected_idVendor}:{expected_idProduct}")
