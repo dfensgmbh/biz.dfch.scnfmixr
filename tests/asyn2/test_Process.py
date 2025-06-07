@@ -22,7 +22,7 @@
 
 import unittest
 
-from asyn import Process
+from asyn2 import Process
 
 
 class TestProcess(unittest.TestCase):
