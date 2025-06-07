@@ -41,7 +41,7 @@ class Process:
     _STDERR = "stderr"
 
     def __init__(self, popen: subprocess.Popen, encoding: str) -> None:
-        """Initialise a `Process` instance. Use `start` to initialise this class. Should not be called directly.
+        """Initialise a process instance. Use `start()` to initialise this class.
         Args:
             process (subprocess.Popen): An instance of `Popen`.
             encoding (str): The charset to used for the process started.
@@ -56,6 +56,13 @@ class Process:
         self._encoding = encoding or locale.getpreferredencoding(False)
 
         self._output_queue: Deque[Tuple[str, str]] = deque()
+
+        # self._stdout_thread = threading.Thread(target=self.read_stream, args=(self._popen.stdout, self._STDOUT))
+        # self._stderr_thread = threading.Thread(target=self.read_stream, args=(self._popen.stderr, self._STDERR))
+        # print(f"Starting thread '{self._STDOUT}' ...")
+        # self._stdout_thread.start()
+        # print(f"Starting thread '{self._STDERR}' ...")
+        # self._stderr_thread.start()
 
     @property
     def is_running(self) -> bool:
