@@ -22,7 +22,7 @@
 
 from collections import deque
 from threading import Lock
-from typing import Deque, Generic, TypeVar
+from typing import Callable, Deque, Generic, Sequence, TypeVar
 
 __all__ = [
     "CircularQueue",
@@ -95,3 +95,19 @@ class CircularQueue(Generic[T]):
                 return None
 
             return self._queue.popleft()
+
+    def dequeue_filter(self, predicate: Callable[[T], bool]) -> Sequence[T]:
+
+        result = []
+        with self._lock:
+            for i in range(len(self._queue) - 1, -1, -1):
+
+                candidate = self._queue[i]
+                if not predicate(candidate):
+                    continue
+
+                result.append(candidate)
+                del self._queue[i]
+
+        result.reverse()
+        return result

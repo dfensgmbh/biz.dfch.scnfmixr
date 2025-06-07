@@ -75,16 +75,58 @@ class TestCircularQueue(unittest.TestCase):
 
         self.assertFalse(sut.has_items)
 
-    def test_has_items_succeeds2(self):
+    def test_dequeue_filter_with_match_all_succeeds(self):
 
         expected_key = "arbitrary-key"
         expected_value = "arbitrary-value"
 
         sut = CircularQueue[Tuple[str, str]]()
 
+        expected_count = 3
+        for _ in range(expected_count):
+            sut.enqueue((expected_key, expected_value))
+
+        result = sut.dequeue_filter(lambda e: True)
+
+        self.assertEqual(expected_count, len(result))
+        self.assertFalse(sut.has_items)
+
+    def test_dequeue_filter_with_match_nothing_succeeds(self):
+
+        expected_key = "arbitrary-key"
+        expected_value = "arbitrary-value"
+
+        sut = CircularQueue[Tuple[str, str]]()
+
+        expected_count = 3
+        for _ in range(expected_count):
+            sut.enqueue((expected_key, expected_value))
+
+        self.assertEqual(expected_count, len(sut))
+
+        result = sut.dequeue_filter(lambda e: False)
+
+        self.assertEqual(expected_count, len(sut))
+
+        self.assertEqual(0, len(result))
+
+    def test_dequeue_filter_with_match_succeeds(self):
+
+        expected_key = "expected-key"
+        expected_value = "expected-value"
+
+        sut = CircularQueue[Tuple[str, str]]()
+
+        expected_count = 3
+        for _ in range(expected_count):
+            sut.enqueue(("arbitrary-key", "arbitrary-value"))
+
         sut.enqueue((expected_key, expected_value))
 
-        key, value = sut.dequeue()
+        result = sut.dequeue_filter(lambda e: e[0] == expected_key)
 
-        self.assertEqual(expected_key, key)
-        self.assertEqual(expected_value, value)
+        self.assertEqual(expected_count, len(sut))
+
+        self.assertEqual(1, len(result))
+        self.assertEqual(expected_key, result[0][0])
+        self.assertEqual(expected_value, result[0][1])
