@@ -21,30 +21,33 @@
 # SOFTWARE.
 
 import unittest
+from unittest.mock import mock_open, patch
 
-from MyPackage import MyModule, MyOtherModule
+from env_embedded import Usb
 
 
-class TestMyModule(unittest.TestCase):
+class TestUsb(unittest.TestCase):
 
-    def test_doit_returns_same_string(self):
-        # Arrange
-        expected = "arbitrary-text"
-        sut = MyModule()
+    # Arrange
+    @patch("os.path.isfile", return_value=True)
+    @patch("builtins.open", new_callable=mock_open, read_data="This is a mock file content")
+    def test_get_usbid_returns_usbid(self, mock_builtins_open, mock_os_path_isfile):
 
-        # Act
-        result = sut.doit(expected)
-
-        # Assert
-        self.assertEqual(result, expected)
-
-    def test_doit_returns_static_string(self):
-        # Arrange
-        expected = "Schnittenfittich"
-        sut = MyOtherModule()
+        expected_idVendor = "1234"
+        expected_idProduct = "ABCD"
+        mock_builtins_open.side_effect = [
+            mock_open(read_data=expected_idVendor).return_value,
+            mock_open(read_data=expected_idProduct).return_value,
+        ]
 
         # Act
-        result = sut.doit(expected)
+        result = Usb.get_usbid("arbitrary-usb-id")
 
         # Assert
-        self.assertEqual(result, expected)
+        self.assertEqual(result, f"{expected_idVendor}:{expected_idProduct}")
+        self.assertEqual(mock_os_path_isfile.call_count, 2)
+        self.assertEqual(mock_builtins_open.call_count, 2)
+
+    def test_get_usbid_with_empty_id_throws(self):
+        with self.assertRaises(AssertionError):
+            Usb.get_usbid(None)

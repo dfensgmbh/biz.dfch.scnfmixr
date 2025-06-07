@@ -24,7 +24,7 @@ import importlib
 import os
 import unittest
 
-from Text import TextUtils
+from text import TextUtils
 
 
 class TextUtilsTest(unittest.TestCase):

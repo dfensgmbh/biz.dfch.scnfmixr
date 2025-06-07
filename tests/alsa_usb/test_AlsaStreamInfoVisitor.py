@@ -23,10 +23,10 @@
 from typing import Callable
 import unittest
 
-from AlsaUsb import AlsaStreamInfoVisitor, AlsaStreamInfoVisitorState
+from alsa_usb import AlsaStreamInfoVisitor, AlsaStreamInfoVisitorState
 from log import log
-from Text.MultiLineTextParser import MultiLineTextParser
-from Text.MultiLineTextParserContext import MultiLineTextParserContext
+from text.MultiLineTextParser import MultiLineTextParser
+from text.MultiLineTextParserContext import MultiLineTextParserContext
 
 
 class TestAlsaStreamInfoVisitor(unittest.TestCase):

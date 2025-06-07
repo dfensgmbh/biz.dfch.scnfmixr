@@ -23,7 +23,7 @@
 from typing import Callable
 import unittest
 
-from Text import MultiLineTextParser, MultiLineTextParserContext
+from text import MultiLineTextParser, MultiLineTextParserContext
 from log import log
 
 

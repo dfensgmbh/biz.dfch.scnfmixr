@@ -22,7 +22,7 @@
 
 import os
 
-from Text import TextUtils
+from text import TextUtils
 
 from .UsbDeviceInfo import UsbDeviceInfo
 

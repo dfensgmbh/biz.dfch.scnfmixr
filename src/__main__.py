@@ -28,8 +28,8 @@ import subprocess
 import sys
 import time
 
+from env_embedded import Asound, Usb
 from log import log
-from Text import TextUtils
 from Version import Version
 
 

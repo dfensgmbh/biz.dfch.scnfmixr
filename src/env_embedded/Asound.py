@@ -26,7 +26,7 @@ import re
 
 from .AsoundCardInfo import AsoundCardInfo
 from .UsbDeviceInfo import UsbDeviceInfo
-from Text import TextUtils
+from text import TextUtils
 from log import log
 
 __all__ = ["Asound"]

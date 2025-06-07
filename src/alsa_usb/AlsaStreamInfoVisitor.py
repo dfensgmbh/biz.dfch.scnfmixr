@@ -23,7 +23,7 @@
 from .AlsaStreamInfoVisitorState import AlsaStreamInfoVisitorState
 from .AlsaStreamInterfaceInfo import AlsaStreamInterfaceInfo
 from log import log
-from Text import MultiLineTextParserContext
+from text import MultiLineTextParserContext
 
 __all__ = ["AlsaStreamInfoVisitor"]
 
