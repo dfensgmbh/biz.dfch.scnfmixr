@@ -41,7 +41,7 @@ class TestProcess(unittest.TestCase):
 
         args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
 
-        sut = Process.start(args, True)
+        sut = Process.start(args, wait_on_completion=True)
 
         self.assertIsNotNone(sut)
         self.assertFalse(sut.is_running)
@@ -55,7 +55,7 @@ class TestProcess(unittest.TestCase):
             "Start-Sleep 1",
         ]
 
-        sut = Process.start(args, False)
+        sut = Process.start(args, wait_on_completion=False)
 
         self.assertIsNotNone(sut)
         self.assertTrue(sut.is_running)
@@ -70,7 +70,7 @@ class TestProcess(unittest.TestCase):
             f"exit {expected}",
         ]
 
-        sut = Process.start(args, True)
+        sut = Process.start(args, wait_on_completion=True)
 
         self.assertIsNotNone(sut)
         self.assertFalse(sut.is_running)
@@ -81,14 +81,122 @@ class TestProcess(unittest.TestCase):
     def test_start_sync_with_reading_from_stdout_succeeds(self):
         """This test is **OS/platform specific**"""
 
-        args = [
-            "C:\\Windows\\system32\\ping.exe",
-            "-n",
-            "5",
-            "www.google.com",
-        ]
+        args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
 
-        sut = Process.start(args, wait_on_completion=True, redirect_stdout=True, redirect_stderr=True)
+        sut = Process.start(args, wait_on_completion=True, capture_stdout=True, capture_stderr=True)
 
         self.assertIsNotNone(sut)
         self.assertFalse(sut.is_running)
+
+    def test_reading_from_stdout_succeeds(self):
+        """This test is **OS/platform specific**"""
+
+        args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
+
+        sut = Process.start(args, wait_on_completion=True, capture_stdout=True, capture_stderr=True)
+
+        self.assertIsNotNone(sut)
+        self.assertFalse(sut.is_running)
+
+        result = sut.stdout
+        self.assertTrue(0 < len(result))
+
+        result = sut.stdout
+        self.assertEqual(0, len(result))
+
+    def test_reading_from_stderr_succeeds(self):
+        """This test is **OS/platform specific**"""
+
+        args = [
+            "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "-Command",
+            "Write-Error 'arbitrary-message'",
+        ]
+
+        sut = Process.start(args, wait_on_completion=True, capture_stdout=True, capture_stderr=True)
+
+        self.assertIsNotNone(sut)
+        self.assertFalse(sut.is_running)
+
+        result = sut.stderr
+        self.assertTrue(0 < len(result))
+
+        result = sut.stderr
+        self.assertEqual(0, len(result))
+
+    def test_reading_from_stderr_without_capture_returns_empty(self):
+        """This test is **OS/platform specific**"""
+
+        args = [
+            "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "-Command",
+            "Write-Error 'arbitrary-error'; Write-Output 'arbitrary-message'",
+        ]
+
+        sut = Process.start(args, wait_on_completion=True, capture_stdout=True, capture_stderr=False)
+
+        self.assertIsNotNone(sut)
+        self.assertFalse(sut.is_running)
+
+        result = sut.stderr
+        self.assertEqual(0, len(result))
+
+        result = sut.stderr
+        self.assertEqual(0, len(result))
+
+    def test_reading_from_output_succeeds(self):
+        """This test is **OS/platform specific**"""
+
+        args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
+
+        sut = Process.start(args, wait_on_completion=True, capture_stdout=True, capture_stderr=True)
+
+        self.assertIsNotNone(sut)
+        self.assertFalse(sut.is_running)
+
+        result = sut.output
+        self.assertTrue(0 < len(result))
+
+        result = sut.output
+        self.assertEqual(0, len(result))
+        self.assertEqual(0, len(sut.stdout))
+        self.assertEqual(0, len(sut.stderr))
+
+    def test_reading_from_output_without_capture_succeeds(self):
+        """This test is **OS/platform specific**"""
+
+        args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
+
+        sut = Process.start(args, wait_on_completion=True, capture_stdout=False, capture_stderr=False)
+
+        self.assertIsNotNone(sut)
+        self.assertFalse(sut.is_running)
+
+        result = sut.output
+        self.assertEqual(0, len(result))
+
+        self.assertEqual(0, len(sut.stdout))
+        self.assertEqual(0, len(sut.stderr))
+
+    def test_stop_succeeds(self):
+        """This test is **OS/platform specific**"""
+
+        args = [
+            "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "-Command",
+            "Start-Sleep 15",
+        ]
+
+        sut = Process.start(args, wait_on_completion=False)
+
+        self.assertIsNotNone(sut)
+        self.assertTrue(sut.is_running)
+
+        result = sut.stop(max_wait_time=1, force=True)
+
+        self.assertTrue(result)
+        self.assertFalse(sut.is_running)
+
+        # Process already stopped.
+        result = sut.stop(max_wait_time=1, force=True)
+        self.assertFalse(result)
