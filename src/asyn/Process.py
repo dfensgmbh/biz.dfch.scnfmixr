@@ -63,8 +63,13 @@ class Process:
         self._queue = CircularQueue[Tuple[str, str]](self._MAX_QUEUE_SIZE)
 
     @property
+    def pid(self) -> int:
+        """The PID of the process. """
+        return self._popen.pid
+
+    @property
     def is_running(self) -> bool:
-        """Returns `True` if the process is still running. Returns `False` if the process has stopped."""
+        """`True` if the process is still running. Returns `False` if the process has stopped."""
         return self._popen.poll() is None
 
     @property
