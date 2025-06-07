@@ -22,16 +22,17 @@
 
 from collections import deque
 from threading import Lock
-from typing import Any
-
-from log import log
+from typing import Deque, Generic, TypeVar
 
 __all__ = [
     "CircularQueue",
 ]
 
 
-class CircularQueue:
+T = TypeVar("T")
+
+
+class CircularQueue(Generic[T]):
     """A circular thread-safe, non-blocking queue that supports a size limit."""
 
     def __init__(self, max_size: int = -1):
@@ -44,7 +45,7 @@ class CircularQueue:
         assert -1 <= max_size
 
         self._lock = Lock()
-        self._queue = deque(maxlen=None if max_size == -1 else max_size)
+        self._queue: Deque[T] = deque(maxlen=None if max_size == -1 else max_size)
 
     def __len__(self) -> int:
         """Returns the number of items in the queue.
@@ -67,11 +68,11 @@ class CircularQueue:
         with self._lock:
             return bool(self._queue)
 
-    def enqueue(self, item: Any) -> int:
+    def enqueue(self, item: T) -> int:
         """Enqueue `item` as the newest element on the queue. If current queue length equals
             `max_size` the oldest item is overwritten by this operation.
         Args:
-            item (Any): The `item` to enqueue. Must not be `None`.
+            item (T): The `item` to enqueue. Must not be `None`.
         Returns:
             int: The length of the queue after enqueuing `item`.
         """
@@ -83,8 +84,11 @@ class CircularQueue:
 
             return len(self._queue)
 
-    def dequeue(self) -> Any:
-        """Returns the oldest items from the queue, or `None` if queue is empty."""
+    def dequeue(self) -> T | None:
+        """Returns the oldest items from the queue, or `None` if queue is empty.
+        Returns:
+            T: The dequeued item, if queue is not empty. Otherwise `None`.
+        """
 
         with self._lock:
             if not self._queue:

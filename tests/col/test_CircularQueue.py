@@ -21,6 +21,7 @@
 # SOFTWARE.
 
 import unittest
+from typing import Tuple
 
 from col import CircularQueue
 
@@ -62,15 +63,28 @@ class TestCircularQueue(unittest.TestCase):
 
     def test_has_items_succeeds(self):
 
-        sut = CircularQueue(3)
+        sut = CircularQueue()
 
-        # self.assertFalse(sut.has_items)
+        self.assertFalse(sut.has_items)
 
-        _ = sut.enqueue("arbitrary-item")
+        sut.enqueue("arbitrary-item")
 
         self.assertTrue(sut.has_items)
 
         _ = sut.dequeue()
-        print(f"len: {len(sut)}")
 
         self.assertFalse(sut.has_items)
+
+    def test_has_items_succeeds2(self):
+
+        expected_key = "arbitrary-key"
+        expected_value = "arbitrary-value"
+
+        sut = CircularQueue[Tuple[str, str]]()
+
+        sut.enqueue((expected_key, expected_value))
+
+        key, value = sut.dequeue()
+
+        self.assertEqual(expected_key, key)
+        self.assertEqual(expected_value, value)
