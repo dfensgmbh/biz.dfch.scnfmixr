@@ -26,6 +26,9 @@ import sys
 import time
 
 from env_embedded import Asound, Usb
+from jack_commands import JackConnection
+from jack_commands import ZitaBridgeAlsaToJack
+from jack_commands import ZitaBridgeJackToAlsa
 from log import log
 from Version import Version
 
@@ -48,89 +51,25 @@ def run_loop():
             _ = subprocess.run(params)
 
             try:
-                # /usr/bin/jackd -ddummy -r48000 -p1024
-                params = ["/usr/bin/jackd", "-ddummy", "-r48000", "-p1024"]
-                log.info(params)
-                _ = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                # _ = subprocess.run(params)
-                time.sleep(10)
-
-                # Jabra
-                params = [
-                    "/usr/bin/zita-a2j",
-                    "-j",
-                    "LCL_IN",
-                    "-d",
-                    f"hw:{asound_info_lcl.idCard},0",
-                    "-c",
-                    "1",
-                    "-r",
-                    "16000",
-                ]
-                log.info(params)
-                _ = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                params = [
-                    "/usr/bin/zita-j2a",
-                    "-j",
-                    "LCL_OUT",
-                    "-d",
-                    f"hw:{asound_info_lcl.idCard},0",
-                    "-c",
-                    "2",
-                    "-r",
-                    "48000",
-                ]
-                log.info(params)
-                _ = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                # JABRA
+                _ = ZitaBridgeAlsaToJack("LCL-I", f"hw:{asound_info_lcl.idCard},0", 1, 16000)
+                _ = ZitaBridgeJackToAlsa("LCL-O", f"hw:{asound_info_lcl.idCard},0", 2, 48000)
 
                 # MixPre-3
-                params = [
-                    "/usr/bin/zita-a2j",
-                    "-j",
-                    "REC_IN",
-                    "-d",
-                    f"hw:{asound_info_ex1.idCard},0",
-                    "-c",
-                    "2",
-                    "-r",
-                    "48000",
-                ]
-                log.info(params)
-                _ = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                params = [
-                    "/usr/bin/zita-j2a",
-                    "-j",
-                    "REC_OUT",
-                    "-d",
-                    f"hw:{asound_info_ex1.idCard},0",
-                    "-c",
-                    "2",
-                    "-r",
-                    "48000",
-                ]
-                log.info(params)
-                _ = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                _ = ZitaBridgeAlsaToJack("EX1-I", f"hw:{asound_info_ex1.idCard},0", 2, 48000)
+                _ = ZitaBridgeJackToAlsa("EX1-O", f"hw:{asound_info_ex1.idCard},0", 2, 48000)
 
                 time.sleep(10)
 
-                params = ["/usr/bin/jack_connect", "LCL_IN:capture_1", "REC_OUT:playback_1"]
-                log.info(params)
-                _ = subprocess.run(params)
-                params = ["/usr/bin/jack_connect", "LCL_IN:capture_1", "REC_OUT:playback_2"]
-                log.info(params)
-                _ = subprocess.run(params)
+                _ = JackConnection.Factory.create("LCL-I:capture_1", "EX1-O:playback_1")
+                _ = JackConnection.Factory.create("LCL-I:capture_1", "EX1-O:playback_2")
 
-                params = ["/usr/bin/jack_connect", "REC_IN:capture_1", "LCL_OUT:playback_1"]
-                log.info(params)
-                _ = subprocess.run(params)
-                params = ["/usr/bin/jack_connect", "REC_IN:capture_2", "LCL_OUT:playback_2"]
-                log.info(params)
-                _ = subprocess.run(params)
+                _ = JackConnection.Factory.create("EX1-I:capture_1", "LCL-O:playback_1")
+                _ = JackConnection.Factory.create("EX1-I:capture_2", "LCL-O:playback_2")
 
                 time.sleep(60)
 
             except Exception:
-                log.error("Could not start jackd")
                 time.sleep(1)
 
         except Exception:
