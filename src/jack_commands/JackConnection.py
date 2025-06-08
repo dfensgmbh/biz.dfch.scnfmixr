@@ -37,6 +37,7 @@ class JackConnection:
     class Factory:
         """Factory class for creating `JackConnection` instances."""
 
+        @staticmethod
         def create(source: str, sink: str) -> JackConnection | None:
             """Creates a `JackConnection` instance.
             Args:

@@ -21,13 +21,11 @@
 # SOFTWARE.
 
 from .JackConnection import JackConnection
-from .ZitaBridgeBase import ZitaBridgeBase
 from .ZitaBridgeAlsaToJack import ZitaBridgeAlsaToJack
 from .ZitaBridgeJackToAlsa import ZitaBridgeJackToAlsa
 
 __all__ = [
     "JackConnection",
-    "ZitaBridgeBase",
     "ZitaBridgeAlsaToJack",
-    "ZitaBridgeJackAlsa",
+    "ZitaBridgeJackToAlsa",
 ]

@@ -20,8 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import os
-
 from asyn import Process
 from log import log
 
@@ -69,3 +67,9 @@ class ZitaBridgeBase:
             f"Created JACK '{self._name}' for device '{self._device}' with PID [{self._process.pid}] "
             f"[channel_count: '{self._channel_count}', sampling_rate: '{self._sampling_rate}']."
         )
+
+    @property
+    def process(self) -> Process:
+        """Returns process information of the started process."""
+
+        return self._process
