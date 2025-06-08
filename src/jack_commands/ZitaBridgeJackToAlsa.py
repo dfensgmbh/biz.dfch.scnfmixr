@@ -28,7 +28,7 @@ from .ZitaBridgeBase import ZitaBridgeBase
 
 
 class ZitaBridgeJackToAlsa(ZitaBridgeBase):
-    """Creates a JACK client from an ALSA playback interface."""
+    """Creates a JACK client from an ALSA playback device."""
 
     _ZITA_J2A_FULLNAME = "/bin/zita-j2a"
 

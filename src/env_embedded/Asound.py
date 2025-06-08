@@ -23,7 +23,6 @@
 import os
 import re
 
-
 from .AsoundCardInfo import AsoundCardInfo
 from .UsbDeviceInfo import UsbDeviceInfo
 from text import TextUtils

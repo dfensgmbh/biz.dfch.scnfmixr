@@ -22,9 +22,8 @@
 
 import os
 
-from text import TextUtils
-
 from .UsbDeviceInfo import UsbDeviceInfo
+from text import TextUtils
 
 __all__ = ["Usb"]
 

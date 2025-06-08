@@ -26,9 +26,7 @@ import sys
 import time
 
 from env_embedded import Asound, Usb
-from jack_commands import JackConnection
-from jack_commands import ZitaBridgeAlsaToJack
-from jack_commands import ZitaBridgeJackToAlsa
+from jack_commands import JackConnection, ZitaBridgeAlsaToJack, ZitaBridgeJackToAlsa
 from log import log
 from Version import Version
 

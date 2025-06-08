@@ -29,7 +29,7 @@ __all__ = [
 
 
 class ZitaBridgeBase:
-    """Create a JACK client from an ALSA interface."""
+    """Create a JACK client from an ALSA device."""
 
     _JACK_CONNECT_FULLNAME = "/bin/jack_connect"
     _SAMPLING_BASERATE = 16000
