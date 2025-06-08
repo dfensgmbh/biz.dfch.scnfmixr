@@ -64,7 +64,7 @@ class Process:
 
     @property
     def pid(self) -> int:
-        """The PID of the process. """
+        """The PID of the process."""
         return self._popen.pid
 
     @property
@@ -178,7 +178,7 @@ class Process:
 
         log.debug(f"Started process '{args[0]}' [{result.pid}].")
 
-        process = Process(result, encoding)
+        process = cls(result, encoding)
 
         if capture_stdout:
             process._stdout_thread = threading.Thread(
