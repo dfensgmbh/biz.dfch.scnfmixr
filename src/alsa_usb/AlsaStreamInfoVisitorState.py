@@ -24,6 +24,13 @@ from enum import Enum
 
 
 class AlsaStreamInfoVisitorState(Enum):
+    """Describes the different states of the ALSA steram info visitor.
+    Attributes:
+        DEFAULT: The initial and default state of the visitor.
+        PLAYBACK: The state when the `Playback` section has been reached.
+        CAPTURE: The state when the `Capture` section has been reached.
+        INTERFACE: The state when an `Interface` section has been reached.
+    """
     DEFAULT = 0
     PLAYBACK = 1
     CAPTURE = 2

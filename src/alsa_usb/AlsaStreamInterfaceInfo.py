@@ -30,6 +30,7 @@ __all__ = ["AlsaStreamInterfaceInfo"]
 
 @dataclass
 class AlsaStreamInterfaceInfo:
+    """Contains information about an ALSA stream interface."""
     state: AlsaStreamInfoVisitorState = AlsaStreamInfoVisitorState.DEFAULT
     format: str = None
     channel_count: int = 0
@@ -38,6 +39,10 @@ class AlsaStreamInterfaceInfo:
     rates: list[int] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
+        """Converts ALSA stream information into a dictionary.
+        Returns:
+            Dict (str, Any): A key-value map containining the ALSA stream information.
+        """
         return {
             "state": self.state,
             "format": self.format,

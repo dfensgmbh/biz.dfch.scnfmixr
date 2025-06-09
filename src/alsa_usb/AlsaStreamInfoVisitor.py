@@ -20,10 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from .AlsaStreamInfoVisitorState import AlsaStreamInfoVisitorState
-from .AlsaStreamInterfaceInfo import AlsaStreamInterfaceInfo
+"""Module implementing an `MultiLineTextParserContext` ALSA stream info visitor."""
+
 from log import log
 from text import MultiLineTextParserContext
+from .AlsaStreamInfoVisitorState import AlsaStreamInfoVisitorState
+from .AlsaStreamInterfaceInfo import AlsaStreamInterfaceInfo
 
 __all__ = ["AlsaStreamInfoVisitor"]
 
@@ -43,23 +45,42 @@ class AlsaStreamInfoVisitor:
         self._current_interface = None
 
     def get_interfaces(self) -> list[AlsaStreamInterfaceInfo]:
+        """Returns all detected interfaces."""
         return self._playback_interfaces + self._capture_interfaces
 
     def get_playback_interfaces(self) -> list[AlsaStreamInterfaceInfo]:
+        """Returns all detected playback interfaces."""
         return self._playback_interfaces
 
     def get_capture_interfaces(self) -> list[AlsaStreamInterfaceInfo]:
+        """Returns all detected capture interfaces."""
         return self._capture_interfaces
 
     def process_playback(self, ctx: MultiLineTextParserContext) -> None:
-        log.info(f"#{ctx.line} [{ctx.level_previous}>{ctx.level}] {ctx.keyword} Processing playback interfaces ...")
+        """Callback processing `Playback` section.
+        Args:
+            ctx (MultiLineTextParserContext): The parser context.
+        """
+        log.info(
+            "#%s [%s>%s] %s Processing playback interfaces ...", ctx.line, ctx.level_previous, ctx.level, ctx.keyword
+        )
         self._current_interfaces = self._playback_interfaces
 
     def process_capture(self, ctx: MultiLineTextParserContext) -> None:
-        log.info(f"#{ctx.line} [{ctx.level_previous}>{ctx.level}] {ctx.keyword} Processing capture interfaces ...")
+        """Callback processing `Capture` section.
+        Args:
+            ctx (MultiLineTextParserContext): The parser context.
+        """
+        log.info(
+            "#%s [%s>%s] %s Processing capture interfaces ...", ctx.line, ctx.level_previous, ctx.level, ctx.keyword
+        )
         self._current_interfaces = self._capture_interfaces
 
     def process_interface(self, ctx: MultiLineTextParserContext) -> None:
+        """Callback processing `Interface` section.
+        Args:
+            ctx (MultiLineTextParserContext): The parser context.
+        """
         if ctx.level_previous < ctx.level:
             return
 
@@ -70,38 +91,91 @@ class AlsaStreamInfoVisitor:
             else AlsaStreamInfoVisitorState.CAPTURE
         )
         self._current_interfaces.append(self._current_interface)
-        log.info(f"#{ctx.line} [{ctx.level_previous}>{ctx.level}] {ctx.keyword}Creating interface ...")
+        log.info("#%s [%s>%s] %s Prcessing interface ...", ctx.line, ctx.level_previous, ctx.level, ctx.keyword)
 
     def process_format(self, ctx: MultiLineTextParserContext) -> None:
+        """Callback processing `Format` entry.
+        Args:
+            ctx (MultiLineTextParserContext): The parser context.
+        """
         result = ctx.text[len(ctx.keyword) :].strip()
         self._current_interface.format = result
-        log.info(f"#{ctx.line} [{ctx.level_previous}>{ctx.level}] {ctx.keyword} '{self._current_interface.format}'")
+        log.info(
+            "#%s [%s>%s] %s '%s'",
+            ctx.line,
+            ctx.level_previous,
+            ctx.level,
+            ctx.keyword,
+            self._current_interface.format,
+        )
 
     def process_channels(self, ctx: MultiLineTextParserContext) -> None:
+        """Callback processing `Channels` entry.
+        Args:
+            ctx (MultiLineTextParserContext): The parser context.
+        """
         result = ctx.text[len(ctx.keyword) :].strip()
         self._current_interface.channel_count = int(result)
         log.info(
-            f"#{ctx.line} [{ctx.level_previous}>{ctx.level}] {ctx.keyword} '{self._current_interface.channel_count}'"
+            "#%s [%s>%s] %s '%s'",
+            ctx.line,
+            ctx.level_previous,
+            ctx.level,
+            ctx.keyword,
+            self._current_interface.channel_count,
         )
 
     def process_rates(self, ctx: MultiLineTextParserContext) -> None:
+        """Callback processing `Rates` entry.
+        Args:
+            ctx (MultiLineTextParserContext): The parser context.
+        """
         result = ctx.text[len(ctx.keyword) :].strip()
         try:
             self._current_interface.rates = [int(rate.strip()) for rate in result.split(",")]
-        except Exception:
-            DELIMITER = "-"
-            if DELIMITER in result:
-                self._current_interface.rates = [int(result.split(DELIMITER)[0].strip())]
+        except Exception:  # pylint: disable=broad-exception-caught
+            _DELIMITER = "-"
+            if _DELIMITER in result:
+                self._current_interface.rates = [int(result.split(_DELIMITER)[0].strip())]
             else:
                 raise
-        log.info(f"#{ctx.line} [{ctx.level_previous}>{ctx.level}] {ctx.keyword} '{self._current_interface.rates}'")
+        log.info(
+            "#%s [%s>%s] %s '%s'",
+            ctx.line,
+            ctx.level_previous,
+            ctx.level,
+            ctx.keyword,
+            self._current_interface.rates,
+        )
 
     def process_bits(self, ctx: MultiLineTextParserContext) -> None:
+        """Callback processing `Bits` entry.
+        Args:
+            ctx (MultiLineTextParserContext): The parser context.
+        """
         result = ctx.text[len(ctx.keyword) :].strip()
         self._current_interface.bit_depth = int(result)
-        log.info(f"#{ctx.line} [{ctx.level_previous}>{ctx.level}] {ctx.keyword} '{self._current_interface.bit_depth}'")
+        log.info(
+            "#%s [%s>%s] %s '%s'",
+            ctx.line,
+            ctx.level_previous,
+            ctx.level,
+            ctx.keyword,
+            self._current_interface.bit_depth,
+        )
 
     def process_map(self, ctx: MultiLineTextParserContext) -> None:
+        """Callback processing `Map` entry.
+        Args:
+            ctx (MultiLineTextParserContext): The parser context.
+        """
         result = ctx.text[len(ctx.keyword) :].strip()
         self._current_interface.map = [rate.strip() for rate in result.split(" ")]
-        log.info(f"#{ctx.line} [{ctx.level_previous}>{ctx.level}] {ctx.keyword} '{self._current_interface.map}'")
+        log.info(
+            "#%s [%s>%s] %s '%s'",
+            ctx.line,
+            ctx.level_previous,
+            ctx.level,
+            ctx.keyword,
+            self._current_interface.map,
+        )

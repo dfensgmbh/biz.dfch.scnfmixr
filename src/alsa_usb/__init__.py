@@ -23,9 +23,11 @@
 from .AlsaStreamInfoVisitor import AlsaStreamInfoVisitor
 from .AlsaStreamInfoVisitorState import AlsaStreamInfoVisitorState
 from .AlsaStreamInterfaceInfo import AlsaStreamInterfaceInfo
+from .AlsaStreamInfoParser import AlsaStreamInfoParser
 
 __all__ = [
     "AlsaStreamInfoVisitor",
     "AlsaStreamInfoVisitorState",
     "AlsaStreamInterfaceInfo",
+    "AlsaStreamInfoParser",
 ]
