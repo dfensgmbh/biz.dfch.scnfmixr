@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Module for starting and managing processes."""
+
 from __future__ import annotations
 import locale
 import os
@@ -158,13 +160,14 @@ class Process:
         """
 
         assert cmd is not None and 0 < len(cmd)
-        args = tuple(cmd)
+        args = [str(arg) for arg in cmd]
 
         cwd = cwd or os.getcwd()
         assert os.path.exists(cwd)
 
         encoding = encoding or locale.getpreferredencoding(False)
 
+        # pylint: disable=consider-using-with
         result = subprocess.Popen(
             args=args,
             cwd=cwd,
@@ -176,22 +179,22 @@ class Process:
             **kwargs,
         )
 
-        log.debug(f"Started process '{args[0]}' [{result.pid}].")
+        log.debug("Started process '%s' [%s].", args[0], result.pid)
 
         process = cls(result, encoding)
 
         if capture_stdout:
             process._stdout_thread = threading.Thread(
-                target=process.__read_stream, args=(process._popen.stdout, process._STDOUT)
+                target=process._read_stream, args=(process._popen.stdout, process._STDOUT)
             )
-            log.debug(f"Starting reading from pipe '{process._STDOUT}' [{result.pid}] ...")
+            log.debug("Starting reading from pipe '%s' [%s] ...", process._STDOUT, result.pid)
             process._stdout_thread.start()
 
         if capture_stderr:
             process._stderr_thread = threading.Thread(
-                target=process.__read_stream, args=(process._popen.stderr, process._STDERR)
+                target=process._read_stream, args=(process._popen.stderr, process._STDERR)
             )
-            log.debug(f"Starting reading from pipe '{process._STDERR}' [{result.pid}] ...")
+            log.debug("Starting reading from pipe '%s' [%s] ...", process._STDERR, result.pid)
             process._stderr_thread.start()
 
         if not wait_on_completion:
@@ -202,7 +205,7 @@ class Process:
 
         return process
 
-    def __read_stream(self, stream: IO[str], name: str) -> None:
+    def _read_stream(self, stream: IO[str], name: str) -> None:
         """Reads data from a specified pipe.
         Args:
             pipe (IO[str]): The pipe to read from.
@@ -220,8 +223,8 @@ class Process:
                 value = line.rstrip(os.linesep)
                 self._queue.enqueue((name, value))
 
-        except Exception as ex:
-            log.warning(f"Error reading from stream '{name}' [{self._popen.pid}]. {ex}")
+        except Exception as ex:  # pylint: disable=broad-exception-caught
+            log.warning("Error reading from stream '%s' [%s]. %s", name, self._popen.pid, ex)
 
     @property
     def stdout(self) -> Sequence[str]:
