@@ -22,12 +22,14 @@
 
 from .Asound import Asound
 from .AsoundCardInfo import AsoundCardInfo
+from .Playback import Playback
 from .Usb import Usb
 from .UsbDeviceInfo import UsbDeviceInfo
 
 __all__ = [
     "Asound",
     "AsoundCardInfo",
+    "Playback",
     "Usb",
     "UsbDeviceInfo",
 ]
