@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Contains information about an ALSA USB device."""
+
 from dataclasses import dataclass
 
 from .UsbDeviceInfo import UsbDeviceInfo
