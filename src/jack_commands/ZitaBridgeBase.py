@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import time
+
 from asyn import Process
 from log import log
 
@@ -53,8 +55,11 @@ class ZitaBridgeBase:
         args = [self._cmd, "-j", self._name, "-d", self._device, "-c", self._channel_count, "-r", self._sampling_rate]
 
         log.debug(
-            f"Creating JACK client '{self._name}' for device '{self._device}' "
-            f"[channel_count: '{self._channel_count}', sampling_rate: '{self._sampling_rate}'] ..."
+            "Creating JACK client '%s' for device '%s' [channel_count: '%s', sampling_rate: '%s'] ...",
+            self._name,
+            self._device,
+            self._channel_count,
+            self._sampling_rate
         )
 
         self._process = Process.start(args, wait_on_completion=False, capture_stdout=False, capture_stderr=True)
@@ -64,9 +69,16 @@ class ZitaBridgeBase:
         assert 0 == len(stderr)
 
         log.info(
-            f"Created JACK '{self._name}' for device '{self._device}' with PID [{self._process.pid}] "
-            f"[channel_count: '{self._channel_count}', sampling_rate: '{self._sampling_rate}']."
+            "Created JACK '%s' for device '%s' with PID [%s] [channel_count: '%s', sampling_rate: '%s'].",
+            self._name,
+            self._device,
+            self._process.pid,
+            self._channel_count,
+            self._sampling_rate
         )
+
+        # DFTODO - fix timing and the remove this
+        time.sleep(3)
 
     @property
     def process(self) -> Process:

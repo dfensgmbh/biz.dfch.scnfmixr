@@ -20,8 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Module for handling JACK commands."""
+
 from __future__ import annotations
 import os
+import time
 
 from asyn import Process
 from log import log
@@ -68,16 +71,17 @@ class JackConnection:
 
         args = [self._JACK_CONNECT_FULLNAME, self._source, self._sink]
 
-        log.debug(f"Connecting '{source}' to '{sink}' ...")
+        log.debug("Connecting '%s' to '%s' ...", source, sink)
 
-        self._process = Process.start(args, wait_on_completion=True, capture_stdout=True, capture_stderr=True)
-        # self._process = Process.Factory.create(args, wait_on_completion=True, capture_stdout=True, capture_stderr=True)
+        self._process = Process.start(args, wait_on_completion=False, capture_stdout=True, capture_stderr=True)
 
         stderr = self._process.stderr
         if 0 == len(stderr):
 
             self._is_active = True
-            log.info(f"Connecting '{source}' to '{sink}' completed.")
+            time.sleep(1)
+
+            log.info("Connecting '%s' to '%s' completed.", source, sink)
 
             return
 
