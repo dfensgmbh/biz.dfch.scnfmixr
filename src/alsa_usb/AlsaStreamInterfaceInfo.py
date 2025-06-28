@@ -31,6 +31,7 @@ __all__ = ["AlsaStreamInterfaceInfo"]
 @dataclass
 class AlsaStreamInterfaceInfo:
     """Contains information about an ALSA stream interface."""
+
     state: AlsaStreamInfoVisitorState = AlsaStreamInfoVisitorState.DEFAULT
     format: str = None
     channel_count: int = 0

@@ -22,13 +22,14 @@
 
 """Implements a `MultiLineTextParser` for parsing ALSA stream information."""
 
+from text import MultiLineTextParser, TextUtils
 from .AlsaStreamInfoVisitor import AlsaStreamInfoVisitor
 from .AlsaStreamInterfaceInfo import AlsaStreamInterfaceInfo
-from text import MultiLineTextParser, TextUtils
 
 
 class AlsaStreamInfoParser(MultiLineTextParser):
-    """Implements a `MultiLineTextParser` for parsing ALSA stream information."""
+    """Implements a `MultiLineTextParser` for parsing ALSA stream information.
+    """
 
     def __init__(self, id_card: int):
 
@@ -62,7 +63,8 @@ class AlsaStreamInfoParser(MultiLineTextParser):
             for interface in self.visitor.get_capture_interfaces()
             if interface.bit_depth != 0
             and 1 <= interface.channel_count <= 2
-            and any(rate % 16000 == 0 or rate == 44100 for rate in interface.rates)
+            and any(rate % 16000 == 0 or rate == 44100 for rate in
+                    interface.rates)
         ]
 
         result = next(
@@ -88,7 +90,8 @@ class AlsaStreamInfoParser(MultiLineTextParser):
             for interface in self.visitor.get_playback_interfaces()
             if interface.bit_depth != 0
             and 1 <= interface.channel_count <= 2
-            and any(rate % 16000 == 0 or rate == 44100 for rate in interface.rates)
+            and any(rate % 16000 == 0 or rate == 44100 for rate in
+                    interface.rates)
         ]
 
         result = next(
@@ -105,7 +108,7 @@ class AlsaStreamInfoParser(MultiLineTextParser):
             None
         )
         return result
-    
+
     def best_rate(self, rates: list[int]) -> int:
         """Returns the best sampling rate from a list of sampling rates."""
         return max((r for r in rates if r <= 48000), default=0)
