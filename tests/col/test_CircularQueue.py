@@ -27,8 +27,10 @@ from col import CircularQueue
 
 
 class TestCircularQueue(unittest.TestCase):
+    """Testing `CircularQueue` class."""
 
     def test_empty_queue_returns_none(self):
+        """Dequeuing on an empty queue must return None."""
 
         sut = CircularQueue()
 
@@ -37,6 +39,7 @@ class TestCircularQueue(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_enqueue_none_throws(self):
+        """Enqueuing `None` is not supported."""
 
         sut = CircularQueue()
 
@@ -44,6 +47,7 @@ class TestCircularQueue(unittest.TestCase):
             sut.enqueue(None)
 
     def test_enqueing_more_items_than_max_size_removes_oldest_item(self):
+        """Enqueuing more items than the maximum size configured will overwrite older items."""
 
         expected_item = "item2"
         expected_size = 3
@@ -62,6 +66,7 @@ class TestCircularQueue(unittest.TestCase):
         self.assertEqual(expected_item, result)
 
     def test_has_items_succeeds(self):
+        """has_items returns true on non-empty queue."""
 
         sut = CircularQueue()
 
@@ -76,6 +81,7 @@ class TestCircularQueue(unittest.TestCase):
         self.assertFalse(sut.has_items)
 
     def test_dequeue_filter_with_match_all_succeeds(self):
+        """Lambda on dequeuing will only return selected items."""
 
         expected_key = "arbitrary-key"
         expected_value = "arbitrary-value"
@@ -92,6 +98,7 @@ class TestCircularQueue(unittest.TestCase):
         self.assertFalse(sut.has_items)
 
     def test_dequeue_filter_with_match_nothing_succeeds(self):
+        """Lambda on dequeuing will only return selected items."""
 
         expected_key = "arbitrary-key"
         expected_value = "arbitrary-value"
@@ -111,6 +118,7 @@ class TestCircularQueue(unittest.TestCase):
         self.assertEqual(0, len(result))
 
     def test_dequeue_filter_with_match_succeeds(self):
+        """Lambda on dequeuing will only return selected items."""
 
         expected_key = "expected-key"
         expected_value = "expected-value"
