@@ -82,6 +82,7 @@ Capture:
         }
 
         def increment_call_count(ctx: MultiLineTextParserContext, key: str):
+            _ = ctx
             counters[key] += 1
 
         map = {
