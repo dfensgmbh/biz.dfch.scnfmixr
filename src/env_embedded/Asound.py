@@ -153,10 +153,8 @@ class Asound:
                 if busnum != info.busnum:
                     continue
 
-                log.debug("still here 1 ...")
                 # Test if specified devnum matches current card.
                 devnum = int(match.group(_USBBUS_PATTERN_DEVNUM_IDX))
-                log.debug("still here 2 ...")
                 log.debug("Card candidate '%s' has devnum: '%s'.", card_dir_basename, devnum)
                 if devnum != info.devnum:
                     continue
