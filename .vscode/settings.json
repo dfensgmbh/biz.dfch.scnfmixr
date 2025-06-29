@@ -1,7 +1,8 @@
   {
+    "python.defaultInterpreterPath": "C:\\Program Files\\Python311\\python.exe",
     "[python]": {
-    "editor.defaultFormatter": "ms-python.autopep8",
-  },
+      "editor.defaultFormatter": "ms-python.autopep8",
+    },
   "editor.formatOnSave": true,
   "autopep8.args": ["--max-line-length=80"],
   "python.analysis.autoFormatStrings": true,
