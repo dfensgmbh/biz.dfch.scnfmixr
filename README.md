@@ -70,8 +70,12 @@ admin@raspberrypi:~ $ pwd
 /home/admin
 admin@raspberrypi:~ $ cd ~/PhoneTap20
 admin@raspberrypi:~ $ python -m unittest discover
-admin@raspberrypi:~ $ python -m unittest discover -s tests .
-admin@raspberrypi:~ $ python -m unittest discover -v -s <package-path> .
+admin@raspberrypi:~ $ python -m unittest discover -s tests -t . -p test_*.py
+admin@raspberrypi:~ $ python -m unittest discover -v -s <package-path> -t . -p test_*.py
+# Example: Test single package.
+admin@raspberrypi:~ $ python -m unittest discover -v -s tests/my_package -t . -p test_*.py
+# Example: Test single module.
+admin@raspberrypi:~ $ python -m unittest discover -v -s tests -t . -p test_MyModule.py
 ```
 
 # Hardware and Software Requirements
