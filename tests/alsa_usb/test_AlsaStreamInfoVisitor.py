@@ -31,7 +31,8 @@ from text.MultiLineTextParserContext import MultiLineTextParserContext
 
 class TestAlsaStreamInfoVisitor(unittest.TestCase):
 
-    def test_parsing_stream_data_atomos_continuous_returns_single_capture_interface(self):
+    def test_parsing_stream_data_atomos_returns_single_capture_interface(self):
+        """Atomos has a 'continuous' interface rate."""
 
         # Arrange
         text = """\
@@ -50,7 +51,7 @@ Capture:
 """.splitlines()
 
         alsa_stream_info = AlsaStreamInfoVisitor()
-        map = {
+        dic = {
             "Playback:": alsa_stream_info.process_playback,
             "Capture:": alsa_stream_info.process_capture,
             "Interface ": alsa_stream_info.process_interface,
@@ -61,10 +62,10 @@ Capture:
             "Channel map:": alsa_stream_info.process_map,
         }
 
-        parser = MultiLineTextParser(text, map)
+        parser = MultiLineTextParser(indent=" ", length=2, dic=dic)
 
         # Act
-        parser.Parse(text)
+        parser.parse(text)
 
         # Assert
         self.assertEqual(len(alsa_stream_info.get_playback_interfaces()), 0)
@@ -80,10 +81,12 @@ Capture:
             and interface.bit_depth == 0
             and 48000 in interface.rates
         ]
-        best_capture = sorted(filtered, key=lambda interface: interface.format)[0].to_dict()
+        best_capture = sorted(filtered, key=lambda interface: interface.format)[
+            0].to_dict()
         log.info(f"best_capture: {best_capture}")
 
-    def test_parsing_stream_data_atomos_continuous_returns_no_best_interface(self):
+    def test_parsing_stream_data_atomos_returns_no_best_interface(self):
+        """Atomos has a 'continuous' interface rate."""
 
         # Arrange
         text = """\
@@ -102,7 +105,7 @@ Capture:
 """.splitlines()
 
         alsa_stream_info = AlsaStreamInfoVisitor()
-        map = {
+        dic = {
             "Playback:": alsa_stream_info.process_playback,
             "Capture:": alsa_stream_info.process_capture,
             "Interface ": alsa_stream_info.process_interface,
@@ -113,10 +116,10 @@ Capture:
             "Channel map:": alsa_stream_info.process_map,
         }
 
-        parser = MultiLineTextParser(text, map)
+        parser = MultiLineTextParser(indent=" ", length=2, dic=dic)
 
         # Act
-        parser.Parse(text)
+        parser.parse(text)
 
         # Assert
         self.assertEqual(len(alsa_stream_info.get_playback_interfaces()), 0)
@@ -129,12 +132,13 @@ Capture:
             interface
             for interface in alsa_stream_info.get_interfaces()
             if interface.state == AlsaStreamInfoVisitorState.CAPTURE
-            and (interface.bit_depth == 16 or interface.bit_depth == 24)
+            and (interface.bit_depth in (16, 24))
             and 48000 in interface.rates
         ]
         self.assertEqual(filtered, [])
 
     def test_parsing_stream_data_ugreen_ktmicro_succeeds(self):
+        """Ugreen KTMicro interface card."""
 
         # Arrange
         text = """\
@@ -171,12 +175,17 @@ Capture:
     Channel map: MONO
 """.splitlines()
 
-        default: Callable[[MultiLineTextParserContext], None] = lambda ctx: log.debug(
-            f"[#{ctx.line}][{ctx.level_previous}>{ctx.level}] default: {ctx.text}"
-        )
+        def process_default(ctx: MultiLineTextParserContext) -> bool:
+            log.debug("[#%s][%s>%s] default: %s",
+                      ctx.line,
+                      ctx.level_previous,
+                      ctx.level,
+                      ctx.text)
+
+            return True
 
         alsa_stream_parser = AlsaStreamInfoVisitor()
-        map = {
+        dic = {
             "Playback:": alsa_stream_parser.process_playback,
             "Capture:": alsa_stream_parser.process_capture,
             "Interface ": alsa_stream_parser.process_interface,
@@ -187,10 +196,13 @@ Capture:
             "Channel map:": alsa_stream_parser.process_map,
         }
 
-        parser = MultiLineTextParser(text, map, default)
+        parser = MultiLineTextParser(indent=" ",
+                                     length=2,
+                                     dic=dic,
+                                     default=process_default)
 
         # Act
-        parser.Parse(text)
+        parser.parse(text)
 
         # Assert
         self.assertEqual(len(alsa_stream_parser.get_playback_interfaces()), 2)
@@ -206,20 +218,24 @@ Capture:
             and (interface.bit_depth == 16 or interface.bit_depth == 24)
             and 48000 in interface.rates
         ]
-        best_playback = sorted(filtered, key=lambda interface: interface.format)[0].to_dict()
-        log.info(f"best_playback: {best_playback}")
+        best_playback = sorted(
+            filtered,
+            key=lambda interface: interface.format)[0].to_dict()
+        log.info("best_playback: '%s'", best_playback)
 
         filtered = [
             interface
             for interface in alsa_stream_parser.get_interfaces()
             if interface.state == AlsaStreamInfoVisitorState.CAPTURE
-            and (interface.bit_depth == 16 or interface.bit_depth == 24)
+            and (interface.bit_depth in (16, 24))
             and 48000 in interface.rates
         ]
-        best_capture = sorted(filtered, key=lambda interface: interface.format)[0].to_dict()
-        log.info(f"best_capture: {best_capture}")
+        best_capture = sorted(filtered, key=lambda interface: interface.format)[
+            0].to_dict()
+        log.info("best_capture: '%s'", best_capture)
 
     def test_parsing_stream_data_sound_devices_succeeds(self):
+        """Sound Deivces MixPre-6 II."""
 
         # Arrange
         text = """\
@@ -286,7 +302,7 @@ Capture:
 """.splitlines()
 
         alsa_stream_parser = AlsaStreamInfoVisitor()
-        map = {
+        dic = {
             "Playback:": alsa_stream_parser.process_playback,
             "Capture:": alsa_stream_parser.process_capture,
             "Interface ": alsa_stream_parser.process_interface,
@@ -297,10 +313,10 @@ Capture:
             "Channel map:": alsa_stream_parser.process_map,
         }
 
-        parser = MultiLineTextParser(text, map)
+        parser = MultiLineTextParser(" ", 2, dic)
 
         # Act
-        parser.Parse(text)
+        parser.parse(text)
 
         # Assert
         self.assertEqual(len(alsa_stream_parser.get_playback_interfaces()), 2)
@@ -313,11 +329,13 @@ Capture:
             interface
             for interface in alsa_stream_parser.get_interfaces()
             if interface.state == AlsaStreamInfoVisitorState.PLAYBACK
-            and (interface.bit_depth == 16 or interface.bit_depth == 24)
+            and (interface.bit_depth in (16, 24))
             and 48000 in interface.rates
         ]
-        best_playback = sorted(filtered, key=lambda interface: interface.format)[0].to_dict()
-        log.info(f"best_playback: {best_playback}")
+        best_playback = sorted(
+            filtered,
+            key=lambda interface: interface.format)[0].to_dict()
+        log.info("best_playback: '%s'", best_playback)
 
         filtered = [
             interface
@@ -326,8 +344,9 @@ Capture:
             and (interface.bit_depth == 16 or interface.bit_depth == 24)
             and 48000 in interface.rates
         ]
-        best_capture = sorted(filtered, key=lambda interface: interface.format)[0].to_dict()
-        log.info(f"best_capture: {best_capture}")
+        best_capture = sorted(filtered, key=lambda interface: interface.format)[
+            0].to_dict()
+        log.info("best_capture: '%s'", best_capture)
 
 
 if __name__ == "__main__":

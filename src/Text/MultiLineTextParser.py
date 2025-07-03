@@ -23,80 +23,90 @@
 
 from dataclasses import replace
 import os
+import re
 from typing import Callable, Dict
 
+from log import log
 from .MultiLineTextParserContext import MultiLineTextParserContext
 from .TextUtils import TextUtils
-from log import log
 
 __all__ = ["MultiLineTextParser"]
 
 
 class MultiLineTextParser:
-    """Parses an ALSA stream info and invokes callbacks based on parsed keywords."""
+    """Parses an ALSA stream info and invokes callbacks based on parsed
+    keywords."""
 
     def __init__(
         self,
-        text: list[str],
-        map: Dict[str, Callable[[MultiLineTextParserContext], None]],
-        default: Callable[[MultiLineTextParserContext], None] = None,
+        indent: str,
+        length: int,
+        dic: Dict[str, Callable[[MultiLineTextParserContext], bool]],
+        default: Callable[[MultiLineTextParserContext], bool] = None,
     ):
         """Initialises an ALSA stream info parser.
         Args:
-            text (str): An array of strings containing the ALSA stream info.
-            map: A dictionary of keyword / func to be invoked when specified keywords are parsed.
-            default: A default func to be invoked when no keyword is defined. Can be None.
+            dic: A dictionary of keyword / func to be invoked when specified
+                keywords are parsed.
+            default: A default func to be invoked when no keyword is defined.
+                Can be None.
 
         Returns:
             An instance of the class.
         """
 
-        assert text is not None
-        assert map is not None
+        assert indent is not None and 1 == len(indent)
+        assert 0 <= length
+        assert dic is not None
 
-        self.text = text
-        self.map = map
+        self.indent = indent
+        self.length = length
+        self.dic = dic
         self.default = default
 
     # DFTODO - must be moved out of this class.
     @staticmethod
-    def get_stream_info_data(id: int) -> list[str]:
-        """Reads stream data from `stream0` for a given ALSA card id and returns an array of strings.
-        Throws an exception if no `stream0` file exists.
+    def get_stream_info_data(idx: int) -> list[str]:
+        """Reads stream data from `stream0` for a given ALSA card id and
+        returns an array of strings.
 
         Args:
-            id (int): The ALSA card id.
+            idx (int): The ALSA card id.
 
         Returns:
             Returns stream info as a list of strings.
+
+        Raises:
+            Exception: Throws an exception if `stream0` does not exist.
         """
 
-        assert id >= 0
+        assert idx >= 0
 
         PROC_ASOUND_BASEPATH = "/proc/asound/"
         STREAM_FILE = "stream0"
 
-        card_path = f"{PROC_ASOUND_BASEPATH}card{id}"
+        card_path = f"{PROC_ASOUND_BASEPATH}card{idx}"
         card_stream_file = os.path.join(card_path, STREAM_FILE)
 
         return TextUtils().read_all_lines(card_stream_file)
 
-    def Parse(self, stream_info_data: list[str]) -> None:
+    def parse(self, value: list[str], is_regex: bool = False) -> None:
         """Parses specified stream info data.
 
         Args:
-            stream_info_data (list[str]): An array of strings containing stream
-                info data as returned by `get_stream_info_data`.
+            value (list[str]): An array of strings containing lines of text.
+            is_regex (bool): True, if the keywords are regex; false otherwise
+                (default).
 
         Returns:
-            None. This method does not return anything.
+            None
         """
 
-        assert stream_info_data is not None
+        assert value is not None
 
         ctx = MultiLineTextParserContext()
 
-        for line in stream_info_data:
+        for line in value:
             ctx.line += 1
 
             # Skip empty lines.
@@ -104,12 +114,12 @@ class MultiLineTextParser:
                 continue
 
             # Ensure we have an even spacing.
-            leading_spaces = len(line) - len(line.lstrip(" "))
-            assert 0 == leading_spaces % 2, f"[{ctx.level}] Invalid spacing on #{line} '{line}' [{leading_spaces}]."
+            leading_indent = len(line) - len(line.lstrip(self.indent))
+            assert 0 == leading_indent % self.length
 
             # Upate indentation.
             ctx.level_previous = ctx.level
-            ctx.level = int(leading_spaces / 2)
+            ctx.level = int(leading_indent / self.length)
 
             # Now parse the actual line.
             ctx.text = line.strip()
@@ -117,10 +127,14 @@ class MultiLineTextParser:
             # Find function to call on keyword.
             func = None
             ctx.keyword = None
-            for key in sorted(self.map.keys(), key=len, reverse=True):
-                if ctx.text.startswith(key):
-                    func = self.map[key]
+            for key in sorted(self.dic.keys(), key=len, reverse=True):
+
+                if (
+                    re.search(key, ctx.text)
+                    if is_regex else ctx.text.startswith(key)
+                ):
                     ctx.keyword = key
+                    func = self.dic[key]
                     break
 
             # Or use default func if not keyword matches.
@@ -129,5 +143,8 @@ class MultiLineTextParser:
 
             if func is not None:
                 # Invoke function.
-                log.debug(f"Invoke '{ctx.keyword}' on '{ctx.text}'.")
-                func(replace(ctx))
+                log.debug("Invoke '%s' on '%s'.", ctx.keyword, ctx.text)
+
+                result = func(replace(ctx))
+                if not result:
+                    return

@@ -20,7 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module implementing an `MultiLineTextParserContext` ALSA stream info visitor."""
+"""Module implementing an `MultiLineTextParserContext` ALSA stream info
+visitor."""
 
 from log import log
 from text import MultiLineTextParserContext
@@ -56,7 +57,7 @@ class AlsaStreamInfoVisitor:
         """Returns all detected capture interfaces."""
         return self._capture_interfaces
 
-    def process_playback(self, ctx: MultiLineTextParserContext) -> None:
+    def process_playback(self, ctx: MultiLineTextParserContext) -> bool:
         """Callback processing `Playback` section.
         Args:
             ctx (MultiLineTextParserContext): The parser context.
@@ -66,7 +67,9 @@ class AlsaStreamInfoVisitor:
         )
         self._current_interfaces = self._playback_interfaces
 
-    def process_capture(self, ctx: MultiLineTextParserContext) -> None:
+        return True
+
+    def process_capture(self, ctx: MultiLineTextParserContext) -> bool:
         """Callback processing `Capture` section.
         Args:
             ctx (MultiLineTextParserContext): The parser context.
@@ -76,13 +79,15 @@ class AlsaStreamInfoVisitor:
         )
         self._current_interfaces = self._capture_interfaces
 
-    def process_interface(self, ctx: MultiLineTextParserContext) -> None:
+        return True
+
+    def process_interface(self, ctx: MultiLineTextParserContext) -> bool:
         """Callback processing `Interface` section.
         Args:
             ctx (MultiLineTextParserContext): The parser context.
         """
         if ctx.level_previous < ctx.level:
-            return
+            return True
 
         self._current_interface = AlsaStreamInterfaceInfo()
         self._current_interface.state = (
@@ -93,7 +98,9 @@ class AlsaStreamInfoVisitor:
         self._current_interfaces.append(self._current_interface)
         log.info("#%s [%s>%s] %s Prcessing interface ...", ctx.line, ctx.level_previous, ctx.level, ctx.keyword)
 
-    def process_format(self, ctx: MultiLineTextParserContext) -> None:
+        return True
+
+    def process_format(self, ctx: MultiLineTextParserContext) -> bool:
         """Callback processing `Format` entry.
         Args:
             ctx (MultiLineTextParserContext): The parser context.
@@ -109,7 +116,9 @@ class AlsaStreamInfoVisitor:
             self._current_interface.format,
         )
 
-    def process_channels(self, ctx: MultiLineTextParserContext) -> None:
+        return True
+
+    def process_channels(self, ctx: MultiLineTextParserContext) -> bool:
         """Callback processing `Channels` entry.
         Args:
             ctx (MultiLineTextParserContext): The parser context.
@@ -125,7 +134,9 @@ class AlsaStreamInfoVisitor:
             self._current_interface.channel_count,
         )
 
-    def process_rates(self, ctx: MultiLineTextParserContext) -> None:
+        return True
+
+    def process_rates(self, ctx: MultiLineTextParserContext) -> bool:
         """Callback processing `Rates` entry.
         Args:
             ctx (MultiLineTextParserContext): The parser context.
@@ -148,7 +159,9 @@ class AlsaStreamInfoVisitor:
             self._current_interface.rates,
         )
 
-    def process_bits(self, ctx: MultiLineTextParserContext) -> None:
+        return True
+
+    def process_bits(self, ctx: MultiLineTextParserContext) -> bool:
         """Callback processing `Bits` entry.
         Args:
             ctx (MultiLineTextParserContext): The parser context.
@@ -164,7 +177,9 @@ class AlsaStreamInfoVisitor:
             self._current_interface.bit_depth,
         )
 
-    def process_map(self, ctx: MultiLineTextParserContext) -> None:
+        return True
+
+    def process_map(self, ctx: MultiLineTextParserContext) -> bool:
         """Callback processing `Map` entry.
         Args:
             ctx (MultiLineTextParserContext): The parser context.
@@ -179,3 +194,5 @@ class AlsaStreamInfoVisitor:
             ctx.keyword,
             self._current_interface.map,
         )
+
+        return True

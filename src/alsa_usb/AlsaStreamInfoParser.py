@@ -33,6 +33,9 @@ class AlsaStreamInfoParser(MultiLineTextParser):
 
     def __init__(self, id_card: int):
 
+        _INDENT = " "
+        _SPACING = 2
+
         assert 0 <= id_card
 
         stream_fullname = f"/proc/asound/card{id_card}/stream0"
@@ -50,8 +53,8 @@ class AlsaStreamInfoParser(MultiLineTextParser):
             "Channel map:": visitor.process_map,
         }
 
-        super().__init__(text, callbacks)
-        super().Parse(text)
+        super().__init__(indent=_INDENT, length=_SPACING, dic=callbacks)
+        super().parse(text)
 
         self.visitor = visitor
 
