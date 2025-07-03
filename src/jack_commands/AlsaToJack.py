@@ -20,18 +20,32 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from .AlsaToJack import AlsaToJack
-from .JackToAlsa import JackToAlsa
-from .JackConnection import JackConnection
-from .JackPort import JackPort
-from .ZitaBridgeAlsaToJack import ZitaBridgeAlsaToJack
-from .ZitaBridgeJackToAlsa import ZitaBridgeJackToAlsa
+"""Module for creating an ALSA to JACK bridge."""
 
-__all__ = [
-    "AlsaToJack",
-    "JackConnection",
-    "JackPort",
-    "JackToAlsa",
-    "ZitaBridgeAlsaToJack",
-    "ZitaBridgeJackToAlsa",
-]
+from .AlsaJackBase import AlsaJackBase
+
+
+class AlsaToJack(AlsaJackBase):
+    """Creates an ALSA to JACK source.
+
+        Attributes:
+            name (str): The name of the JACK source client.
+            device (str): The name of the ALSA capture device.
+            channels (int): The number of channels of the ALSA device.
+            rate (int): The rate in Hz of the ALSA device.
+    """
+
+    _ZITA_BRIDGE = "/usr/bin/zita-a2j"
+    _ZITA_PORT_SUFFIX = "capture_"
+
+    def __init__(self, name: str, device: str, channels: int = 2,
+                 rate: int = 48000):
+        """Creates an instance of this class."""
+
+        super().__init__(
+            self._ZITA_BRIDGE,
+            self._ZITA_PORT_SUFFIX,
+            name,
+            device,
+            channels,
+            rate)

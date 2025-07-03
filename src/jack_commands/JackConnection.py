@@ -25,9 +25,12 @@
 from __future__ import annotations
 import os
 import time
+# from typing import overload, Union
 
 from asyn import Process
 from log import log
+from text import MultiLineTextParser
+from text import MultiLineTextParserContext
 
 __all__ = [
     "JackConnection",
@@ -37,35 +40,135 @@ __all__ = [
 class JackConnection:
     """Create a JACK connection between a `source` and a `sink`."""
 
+    _JACK_CONNECT_FULLNAME = "/bin/jack_connect"
+    _JACK_LSP_FULLNAME = "/bin/jack_lsp"
+
     class Factory:
         """Factory class for creating `JackConnection` instances."""
 
         @staticmethod
         def create(source: str, sink: str) -> JackConnection | None:
             """Creates a `JackConnection` instance.
+
             Args:
                 source (str): The name of the JACK client to connect from.
                 sink (str): The name of the JACK client to connect to.
+
             Returns:
-                JackConnection: The created connection if successful, or `None` otherwise.
+                JackConnection: If successful, the created connection, or `None`
+                otherwise.
             """
 
-            assert source is not None and "" != source.strip()
-            assert sink is not None and "" != sink.strip()
+            assert source and source.strip()
+            assert sink and sink.strip()
 
             try:
+
                 return JackConnection(source, sink)
+
             except RuntimeError:
+
                 return None
 
-    _JACK_CONNECT_FULLNAME = "/bin/jack_connect"
+    @staticmethod
+    def get_ports(name: str) -> list[str]:
+        """Show JACK ports for the specified JACK name.
 
-    def __init__(self, source: str, sink: str):
+        Args:
+            name (str): The channel independent name of the jack sink to
+                connect to.
 
-        assert source is not None and "" != source.strip()
-        assert sink is not None and "" != sink.strip()
+        Returns:
+            list[str]: A list of port names.
+        """
 
-        self._is_active = False
+        assert name and name.strip()
+
+        result: list[str] = []
+
+        cmd: list[str] = []
+        cmd.append(JackConnection._JACK_LSP_FULLNAME)
+        cmd.append(name)
+
+        process = Process.start(cmd, True, capture_stdout=True)
+        text = list(process.stdout)
+
+        visitor = JackConnection.PortVisitor()
+        dic = {
+            name: visitor.process_port,
+        }
+
+        parser = MultiLineTextParser(
+            indent=" ",
+            length=3,
+            dic=dic)
+        parser.parse(text)
+
+        result = visitor.items
+
+        while process.is_running:
+            time.sleep(0.1)
+
+        process.stop(force=True)
+
+        return result
+
+    @staticmethod
+    def get_connections(name: str) -> list[str]:
+        """Show JACK connections for the specified JACK name.
+
+        Args:
+            name (str): The channel independent name of the jack sink to
+                connect to.
+
+        Returns:
+            list[str]: A list of clients connected to `name`.
+        """
+
+        assert name and name.strip()
+
+        result: list[str] = []
+
+        cmd: list[str] = []
+        cmd.append(JackConnection._JACK_LSP_FULLNAME)
+        cmd.append(name)
+        cmd.append("-c")
+
+        process = Process.start(cmd, True, capture_stdout=True)
+        text = list(process.stdout)
+
+        visitor = JackConnection.ConnectionVisitor()
+        dic = {
+            f"{name}": visitor.process_port,
+        }
+
+        parser = MultiLineTextParser(
+            indent=" ",
+            length=3,
+            dic=dic,
+            default=visitor.process_connection)
+        parser.parse(text, is_regex=False)
+
+        result = visitor.items
+
+        while process.is_running:
+            time.sleep(0.1)
+
+        process.stop(force=True)
+
+        return result
+
+    def __init__(self, source: str, sink: str) -> None:
+        """Initialise an instance of this class.
+
+        Args:
+            source (str): The JACK source to connect to.
+            sink (str): The JACK sink to connecto to.
+        """
+
+        assert source and source.strip()
+        assert sink and sink.strip()
+
         self._source = source
         self._sink = sink
 
@@ -73,7 +176,10 @@ class JackConnection:
 
         log.debug("Connecting '%s' to '%s' ...", source, sink)
 
-        self._process = Process.start(args, wait_on_completion=False, capture_stdout=True, capture_stderr=True)
+        self._process = Process.start(args,
+                                      wait_on_completion=False,
+                                      capture_stdout=True,
+                                      capture_stderr=True)
 
         stderr = self._process.stderr
         if 0 == len(stderr):
@@ -91,21 +197,83 @@ class JackConnection:
 
         raise RuntimeError(message)
 
-    @property
-    def is_active(self) -> bool:
-        """`True` if the connection is active. `False` otherwise."""
+    class ConnectionVisitor():
+        """A visitor for parsing `jack_lsp` connection output."""
 
-        return self._is_active
+        def __init__(self):
+            """Returns an instance of this object."""
 
-    def disconnect(self) -> bool:
-        """Disconnects an active JACK connection.
-        Returns:
-            bool: `True` if the connection was active. `False` otherwise.
-        """
+            self.is_section_active = False
+            self.has_section_processed = False
+            self.items = []
 
-        if not self._is_active:
-            return False
+        def process_port(self, ctx: MultiLineTextParserContext) -> bool:
+            """Process the specified port.
 
-        # DFTODO - disconnect existing connection.
-        # self._has_connection = False
-        pass
+            Args:
+                ctx (MultiLineTextParserContext): The parser context.
+
+            Returns:
+                bool: True, if processing should continue; false otherwise.
+            """
+
+            assert ctx
+
+            if 0 != ctx.level:
+                return True
+
+            self.is_section_active = True
+            return True
+
+        def process_connection(self, ctx: MultiLineTextParserContext) -> bool:
+            """Process any other line.
+
+            Args:
+                ctx (MultiLineTextParserContext): The parser context.
+
+            Returns:
+                bool: True, if processing should continue; false otherwise.
+            """
+
+            assert ctx
+
+            if not self.is_section_active:
+                return True
+
+            # Stop processing after port section.
+            if 0 == ctx.level:
+                self.is_section_active = False
+                self.has_section_processed = True
+                return False
+
+            if 1 != ctx.level:
+                return True
+
+            self.items.append(ctx.text)
+            return True
+
+    class PortVisitor():
+        """A visitor for parsing `jack_lsp` port output."""
+
+        def __init__(self):
+            """Returns an instance of this object."""
+
+            self.items = []
+
+        def process_port(self, ctx: MultiLineTextParserContext) -> bool:
+            """Process the specified port.
+
+            Args:
+                ctx (MultiLineTextParserContext): The parser context.
+
+            Returns:
+                bool: True, if processing should continue; false otherwise.
+            """
+
+            assert ctx
+
+            if 0 != ctx.level:
+                return False
+
+            self.items.append(ctx.text)
+            return True
