@@ -52,6 +52,7 @@ class Process:
         Args:
             process (subprocess.Popen): An instance of `Popen`.
             encoding (str): The charset to used for the process started.
+
         Returns:
             Process: An instance of this class.
         """
@@ -66,28 +67,58 @@ class Process:
 
     @property
     def pid(self) -> int:
-        """The PID of the process."""
+        """Returns the PID of the process.
+
+        Args:
+            None:
+
+        Returns:
+            int: The PID of the process.
+        """
+
+        assert self._popen
+
         return self._popen.pid
 
     @property
     def is_running(self) -> bool:
-        """`True` if the process is still running. Returns `False` if the process has stopped."""
+        """Determines wether the process is still running.
+
+        Args:
+            None:
+
+        Returns:
+            bool: True if running; false otherwise.
+        """
+
         return self._popen.poll() is None
 
     @property
     def exit_code(self) -> int | None:
-        """Returns the numeric exit code if the process has stopped. Returns `None` if the process is still running."""
+        """Returns the numeric exit code if the process has stopped.
+
+        Args:
+            None:
+
+        Returns:
+            int: The exit code or `None` if the process is still running.
+        """
         return self._popen.poll()
 
     def stop(self, max_wait_time: int = 5, force: bool = False) -> bool:
-        """Stops a running process, then forcibly terminates if specified and if it is still running.
-        Does nothing if the process is already stopped.
+        """Stops a running process, then forcibly terminates if specified and
+        if it is still running. Does nothing if the process is already stopped.
 
         Args:
-            max_wait_time (int): Maximum number of seconds to wait for graceful termination.
-            force (bool): If `True`, the process is forcibly stopped. `False` by default.
+            max_wait_time (int): Maximum number of seconds to wait for graceful
+                termination.
+            force (bool): If `True`, the process is forcibly stopped. `False`
+                by default.
+
         Returns:
-            bool: Returns `True` if the process could be stopped. `False` if the process was already stopped.
+            bool: Returns `True` if the process could be stopped; `False` if
+            the process was already stopped.
+
         Raises:
             RuntimeError: If the process could not be stopped.
         """
@@ -96,14 +127,26 @@ class Process:
 
         try:
 
+            if self._popen.stdin:
+                self._popen.stdin.flush()
+                self._popen.stdin.close()
+
+            if self._popen.stdout:
+                self._popen.stdout.flush()
+                self._popen.stdout.close()
+
+            if self._popen.stderr:
+                self._popen.stderr.flush()
+                self._popen.stderr.close()
+
             # Process already stopped.
             if self._popen.poll() is not None:
                 return False
 
             self._popen.terminate()
 
-            start_time = time.time()
-            while time.time() - start_time < max_wait_time:
+            start_time = time.time_ns()
+            while time.time_ns() - start_time < max_wait_time * 10**9:
                 if self._popen.poll() is not None:
                     return True
 
@@ -114,27 +157,29 @@ class Process:
                 return True
 
             if not force:
-                message = f"Process [{self._popen.pid}] could not be stopped gracefully."
-                log.error(message)
+
+                message = f"Process [{self._popen.pid}] could not be stopped" \
+                    "gracefully."
+                log.error(message, exc_info=True)
+
                 raise RuntimeError(message)
 
             self._popen.kill()
 
-            start_time = time.time()
-            while time.time() - start_time < max_wait_time:
+            start_time = time.time_ns()
+            while time.time_ns() - start_time < max_wait_time * 10**9:
                 if self._popen.poll() is not None:
                     return True
 
                 time.sleep(0.25)
 
             # Process stopped forcibly.
-            if self._popen.poll() is not None:
-                return True
+            return self._popen.poll() is not None
 
         except Exception as ex:
 
             message = f"Process [{self._popen.pid}] could not be stopped."
-            log.error(message)
+            log.error(message, exc_info=True)
             raise RuntimeError(message) from ex
 
     @classmethod
@@ -149,14 +194,19 @@ class Process:
         **kwargs,
     ) -> Process:
         """Starts a specified process and optionally waits until its completion.
+
         Args:
             cmd (list[str]): The process with its arguments to be started.
-            cmd (str, optional): The working directory of the process to be started. If no working directory is given,
-                the current working directory of the calling process is used.
-            encoding (str, optional): The charset to be used for the process to be started. If no encoding is given,
+            cmd (str, optional): The working directory of the process to be
+                started. If no working directory is given, the current working
+                directory of the calling process is used.
+            encoding (str, optional): The charset to be used for the process to
+                be started. If no encoding is given,
                 the current encoding of the calling process is used.
+
         Returns:
-            Process: An instance of `Process` containing information about the process started.
+            Process: An instance of `Process` containing information about the
+            process started.
         """
 
         assert cmd is not None and 0 < len(cmd)
@@ -174,8 +224,8 @@ class Process:
             encoding=encoding,
             text=True,
             bufsize=1,
-            stdout=subprocess.PIPE if capture_stdout else None,
-            stderr=subprocess.PIPE if capture_stderr else None,
+            stdout=subprocess.PIPE if capture_stdout else subprocess.DEVNULL,
+            stderr=subprocess.PIPE if capture_stderr else subprocess.DEVNULL,
             **kwargs,
         )
 
@@ -228,34 +278,45 @@ class Process:
 
     @property
     def stdout(self) -> Sequence[str]:
-        """Returns all `STDOUT` messages from the started process, if `start` was called with `capture_stdout`.
+        """Returns all `STDOUT` messages from the started process, if `start`
+        was called with `capture_stdout`.
+
         Returns:
-            Sequence[str]: A sequence containing all output that was sent to `STDOUT` by the process.
+            Sequence[str]: A sequence containing all output that was sent to
+            `STDOUT` by the process.
         """
 
-        items = self._queue.dequeue_filter(lambda e: e[self._TUPLE_KEY_INDEX] == self._STDOUT)
+        items = self._queue.dequeue_filter(
+            lambda e: e[self._TUPLE_KEY_INDEX] == self._STDOUT)
         result = [item[self._TUPLE_KEY_VALUE] for item in items]
 
         return result
 
     @property
     def stderr(self) -> Sequence[str]:
-        """Returns all `STDERR` messages from the started process, if `start` was called with `capture_stderr`.
+        """Returns all `STDERR` messages from the started process, if `start`
+        was called with `capture_stderr`.
+
         Returns:
-            Sequence[str]: A sequence containing all output that was sent to `STDERR` by the process.
+            Sequence[str]: A sequence containing all output that was sent to
+            `STDERR` by the process.
         """
 
-        items = self._queue.dequeue_filter(lambda e: e[self._TUPLE_KEY_INDEX] == self._STDERR)
+        items = self._queue.dequeue_filter(
+            lambda e: e[self._TUPLE_KEY_INDEX] == self._STDERR)
         result = [item[self._TUPLE_KEY_VALUE] for item in items]
 
         return result
 
     @property
     def output(self) -> Sequence[str]:
-        """Returns all output (`STDOUT` and `STDERR`) messages from the started process,
-        if `start` was called with  `capture_stdout` and/or `capture_stderr`.
+        """Returns all output (`STDOUT` and `STDERR`) messages from the started
+        process, if `start` was called with  `capture_stdout` and/or
+        `capture_stderr`.
+
         Returns:
-            Sequence[str]: A sequence containing all output that was sent to `STDERR` by the process.
+            Sequence[str]: A sequence containing all output that was sent to
+            `STDERR` by the process.
         """
 
         items = self._queue.dequeue_filter(lambda _: True)
