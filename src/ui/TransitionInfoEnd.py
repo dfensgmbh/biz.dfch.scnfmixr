@@ -22,13 +22,13 @@
 
 """Module defining the language neutral end info for transitions."""
 
-from enum import Enum, auto
+from enum import Enum
 
 
 class TransitionInfoEnd(Enum):
     """Defines the language neutral end info for transitions names."""
 
-    SELECTING_LANGUAGE_ENGLISH = auto()
-    SELECTING_LANGUAGE_GERMAN = auto()
-    SELECTING_LANGUAGE_FRENCH = auto()
-    SELECTING_LANGUAGE_ITALIAN = auto()
+    SELECTING_LANGUAGE_ENGLISH = False
+    SELECTING_LANGUAGE_GERMAN = False
+    SELECTING_LANGUAGE_FRENCH = False
+    SELECTING_LANGUAGE_ITALIAN = False

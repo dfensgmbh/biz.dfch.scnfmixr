@@ -20,12 +20,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module defining the language neutral end info for states."""
+"""Module defining the abstract base class input handling."""
 
-from enum import Enum
+from abc import ABC, abstractmethod
 
 
-class StateInfoEnd(Enum):
-    """Defines the language neutral end info for states."""
+class EventHandler(ABC):
+    """Defines the abstract base class for input handling."""
 
-    LANGUAGE_SELECTION = False
+    @abstractmethod
+    def invoke(self) -> bool:
+        """
+        Return:
+            bool: True, if successful, false otherwise.
+        """
+
+        result = False
+
+        return result

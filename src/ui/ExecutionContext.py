@@ -20,13 +20,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module defining the transition context of a transition in a finite state
-machine."""
+"""Module defining the transition context of the finite state machine."""
 
 from dataclasses import dataclass
+from .LanguageCode import LanguageCode
 
 
 @dataclass(frozen=True)
 class ExecutionContext:
-    """Defines the context with which each transition is invoked."""
-    pass
+    """Defines the execution context of the finite state machine.
+
+    Attributes:
+        language (LanguageCode): The language code selected.
+    """
+
+    language : LanguageCode = LanguageCode.EN
+
+    def __postinit__(self) -> None:
+        """Field validation."""
+
+        assert self.language is not None and isinstance(
+            self.language, LanguageCode)

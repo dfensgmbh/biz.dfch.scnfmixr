@@ -20,12 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module defining the language neutral end info for states."""
+"""Module defining the class keyboard input handling."""
 
-from enum import Enum
+from .EventHandler import EventHandler
 
 
-class StateInfoEnd(Enum):
-    """Defines the language neutral end info for states."""
+class KeyboardHandler(EventHandler):
+    """Handles keyboard input."""
 
-    LANGUAGE_SELECTION = False
+    def invoke(self) -> bool:
+
+        pass

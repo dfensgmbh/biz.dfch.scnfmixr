@@ -20,12 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module defining the language neutral end info for states."""
+"""Module defining the language codes supported."""
 
 from enum import Enum
 
 
-class StateInfoEnd(Enum):
-    """Defines the language neutral end info for states."""
+class LanguageCode(str, Enum):
+    """Defines the language codes supported."""
 
-    LANGUAGE_SELECTION = False
+    EN = "English"
+    DE = "Deutsch"
+    FR = "Français"
+    IT = "Italiano"

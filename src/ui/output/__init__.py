@@ -20,12 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module defining the language neutral end info for states."""
+from __future__ import annotations
+from .AudioPlayer import AudioPlayer
 
-from enum import Enum
-
-
-class StateInfoEnd(Enum):
-    """Defines the language neutral end info for states."""
-
-    LANGUAGE_SELECTION = False
+__all__ = [
+    "AudioPlayer"
+]
