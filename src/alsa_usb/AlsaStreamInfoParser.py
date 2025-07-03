@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Implements a `MultiLineTextParser` for parsing ALSA stream information."""
+"""Implements a parser for ALSA stream information."""
 
 from typing import overload
 
@@ -31,8 +31,7 @@ from .AlsaStreamInterfaceInfo import AlsaStreamInterfaceInfo
 
 
 class AlsaStreamInfoParser(MultiLineTextParser):
-    """Implements a `MultiLineTextParser` for parsing ALSA stream information.
-    """
+    """Implements a parser for ALSA stream information."""
 
     @overload
     def __init__(self, id_card: int) -> None:
