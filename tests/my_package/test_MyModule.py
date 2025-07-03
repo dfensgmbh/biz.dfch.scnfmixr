@@ -25,9 +25,12 @@ import unittest
 from my_package import MyModule, MyOtherModule
 
 
-class TestMyModule(unittest.TestCase):
+class TestMyModule(unittest.TestCase):  # pylint: disable=C0115
+    """Class for testing test setup."""
 
-    def test_doit_returns_same_string(self):
+    def test_doit_returns_same_string(self):  # pylint: disable=C0116
+        """Test for testing test setup (1)."""
+
         # Arrange
         expected = "arbitrary-text"
         sut = MyModule()
@@ -38,7 +41,8 @@ class TestMyModule(unittest.TestCase):
         # Assert
         self.assertEqual(result, expected)
 
-    def test_doit_returns_static_string(self):
+    def test_doit_returns_static_string(self):  # pylint: disable=C0116
+        """Test for testing test setup (2)."""
         # Arrange
         expected = "Schnittenfittich"
         sut = MyOtherModule()

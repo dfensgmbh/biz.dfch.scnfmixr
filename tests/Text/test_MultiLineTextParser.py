@@ -66,9 +66,14 @@ Capture:
     Channel map: MONO
 """.splitlines()
 
-        default: Callable[[MultiLineTextParserContext], None] = lambda ctx: log.debug(
-            f"[#{ctx.line}][{ctx.level_previous}>{ctx.level}] default: {ctx.text}"
-        )
+        def process_default(ctx: MultiLineTextParserContext) -> bool:
+            log.debug(
+                "[#%s][%s>%s] default: %s",
+                ctx.line,
+                ctx.level_previous,
+                ctx.level,
+                ctx.text)
+            return True
 
         counters = {
             "playback": 0,
@@ -81,11 +86,13 @@ Capture:
             "map": 0,
         }
 
-        def increment_call_count(ctx: MultiLineTextParserContext, key: str):
+        def increment_call_count(
+                ctx: MultiLineTextParserContext, key: str) -> bool:
             _ = ctx
             counters[key] += 1
+            return True
 
-        map = {
+        dic = {
             "Playback:": lambda ctx: increment_call_count(ctx, "playback"),
             "Capture:": lambda ctx: increment_call_count(ctx, "capture"),
             "Interface ": lambda ctx: increment_call_count(ctx, "interface"),
@@ -96,10 +103,14 @@ Capture:
             "Channel map:": lambda ctx: increment_call_count(ctx, "map"),
         }
 
-        parser = MultiLineTextParser(text, map, default)
+        parser = MultiLineTextParser(
+            indent=" ",
+            length=2,
+            dic=dic,
+            default=process_default)
 
         # Act
-        parser.Parse(text)
+        parser.parse(text)
 
         # Assert
         self.assertEqual(counters["playback"], 1)
