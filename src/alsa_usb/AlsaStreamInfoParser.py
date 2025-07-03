@@ -22,7 +22,10 @@
 
 """Implements a `MultiLineTextParser` for parsing ALSA stream information."""
 
+from typing import overload
+
 from text import MultiLineTextParser, TextUtils
+
 from .AlsaStreamInfoVisitor import AlsaStreamInfoVisitor
 from .AlsaStreamInterfaceInfo import AlsaStreamInterfaceInfo
 
@@ -31,15 +34,35 @@ class AlsaStreamInfoParser(MultiLineTextParser):
     """Implements a `MultiLineTextParser` for parsing ALSA stream information.
     """
 
-    def __init__(self, id_card: int):
+    @overload
+    def __init__(self, id_card: int) -> None:
+        ...
+
+    @overload
+    def __init__(self, contents: list[str]) -> None:
+        ...
+
+    def __init__(self, value: int | list[str]) -> None:
+        """Creates an ALSA stream info parser.
+
+        Args:
+            value (int, list): Either the ALSA id of the sound card or the
+                contents of an ALSA stream info file as a list of strings.
+        """
 
         _INDENT = " "
         _SPACING = 2
 
-        assert 0 <= id_card
+        assert value
+        assert isinstance(value, (str, list))
 
-        stream_fullname = f"/proc/asound/card{id_card}/stream0"
-        text = TextUtils().read_all_lines(stream_fullname)
+        text = value
+        if isinstance(value, int):
+            id_card = value
+            assert 0 <= id_card
+
+            stream_fullname = f"/proc/asound/card{id_card}/stream0"
+            text = TextUtils().read_all_lines(stream_fullname)
 
         visitor = AlsaStreamInfoVisitor()
         callbacks = {

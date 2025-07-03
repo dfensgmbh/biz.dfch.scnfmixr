@@ -20,16 +20,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from typing import Callable
 import unittest
 
-from alsa_usb import AlsaStreamInfoVisitor, AlsaStreamInfoVisitorState
+from alsa_usb import AlsaStreamInfoParser
+from alsa_usb import AlsaStreamInfoVisitor
+from alsa_usb import AlsaStreamInfoVisitorState
 from log import log
 from text.MultiLineTextParser import MultiLineTextParser
 from text.MultiLineTextParserContext import MultiLineTextParserContext
 
 
 class TestAlsaStreamInfoVisitor(unittest.TestCase):
+    """Class for testing sound card stream info."""
 
     def test_parsing_stream_data_atomos_returns_single_capture_interface(self):
         """Atomos has a 'continuous' interface rate."""
@@ -347,6 +349,37 @@ Capture:
         best_capture = sorted(filtered, key=lambda interface: interface.format)[
             0].to_dict()
         log.info("best_capture: '%s'", best_capture)
+
+    def test_parsing_stream_data_44100_only_succeeds(self):
+        """USB interface with 44100Hz only."""
+
+        # Arrange
+        text = """\
+MacroSilicon MS2109 at usb-xhci-hcd.0-1.2, high speed : USB Audio
+
+Capture:
+  Status: Stop
+  Interface 3
+    Altset 1
+    Format: S16_LE
+    Channels: 2
+    Endpoint: 0x82 (2 IN) (ASYNC)
+    Rates: 44100
+    Data packet interval: 1000 us
+    Bits: 16
+""".splitlines()
+
+        sut = AlsaStreamInfoParser(text)
+
+        result = sut.get_best_capture_interface()
+
+        self.assertIsNotNone(result)
+        self.assertEqual(2, result.channel_count)
+        self.assertEqual(16, result.bit_depth)
+        self.assertEqual("S16_LE", result.format)
+
+        result = sut.best_rate(result.rates)
+        self.assertEqual(44100, result)
 
 
 if __name__ == "__main__":
