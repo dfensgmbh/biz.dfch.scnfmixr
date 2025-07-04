@@ -208,7 +208,7 @@ This is the typical contact layout for a (OMTP) TRRS adaptetr that splits the TR
 
 # Build and Installation
 
-The programme should be built with `pyinstaller` as `--onefile`. The resulting executable will be copied into `/opt/...` and started from there. As it is `--onefile` it will be unpacked on start into `/tmp/_MEI...` Technically `-add-data` for `logging.conf` is not needed, as it is read from `/opt/PhoneTap` (relative via `./bin/..` , not absolute), but serves a template (it will be unpacked into `/tmp/_MEI...`). Logs will by default be written to `/opt/PhoneTap/app.log` (relative via `./bin/..` , not absolute); this can be changed in `logging.conf`.
+The programme should be built with `pyinstaller` as `--onefile`. The resulting executable will be copied into `/opt/...` and started from there. As it is `--onefile` it will be unpacked on start into `/tmp/_MEI...`. By default, logs will be written to the current working directory into `app.log` (truncated on every start); this can be changed in `logging.conf` (obviously before packing into `--onefile`).
 
 ## Source Directory
 ```
@@ -218,30 +218,43 @@ The programme should be built with `pyinstaller` as `--onefile`. The resulting e
 - logging.conf
 + src
     |
-    - __main__.py
+    + biz
+        |
+        - __init__.py
+        - __main__.py   # Use absolute imports.
+        + dfch
+            |
+            + scnfmixr
+                |
+                - __init__.py
+                - app.py
 + tests
-+ venv
++ venv      # Windows 11 venv
++ venvdeb   # WSL2 debian venv
 + dist
     |
-    - PhoneTap-v{maj}.{min}.{rev}
+    - scnfmixr-v{maj}.{min}.{rev}
 
-user@system:~/{project-root} $ pyinstaller --onefile --add-data "logging.conf:." --name=PhoneTap-v{maj}.{min}.{rev} src/__main__.py
+user@system:~/{project-root} $ pyinstaller --clean --onefile --name scnfmixr --add-data "./logging.conf:." -p ./src -p ./src/biz ./src/biz/__main__.py;
 ```
+
+Note1: `-p` seem to be necessary for successful `import` resolving.
+Note2: Starting the programme from source: `(venvdeb) user@system:~/{project-root}/src $ python -m biz
 
 ## Target Directory
 ```
 /opt
 |
-+ PhoneTap
++ scnfmixr
     |
     - logging.conf
     - app.conf
     + bin
         | 
-        - PhoneTap-v{maj}.{min}.{rev}
+        - scnfmixr-v{maj}.{min}.{rev}
 ```
 
-Note: naming for the executable does not have to follow [SemVer](http://semver.org). To allow multiple installed versions the programme directory can be changed from `PhoneTap` to `PhoneTap-v{maj}.{min}.{rev}` and then the executable obviously can be named without version information (which is optional anyway).
+Note: naming for the executable does not have to follow [SemVer](http://semver.org). To allow multiple installed versions the programme directory can be changed from `scnfmixr` to `scnfmixr-v{maj}.{min}.{rev}` and then the executable obviously can be named without version information (which is optional anyway).
 
 # Notes and Observations
 
