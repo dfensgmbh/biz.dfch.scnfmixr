@@ -26,13 +26,14 @@ import argparse
 import sys
 import time
 
+from biz.dfch.logging import log
+
 from alsa_usb import AlsaStreamInfoParser
 from jack_commands import JackConnection
 from jack_commands import ZitaBridgeAlsaToJack
 from jack_commands import ZitaBridgeJackToAlsa
-from log import log
 from service import SetupDevice
-from Version import Version
+from biz.dfch.version import Version
 
 
 def run_loop():
