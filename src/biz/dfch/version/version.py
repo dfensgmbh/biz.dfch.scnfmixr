@@ -19,3 +19,36 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+"""Module version."""
+
+import sys
+from ..logging import log
+
+
+class Version:
+    """Version class ensuring minimum Python interpreter version."""
+
+    def ensure_minimum_version(self, major: int = 3, minor: int = 11) -> None:
+        """Ensures the currently running Python interpreter runs at least the
+        specified version.
+
+        Args:
+            major (int): The minimum major version required.
+            minor (int): The minimum minor version required.
+
+        Returns:
+            None:
+
+        Raises:
+            EnvironmentError: The exception is raised, when the specified
+                version is not met by the currently running Python interpreter.
+        """
+
+        if sys.version_info >= (major, minor):
+            return
+
+        message = f"'{sys.version_info}' < '{major}.{minor}'"
+        log.critical(message)
+
+        raise EnvironmentError(message)

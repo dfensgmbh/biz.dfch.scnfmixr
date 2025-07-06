@@ -19,3 +19,45 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+import os
+import sys
+
+import logging
+import logging.config
+
+_LOGGER_NAME = "biz.dfch.scnfmix"
+# Note: When using `pyinstaller --onefile` make sure this file is available.
+_LOGGER_FILE = "logging.conf"
+
+
+def resolve_resource_file(path: str) -> str:
+    """Resolves a relative path to the runtime path."""
+
+    assert path
+
+    if getattr(sys, "frozen", False):
+        # Determine whether we run as binary onefile.
+        base_path = sys._MEIPASS  # pylint: disable=W0212
+    else:
+        base_path = os.getcwd()
+
+    return os.path.join(base_path, path)
+
+
+try:
+    print(f"{__file__} - {__name__}")
+    print(f"path     '{_LOGGER_FILE}'")
+    print(f"resolved '{resolve_resource_file(_LOGGER_FILE)}'")
+
+    logging.config.fileConfig(resolve_resource_file(_LOGGER_FILE))
+    log = logging.getLogger(_LOGGER_NAME)
+    log.debug("Logging configuration initialised from '%s'.",
+              _LOGGER_FILE)
+
+except Exception as ex:
+
+    print(f"{_LOGGER_NAME}: An error occurred while trying to load "
+          f"'{_LOGGER_FILE}': '{ex}'")
+
+    raise

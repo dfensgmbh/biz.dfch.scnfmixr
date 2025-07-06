@@ -23,7 +23,8 @@
 """Module implementing an `MultiLineTextParserContext` ALSA stream info
 visitor."""
 
-from log import log
+from biz.dfch.logging import log
+
 from text import MultiLineTextParserContext
 from .AlsaStreamInfoVisitorState import AlsaStreamInfoVisitorState
 from .AlsaStreamInterfaceInfo import AlsaStreamInterfaceInfo

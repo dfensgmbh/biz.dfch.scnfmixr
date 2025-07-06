@@ -22,8 +22,9 @@
 
 import time
 
+from biz.dfch.logging import log
+
 from asyn import Process
-from log import log
 
 __all__ = [
     "ZitaBridgeBase",

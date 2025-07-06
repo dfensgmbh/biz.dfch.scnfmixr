@@ -27,7 +27,8 @@ This module provide USB device related functions.
 import os
 from typing import NoReturn
 
-from log import log
+from biz.dfch.logging import log
+
 from text import TextUtils
 from .UsbDeviceInfo import UsbDeviceInfo
 from .ProcAlsaUsbDeviceInfo import ProcAlsaUsbDeviceInfo

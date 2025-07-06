@@ -1,6 +1,6 @@
 # MIT License
 
-# Copyright (c) 2024, 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,21 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import logging
-import logging.config
+"""Package version."""
 
-_LOGGER_NAME = "biz.dfch.PhoneTap"
-# Note: When using `pyinstaller --onefile` make sure this file is available.
-_LOGGER_FILE = "logging.conf"
+from .version import Version
 
-try:
-
-    logging.config.fileConfig(_LOGGER_FILE)
-    log = logging.getLogger(_LOGGER_NAME)
-    log.info(f"Logging configuration initialised from '{_LOGGER_FILE}'.")
-
-except Exception as ex:
-
-    print(f"{_LOGGER_NAME}: An error occurred while trying to load '{_LOGGER_FILE}': '{ex}'")
-
-    raise
+__all__ = [
+    "Version",
+]

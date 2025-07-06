@@ -26,7 +26,8 @@ import os
 import re
 from typing import Callable, Dict
 
-from log import log
+from biz.dfch.logging import log
+
 from .MultiLineTextParserContext import MultiLineTextParserContext
 from .TextUtils import TextUtils
 

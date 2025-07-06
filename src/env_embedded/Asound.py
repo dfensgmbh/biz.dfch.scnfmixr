@@ -26,7 +26,9 @@ import os
 import re
 
 from text import TextUtils
-from log import log
+
+from biz.dfch.logging import log
+
 from .AsoundCardInfo import AsoundCardInfo
 from .ProcAlsaUsbDeviceInfo import ProcAlsaUsbDeviceInfo
 from .UsbDeviceInfo import UsbDeviceInfo

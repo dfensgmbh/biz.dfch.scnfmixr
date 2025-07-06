@@ -21,7 +21,8 @@
 # SOFTWARE.
 
 from asyn import Process
-from log import log
+
+from biz.dfch.logging import log
 
 __all__ = [
     "Playback",

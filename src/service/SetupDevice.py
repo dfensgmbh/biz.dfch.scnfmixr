@@ -25,8 +25,9 @@
 from __future__ import annotations
 import time
 
+from biz.dfch.logging import log
+
 from env_embedded import Asound, Usb
-from log import log
 
 __all__ = ["SetupDevice"]
 
