@@ -30,8 +30,8 @@ import threading
 import time
 from typing import IO, Optional, Sequence, Tuple
 
+from biz.dfch.logging import log
 from col import CircularQueue
-from log import log
 
 __all__ = ["Process"]
 
