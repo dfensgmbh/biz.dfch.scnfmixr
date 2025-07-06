@@ -22,10 +22,11 @@
 
 import unittest
 
+from biz.dfch.logging import log
+
 from alsa_usb import AlsaStreamInfoParser
 from alsa_usb import AlsaStreamInfoVisitor
 from alsa_usb import AlsaStreamInfoVisitorState
-from log import log
 from text.MultiLineTextParser import MultiLineTextParser
 from text.MultiLineTextParserContext import MultiLineTextParserContext
 

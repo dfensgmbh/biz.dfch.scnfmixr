@@ -20,11 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from typing import Callable
 import unittest
 
+from biz.dfch.logging import log
+
 from text import MultiLineTextParser, MultiLineTextParserContext
-from log import log
 
 
 class MultiLineTextParserTest(unittest.TestCase):

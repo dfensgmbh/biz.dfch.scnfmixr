@@ -26,7 +26,7 @@ from pathlib import Path
 import time
 import unittest
 
-from ui.output.AudioPlayer import AudioPlayer
+from biz.dfch.scnfmixr.audio.audio_player import AudioPlayer
 from jack_commands.AlsaToJack import AlsaToJack
 
 

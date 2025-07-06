@@ -22,17 +22,33 @@
 
 """Tests for module: `Transition`."""
 
+from enum import Enum
 import unittest
 
-from ui import ExecutionContext
-from ui import StateBase
-from ui import TransitionBase
-from ui import TransitionInfoStart
-from ui import TransitionInfoEnd
+from biz.dfch.scnfmixr.ui import UiEventInfo
+from biz.dfch.scnfmixr.ui import ExecutionContext
+from biz.dfch.scnfmixr.ui import StateBase
+from biz.dfch.scnfmixr.ui import TransitionBase
 
 
 class TestTransitionBase(unittest.TestCase):
     """Tests transitions in a state machine."""
+
+    class TransitionInfoEnter(Enum):
+        """Test events.
+        True: The audio will be played continously in a loop.
+        False: The audio will be play once (one-shot).
+        """
+
+        EVENT = False
+
+    class TransitionInfoLeave(Enum):
+        """Test events.
+        True: The audio will be played continously in a loop.
+        False: The audio will be play once (one-shot).
+        """
+
+        EVENT = False
 
     class ArbitraryState(StateBase):
         """Defines an arbitrary state for testing purposes."""
@@ -51,14 +67,14 @@ class TestTransitionBase(unittest.TestCase):
         """Initialising succeeds."""
 
         arbitrary_state = TestTransitionBase.ArbitraryState(
-            info_start=None, info_end=None)
+            info_enter=None, info_leave=None)
 
         sut = TestTransitionBase.ArbitraryTransition(
             event="0",
-            info_start=TransitionInfoStart.SELECTING_LANGUAGE_ENGLISH,
-            do_info_start_loop=True,
-            info_end=TransitionInfoEnd.SELECTING_LANGUAGE_ENGLISH,
-            do_info_end_loop=True,
+            info_enter=UiEventInfo(
+                TestTransitionBase.TransitionInfoEnter.EVENT, False),
+            info_leave=UiEventInfo(
+                TestTransitionBase.TransitionInfoLeave.EVENT, False),
             target_state=arbitrary_state
         )
 
@@ -70,10 +86,8 @@ class TestTransitionBase(unittest.TestCase):
         with self.assertRaises(AssertionError):
             _ = TestTransitionBase.ArbitraryTransition(
                 event="0",
-                info_start=None,
-                do_info_start_loop=True,
-                info_end=None,
-                do_info_end_loop=True,
+                info_enter=None,
+                info_leave=None,
                 target_state=None
             )
 
@@ -81,15 +95,13 @@ class TestTransitionBase(unittest.TestCase):
         """`event` must not contain more than a single character."""
 
         arbitrary_state = TestTransitionBase.ArbitraryState(
-            info_start=None, info_end=None)
+            info_enter=None, info_leave=None)
 
         with self.assertRaises(AssertionError):
             _ = TestTransitionBase.ArbitraryTransition(
                 event="12",
-                info_start=None,
-                do_info_start_loop=True,
-                info_end=None,
-                do_info_end_loop=True,
+                info_enter=None,
+                info_leave=None,
                 target_state=arbitrary_state
             )
 
@@ -97,15 +109,13 @@ class TestTransitionBase(unittest.TestCase):
         """`event` must not contain more than a single character."""
 
         arbitrary_state = TestTransitionBase.ArbitraryState(
-            info_start=None, info_end=None)
+            info_enter=None, info_leave=None)
 
         with self.assertRaises(AssertionError):
             _ = TestTransitionBase.ArbitraryTransition(
                 event="",
-                info_start=None,
-                do_info_start_loop=True,
-                info_end=None,
-                do_info_end_loop=True,
+                info_enter=None,
+                info_leave=None,
                 target_state=arbitrary_state
             )
 
@@ -113,14 +123,12 @@ class TestTransitionBase(unittest.TestCase):
         """Passing `None` or wrong data type as context to `invoke` throws."""
 
         arbitrary_state = TestTransitionBase.ArbitraryState(
-            info_start=None, info_end=None)
+            info_enter=None, info_leave=None)
 
         sut = TestTransitionBase.ArbitraryTransition(
             event="0",
-            info_start="arbitrary-start",
-            do_info_start_loop=True,
-            info_end="arbitrary-end",
-            do_info_end_loop=True,
+            info_enter=UiEventInfo("arbitrary-start", False),
+            info_leave=UiEventInfo("arbitrary-end", False),
             target_state=arbitrary_state
         )
 

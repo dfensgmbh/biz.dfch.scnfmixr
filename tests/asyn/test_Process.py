@@ -20,14 +20,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Conains platform specific tests."""
+
 import unittest
 
 from asyn import Process
 
 
 class TestProcess(unittest.TestCase):
+    """Testing Process class."""
 
     def test_start_with_invalid_program_throws(self):
+        """Starting an non-existing command fails."""
 
         args = [
             "invalid-process-name",
@@ -83,7 +87,8 @@ class TestProcess(unittest.TestCase):
 
         args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
 
-        sut = Process.start(args, wait_on_completion=True, capture_stdout=True, capture_stderr=True)
+        sut = Process.start(args, wait_on_completion=True, capture_stdout=True,
+                            capture_stderr=True)
 
         self.assertIsNotNone(sut)
         self.assertFalse(sut.is_running)
@@ -93,7 +98,8 @@ class TestProcess(unittest.TestCase):
 
         args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
 
-        sut = Process.start(args, wait_on_completion=True, capture_stdout=True, capture_stderr=True)
+        sut = Process.start(args, wait_on_completion=True, capture_stdout=True,
+                            capture_stderr=True)
 
         self.assertIsNotNone(sut)
         self.assertFalse(sut.is_running)
@@ -113,7 +119,8 @@ class TestProcess(unittest.TestCase):
             "Write-Error 'arbitrary-message'",
         ]
 
-        sut = Process.start(args, wait_on_completion=True, capture_stdout=True, capture_stderr=True)
+        sut = Process.start(args, wait_on_completion=True, capture_stdout=True,
+                            capture_stderr=True)
 
         self.assertIsNotNone(sut)
         self.assertFalse(sut.is_running)
@@ -133,7 +140,8 @@ class TestProcess(unittest.TestCase):
             "Write-Error 'arbitrary-error'; Write-Output 'arbitrary-message'",
         ]
 
-        sut = Process.start(args, wait_on_completion=True, capture_stdout=True, capture_stderr=False)
+        sut = Process.start(args, wait_on_completion=True, capture_stdout=True,
+                            capture_stderr=False)
 
         self.assertIsNotNone(sut)
         self.assertFalse(sut.is_running)
@@ -149,7 +157,8 @@ class TestProcess(unittest.TestCase):
 
         args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
 
-        sut = Process.start(args, wait_on_completion=True, capture_stdout=True, capture_stderr=True)
+        sut = Process.start(args, wait_on_completion=True, capture_stdout=True,
+                            capture_stderr=True)
 
         self.assertIsNotNone(sut)
         self.assertFalse(sut.is_running)
@@ -167,7 +176,8 @@ class TestProcess(unittest.TestCase):
 
         args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
 
-        sut = Process.start(args, wait_on_completion=True, capture_stdout=False, capture_stderr=False)
+        sut = Process.start(args, wait_on_completion=True, capture_stdout=False,
+                            capture_stderr=False)
 
         self.assertIsNotNone(sut)
         self.assertFalse(sut.is_running)

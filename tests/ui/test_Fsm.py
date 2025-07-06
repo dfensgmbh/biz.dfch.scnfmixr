@@ -24,9 +24,10 @@
 
 import unittest
 
-from ui import ExecutionContext, Fsm
-from ui import StateBase
-from ui import TransitionBase
+from biz.dfch.scnfmixr.ui import ExecutionContext
+from biz.dfch.scnfmixr.ui import Fsm
+from biz.dfch.scnfmixr.ui import StateBase
+from biz.dfch.scnfmixr.ui import TransitionBase
 
 
 class TestFsm(unittest.TestCase):
@@ -61,8 +62,10 @@ class TestFsm(unittest.TestCase):
     def test_initialising_succeeds(self):
         """Initialising succeeds."""
 
-        initial_state = TestFsm.ArbitraryState1(info_start=None, info_end=None)
-        ctx = ExecutionContext()
+        initial_state = TestFsm.ArbitraryState1(
+            info_enter=None,
+            info_leave=None)
+        ctx = ExecutionContext(None, None)
 
         sut = Fsm(initial_state, ctx)
 
@@ -72,31 +75,31 @@ class TestFsm(unittest.TestCase):
     def test_transiting_between_states_succeeds(self):
         """Invoking a transition between states suceeds for valid events."""
 
-        initial_state = TestFsm.ArbitraryState1(info_start=None, info_end=None)
+        initial_state = TestFsm.ArbitraryState1(
+            info_enter=None,
+            info_leave=None)
 
-        end_state = TestFsm.ArbitraryState2(info_start=None, info_end=None)
+        end_state = TestFsm.ArbitraryState2(
+            info_enter=None,
+            info_leave=None)
 
         transition_to_end_state = TestFsm.ArbitraryTransition1(
             event="0",
-            info_start=None,
-            do_info_start_loop=True,
-            info_end=None,
-            do_info_end_loop=True,
+            info_enter=None,
+            info_leave=None,
             target_state=end_state
         )
 
         transition_to_initial_state = TestFsm.ArbitraryTransition2(
             event="1",
-            info_start=None,
-            do_info_start_loop=True,
-            info_end=None,
-            do_info_end_loop=True,
+            info_enter=None,
+            info_leave=None,
             target_state=initial_state
         )
 
         initial_state.add_transition(transition_to_end_state)
         end_state.add_transition(transition_to_initial_state)
-        ctx = ExecutionContext()
+        ctx = ExecutionContext(None, None)
 
         sut = Fsm(initial_state, ctx)
         self.assertIsNotNone(sut)

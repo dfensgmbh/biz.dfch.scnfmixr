@@ -24,11 +24,13 @@
 
 import unittest
 
-from ui import StateBase
-from ui import TransitionBase, ExecutionContext
+from biz.dfch.scnfmixr.ui import UiEventInfo
+from biz.dfch.scnfmixr.ui import ExecutionContext
+from biz.dfch.scnfmixr.ui import StateBase
+from biz.dfch.scnfmixr.ui import TransitionBase
 
 
-class TestState(unittest.TestCase):
+class TestStateBase(unittest.TestCase):
     """Tests states in a state machine."""
 
     class ArbitraryState(StateBase):
@@ -48,15 +50,13 @@ class TestState(unittest.TestCase):
     def test_initialising_succeeds(self):
         """Initialising succeeds."""
 
-        arbitrary_state = TestState.ArbitraryState(
-            info_start=None, info_end=None)
+        arbitrary_state = TestStateBase.ArbitraryState(
+            info_enter=None, info_leave=None)
 
-        sut = TestState.ArbitraryTransition(
+        sut = TestStateBase.ArbitraryTransition(
             event="0",
-            info_start="arbitrary-start",
-            do_info_start_loop=True,
-            info_end="arbitrary-end",
-            do_info_end_loop=True,
+            info_enter=UiEventInfo("arbitrary-start", False),
+            info_leave=UiEventInfo("arbitrary-end", False),
             target_state=arbitrary_state
         )
 
@@ -66,28 +66,24 @@ class TestState(unittest.TestCase):
         """`target_state` must not be `None`."""
 
         with self.assertRaises(AssertionError):
-            _ = TestState.ArbitraryTransition(
+            _ = TestStateBase.ArbitraryTransition(
                 event="0",
-                info_start=None,
-                do_info_start_loop=True,
-                info_end=None,
-                do_info_end_loop=True,
+                info_enter=None,
+                info_leave=None,
                 target_state=None
             )
 
     def test_initialising_event_containing_multiple_characters_throws(self):
         """`event` must not contain more than a single character."""
 
-        arbitrary_state = TestState.ArbitraryState(
-            info_start=None, info_end=None)
+        arbitrary_state = TestStateBase.ArbitraryState(
+            info_enter=None, info_leave=None)
 
         with self.assertRaises(AssertionError):
-            _ = TestState.ArbitraryTransition(
+            _ = TestStateBase.ArbitraryTransition(
                 event="12",
-                info_start=None,
-                do_info_start_loop=True,
-                info_end=None,
-                do_info_end_loop=True,
+                info_enter=None,
+                info_leave=None,
                 target_state=arbitrary_state
             )
 
@@ -95,19 +91,17 @@ class TestState(unittest.TestCase):
         """Adding a valid transition to a State adds it to the list of
         transitions."""
 
-        arbitrary_state = TestState.ArbitraryState(
-            info_start=None, info_end=None)
+        arbitrary_state = TestStateBase.ArbitraryState(
+            info_enter=None, info_leave=None)
 
-        transition = TestState.ArbitraryTransition(
+        transition = TestStateBase.ArbitraryTransition(
             event="0",
-            info_start="arbitrary-start",
-            do_info_start_loop=True,
-            info_end="arbitrary-end",
-            do_info_end_loop=True,
+            info_enter=UiEventInfo("arbitrary-start", False),
+            info_leave=UiEventInfo("arbitrary-end", False),
             target_state=arbitrary_state
         )
 
-        sut = TestState.ArbitraryState(info_start=None, info_end=None)
+        sut = TestStateBase.ArbitraryState(info_enter=None, info_leave=None)
 
         self.assertEqual(0, len(sut.transitions))
         sut.add_transition(transition)
@@ -116,19 +110,17 @@ class TestState(unittest.TestCase):
     def test_adding_transition_twice_throws(self):
         """Adding the same transition twice fails."""
 
-        arbitrary_state = TestState.ArbitraryState(
-            info_start=None, info_end=None)
+        arbitrary_state = TestStateBase.ArbitraryState(
+            info_enter=None, info_leave=None)
 
-        transition = TestState.ArbitraryTransition(
+        transition = TestStateBase.ArbitraryTransition(
             event="0",
-            info_start="arbitrary-start",
-            do_info_start_loop=True,
-            info_end="arbitrary-end",
-            do_info_end_loop=True,
+            info_enter=UiEventInfo("arbitrary-start", False),
+            info_leave=UiEventInfo("arbitrary-end", False),
             target_state=arbitrary_state
         )
 
-        sut = TestState.ArbitraryState(info_start=None, info_end=None)
+        sut = TestStateBase.ArbitraryState(info_enter=None, info_leave=None)
         sut.add_transition(transition)
 
         with self.assertRaises(AssertionError):
@@ -137,28 +129,24 @@ class TestState(unittest.TestCase):
     def test_adding_duplicate_transition_name_throws(self):
         """Adding the same transition name twice fails."""
 
-        arbitrary_state = TestState.ArbitraryState(
-            info_start=None, info_end=None)
+        arbitrary_state = TestStateBase.ArbitraryState(
+            info_enter=None, info_leave=None)
 
-        transition1 = TestState.ArbitraryTransition(
+        transition1 = TestStateBase.ArbitraryTransition(
             event="0",
-            info_start="arbitrary-start",
-            do_info_start_loop=True,
-            info_end="arbitrary-end",
-            do_info_end_loop=True,
+            info_enter=UiEventInfo("arbitrary-start", False),
+            info_leave=UiEventInfo("arbitrary-end", False),
             target_state=arbitrary_state
         )
 
-        transition2 = TestState.ArbitraryTransition(
+        transition2 = TestStateBase.ArbitraryTransition(
             event="0",
-            info_start="arbitrary-start",
-            do_info_start_loop=True,
-            info_end="arbitrary-end",
-            do_info_end_loop=True,
+            info_enter=UiEventInfo("arbitrary-start", False),
+            info_leave=UiEventInfo("arbitrary-end", False),
             target_state=arbitrary_state
         )
 
-        sut = TestState.ArbitraryState(info_start=None, info_end=None)
+        sut = TestStateBase.ArbitraryState(info_enter=None, info_leave=None)
         sut.add_transition(transition1)
 
         with self.assertRaises(AssertionError):
