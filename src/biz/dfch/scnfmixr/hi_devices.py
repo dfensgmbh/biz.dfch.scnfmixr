@@ -20,24 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package scnfmix."""
+"""Logical name of HI devices in the system."""
 
-from .app import App
-from .app_ctx import ApplicationContext
-from .name_input import DateTimeNameInput
-from .language_code import LanguageCode
-from .rc_devices import RcDevices
-from .storage_device_map import StorageDeviceMap
-from .hi_devices import HiDevices
-from .input_device_map import InputDeviceMap
+from enum import StrEnum, auto
 
-__all__ = [
-    "App",
-    "ApplicationContext",
-    "DateTimeNameInput",
-    "LanguageCode",
-    "RcDevices",
-    "StorageDeviceMap",
-    "HiDevices",
-    "InputDeviceMap",
-]
+
+class HiDevices(StrEnum):
+    """Logical names of HI devices in the system."""
+    HI1 = auto()
+    HI2 = auto()
+    HI3 = auto()

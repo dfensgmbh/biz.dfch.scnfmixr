@@ -32,6 +32,10 @@ from .app_ctx import ApplicationContext
 from .args import Arguments
 from .audio import AudioDevices, AudioDeviceMap, RecordingParameters
 from .core import StateMachine
+from .hi_devices import HiDevices
+from .input_device_map import InputDeviceMap
+from .rc_devices import RcDevices
+from .storage_device_map import StorageDeviceMap
 
 
 class App():
@@ -55,11 +59,11 @@ class App():
 
         args = Arguments(prog_name=self._PROG_NAME, version=self._VERSION).get()
 
-        device_map: AudioDeviceMap = {
-            AudioDevices.LCL: args.LCL,
-            AudioDevices.EX1: args.EX1,
-            AudioDevices.EX2: args.EX2,
-        }
+        # audio_device_map: AudioDeviceMap = {
+        #     AudioDevices.LCL: args.LCL,
+        #     AudioDevices.EX1: args.EX1,
+        #     AudioDevices.EX2: args.EX2,
+        # }
 
         rec_params = RecordingParameters(
             format=args.format,
@@ -68,10 +72,38 @@ class App():
             is_dual=args.dual_recording,
         )
 
+        # storage_device_map: StorageDeviceMap = {
+        #     RcDevices.RC1: args.RC1,
+        #     RcDevices.RC2: args.RC2,
+        # }
+
+        # input_device_map: InputDeviceMap = {
+        #     HiDevices.HI1: args.HI1,
+        #     HiDevices.HI2: args.HI2,
+        #     HiDevices.HI3: args.HI3,
+        # }
+
         app_ctx = ApplicationContext()
+
+        app_ctx.audio_device_map = {
+            AudioDevices.LCL: args.LCL,
+            AudioDevices.EX1: args.EX1,
+            AudioDevices.EX2: args.EX2,
+        }
+        app_ctx.storage_device_map = {
+            RcDevices.RC1: args.RC1,
+            RcDevices.RC2: args.RC2,
+        }
+        app_ctx.input_device_map = {
+            HiDevices.HI1: args.HI1,
+            HiDevices.HI2: args.HI2,
+            HiDevices.HI3: args.HI3,
+        }
         app_ctx.language = LanguageCode[args.language]
 
-        log.info("Dev map: '%s'.", device_map)
+        log.info("Snd map: '%s'.", app_ctx.audio_device_map)
+        log.info("Sto map: '%s'.", app_ctx.storage_device_map)
+        log.info("Inp map: '%s'.", app_ctx.input_device_map)
         log.info("Rec opt: '%s'.", rec_params)
         log.info("App ctx: '%s'.", app_ctx)
 

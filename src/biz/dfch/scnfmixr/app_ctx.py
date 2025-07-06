@@ -28,6 +28,9 @@ from typing import final
 
 from .app import LanguageCode
 from .name_input import DateTimeNameInput
+from .audio import AudioDeviceMap
+from .input_device_map import InputDeviceMap
+from .storage_device_map import StorageDeviceMap
 
 
 @final
@@ -52,7 +55,10 @@ class ApplicationContext():
 
     def __str__(self) -> str:
         result = {
-            "language": self._language
+            "language": self._language,
+            "snd": self.audio_device_map,
+            "sto": self.storage_device_map,
+            "inp": self.input_device_map,
         }
 
         return str(result)
@@ -65,13 +71,16 @@ class ApplicationContext():
 
         with cls._lock:
 
-            if not cls._instance:
+            if cls._instance:
+                return cls._instance
 
-                cls._instance = super().__new__(cls)
+            cls._instance = super().__new__(cls)
 
-                # Set default values here and not in __init__.
-                cls._instance.language = LanguageCode.EN
-                cls.date_string = ""
-                cls.date_time_name_input = DateTimeNameInput()
+            # Set default values here and not in __init__.
+            cls._instance.language = LanguageCode.EN
+            cls.date_time_name_input = DateTimeNameInput()
+            cls.audio_device_map: AudioDeviceMap = AudioDeviceMap()
+            cls.storage_device_map: StorageDeviceMap = StorageDeviceMap()
+            cls.input_device_map: InputDeviceMap = InputDeviceMap()
 
         return cls._instance

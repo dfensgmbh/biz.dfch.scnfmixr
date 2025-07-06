@@ -20,24 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package scnfmix."""
+"""Mapping of HI devices to system ports."""
 
-from .app import App
-from .app_ctx import ApplicationContext
-from .name_input import DateTimeNameInput
-from .language_code import LanguageCode
-from .rc_devices import RcDevices
-from .storage_device_map import StorageDeviceMap
 from .hi_devices import HiDevices
-from .input_device_map import InputDeviceMap
 
-__all__ = [
-    "App",
-    "ApplicationContext",
-    "DateTimeNameInput",
-    "LanguageCode",
-    "RcDevices",
-    "StorageDeviceMap",
-    "HiDevices",
-    "InputDeviceMap",
-]
+InputDeviceMap = dict[HiDevices, str]

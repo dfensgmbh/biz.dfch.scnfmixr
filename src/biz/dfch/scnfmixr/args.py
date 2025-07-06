@@ -114,15 +114,6 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
                   "(if connected).")
         )
 
-        # User interaction.
-        parser.add_argument(
-            "--hid",
-            type=str,
-            choices=["keyboard", "midi", "streamdeck", "none"],
-            default="hid",
-            help="Select the user interaction device."
-        )
-
         # Audio devices.
         parser.add_argument(
             "--local", "-lcl",
@@ -144,6 +135,45 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
             dest="EX2",
             default="3-2",
             help="Specifies USB port for external audio device 2."
+        )
+
+        # Storage devices.
+        parser.add_argument(
+            "--storage1", "-rc1",
+            type=str,
+            dest="RC1",
+            default="3-1.3",
+            help="Specifies USB port for storage device 1."
+        )
+        parser.add_argument(
+            "--storage2", "-rc2",
+            type=str,
+            dest="RC2",
+            default="3-1.1",
+            help="Specifies USB port for storage device 2."
+        )
+
+        # User interaction.
+        parser.add_argument(
+            "--input1", "-hi1",
+            type=str,
+            dest="HI1",
+            default="3-1.4",
+            help="Specifies USB port for keyboard."
+        )
+        parser.add_argument(
+            "--input2", "-hi2",
+            type=str,
+            dest="HI2",
+            default="3-1.4",
+            help="Specifies USB port for Elgato Streamdeck."
+        )
+        parser.add_argument(
+            "--input3", "-hi3",
+            type=str,
+            dest="HI3",
+            default="3-1.4",
+            help="Specifies USB port for MorningStar MIDI controller."
         )
 
         result = parser.parse_args()

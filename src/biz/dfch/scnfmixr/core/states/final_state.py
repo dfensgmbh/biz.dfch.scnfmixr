@@ -26,6 +26,8 @@ from __future__ import annotations
 from enum import StrEnum
 
 from biz.dfch.logging import log
+
+from ...app import ApplicationContext
 from ...ui import UiEventInfo
 from ...ui import ExecutionContext
 from ...ui import StateBase
@@ -58,6 +60,13 @@ class FinalState(StateBase):
 
         log.info("Stopping state machine.")
         ctx.signal_stop.set()
+
+        app_ctx = ApplicationContext()
+        # log.info("Snd map: '%s'.", app_ctx.audio_device_map)
+        # log.info("Sto map: '%s'.", app_ctx.storage_device_map)
+        # log.info("Inp map: '%s'.", app_ctx.input_device_map)
+        # log.info("Rec opt: '%s'.", app_ctx.rec_params)
+        log.info("App ctx: '%s'.", app_ctx)
 
         return True
 
