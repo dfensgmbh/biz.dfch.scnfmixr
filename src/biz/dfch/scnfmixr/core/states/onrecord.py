@@ -47,8 +47,8 @@ class OnRecord(StateBase):
         """Default ctor."""
 
         super().__init__(
-            info_enter=UiEventInfo(StateEvent.RECORD_ENTER, True),
-            info_leave=UiEventInfo(StateEvent.RECORD_LEAVE, True)
+            info_enter=UiEventInfo(StateEvent.ONRECORD_ENTER, True),
+            info_leave=UiEventInfo(StateEvent.ONRECORD_LEAVE, True)
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:
