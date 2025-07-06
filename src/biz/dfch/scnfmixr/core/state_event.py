@@ -46,10 +46,6 @@ class StateEvent(StrEnum):
     DETECT_RC1_LEAVE = auto()
     DETECT_RC2_ENTER = auto()
     DETECT_RC2_LEAVE = auto()
-    CLEAN_RC1_ENTER = auto()
-    CLEAN_RC1_LEAVE = auto()
-    CLEAN_RC2_ENTER = auto()
-    CLEAN_RC2_LEAVE = auto()
 
     SELECT_LANGUAGE_ENTER = auto()
     SELECT_LANGUAGE_LEAVE = auto()
@@ -60,11 +56,6 @@ class StateEvent(StrEnum):
     SET_TIME_LEAVE = auto()
     SET_NAME_ENTER = auto()
     SET_NAME_LEAVE = auto()
-
-    RECORD1_ENTER = auto()
-    RECORD1_LEAVE = auto()
-    RECORD2_ENTER = auto()
-    RECORD2_LEAVE = auto()
 
     SYSTEM_MENU_ENTER = auto()
     SYSTEM_MENU_LEAVE = auto()

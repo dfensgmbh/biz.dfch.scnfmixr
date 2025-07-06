@@ -347,8 +347,8 @@ class StateMachine():
         self._fsm = Fsm(initialise_lcl, self._ctx, ui)
         self._fsm.start()
 
-        for line in self._fsm.visualise():
-            log.debug(line)
+        # for line in self._fsm.visualise():
+        #     log.debug(line)
 
         log.info("Initialising state machine SUCCEEDED.")
 
