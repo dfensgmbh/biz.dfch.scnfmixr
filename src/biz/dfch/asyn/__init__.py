@@ -24,10 +24,10 @@
 
 from .concurrent_queue import ConcurrentQueue
 from .concurrent_queue_t import ConcurrentQueueT
-from .process_module import Process
+from .process import Process
 
 __all__ = [
     "ConcurrentQueue",
     "ConcurrentQueueT",
-    "process_module",
+    "Process",
 ]
