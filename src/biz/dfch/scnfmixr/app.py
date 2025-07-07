@@ -24,10 +24,10 @@
 
 import time
 
+from biz.dfch.i18n import LanguageCode
 from biz.dfch.logging import log
 from biz.dfch.version import Version
 
-from .language_code import LanguageCode
 from .app_ctx import ApplicationContext
 from .args import Arguments
 from .audio import AudioDevices, AudioDeviceMap, RecordingParameters

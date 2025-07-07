@@ -20,15 +20,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module defining the language codes supported."""
+"""Module defining supported language codes."""
 
 from enum import Enum
+from typing import Self
 
 
 class LanguageCode(str, Enum):
-    """Defines the language codes supported."""
+    """Defines supported language codes."""
 
     EN = "English"
     DE = "Deutsch"
     FR = "Français"
     IT = "Italiano"
+
+    @staticmethod
+    def get_default() -> Self:
+        """Gets the default language code.
+
+        Returns:
+            LanguageCode: The default language code.
+        """
+        return LanguageCode.EN

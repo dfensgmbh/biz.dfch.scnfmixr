@@ -25,7 +25,7 @@
 import argparse
 from dataclasses import dataclass
 
-from .language_code import LanguageCode
+from biz.dfch.i18n import LanguageCode
 
 
 @dataclass(frozen=True)

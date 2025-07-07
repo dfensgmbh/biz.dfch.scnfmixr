@@ -22,11 +22,12 @@
 
 from __future__ import annotations
 
+from biz.dfch.i18n import LanguageCode
+
 from ..audio.audio_player import AudioPlayer
 from .ui_event_info import UiEventInfo
 from .execution_context import ExecutionContext
 from .fsm import Fsm
-from ..language_code import LanguageCode
 from .state_base import StateBase
 from .transition_base import TransitionBase
 

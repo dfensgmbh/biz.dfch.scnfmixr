@@ -20,38 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module user_interaction_audio."""
+"""Package i18n."""
 
-from biz.dfch.i18n import I18n
-
-from ..app_ctx import ApplicationContext
-from ..audio.audio_player import AudioPlayer
-from .user_interacton_base import UserInteractionBase
-from .ui_event_info import UiEventInfo
+from .i18n import I18n
+from .language_code import LanguageCode
 
 __all__ = [
-    "UserInteractionAudio",
+    "I18n",
+    "LanguageCode"
 ]
-
-
-class UserInteractionAudio(UserInteractionBase):
-    """Audio UI output handling."""
-
-    def __init__(self, jack_name: str):
-
-        assert jack_name and jack_name.strip()
-
-        self._player = AudioPlayer(jack_name)
-
-    def update(self, item):
-
-        assert item
-        assert isinstance(item, UiEventInfo)
-
-        app_ctx = ApplicationContext()
-
-        path = I18n.get_resource_path(f"{item.name}.wav", app_ctx.language)
-
-        self._player.clear(True)
-        # self._player.enqueue((item.name, item.is_loop))
-        self._player.enqueue((path, item.is_loop))
