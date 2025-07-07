@@ -20,9 +20,9 @@ admin@raspberrypi:~ $ pwd
 sudo apt install python3 python3-pip
 
 # Create virtual environment
-cd ~/PhoneTap20
+cd ~/scnfmixr
 python3 -m venv venv
-source ~/PhoneTap20/venv/bin/activate
+source ~/scnfmixr/venv/bin/activate
 
 # Upgrade PIP
 pip install --upgrade pip
@@ -36,39 +36,39 @@ pip install typing
 pip freeze > requirements.txt
 
 # Create script
-nano ~/PhoneTap20/src/__main__.py
+nano ~/scnfmixr/src/__main__.py
 
 # Make script executable
-chmod +x ~/PhoneTap20/src/__main__.py
+chmod +x ~/scnfmixr/src/__main__.py
 
 # Create log file and set permissions
-sudo touch ~/PhoneTap20/app.log
-sudo chown admin:root ~/PhoneTap20/app.log
-sudo chmod 660 ~/PhoneTap20/app.log
+sudo touch ~/scnfmixr/app.log
+sudo chown admin:root ~/scnfmixr/app.log
+sudo chmod 660 ~/scnfmixr/app.log
 
 # Create service descriptor
-nano ~/PhoneTap20/src/app.service
+nano ~/scnfmixr/src/app.service
 
 # Activate and start service
-sudo ln -fs ~/PhoneTap20/src/app.service /etc/systemd/system/PhoneTap20.service
-sudo systemctl enable PhoneTap20.service
+sudo ln -fs ~/scnfmixr/src/app.service /etc/systemd/system/scnfmixr.service
+sudo systemctl enable scnfmixr.service
 sudo systemctl daemon-reload
-sudo systemctl start PhoneTap20.service
-sudo systemctl status PhoneTap20.service
-journalctl -u PhoneTap20.service
+sudo systemctl start scnfmixr.service
+sudo systemctl status scnfmixr.service
+journalctl -u scnfmixr.service
 # tail -f app.log
 
 # Deactivate service
-sudo systemctl disable PhoneTap20.service
-sudo systemctl stop PhoneTap20.service
-sudo systemctl status PhoneTap20.service
+sudo systemctl disable scnfmixr.service
+sudo systemctl stop scnfmixr.service
+sudo systemctl status scnfmixr.service
 ```
 
 # Testing
 ```sh
 admin@raspberrypi:~ $ pwd
 /home/admin
-admin@raspberrypi:~ $ cd ~/PhoneTap20
+admin@raspberrypi:~ $ cd ~/scnfmixr
 admin@raspberrypi:~ $ python -m unittest discover
 admin@raspberrypi:~ $ python -m unittest discover -s tests -t . -p test_*.py
 admin@raspberrypi:~ $ python -m unittest discover -v -s <package-path> -t . -p test_*.py
@@ -312,7 +312,20 @@ Restart=on-failure
 WantedBy=default.target
 ```
 
-### app.service
+### Enabling, starting and stopping the jackd.service
+
+```
+systemctl --user daemon-reexec
+systemctl --user daemon-reload
+
+$
+systemctl --user enable jackd.service
+systemctl --user status jackd.service
+```
+
+Note: it has been reported, that `status` will not show JACK running, despite it is. Check with `ps aux | grep -i jack` and `jack_lsp` instead.
+
+### scnfmixr.service
 
 ```
 [Unit]
@@ -331,18 +344,22 @@ Restart=always
 WantedBy=default.target
 ```
 
-### Enabling, starting and stopping the service 
+### Enabling, starting and stopping the scnfmixr.service
 
 ```
-systemctl --user daemon-reexec
-systemctl --user daemon-reload
+# Disable service.
+sudo systemctl disable scnfmixr.service
+sudo systemctl stop scnfmixr.service
+sudo systemctl daemon-reload
 
-$
-systemctl --user enable jackd.service
-systemctl --user status jackd.service
+# Enable service.
+sudo ln -fs ~/scnfmixr/src/app.service /etc/systemd/system/scnfmixr.service
+sudo systemctl enable scnfmixr.service
+sudo systemctl daemon-reload
+sudo systemctl start scnfmixr.service
+sudo systemctl status scnfmixr.service
+journalctl -u scnfmixr.service
 ```
-
-Note: it has been reported, that `status` will not show JACK running, despite it is. Check with `ps aux | grep -i jack` and `jack_lsp` instead.
 
 ## Target Directory
 ```

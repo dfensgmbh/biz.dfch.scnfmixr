@@ -60,10 +60,10 @@ class DetectingHi1(TransitionBase):
         device = worker.select()
 
         if device is None or "" == device.strip():
-            log.error("No input device for at: '%s'", value)
+            log.error("No input device detected at: '%s'", value)
             return False
 
-        log.debug("Input device found: '%s'", device)
+        log.debug("Input device detected at: '%s'", device)
 
         self._handler = KeyboardHandler(ctx.events, device)
         log.debug("Starting keyboard processing ...")

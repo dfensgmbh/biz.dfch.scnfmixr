@@ -21,13 +21,13 @@
 # SOFTWARE.
 
 [Unit]
-Description=Run PhoneTap20 main script at startup
+Description=scnfmixr (Secure Conference Mixer and Recorder)
 After=sound.target
 
 [Service]
-ExecStart=/home/admin/PhoneTap20/venv/bin/python -m src --startup
+ExecStart=/opt/scnfmixr/bin/scnfmixr --service
 User=root
-WorkingDirectory=/home/admin/PhoneTap20
+WorkingDirectory=/opt/scnfmixr/
 StandardOutput=journal
 StandardError=journal
 Restart=always
