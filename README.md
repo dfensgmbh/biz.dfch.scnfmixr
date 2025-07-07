@@ -215,11 +215,11 @@ The programme should be built with `pyinstaller` as `--onefile`. The resulting e
 ```
 user@system:~/{project-root} $ pyinstaller --clean --onefile \
     --name scnfmixr \
-    --add-data "./logging.conf:." \
+    --add-data "./src/logging.conf:." \
+    --add-data "./src/biz/dfch/scnfmixr/res/:./res/" \
     -p ./src -p ./src/biz \
     ./src/biz/__main__.py;
 ```
-
 
 ## Source Directory
 ```
@@ -240,9 +240,15 @@ user@system:~/{project-root} $ pyinstaller --clean --onefile \
                 - __init__.py
                 - app.py        # Entry point.
                 + res           # Contains resources and audio files.
-                    |           # lang: EN, DE, FR, IT
-                    - <state>-<lang>.(flac|wav)
-                    - <transition>-<lang>.(flac|wav)
+                    |
+                    + EN
+                        - res.(flac|wav)
+                    + DE
+                        - res.(flac|wav)
+                    + FR
+                        - res.(flac|wav)
+                    + IT
+                        - res.(flac|wav)
 + tests                         # Same structure as 'src' layout, but 
 |                               # 'biz' and 'dfch' are omitted.
 + venv      # Windows 11 venv
