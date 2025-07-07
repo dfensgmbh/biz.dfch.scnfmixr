@@ -88,6 +88,19 @@ class App():
         log.info("Rec opt: '%s'.", app_ctx.recording_parameters)
         log.info("App ctx: '%s'.", app_ctx)
 
+        if args.test:
+            from .core.transitions.detecting_hi1 import DetectingHi1
+            from .ui import StateBase
+            from .ui import ExecutionContext
+
+            s = StateBase(None, None)
+            t = DetectingHi1("0", s)
+            ctx = ExecutionContext(None, None)
+            t.invoke(ctx)
+
+            log.info("TESTING. Detecting keyboard.")
+            return
+
         if args.service:
             log.info("Arg 'startup' detected.")
 

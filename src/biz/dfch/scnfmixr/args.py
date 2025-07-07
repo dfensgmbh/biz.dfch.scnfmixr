@@ -176,6 +176,11 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
             help="Specifies USB port for MorningStar MIDI controller."
         )
 
+        parser.add_argument(
+            "--test", "-t",
+            action="store_true",
+            help="Test HID detection."
+        )
         result = parser.parse_args()
 
         return result
