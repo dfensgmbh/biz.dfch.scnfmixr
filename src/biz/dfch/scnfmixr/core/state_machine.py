@@ -86,16 +86,21 @@ class StateMachine():
     WAIT_INTERVAL_MS: int = 350
     BLOCK_INTERVAL_MS: int = 5000
 
+    _app_ctx: ApplicationContext
+    _queue: ConcurrentQueueT[str]
+    _do_cancel_worker: threading.Event
+    _thread: threading.Thread
+
     def __init__(self):
-        """Default .ctor."""
 
         self._app_ctx = ApplicationContext()
         self._queue: ConcurrentQueueT[str] = ConcurrentQueueT(str, True)
         self._do_cancel_worker = threading.Event()
         self._thread = threading.Thread(target=self._worker, daemon=True)
 
+    def start(self) -> None:
+        "Starts the state machine."
         self.initialise()
-
         self._thread.start()
 
     def _worker(self) -> None:
