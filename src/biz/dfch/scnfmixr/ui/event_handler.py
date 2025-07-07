@@ -23,18 +23,107 @@
 """Module defining the abstract base class input handling."""
 
 from abc import ABC, abstractmethod
+from threading import Event, Lock
+
+from biz.dfch.asyn import ConcurrentQueueT
 
 
 class EventHandler(ABC):
-    """Defines the abstract base class for input handling."""
+    """Defines the abstract base class for input handling.
+
+    Attributes:
+        stop_processing (Event): Signalled when stop is invoked.
+        sync_root (Lock): A non-reentrant lock for synchronisation.
+        queue (ConcurrentQueueT[str]): The event queue to be fed by the 
+            event handler.
+    """
+
+    stop_processing: Event
+    sync_root: Lock
+    queue: ConcurrentQueueT[str]
+    _is_paused: bool
+
+    def __init__(self, queue: ConcurrentQueueT[str]):
+
+        super().__init__()
+
+        assert queue
+
+        self.stop_processing = Event()
+        self.sync_root = Lock()
+        self.queue = queue
+        self._is_paused = False
 
     @abstractmethod
-    def invoke(self) -> bool:
+    def start(self):
         """
         Return:
             bool: True, if successful, false otherwise.
         """
 
-        result = False
+        return False
 
-        return result
+    @abstractmethod
+    def stop(self):
+        """
+        Return:
+            bool: True, if successful, false otherwise.
+        """
+
+        return False
+
+    @property
+    def is_started(self) -> bool:
+        """Determines whether keyboard processing is active or not.
+
+        Returns:
+            bool: True, if processing is started; false, otherwise.
+        """
+
+        return not self.stop_processing.is_set()
+
+    @property
+    def is_paused(self) -> bool:
+        """Determines whether keyboard processing is paused or not.
+
+        Returns:
+            bool: True, if processing is paused; false, otherwise.
+        """
+
+        return not self.stop_processing.is_set()
+
+    def pause(self) -> bool:
+        """Pauses keyboard processing.
+
+        Returns:
+            bool: True, if processing is paused; false, if not or if the
+                service is not started.
+        """
+
+        with self.sync_root:
+            if self.stop_processing.is_set():
+                return False
+
+            if self._is_paused:
+                return True
+
+            self._is_paused = not self._is_paused
+            return self._is_paused
+
+    def resume(self) -> bool:
+        """Resumes keyboard processing.
+
+        Returns:
+            bool: True, if processing is paused; false, if not or if the
+                service is not started.
+        """
+
+        with self.sync_root:
+            if self.stop_processing.is_set():
+                return False
+
+            if not self._is_paused:
+                return False
+
+            self._is_paused = not self._is_paused
+            return self._is_paused

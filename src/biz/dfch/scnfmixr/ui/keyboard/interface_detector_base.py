@@ -20,14 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module defining the class keyboard input handling."""
+"""Module interface_detector_base."""
 
-from .event_handler import EventHandler
+from abc import ABC, abstractmethod
+
+# Move to separate package, as it is not specific to keybarod detection.
 
 
-class KeyboardHandler(EventHandler):
-    """Handles keyboard input."""
+class InterfaceDetectorBase(ABC):
+    """Base class for user interface selection."""
 
-    def invoke(self) -> bool:
-
-        pass
+    @abstractmethod
+    def select(self) -> str:
+        """Selects a device."""

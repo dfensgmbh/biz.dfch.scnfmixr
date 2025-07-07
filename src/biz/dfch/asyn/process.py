@@ -130,15 +130,12 @@ class Process:
 
             if self._popen.stdin:
                 self._popen.stdin.flush()
-                self._popen.stdin.close()
 
             if self._popen.stdout:
                 self._popen.stdout.flush()
-                self._popen.stdout.close()
 
             if self._popen.stderr:
                 self._popen.stderr.flush()
-                self._popen.stderr.close()
 
             # Process already stopped.
             if self._popen.poll() is not None:
@@ -146,8 +143,8 @@ class Process:
 
             self._popen.terminate()
 
-            start_time = time.time_ns()
-            while time.time_ns() - start_time < max_wait_time * 10**9:
+            end_time = time.monotonic() + max_wait_time
+            while end_time > time.monotonic():
                 if self._popen.poll() is not None:
                     return True
 
@@ -236,16 +233,20 @@ class Process:
 
         if capture_stdout:
             process._stdout_thread = threading.Thread(
-                target=process._read_stream, args=(process._popen.stdout, process._STDOUT)
+                target=process._read_stream, args=(
+                    process._popen.stdout, process._STDOUT)
             )
-            log.debug("Starting reading from pipe '%s' [%s] ...", process._STDOUT, result.pid)
+            log.debug(
+                "Starting reading from pipe '%s' [%s] ...", process._STDOUT, result.pid)
             process._stdout_thread.start()
 
         if capture_stderr:
             process._stderr_thread = threading.Thread(
-                target=process._read_stream, args=(process._popen.stderr, process._STDERR)
+                target=process._read_stream, args=(
+                    process._popen.stderr, process._STDERR)
             )
-            log.debug("Starting reading from pipe '%s' [%s] ...", process._STDERR, result.pid)
+            log.debug(
+                "Starting reading from pipe '%s' [%s] ...", process._STDERR, result.pid)
             process._stderr_thread.start()
 
         if not wait_on_completion:
@@ -274,8 +275,14 @@ class Process:
                 value = line.rstrip(os.linesep)
                 self._queue.enqueue((name, value))
 
+                # if stream.closed:
+                #     return
+
         except Exception as ex:  # pylint: disable=broad-exception-caught
-            log.warning("Error reading from stream '%s' [%s]. %s", name, self._popen.pid, ex)
+            log.warning("Error reading from stream '%s' [%s]. %s",
+                        name,
+                        self._popen.pid,
+                        ex)
 
     @property
     def stdout(self) -> Sequence[str]:

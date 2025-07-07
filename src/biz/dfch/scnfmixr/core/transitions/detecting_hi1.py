@@ -22,20 +22,26 @@
 
 """Module detecting_hi1."""
 
+from biz.dfch.asyn import ConcurrentQueueT
+from biz.dfch.logging import log
+
+from ...app import ApplicationContext
+from ...hi_devices import HiDevices
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
+from ...ui.keyboard import DetectingHi1Worker
+from ...ui.keyboard import KeyboardHandler
 from ..transition_event import TransitionEvent
 
 
 class DetectingHi1(TransitionBase):
     """Detecting device HI1."""
 
+    _handler: KeyboardHandler
+
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""
-
-        assert event and event.strip()
-        assert target
 
         super().__init__(
             event,
@@ -45,5 +51,22 @@ class DetectingHi1(TransitionBase):
                 TransitionEvent.DETECTING_DEVICE_HI1_LEAVE, False),
             target_state=target)
 
+        self._handler = None
+
     def invoke(self, ctx):
+
+        value = ApplicationContext().input_device_map[HiDevices.HI1]
+        worker = DetectingHi1Worker(value)
+        device = worker.select()
+
+        if device is None or "" == device.strip():
+            log.error("No input device for at: '%s'", value)
+            return False
+
+        log.debug("Input device found: '%s'", device)
+
+        self._handler = KeyboardHandler(ctx.events, device)
+        log.debug("Starting keyboard processing ...")
+        self._handler.start()
+
         return True
