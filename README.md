@@ -212,6 +212,15 @@ This is the typical contact layout for a (OMTP) TRRS adaptetr that splits the TR
 
 The programme should be built with `pyinstaller` as `--onefile`. The resulting executable will be copied into `/opt/...` and started from there. As it is `--onefile` it will be unpacked on start into `/tmp/_MEI...`. By default, logs will be written to the current working directory into `app.log` (truncated on every start); this can be changed in `logging.conf` (obviously before packing into `--onefile`).
 
+```
+user@system:~/{project-root} $ pyinstaller --clean --onefile \
+    --name scnfmixr \
+    --add-data "./logging.conf:." \
+    -p ./src -p ./src/biz \
+    ./src/biz/__main__.py;
+```
+
+
 ## Source Directory
 ```
 ~/project-root
@@ -242,12 +251,6 @@ The programme should be built with `pyinstaller` as `--onefile`. The resulting e
 + dist
     |
     - scnfmixr-{arch}-v{maj}.{min}.{rev}
-
-user@system:~/{project-root} $ pyinstaller --clean --onefile \
-    --name scnfmixr \
-    --add-data "./logging.conf:." \
-    -p ./src -p ./src/biz \
-    ./src/biz/__main__.py;
 ```
 
 ## Notes:
@@ -349,13 +352,13 @@ Note: it has been reported, that `status` will not show JACK running, despite it
 + opt
     |
     + scnfmixr              # Working directory
-    |
-    - app.log
-    - app.service
-    + bin
-        | 
-        - scnfmixr >>> scnfmixr-v{maj}.{min}.{rev}
-        - scnfmixr-v{maj}.{min}.{rev}
+        |
+        - app.log
+        - app.service
+        + bin
+            | 
+            - scnfmixr >>> scnfmixr-v{maj}.{min}.{rev}
+            - scnfmixr-v{maj}.{min}.{rev}
 ```
 
 Note: naming for the executable does not have to follow [SemVer](http://semver.org). To allow multiple installed versions the programme directory can be changed from `scnfmixr` to `scnfmixr-v{maj}.{min}.{rev}` and then the executable obviously can be named without version information (which is optional anyway). And there can be only one version of the programme running anyway.
