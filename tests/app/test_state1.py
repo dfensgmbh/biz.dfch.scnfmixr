@@ -23,9 +23,6 @@
 from enum import Enum
 import unittest
 
-# from app import State1
-from asyn import Process
-
 
 class TestState1(unittest.TestCase):
     """Testing State1 as part of the state machine."""

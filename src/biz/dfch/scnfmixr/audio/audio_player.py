@@ -31,7 +31,7 @@ import threading
 import time
 
 from biz.dfch.logging import log
-from asyn import Process
+from biz.dfch.asyn import Process
 
 
 class AudioPlayer():

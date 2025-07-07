@@ -20,9 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from asyn import Process
-
 from biz.dfch.logging import log
+from biz.dfch.asyn import Process
 
 __all__ = [
     "Playback",

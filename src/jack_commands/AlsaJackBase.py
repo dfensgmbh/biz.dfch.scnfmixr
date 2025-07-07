@@ -25,8 +25,9 @@
 from abc import ABC
 import time
 
-from asyn import Process
+from biz.dfch.asyn import Process
 from biz.dfch.logging import log
+
 from .JackConnection import JackConnection
 from .JackPort import JackPort
 

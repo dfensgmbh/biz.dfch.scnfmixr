@@ -24,7 +24,7 @@
 
 import unittest
 
-from asyn import Process
+from biz.dfch.asyn import Process
 
 
 class TestProcess(unittest.TestCase):

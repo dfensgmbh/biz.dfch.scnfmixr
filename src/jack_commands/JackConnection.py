@@ -28,8 +28,8 @@ import time
 # from typing import overload, Union
 
 from biz.dfch.logging import log
+from biz.dfch.asyn import Process
 
-from asyn import Process
 from text import MultiLineTextParser
 from text import MultiLineTextParserContext
 
