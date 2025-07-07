@@ -208,7 +208,7 @@ This is the typical contact layout for a (OMTP) TRRS adaptetr that splits the TR
 
 *tbd*
 
-# Build and Installation
+# Build
 
 The programme should be built with `pyinstaller` as `--onefile`. The resulting executable will be copied into `/opt/...` and started from there. As it is `--onefile` it will be unpacked on start into `/tmp/_MEI...`. By default, logs will be written to the current working directory into `app.log` (truncated on every start); this can be changed in `logging.conf` (obviously before packing into `--onefile`).
 
@@ -223,47 +223,150 @@ The programme should be built with `pyinstaller` as `--onefile`. The resulting e
     + biz
         |
         - __init__.py
-        - __main__.py   # Use absolute imports.
-        + dfch
-            |
-            + scnfmixr
+        - __main__.py           # Use absolute imports here.
+        + dfch                  # Relative imports from here.
+            |                   # This package is generally empty.
+            + scnfmixr          # Actual programme.
                 |
                 - __init__.py
-                - app.py
-+ tests
+                - app.py        # Entry point.
+                + res           # Contains resources and audio files.
+                    |           # lang: EN, DE, FR, IT
+                    - <state>-<lang>.(flac|wav)
+                    - <transition>-<lang>.(flac|wav)
++ tests                         # Same structure as 'src' layout, but 
+|                               # 'biz' and 'dfch' are omitted.
 + venv      # Windows 11 venv
 + venvdeb   # WSL2 debian venv
++ venvpi    # Pi OS debian venv
 + dist
     |
-    - scnfmixr-v{maj}.{min}.{rev}
+    - scnfmixr-{arch}-v{maj}.{min}.{rev}
 
-user@system:~/{project-root} $ pyinstaller --clean --onefile --name scnfmixr --add-data "./logging.conf:." -p ./src -p ./src/biz ./src/biz/__main__.py;
+user@system:~/{project-root} $ pyinstaller --clean --onefile \
+    --name scnfmixr \
+    --add-data "./logging.conf:." \
+    -p ./src -p ./src/biz \
+    ./src/biz/__main__.py;
 ```
 
-Note1: `-p` seem to be necessary for successful `import` resolving.
-Note2: Starting the programme from source: `(venvdeb) user@system:~/{project-root}/src $ python -m biz
+## Notes:
+
+pyinstaller parameters
+
+* `-p` on both directories seem to be necessary for successful `import` resolving.
+* `--add-data` needed for `logging.conf` and audio files. Or use a separate file for `add-data`.
+* On Windows use `;` instead of `:` for `--add-data`.
+
+# Installation and Running the Programme
+
+The programme will create a new `app.log` in the current working directory upon every start.
+
+## Running from source
+
+The programme needs to be run in `src` when running from source: 
+`(venv...) user@system:~/{project-root}/src $ python -m biz`
+
+## Running as service
+
+* The programme is intended to run as a `systemd` service..
+* The programme depends on JACK to run as a `systemd` service (running as `root`).
+* The programme is intended and tested to run on Raspberry Pi 5 under `bookworm-lite`.
+
+```
+sudo loginctl enable-linger $USER
+sudo usermod -aG audio "$USER"
+
+sudo tee /etc/security/limits.d/audio.conf > /dev/null <<EOF
+@audio   -  rtprio     95
+@audio   -  memlock    unlimited
+EOF
+
+# Packages to be installed:
+sudo apt-get -y install pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber zita-ajbridge flac sndfile-tools ecasound jackd2 jack-tools exfat-fuse exfatprogs jack-capture lv2-dev lilv-utils x42-plugins zam-plugins calf-plugins lsp-plugins 
+```
+
+### jackd.service
+
+As `admin` create with `nano ~/.config/systemd/user/jackd.service`:
+
+```
+[Unit]
+Description=JACK audio server (dummy backend)
+After=sound.target
+
+[Service]
+ExecStart=/usr/bin/jackd -R -ddummy -r48000 -p1024 -C2 -P2
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+```
+
+### app.service
+
+```
+[Unit]
+Description=scnfmixr (Secure Conference Mixer and Recorder)
+After=sound.target
+
+[Service]
+ExecStart=/opt/scnfmixr/bin/scnfmixr --service
+User=root
+WorkingDirectory=/opt/scnfmixr
+StandardOutput=journal
+StandardError=journal
+Restart=always
+
+[Install]
+WantedBy=default.target
+```
+
+### Enabling, starting and stopping the service 
+
+```
+systemctl --user daemon-reexec
+systemctl --user daemon-reload
+
+$
+systemctl --user enable jackd.service
+systemctl --user status jackd.service
+```
+
+Note: it has been reported, that `status` will not show JACK running, despite it is. Check with `ps aux | grep -i jack` and `jack_lsp` instead.
 
 ## Target Directory
 ```
-/opt
+/
 |
-+ scnfmixr
++ home
     |
-    - logging.conf
-    - app.conf
+    + admin
+        |
+        + .config/systemd/user
+            |
+            - jackd.service # Service running as admin
++ opt
+    |
+    + scnfmixr              # Working directory
+    |
+    - app.log
+    - app.service
     + bin
         | 
+        - scnfmixr >>> scnfmixr-v{maj}.{min}.{rev}
         - scnfmixr-v{maj}.{min}.{rev}
 ```
 
-Note: naming for the executable does not have to follow [SemVer](http://semver.org). To allow multiple installed versions the programme directory can be changed from `scnfmixr` to `scnfmixr-v{maj}.{min}.{rev}` and then the executable obviously can be named without version information (which is optional anyway).
+Note: naming for the executable does not have to follow [SemVer](http://semver.org). To allow multiple installed versions the programme directory can be changed from `scnfmixr` to `scnfmixr-v{maj}.{min}.{rev}` and then the executable obviously can be named without version information (which is optional anyway). And there can be only one version of the programme running anyway.
 
 # Notes and Observations
 
-* Normally, when connecting a device to the USB hub, a blue LED turns on next to the connected device. However, when connecting a *UGREEN* USB audio adapter it only shows when there is a 3.5mm TRRS cable connected to its socket. (`12d1:0010 Huawei Technologies Co., Ltd. KT USB Audio`). The same happens with the *Atomos Connect 4K* when there is no HDMI cable connected.
-* The Speakerphone (or any device with a rechargeable battery) should be connected to port 7 on the USB hub as that port can provide the most power.
+* Normally, when connecting a device to the "Icy Box IB-AC618", a blue LED turns on next to the connected device. However, when connecting a *UGREEN* USB audio adapter it only shows when there is a 3.5mm TRRS cable connected to its socket. (`12d1:0010 Huawei Technologies Co., Ltd. KT USB Audio`). The same happens with the *Atomos Connect 4K* when there is no HDMI cable connected.
+* Also for "Icy Box IB-AC618": The Speakerphone (or any device with a rechargeable battery) should be connected to port 7 on the USB hub as that port can provide the most power.
 
 # License and Copyright
+
 Everything in this repository (unless otherwise noted) is licensed under the MIT license (see [LICENSE](./LICENSE)) and copyright of 
 
 **[d-fens GmbH](https://zefix.ch/en/search/entity/list/firm/989185)**
