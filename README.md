@@ -188,15 +188,17 @@ The USB ports of the Icy Box IB-AC618 have the following numbering (when connect
 
 | Port  | Type  | USB id  | Path  | Remark  |
 |---------|----------|------------|------------------------------|-------------------------|
-| Port 1  | USB 3.0  | `3-1.1`  | `/sys/bus/usb/devices/3-1.1/`  | 3-2-1-4 (left to right to the cable), connected Top Left  |
-| Port 2  | USB 3.0  | `3-1.2`  | `/sys/bus/usb/devices/3-1.2/`  | 3-2-1-4 (left to right to the cable), connected Top Left  |
-| Port 3  | USB 3.0  | `3-1.3`  | `/sys/bus/usb/devices/3-1.3/`  | 3-2-1-4 (left to right to the cable), connected Top Left  |
-| Port 4  | USB 3.0  | `3-1.4`  | `/sys/bus/usb/devices/3-1.4/`  | 3-2-1-4 (left to right to the cable), connected Top Left  |
+| Port 1  | USB 3.0  | `3-1.1`  | `/sys/bus/usb/devices/3-1.1/`  | 2nd from the cable, connected Top Left  |
+| Port 2  | USB 3.0  | `3-1.2`  | `/sys/bus/usb/devices/3-1.2/`  | 3rd from the cable, connected Top Left  |
+| Port 3  | USB 3.0  | `3-1.3`  | `/sys/bus/usb/devices/3-1.3/`  | 4th from the cable, connected Top Left  |
+| Port 4  | USB 3.0  | `3-1.4`  | `/sys/bus/usb/devices/3-1.4/`  | next to the cable, connected Top Left  |
 |  |  |  |  | |  
-| Port 1  | USB 3.0  | `1-1.1`  | `/sys/bus/usb/devices/1-1.1/`  | 3-2-1-4 (left to right to the cable), connected Bottom Left  |
-| Port 2  | USB 3.0  | `1-1.2`  | `/sys/bus/usb/devices/1-1.2/`  | 3-2-1-4 (left to right to the cable), connected Bottom Left  |
-| Port 3  | USB 3.0  | `1-1.3`  | `/sys/bus/usb/devices/1-1.3/`  | 3-2-1-4 (left to right to the cable), connected Bottom Left  |
-| Port 4  | USB 3.0  | `1-1.4`  | `/sys/bus/usb/devices/1-1.4/`  | 3-2-1-4 (left to right to the cable), connected Bottom Left  |
+| Port 1  | USB 3.0  | `1-1.1`  | `/sys/bus/usb/devices/1-1.1/`  | 2nd from the cable, connected Bottom Left  |
+| Port 2  | USB 3.0  | `1-1.2`  | `/sys/bus/usb/devices/1-1.2/`  | 3rd from the cable, connected Bottom Left  |
+| Port 3  | USB 3.0  | `1-1.3`  | `/sys/bus/usb/devices/1-1.3/`  | 4th from the cable, connected Bottom Left  |
+| Port 4  | USB 3.0  | `1-1.4`  | `/sys/bus/usb/devices/1-1.4/`  | next to the cable, connected Bottom Left  |
+
+Note: The hub the following internal port numbering, from left to the right (where the cable is): **3-2-1-4**. So, port 4 is the port directly next to the cable; port 3 is on the opposite end.
 
 # Pin Layout
 
