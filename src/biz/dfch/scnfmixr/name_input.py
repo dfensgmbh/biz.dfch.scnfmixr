@@ -48,6 +48,18 @@ class DateTimeNameInput():
 
         self.reset()
 
+    def __str__(self) -> str:
+        result = {
+            "is_valid_date": self.is_valid_date,
+            "is_valid_time": self.is_valid_time,
+            "is_valid_name": self.is_valid_name,
+            "date": self.date,
+            "time": self.time,
+            "name": self.name,
+        }
+
+        return str(result)
+
     @property
     def datetime(self) -> datetime:
         """Returns the recorded date and time."""

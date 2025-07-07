@@ -30,12 +30,10 @@ from biz.dfch.version import Version
 
 from .app_ctx import ApplicationContext
 from .args import Arguments
-from .audio import AudioDevices, AudioDeviceMap, RecordingParameters
+from .audio import AudioDevices, RecordingParameters
 from .core import StateMachine
 from .hi_devices import HiDevices
-from .input_device_map import InputDeviceMap
 from .rc_devices import RcDevices
-from .storage_device_map import StorageDeviceMap
 
 
 class App():
@@ -59,31 +57,14 @@ class App():
 
         args = Arguments(prog_name=self._PROG_NAME, version=self._VERSION).get()
 
-        # audio_device_map: AudioDeviceMap = {
-        #     AudioDevices.LCL: args.LCL,
-        #     AudioDevices.EX1: args.EX1,
-        #     AudioDevices.EX2: args.EX2,
-        # }
+        app_ctx = ApplicationContext()
 
-        rec_params = RecordingParameters(
+        app_ctx.recording_parameters = RecordingParameters(
             format=args.format,
             sampling_rate=args.sampling_rate,
             bit_depth=args.bit_depth,
             is_dual=args.dual_recording,
         )
-
-        # storage_device_map: StorageDeviceMap = {
-        #     RcDevices.RC1: args.RC1,
-        #     RcDevices.RC2: args.RC2,
-        # }
-
-        # input_device_map: InputDeviceMap = {
-        #     HiDevices.HI1: args.HI1,
-        #     HiDevices.HI2: args.HI2,
-        #     HiDevices.HI3: args.HI3,
-        # }
-
-        app_ctx = ApplicationContext()
 
         app_ctx.audio_device_map = {
             AudioDevices.LCL: args.LCL,
@@ -104,7 +85,7 @@ class App():
         log.info("Snd map: '%s'.", app_ctx.audio_device_map)
         log.info("Sto map: '%s'.", app_ctx.storage_device_map)
         log.info("Inp map: '%s'.", app_ctx.input_device_map)
-        log.info("Rec opt: '%s'.", rec_params)
+        log.info("Rec opt: '%s'.", app_ctx.recording_parameters)
         log.info("App ctx: '%s'.", app_ctx)
 
         if args.service:

@@ -28,7 +28,7 @@ from typing import final
 
 from .app import LanguageCode
 from .name_input import DateTimeNameInput
-from .audio import AudioDeviceMap
+from .audio import AudioDeviceMap, RecordingParameters
 from .input_device_map import InputDeviceMap
 from .storage_device_map import StorageDeviceMap
 
@@ -59,6 +59,8 @@ class ApplicationContext():
             "snd": self.audio_device_map,
             "sto": self.storage_device_map,
             "inp": self.input_device_map,
+            "rec": self.recording_parameters,
+            "dat": str(self.date_time_name_input),
         }
 
         return str(result)
@@ -77,10 +79,11 @@ class ApplicationContext():
             cls._instance = super().__new__(cls)
 
             # Set default values here and not in __init__.
-            cls._instance.language = LanguageCode.EN
-            cls.date_time_name_input = DateTimeNameInput()
-            cls.audio_device_map: AudioDeviceMap = AudioDeviceMap()
-            cls.storage_device_map: StorageDeviceMap = StorageDeviceMap()
-            cls.input_device_map: InputDeviceMap = InputDeviceMap()
+            cls._instance.language = LanguageCode.get_default()
+            cls.date_time_name_input: DateTimeNameInput = DateTimeNameInput()
+            cls.audio_device_map: AudioDeviceMap = None
+            cls.storage_device_map: StorageDeviceMap = None
+            cls.input_device_map: InputDeviceMap = None
+            cls.recording_parameters: RecordingParameters = None
 
         return cls._instance
