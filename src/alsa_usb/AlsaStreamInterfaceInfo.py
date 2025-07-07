@@ -41,8 +41,10 @@ class AlsaStreamInterfaceInfo:
 
     def to_dict(self) -> Dict[str, Any]:
         """Converts ALSA stream information into a dictionary.
+
         Returns:
-            Dict (str, Any): A key-value map containining the ALSA stream information.
+            Dict (str, Any): A key-value map containining the ALSA stream
+                information.
         """
         return {
             "state": self.state,
