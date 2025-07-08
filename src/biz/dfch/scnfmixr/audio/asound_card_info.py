@@ -26,7 +26,9 @@ from dataclasses import dataclass
 
 from .usb_device_info import UsbDeviceInfo
 
-__all__ = ["AsoundCardInfo"]
+__all__ = [
+    "AsoundCardInfo",
+]
 
 
 @dataclass(frozen=True)

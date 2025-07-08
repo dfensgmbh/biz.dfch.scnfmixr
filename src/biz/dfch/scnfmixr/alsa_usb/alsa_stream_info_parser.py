@@ -26,8 +26,8 @@ from typing import overload
 
 from text import MultiLineTextParser, TextUtils
 
-from .AlsaStreamInfoVisitor import AlsaStreamInfoVisitor
-from .AlsaStreamInterfaceInfo import AlsaStreamInterfaceInfo
+from .alsa_stream_info_visitor import AlsaStreamInfoVisitor
+from .alsa_stream_interface_info import AlsaStreamInterfaceInfo
 
 
 class AlsaStreamInfoParser(MultiLineTextParser):
