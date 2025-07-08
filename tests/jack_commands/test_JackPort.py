@@ -24,7 +24,7 @@
 
 import unittest
 
-from jack_commands import JackPort
+from biz.dfch.scnfmixr.jack_commands import JackPort
 
 
 class TestJackPort(unittest.TestCase):
