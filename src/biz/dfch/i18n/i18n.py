@@ -30,7 +30,7 @@ from .language_code import LanguageCode
 
 
 class I18n():
-    """Tralala"""
+    """Internationalisation module."""
 
     _RES_PATH = "res"
 
@@ -81,6 +81,8 @@ class I18n():
         path = Path(item)
 
         if code is not None:
+            if code is LanguageCode.DEFAULT:
+                code = LanguageCode.EN
             result = os.path.join(I18n._RES_PATH, code.name, path)
         else:
             result = os.path.join(I18n._RES_PATH, path)

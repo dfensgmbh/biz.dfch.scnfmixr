@@ -22,23 +22,14 @@
 
 """Module defining supported language codes."""
 
-from enum import Enum
-from typing import Self
+from enum import StrEnum
 
 
-class LanguageCode(str, Enum):
+class LanguageCode(StrEnum):
     """Defines supported language codes."""
 
+    DEFAULT = "default"
     EN = "English"
     DE = "Deutsch"
     FR = "Français"
     IT = "Italiano"
-
-    @staticmethod
-    def get_default() -> Self:
-        """Gets the default language code.
-
-        Returns:
-            LanguageCode: The default language code.
-        """
-        return LanguageCode.EN
