@@ -30,15 +30,17 @@ from typing import NoReturn
 from biz.dfch.logging import log
 
 from text import TextUtils
-from .UsbDeviceInfo import UsbDeviceInfo
-from .ProcAlsaUsbDeviceInfo import ProcAlsaUsbDeviceInfo
+from .usb_device_info import UsbDeviceInfo
+from .proc_alsa_usb_device_info import ProcAlsaUsbDeviceInfo
 
 __all__ = ["Usb"]
 
 
 class Usb:
-    """Retrieves information about connected USB devices. **OS and environment
-    dependent**!"""
+    """Retrieves information about connected USB devices. 
+
+    **OS and environment dependent**!
+    """
 
     _SYS_BUS_USB_DEVICES_BASEPATH = "/sys/bus/usb/devices/"
     _USB_MANUFACTURER = "manufacturer"
@@ -50,7 +52,7 @@ class Usb:
     _USB_DEVNUM = "devnum"
 
     def __new__(cls, *_args, **_kwargs) -> NoReturn:
-        """Initialiser to prevent object initialisation."""
+        """Initialiser to prevent object instantiation."""
 
         _ = _args
         _ = _kwargs
@@ -75,11 +77,13 @@ class Usb:
             with `usb_id` (case-sensitive) and is also alphabetically first.
         """
 
-        assert usb_id is not None and "" != usb_id.strip()
+        assert usb_id and usb_id.strip()
         assert devices is not None
 
-        candidates = [name for name in sorted(
-            devices.keys()) if name.startswith(usb_id)]
+        candidates = [
+            name for name in sorted(devices.keys()) if name.startswith(usb_id)
+            ]
+
         if not candidates:
             return None
 
@@ -97,7 +101,7 @@ class Usb:
                 Otherwise will raise a `FileNotFoundException`.
         """
 
-        assert usbbus_id is not None and "" != usbbus_id.strip()
+        assert usbbus_id and usbbus_id.strip()
 
         sys_bus_usb_device_path = os.path.join(
             Usb._SYS_BUS_USB_DEVICES_BASEPATH, usbbus_id)
@@ -122,7 +126,7 @@ class Usb:
                 returns `UsbDeviceInfo` data class.
                 Otherwise will raise a `FileNotFoundException`.
         """
-        assert usbbus_id is not None and "" != usbbus_id.strip()
+        assert usbbus_id and usbbus_id.strip()
 
         sys_bus_usb_device_path = os.path.join(
             Usb._SYS_BUS_USB_DEVICES_BASEPATH, usbbus_id)

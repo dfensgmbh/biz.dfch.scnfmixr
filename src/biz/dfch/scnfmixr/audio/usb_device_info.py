@@ -25,10 +25,10 @@ from dataclasses import dataclass
 __all__ = ["UsbDeviceInfo"]
 
 
-# DFTODO - use __init__ with `object.__setattr__(self, "attr", "value")` instead of static in `Usb`
 @dataclass(frozen=True)
 class UsbDeviceInfo:
-    """Holds information about a USB device.
+    """Contains information about a USB device.
+
     Attributes:
         manufacturer (str): The manfacturer name of the device.
         product (str): The product name of the device.
@@ -36,7 +36,8 @@ class UsbDeviceInfo:
         id_vendor (str): The USB vendor id ('abcd').
         id_product (str): The USB product id ('1234').
         busnum (str): The USB bus number.
-        devnum (str): The USB device number (increments between reconnects per bus).
+        devnum (str): The USB device number (increments between reconnects per
+            bus).
     """
 
     manufacturer: str

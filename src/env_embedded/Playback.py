@@ -20,7 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from biz.dfch.logging import log
 from biz.dfch.asyn import Process
 
 __all__ = [
@@ -28,35 +27,47 @@ __all__ = [
 ]
 
 
-class Playback:
+class Playback:  # pylint: disable=R0903
     """Sends audio to an ALSA device."""
 
-    _APLAY_FULLNAME = "/bin/aplay"
+    _APLAY_FULLNAME = "/usr/bin/aplay"
+    _APLAY_OPTION_DEVICE = "-D"
 
-    def __init__(self, device: str, name: str, wait_on_completion: bool = False):
+    def __init__(
+            self,
+            device: str,
+            name: str,
+            wait_on_completion: bool = False
+    ):
         """Plays an audio file to the specified device.
         Args:
-            device (str): An ALSA device string, e.g. `hw:1`, `plughw:1,0`, `hw:CARD=ABC`, `hw:CARD=ABC,DEV=1`
+            device (str): An ALSA device string, e.g. `hw:1`, `plughw:1,0`,
+                `hw:CARD=ABC`, `hw:CARD=ABC,DEV=1`
             name (str): The full path and name to an audio file.
-            wait_on_completion (bool): If `True`, waits until the audio has finished playing. \
-            `False` otherwise (*default*).
+            wait_on_completion (bool): If `True`, waits until the audio has
+                finished playing. `False` otherwise (*default*).
         Returns:
             Returns an instance to this class.
         Raises:
-            FileNotFoundError: If the specified audio file `name` cannot be found, \
-            a `FileNotFoundError` will be thrown.
+            FileNotFoundError: If the specified audio file `name` cannot be
+                found, a `FileNotFoundError` will be thrown.
         """
 
-        assert device is not None and "" == device.strip()
-        assert name is not None and "" == name.strip()
+        assert device and device.strip()
+        assert name and name.strip()
 
         self._device = device
         self._name = name
 
-        args = [self._APLAY_FULLNAME, "-D", device, name]
+        cmd = [
+            self._APLAY_FULLNAME,
+            self._APLAY_OPTION_DEVICE,
+            device, name,
+        ]
 
-        self._process = Process.start(args, wait_on_completion=wait_on_completion)
+        self._process = Process.start(cmd, wait_on_completion)
 
     @property
     def process(self) -> Process:
+        """Returns the process associated with the playback."""
         return self._process

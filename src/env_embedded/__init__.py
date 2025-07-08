@@ -20,16 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from .Asound import Asound
-from .AsoundCardInfo import AsoundCardInfo
 from .Playback import Playback
-from .Usb import Usb
-from .UsbDeviceInfo import UsbDeviceInfo
 
 __all__ = [
-    "Asound",
-    "AsoundCardInfo",
     "Playback",
-    "Usb",
-    "UsbDeviceInfo",
 ]

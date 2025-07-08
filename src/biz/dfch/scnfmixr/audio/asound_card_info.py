@@ -20,8 +20,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from .SetupDevice import SetupDevice
+"""Contains information about an ALSA USB device."""
 
-__all__ = [
-    "SetupDevice",
-]
+from dataclasses import dataclass
+
+from .usb_device_info import UsbDeviceInfo
+
+__all__ = ["AsoundCardInfo"]
+
+
+@dataclass(frozen=True)
+class AsoundCardInfo:
+    """Holds information about an ALSA USB device.
+
+    Attributes:
+        usb_device_info (UsbDeviceInfo): USB information about the device.
+        id_card (int): The ALSA card id (counting from '0').
+    """
+
+    usb_device_info: UsbDeviceInfo
+    id_card: int

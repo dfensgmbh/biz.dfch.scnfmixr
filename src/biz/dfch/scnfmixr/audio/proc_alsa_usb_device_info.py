@@ -24,7 +24,7 @@
 
 from dataclasses import dataclass
 import re
-from typing import Dict, Any
+from typing import Any
 
 __all__ = ["ProcAlsaUsbDeviceInfo"]
 
@@ -36,14 +36,19 @@ _USBBUS_PATTERN_DEVNUM_IDX = 2
 @dataclass(frozen=True)
 class ProcAlsaUsbDeviceInfo:
     """Contains information about an ALSA USB device as seen in `/proc/asound`.
+
     Attributes:
         card_id (int): The ALSA card id of the device.
-        display_name (str): The ALSA `id` of the device. This can change between reconnects.
+        display_name (str): The ALSA `id` of the device. This can change
+            between reconnects.
         usbbus (str): The USB bus and device number of the device.
         usbid (str): The USB vendor and product id of the device.
+
     Notes:
-        To retrieve the bus and device number as `int` use the respective `get_` methods.
-        To retrieve vendor and product id separately use the respective `get_` methods.
+        To retrieve the bus and device number as `int` use the respective `get_`
+            methods.
+        To retrieve vendor and product id separately use the respective `get_`
+            methods.
     """
 
     card_id: int = 0
@@ -53,6 +58,7 @@ class ProcAlsaUsbDeviceInfo:
 
     def get_busnum(self) -> int:
         """Returns the bus number of the device.
+
         Returns:
             int: The bus number of the device.
         """
@@ -65,6 +71,7 @@ class ProcAlsaUsbDeviceInfo:
 
     def get_devnum(self) -> int:
         """Returns the device number on the usbbus of the device.
+
         Returns:
             int: The device number on the usbbus of the device.
         """
@@ -77,6 +84,7 @@ class ProcAlsaUsbDeviceInfo:
 
     def get_id_vendor(self) -> str:
         """Returns the USB vendor id of the device.
+
         Returns:
             int: The USB vendor id of the device.
         """
@@ -85,16 +93,19 @@ class ProcAlsaUsbDeviceInfo:
 
     def get_id_product(self) -> str:
         """Returns the USB product id of the device.
+
         Returns:
             int: The USB product id of the device.
         """
 
         return self.usbid.split(":", maxsplit=1)[1]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Converts this information into a dictionary.
+
         Returns:
-            Dict (str, Any): A key-value map containining the ALSA stream information.
+            Dict (str, Any): A key-value map containining the ALSA stream
+                information.
         """
 
         return {

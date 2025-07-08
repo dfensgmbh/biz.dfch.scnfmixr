@@ -29,9 +29,9 @@ from text import TextUtils
 
 from biz.dfch.logging import log
 
-from .AsoundCardInfo import AsoundCardInfo
-from .ProcAlsaUsbDeviceInfo import ProcAlsaUsbDeviceInfo
-from .UsbDeviceInfo import UsbDeviceInfo
+from .asound_card_info import AsoundCardInfo
+from .proc_alsa_usb_device_info import ProcAlsaUsbDeviceInfo
+from .usb_device_info import UsbDeviceInfo
 
 __all__ = ["Asound"]
 
@@ -51,23 +51,29 @@ class Asound:
 
     @staticmethod
     def get_device(card_id: int) -> ProcAlsaUsbDeviceInfo | None:
-        """Returns a connected ALSA USB device based on its ASLA card id.
+        """Returns a connected ALSA USB device based on its ALSA card id.
+
         Args:
             id_card (int): The ALSA USB card id.
+
         Returns:
-            ProcAlsaUsbDeviceInfo: The ALSA USB device or None.
+            (ProcAlsaUsbDeviceInfo | None): The ALSA USB device or None.
+
         Notes:
-            Even when a valid `id` is specified it will return `None` if the device in question is not a USB device.
+            Even when a valid `id` is specified it will return `None` if the
+            device in question is not a USB device.
         """
 
         assert 0 < card_id
 
         devices = Asound.get_devices()
-        return next((device for device in devices if device.card_id == card_id), None)
+        return next(
+            (device for device in devices if device.card_id == card_id), None)
 
     @staticmethod
     def get_devices() -> list[ProcAlsaUsbDeviceInfo]:
         """Returns a list of all currently connected ALSA USB devices.
+
         Returns:
             list (ProcAlsaUsbDeviceInfo): The list of ALSA USB devices.
         """
@@ -85,17 +91,25 @@ class Asound:
                 log.debug("Card candidate found '%s'.", card_dir_basename)
 
                 card_id = int(match.group(1))
-                log.debug("Card candidate '%s' has card_id: '%s'.", card_dir_basename, card_id)
-                card_dir_fullpath = os.path.join(_PROC_ASOUND_BASEPATH, card_dir_basename)
+                log.debug("Card candidate '%s' has card_id: '%s'.",
+                          card_dir_basename, card_id)
+                card_dir_fullpath = os.path.join(
+                    _PROC_ASOUND_BASEPATH, card_dir_basename)
 
-                usbid = TextUtils().read_first_line(os.path.join(card_dir_fullpath, _ASOUND_CARD_USBID))
-                log.debug("Card candidate '%s' has usbid: '%s'.", card_dir_basename, usbid)
+                usbid = TextUtils().read_first_line(
+                    os.path.join(card_dir_fullpath, _ASOUND_CARD_USBID))
+                log.debug("Card candidate '%s' has usbid: '%s'.",
+                          card_dir_basename, usbid)
 
-                usbbus = TextUtils().read_first_line(os.path.join(card_dir_fullpath, _ASOUND_CARD_USBBUS))
-                log.debug("Card candidate '%s' has usbbus: '%s'.", card_dir_basename, usbbus)
+                usbbus = TextUtils().read_first_line(
+                    os.path.join(card_dir_fullpath, _ASOUND_CARD_USBBUS))
+                log.debug("Card candidate '%s' has usbbus: '%s'.",
+                          card_dir_basename, usbbus)
 
-                display_name = TextUtils().read_first_line(os.path.join(card_dir_fullpath, _ASOUND_CARD_ID))
-                log.debug("Card candidate '%s' has display name: '%s'.", card_dir_basename, display_name)
+                display_name = TextUtils().read_first_line(
+                    os.path.join(card_dir_fullpath, _ASOUND_CARD_ID))
+                log.debug("Card candidate '%s' has display name: '%s'.",
+                          card_dir_basename, display_name)
 
                 device_info = ProcAlsaUsbDeviceInfo(
                     card_id=card_id,
@@ -113,16 +127,20 @@ class Asound:
 
     @staticmethod
     def get_info(info: UsbDeviceInfo) -> AsoundCardInfo | None:
-        """Returns a `AsoundCardInfo` class for the device specified in `usbDeviceInfo`.
+        """Returns a `AsoundCardInfo` class for the device specified in
+        `usbDeviceInfo`.
+
         Args:
             info (UsbDeviceInfo): The device to get information about.
+
         Returns:
-            AsoundCardInfo?: Returns `AsoundCardInfo`
-                if the device specified in `usbDeviceInfo` could be found. Otherwise returns `None.
+            AsoundCardInfo?: Returns `AsoundCardInfo`if the device specified in
+                `usbDeviceInfo` could be found. Otherwise returns `None.
         """
 
         target_usbid = f"{info.id_vendor}:{info.id_product}"
-        log.debug("Trying to detect '%s' [%s-%s] ...", target_usbid, info.busnum, info.devnum)
+        log.debug("Trying to detect '%s' [%s-%s] ...",
+                  target_usbid, info.busnum, info.devnum)
 
         for card_dir_basename in os.listdir(_PROC_ASOUND_BASEPATH):
             try:
@@ -134,30 +152,38 @@ class Asound:
                 log.debug("Card candidate found '%s'.", card_dir_basename)
 
                 card_id = int(match.group(1))
-                log.debug("Card candidate '%s' has card_id: '%s'.", card_dir_basename, card_id)
-                card_dir_fullpath = os.path.join(_PROC_ASOUND_BASEPATH, card_dir_basename)
+                log.debug("Card candidate '%s' has card_id: '%s'.",
+                          card_dir_basename, card_id)
+                card_dir_fullpath = os.path.join(
+                    _PROC_ASOUND_BASEPATH, card_dir_basename)
 
                 # Test if specified usbid matches current card.
-                usbid = TextUtils().read_first_line(os.path.join(card_dir_fullpath, _ASOUND_CARD_USBID))
-                log.debug("Card candidate '%s' has usbid: '%s'.", card_dir_basename, usbid)
+                usbid = TextUtils().read_first_line(
+                    os.path.join(card_dir_fullpath, _ASOUND_CARD_USBID))
+                log.debug("Card candidate '%s' has usbid: '%s'.",
+                          card_dir_basename, usbid)
                 if usbid.lower() != target_usbid.lower():
                     continue
 
-                usbbus = TextUtils().read_first_line(os.path.join(card_dir_fullpath, _ASOUND_CARD_USBBUS))
-                log.debug("Card candidate '%s' has usbbus: '%s'.", card_dir_basename, usbbus)
+                usbbus = TextUtils().read_first_line(
+                    os.path.join(card_dir_fullpath, _ASOUND_CARD_USBBUS))
+                log.debug("Card candidate '%s' has usbbus: '%s'.",
+                          card_dir_basename, usbbus)
                 match = re.match(_USBBUS_PATTERN, usbbus)
                 if not match:
                     continue
 
                 # Test if specified busnum matches current card.
                 busnum = int(match.group(_USBBUS_PATTERN_BUSNUM_IDX))
-                log.debug("Card candidate '%s' has busnum: '%s'.", card_dir_basename, busnum)
+                log.debug("Card candidate '%s' has busnum: '%s'.",
+                          card_dir_basename, busnum)
                 if busnum != info.busnum:
                     continue
 
                 # Test if specified devnum matches current card.
                 devnum = int(match.group(_USBBUS_PATTERN_DEVNUM_IDX))
-                log.debug("Card candidate '%s' has devnum: '%s'.", card_dir_basename, devnum)
+                log.debug("Card candidate '%s' has devnum: '%s'.",
+                          card_dir_basename, devnum)
                 if devnum != info.devnum:
                     continue
 
@@ -172,7 +198,7 @@ class Asound:
                     info.product,
                     info.version,
                 )
-                return AsoundCardInfo(usbDeviceInfo=info, idCard=card_id)
+                return AsoundCardInfo(usb_device_info=info, id_card=card_id)
 
             except Exception:  # pylint: disable=broad-exception-caught
                 continue

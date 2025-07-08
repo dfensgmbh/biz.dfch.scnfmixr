@@ -39,6 +39,17 @@ class AudioPlayer():
 
     WAIT_INTERVAL_MS: int = 500
 
+    _ECASOuND_FULLNAME = "/usr/bin/ecasound"
+    _ECASOuND_OUTPUT_NAME = "jack"
+    _ECASOuND_PORT_NAME = "AudioPlayer"
+    _ECASOUND_OPTION_SEP = ":"
+    _ECASOUND_OPTION_DELIMITER = ","
+    _ECASOUND_OPTION_QUIET = "-q"
+    _ECASOUND_OPTION_GLOBAL = "-G"
+    _ECASOUND_OPTION_INPUT = "-i"
+    _ECASOUND_OPTION_OUTPUT = "-o"
+    _ECASOUND_OPTION_LOOP = "-tl"
+
     def __init__(self, jack_name: str) -> None:
         """Returns an instance of this class."""
 
@@ -65,7 +76,11 @@ class AudioPlayer():
 
         log.info("Starting worker ...")
 
+        dequeue_message_counter: int = 0
+        process_message_counter: int = 0
         while True:
+            dequeue_message_counter += 1
+
             try:
 
                 # First, handle process termination requests.
@@ -96,12 +111,17 @@ class AudioPlayer():
                 # Only then, skip if a process is still running.
                 if self._process is not None and self._process.is_running:
 
-                    log.debug(
-                        "Process still running [%s] ...", self._process.pid)
-                    continue
+                    if 0 == process_message_counter % 10:
+                        process_message_counter += 1
+
+                        log.debug(
+                            "Process still running [%s] ...", self._process.pid)
+                        continue
 
                 # Otherwise, try to dequeue and play next item.
-                log.debug("Trying to dequeue item ...")
+                if 0 == dequeue_message_counter % 10:
+                    dequeue_message_counter = 0
+                    log.debug("Trying to dequeue item ...")
 
                 file, do_loop = self._queue.get(block=False)
 
@@ -112,16 +132,26 @@ class AudioPlayer():
                     self._jack_name)
 
                 cmd: list[str] = []
-                cmd.append("ecasound")
-                cmd.append("-q")
-                cmd.append("-G:jack,AudioPlayer")
-                cmd.append("-i")
+                cmd.append(self._ECASOuND_FULLNAME)
+                cmd.append(self._ECASOUND_OPTION_QUIET)
+                cmd.append(
+                    f"{self._ECASOUND_OPTION_GLOBAL}"
+                    f"{self._ECASOUND_OPTION_SEP}"
+                    f"{self._ECASOuND_OUTPUT_NAME}"
+                    f"{self._ECASOUND_OPTION_DELIMITER}"
+                    f"{self._ECASOuND_PORT_NAME}"
+                )
+                cmd.append(self._ECASOUND_OPTION_INPUT)
                 cmd.append(file)
-                cmd.append("-o")
-                cmd.append(f"jack,{self._jack_name}")
+                cmd.append(self._ECASOUND_OPTION_OUTPUT)
+                cmd.append(
+                    f"{self._ECASOuND_OUTPUT_NAME}"
+                    f"{self._ECASOUND_OPTION_DELIMITER}"
+                    f"{self._jack_name}")
                 if do_loop:
-                    cmd.append("-tl")
+                    cmd.append(self._ECASOUND_OPTION_LOOP)
                 self._process = Process.start(cmd)
+                process_message_counter = 0
 
             except queue.Empty:
 

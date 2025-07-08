@@ -20,36 +20,58 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module implementing device detection and setup."""
+"""Module implementing sound device detection and setup."""
 
 from __future__ import annotations
 import time
 
 from biz.dfch.logging import log
+from .Asound import Asound
+from .asound_card_info import AsoundCardInfo
+from .usb_device_info import UsbDeviceInfo
+from .Usb import Usb
 
-from env_embedded import Asound, Usb
 
 __all__ = ["SetupDevice"]
 
 
-class SetupDevice:
-    """Detects and sets up a ALSA USB device."""
+class SetupDevice:  # pylint: disable=R0903
+    """Detects and sets up a ALSA USB device.
 
-    class Factory:
+    Attributes:
+        requested_usb_id (str): The requested USB id of the sound device.
+        actual_usb_id (str): The actual USB id of the sound device.
+        device_info (UsbDeviceInfo): Contains USB device information.
+        asound_info (AsoundCardInfo): Contains ALSA device information.
+    """
+
+    requested_usb_id: str
+    actual_usb_id: str
+    device_info: UsbDeviceInfo
+    asound_info: AsoundCardInfo
+
+    class Factory:  # pylint: disable=R0903
         """Factory class for creating `SetupDevice` instances."""
 
         @staticmethod
-        def create(usb_id: str, max_attempts: int = 0, wait_interval_ms: int = 1000) -> SetupDevice:
+        def create(
+            usb_id: str,
+            max_attempts: int = 0,
+            wait_interval_ms: int = 1000
+        ) -> SetupDevice:
             """Factory method for creating `SetupDevice` instances.
             Args:
                 usb_id (str): The USB id to detect and setup.
-                max_attempts (int): The maximum number of attempts to detect and setup the device.
-                    If `0` is specified, an infinite number of attempts is made.
-                wait_interval_ms (int): Time in milliseconds to wait between attempts.
+                max_attempts (int): The maximum number of attempts to detect
+                    and setup the device. If `0` is specified, an infinite
+                    number of attempts is made.
+                wait_interval_ms (int): Time in milliseconds to wait between
+                    attempts.
             Returns:
                 SetupDevice: A successfully created device instance.
             Raises:
-                RuntimeError: If the device could not be created within the given number of attempts.
+                RuntimeError: If the device could not be created within the
+                    given number of attempts.
             """
 
             assert usb_id is not None and "" != usb_id
@@ -63,11 +85,12 @@ class SetupDevice:
 
                     return SetupDevice(usb_id)
 
-                except Exception as ex:  # pylint: disable=broad-exception-caught
+                except Exception as ex:  # pylint: disable=W0718
 
                     current_attempt += 1
                     if max_attempts and current_attempt >= max_attempts:
-                        message = f"Usb '{usb_id}' not detected [{current_attempt}/{max_attempts}]."
+                        message = (f"Usb '{usb_id}' not detected "
+                                   f"[{current_attempt}/{max_attempts}].")
                         log.error(message)
                         raise RuntimeError(message) from ex
 
@@ -82,7 +105,7 @@ class SetupDevice:
 
     def __init__(self, usb_id: str):
 
-        assert usb_id is not None and "" != usb_id.strip()
+        assert usb_id and usb_id.strip()
 
         self.requested_usb_id = usb_id
 
@@ -91,14 +114,16 @@ class SetupDevice:
 
         # Get USB device names for ALSA USB devices.
         usb_name_alsa_device_map = Usb.get_alsa_usb_device_map(alsa_devices)
-        self.actual_usb_id = Usb.get_best_device_name(self.requested_usb_id, usb_name_alsa_device_map)
+        self.actual_usb_id = Usb.get_best_device_name(
+            self.requested_usb_id, usb_name_alsa_device_map)
 
         if self.actual_usb_id is None:
             message = f"Requested USB id '{self.requested_usb_id} not found."
             log.error(message)
             raise RuntimeError(message)
 
-        log.info("Mapped requested usb_id: [%s / %s]", self.requested_usb_id, self.actual_usb_id)
+        log.info("Mapped requested usb_id: [%s / %s]",
+                 self.requested_usb_id, self.actual_usb_id)
 
         log.info("Trying to detect device on '%s' ...", self.actual_usb_id)
         self.device_info = Usb.get_usb_device_info(self.actual_usb_id)
