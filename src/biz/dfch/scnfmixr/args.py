@@ -24,8 +24,13 @@
 
 import argparse
 from dataclasses import dataclass
+import re
 
 from biz.dfch.i18n import LanguageCode
+
+__all__ = [
+    "Arguments",
+]
 
 
 @dataclass(frozen=True)
@@ -44,6 +49,26 @@ class Arguments():
 
         assert self.prog_name and self.prog_name.strip()
         assert self.version and self.version.strip()
+
+    def _validate_hex_string(self, value: str) -> str:
+        """Validates the specified value.
+
+        Args:
+            value (str): The value to validate. Must be of the following
+                format: [0-9a-fA-F]{4}.
+        Returns:
+            str: The unmodified value.
+
+        Raises:
+            ArgumentTypeError: If the specified value is not a valid hex
+                string.
+        """
+
+        if re.fullmatch(r'[0-9A-Fa-f]{4}', value):
+            return str
+
+        raise argparse.ArgumentTypeError(
+            f"'{value}' is not valid. Format: '[0-9a-fA-F]{{4}}'.")
 
     def get(self) -> argparse.Namespace:
         """Returns an instance to the argument parser.
@@ -79,9 +104,11 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
         parser.add_argument(
             "--language", "-l",
             type=str,
-            choices=[LanguageCode.EN.name, LanguageCode.DE.name,
-                     LanguageCode.FR.name, LanguageCode.IT.name],
-            default=LanguageCode.EN.name,
+            choices=[LanguageCode.DEFAULT,
+                     LanguageCode.EN.name, LanguageCode.DE.name,
+                     LanguageCode.FR.name, LanguageCode.IT.name,
+                     ],
+            default=LanguageCode.DEFAULT.name,
             help="Select the user interface language."
         )
 
@@ -142,14 +169,14 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
             "--storage1", "-rc1",
             type=str,
             dest="RC1",
-            default="3-1.3",
+            default="4-1.3",
             help="Specifies USB port for storage device 1."
         )
         parser.add_argument(
             "--storage2", "-rc2",
             type=str,
             dest="RC2",
-            default="3-1.1",
+            default="4-1.1",
             help="Specifies USB port for storage device 2."
         )
 
@@ -174,6 +201,14 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
             dest="HI3",
             default="3-1.4",
             help="Specifies USB port for MorningStar MIDI controller."
+        )
+        parser.add_argument(
+            "--allowed-storage-vendor-ids",
+            type=self._validate_hex_string,
+            nargs="+",
+            dest="RC_VENDOR_IDS",
+            default=["2009"],
+            help="RC Storage vendor id whitelist; e.g. 2009: iStorage."
         )
 
         parser.add_argument(

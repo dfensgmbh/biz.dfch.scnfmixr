@@ -25,6 +25,10 @@
 from __future__ import annotations
 from enum import StrEnum
 
+from biz.dfch.logging import log
+from biz.dfch.i18n import LanguageCode
+
+from ...app import ApplicationContext
 from ...ui import UiEventInfo
 from ...ui import ExecutionContext
 from ...ui import StateBase
@@ -62,6 +66,23 @@ class SelectLanguage(StateBase):
         """
 
         assert ctx and isinstance(ctx, ExecutionContext)
+
+        app_ctx = ApplicationContext()
+
+        # If the language code was not selected via CLI, let the user choose.
+        log.debug("Currently selected language: '%s' [%s].",
+                  app_ctx.language.name, app_ctx.language.value)
+        match app_ctx.language:
+            case LanguageCode.EN:
+                ctx.events.enqueue(SelectLanguage.Events.SELECT_ENGLISH)
+            case LanguageCode.DE:
+                ctx.events.enqueue(SelectLanguage.Events.SELECT_GERMAN)
+            case LanguageCode.FR:
+                ctx.events.enqueue(SelectLanguage.Events.SELECT_FRENCH)
+            case LanguageCode.IT:
+                ctx.events.enqueue(SelectLanguage.Events.SELECT_ITALIAN)
+            case _:
+                pass
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.
