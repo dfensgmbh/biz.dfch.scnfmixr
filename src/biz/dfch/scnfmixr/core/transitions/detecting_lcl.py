@@ -22,6 +22,11 @@
 
 """Module detecting_lcl."""
 
+from biz.dfch.logging import log
+
+from ...app_ctx import ApplicationContext
+from ...audio import SetupDevice
+from ...audio import AudioDevices
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
@@ -48,10 +53,18 @@ class DetectingLcl(TransitionBase):
 
     def invoke(self, _):
 
-        # Simulate auto detection error on first attempt.
+        app_ctx = ApplicationContext()
 
-        if self._has_run_once:
+        try:
+            value = app_ctx.audio_device_map[AudioDevices.LCL]
+            device = SetupDevice.Factory.create(value, 1)
+            app_ctx.audio_configuration_map[AudioDevices.LCL] = device
+
             return True
 
-        self._has_run_once = True
-        return False
+        except Exception as ex:  # pylint: disable=W0718
+
+            log.error("Device detection '%s' FAILED. [%s]",
+                      AudioDevices.LCL.name, ex)
+
+            return False
