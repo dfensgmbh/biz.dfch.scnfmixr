@@ -21,39 +21,58 @@
 # SOFTWARE.
 
 
+from __future__ import annotations
 from dataclasses import replace
-import os
 import re
-from typing import Callable, Dict
+from typing import Callable
 
 from biz.dfch.logging import log
 
 from .MultiLineTextParserContext import MultiLineTextParserContext
-from .TextUtils import TextUtils
 
-__all__ = ["MultiLineTextParser"]
+__all__ = [
+    "MultiLineTextParser",
+    "MultiLineTextParserMap",
+    "MultiLineTextParserFunc",
+]
+
+MultiLineTextParserFunc = Callable[[MultiLineTextParserContext], bool]
+MultiLineTextParserMap = dict[str, MultiLineTextParserFunc]
 
 
 class MultiLineTextParser:
     """Parses an ALSA stream info and invokes callbacks based on parsed
-    keywords."""
+    keywords.
+
+    Attributes:
+        indent (str): The indentation character.
+        length (int): The indentation per hierarchy level.
+        dic (MultiLineTextParserMap): A dictionary of keyword / func to be
+            invoked when specified keywords are parsed.
+        default (MultiLineTextParserFunc | None): A default func to be
+            invoked when no keyword is defined. Can be None.
+    """
+
+    indent: str
+    length: int
+    dic: MultiLineTextParserMap
+    default: MultiLineTextParserFunc | None
 
     def __init__(
         self,
         indent: str,
         length: int,
-        dic: Dict[str, Callable[[MultiLineTextParserContext], bool]],
-        default: Callable[[MultiLineTextParserContext], bool] = None,
-    ):
+        dic: MultiLineTextParserMap,
+        default: MultiLineTextParserFunc = None,
+    ) -> None:
         """Initialises an ALSA stream info parser.
         Args:
-            dic: A dictionary of keyword / func to be invoked when specified
-                keywords are parsed.
-            default: A default func to be invoked when no keyword is defined.
-                Can be None.
-
-        Returns:
-            An instance of the class.
+            indent (str): The indentation character.
+            length (int): The indentation per hierarchy level.
+            dic (MultiLineTextParserMap): A dictionary of keyword / func to be
+                invoked when specified keywords are parsed.
+            default (MultiLineTextParserFunc | None): A default func to be
+                invoked when no keyword is defined. Can be None.
         """
 
         assert indent is not None and 1 == len(indent)
@@ -65,31 +84,31 @@ class MultiLineTextParser:
         self.dic = dic
         self.default = default
 
-    # DFTODO - must be moved out of this class.
-    @staticmethod
-    def get_stream_info_data(idx: int) -> list[str]:
-        """Reads stream data from `stream0` for a given ALSA card id and
-        returns an array of strings.
+    # # DFTODO - must be moved out of this class.
+    # @staticmethod
+    # def get_stream_info_data(idx: int) -> list[str]:
+    #     """Reads stream data from `stream0` for a given ALSA card id and
+    #     returns an array of strings.
 
-        Args:
-            idx (int): The ALSA card id.
+    #     Args:
+    #         idx (int): The ALSA card id.
 
-        Returns:
-            Returns stream info as a list of strings.
+    #     Returns:
+    #         Returns stream info as a list of strings.
 
-        Raises:
-            Exception: Throws an exception if `stream0` does not exist.
-        """
+    #     Raises:
+    #         Exception: Throws an exception if `stream0` does not exist.
+    #     """
 
-        assert idx >= 0
+    #     assert idx >= 0
 
-        PROC_ASOUND_BASEPATH = "/proc/asound/"
-        STREAM_FILE = "stream0"
+    #     PROC_ASOUND_BASEPATH = "/proc/asound/"
+    #     STREAM_FILE = "stream0"
 
-        card_path = f"{PROC_ASOUND_BASEPATH}card{idx}"
-        card_stream_file = os.path.join(card_path, STREAM_FILE)
+    #     card_path = f"{PROC_ASOUND_BASEPATH}card{idx}"
+    #     card_stream_file = os.path.join(card_path, STREAM_FILE)
 
-        return TextUtils().read_all_lines(card_stream_file)
+    #     return TextUtils().read_all_lines(card_stream_file)
 
     def parse(self, value: list[str], is_regex: bool = False) -> None:
         """Parses specified stream info data.
