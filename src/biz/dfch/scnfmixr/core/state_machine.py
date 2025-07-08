@@ -84,8 +84,8 @@ from .transitions import StoppingRecording, SettingCuePoint, TogglingMute, Showi
 class StateMachine():
     """StateMachine of the application."""
 
-    WAIT_INTERVAL_MS: int = 350
-    BLOCK_INTERVAL_MS: int = 1000
+    WAIT_INTERVAL_MS: int = 250
+    BLOCK_INTERVAL_MS: int = 250
 
     _app_ctx: ApplicationContext
     _queue: ConcurrentQueueT[str]

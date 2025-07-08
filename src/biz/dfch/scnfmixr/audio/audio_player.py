@@ -37,7 +37,7 @@ __all__ = [
 class AudioPlayer():
     """Defines the audio player for output handling."""
 
-    WAIT_INTERVAL_MS: int = 500
+    WAIT_INTERVAL_MS: int = 250
 
     _ECASOuND_FULLNAME = "/usr/bin/ecasound"
     _ECASOuND_OUTPUT_NAME = "jack"
@@ -111,7 +111,7 @@ class AudioPlayer():
                 # Only then, skip if a process is still running.
                 if self._process is not None and self._process.is_running:
 
-                    if 0 == process_message_counter % 10:
+                    if 0 == process_message_counter % 25:
                         process_message_counter += 1
 
                         log.debug(
@@ -119,7 +119,7 @@ class AudioPlayer():
                         continue
 
                 # Otherwise, try to dequeue and play next item.
-                if 0 == dequeue_message_counter % 10:
+                if 0 == dequeue_message_counter % 25:
                     dequeue_message_counter = 0
                     log.debug("Trying to dequeue item ...")
 
