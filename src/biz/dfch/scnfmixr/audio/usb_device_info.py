@@ -22,7 +22,9 @@
 
 from dataclasses import dataclass
 
-__all__ = ["UsbDeviceInfo"]
+__all__ = [
+    "UsbDeviceInfo",
+]
 
 
 @dataclass(frozen=True)

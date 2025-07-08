@@ -33,7 +33,9 @@ from .asound_card_info import AsoundCardInfo
 from .proc_alsa_usb_device_info import ProcAlsaUsbDeviceInfo
 from .usb_device_info import UsbDeviceInfo
 
-__all__ = ["Asound"]
+__all__ = [
+    "Asound",
+]
 
 _PROC_ASOUND_BASEPATH = "/proc/asound/"
 _CARD_PATTERN = r"^card(\d+)$"

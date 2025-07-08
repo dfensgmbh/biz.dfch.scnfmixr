@@ -32,7 +32,9 @@ from .usb_device_info import UsbDeviceInfo
 from .Usb import Usb
 
 
-__all__ = ["SetupDevice"]
+__all__ = [
+    "SetupDevice",
+]
 
 
 class SetupDevice:  # pylint: disable=R0903
@@ -60,6 +62,7 @@ class SetupDevice:  # pylint: disable=R0903
             wait_interval_ms: int = 1000
         ) -> SetupDevice:
             """Factory method for creating `SetupDevice` instances.
+
             Args:
                 usb_id (str): The USB id to detect and setup.
                 max_attempts (int): The maximum number of attempts to detect
@@ -67,14 +70,16 @@ class SetupDevice:  # pylint: disable=R0903
                     number of attempts is made.
                 wait_interval_ms (int): Time in milliseconds to wait between
                     attempts.
+
             Returns:
                 SetupDevice: A successfully created device instance.
+
             Raises:
                 RuntimeError: If the device could not be created within the
                     given number of attempts.
             """
 
-            assert usb_id is not None and "" != usb_id
+            assert usb_id and usb_id
             assert 0 <= max_attempts
             assert 0 <= wait_interval_ms
 
@@ -89,6 +94,7 @@ class SetupDevice:  # pylint: disable=R0903
 
                     current_attempt += 1
                     if max_attempts and current_attempt >= max_attempts:
+
                         message = (f"Usb '{usb_id}' not detected "
                                    f"[{current_attempt}/{max_attempts}].")
                         log.error(message)

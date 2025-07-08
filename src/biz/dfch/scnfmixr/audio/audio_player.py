@@ -22,16 +22,16 @@
 
 """Module defining the audio player for output handling."""
 
-__all__ = [
-    "AudioPlayer"
-]
-
 import queue
 import threading
 import time
 
 from biz.dfch.logging import log
 from biz.dfch.asyn import Process
+
+__all__ = [
+    "AudioPlayer",
+]
 
 
 class AudioPlayer():

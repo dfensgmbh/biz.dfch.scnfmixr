@@ -33,13 +33,15 @@ from text import TextUtils
 from .usb_device_info import UsbDeviceInfo
 from .proc_alsa_usb_device_info import ProcAlsaUsbDeviceInfo
 
-__all__ = ["Usb"]
+__all__ = [
+    "Usb",
+]
 
 
 class Usb:
     """Retrieves information about connected USB devices. 
 
-    **OS and environment dependent**!
+    **OS and environment dependent!**
     """
 
     _SYS_BUS_USB_DEVICES_BASEPATH = "/sys/bus/usb/devices/"

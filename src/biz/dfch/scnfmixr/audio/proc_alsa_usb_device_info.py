@@ -26,7 +26,9 @@ from dataclasses import dataclass
 import re
 from typing import Any
 
-__all__ = ["ProcAlsaUsbDeviceInfo"]
+__all__ = [
+    "ProcAlsaUsbDeviceInfo",
+]
 
 _USBBUS_PATTERN = r"^(\d+)/(\d+)$"
 _USBBUS_PATTERN_BUSNUM_IDX = 1
