@@ -89,8 +89,9 @@ class ApplicationContext():
 
             cls._instance = super().__new__(cls)
 
-            # Set default values here and not in __init__.
-            cls.language = LanguageCode.get_default()
+            # Set default values here and not in __init__. 
+            # Ok. But why?
+            cls.language = LanguageCode.DEFAULT
             cls.date_time_name_input = DateTimeNameInput()
             cls.audio_device_map = {}
             cls.storage_device_map = {}

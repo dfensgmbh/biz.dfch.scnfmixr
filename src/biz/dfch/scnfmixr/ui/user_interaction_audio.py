@@ -53,5 +53,4 @@ class UserInteractionAudio(UserInteractionBase):
         path = I18n.get_resource_path(f"{item.name}.wav", app_ctx.language)
 
         self._player.clear(True)
-        # self._player.enqueue((item.name, item.is_loop))
         self._player.enqueue((path, item.is_loop))

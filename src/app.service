@@ -25,9 +25,9 @@ Description=scnfmixr (Secure Conference Mixer and Recorder)
 After=sound.target
 
 [Service]
-ExecStart=/opt/scnfmixr/bin/scnfmixr --service
+ExecStart=/home/admin/PhoneTap/dist/scnfmixr --service
 User=root
-WorkingDirectory=/opt/scnfmixr/
+WorkingDirectory=/home/admin/PhoneTap/
 StandardOutput=journal
 StandardError=journal
 Restart=always
