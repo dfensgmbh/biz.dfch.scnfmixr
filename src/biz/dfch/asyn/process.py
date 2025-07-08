@@ -40,7 +40,7 @@ __all__ = ["Process"]
 class Process:
     """Starts and stops processes. Use `start()` to initialise this class."""
 
-    _MAX_QUEUE_SIZE = 256
+    _MAX_QUEUE_SIZE = 4096
 
     _TUPLE_KEY_INDEX = 0
     _TUPLE_KEY_VALUE = 1
@@ -49,7 +49,9 @@ class Process:
     _STDERR = "stderr"
 
     def __init__(self, popen: subprocess.Popen, encoding: str) -> None:
-        """Initialise a `Process` instance. Use `start` to initialise this class. Should not be called directly.
+        """Initialise a `Process` instance. Use `start` to initialise this
+        class. Should not be called directly.
+
         Args:
             process (subprocess.Popen): An instance of `Popen`.
             encoding (str): The charset to used for the process started.
