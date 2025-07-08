@@ -27,13 +27,14 @@ import sys
 import time
 
 from biz.dfch.logging import log
-
-from alsa_usb import AlsaStreamInfoParser
-from jack_commands import JackConnection
-from jack_commands import ZitaBridgeAlsaToJack
-from jack_commands import ZitaBridgeJackToAlsa
-from service import SetupDevice
 from biz.dfch.version import Version
+
+from biz.dfch.scnfmixr.alsa_usb import AlsaStreamInfoParser
+from biz.dfch.scnfmixr.audio import SetupDevice
+
+from biz.dfch.scnfmixr.jack_commands import JackConnection
+from biz.dfch.scnfmixr.jack_commands import ZitaBridgeAlsaToJack
+from biz.dfch.scnfmixr.jack_commands import ZitaBridgeJackToAlsa
 
 
 def run_loop():
@@ -59,81 +60,81 @@ def run_loop():
 
             # LCL
             log.info("LCL: Creating JACK clients for '%s' ...",
-                     device_lcl.asound_info.idCard)
+                     device_lcl.asound_info.id_card)
 
-            parser_lcl = AlsaStreamInfoParser(device_lcl.asound_info.idCard)
+            parser_lcl = AlsaStreamInfoParser(device_lcl.asound_info.id_card)
 
             lcl_capture = parser_lcl.get_best_capture_interface()
             log.info("%s: %s",
-                     device_lcl.asound_info.idCard, lcl_capture.to_dict())
+                     device_lcl.asound_info.id_card, lcl_capture.to_dict())
 
             lcl_playback = parser_lcl.get_best_playback_interface()
             log.info("%s: %s",
-                     device_lcl.asound_info.idCard, lcl_playback.to_dict())
+                     device_lcl.asound_info.id_card, lcl_playback.to_dict())
 
             _ = ZitaBridgeAlsaToJack(
                 "LCL-I",
-                f"hw:{device_lcl.asound_info.idCard},0",
+                f"hw:{device_lcl.asound_info.id_card},0",
                 lcl_capture.channel_count,
                 parser_lcl.best_rate(lcl_capture.rates),
             )
             _ = ZitaBridgeJackToAlsa(
                 "LCL-O",
-                f"hw:{device_lcl.asound_info.idCard},0",
+                f"hw:{device_lcl.asound_info.id_card},0",
                 lcl_playback.channel_count,
                 parser_lcl.best_rate(lcl_playback.rates),
             )
 
             # EX1
             log.info("EX1: Creating JACK clients for '%s' ...",
-                     device_ex1.asound_info.idCard)
+                     device_ex1.asound_info.id_card)
 
-            parser_ex1 = AlsaStreamInfoParser(device_ex1.asound_info.idCard)
+            parser_ex1 = AlsaStreamInfoParser(device_ex1.asound_info.id_card)
 
             ex1_capture = parser_ex1.get_best_capture_interface()
             log.info("%s: %s",
-                     device_ex1.asound_info.idCard, ex1_capture.to_dict())
+                     device_ex1.asound_info.id_card, ex1_capture.to_dict())
 
             ex1_playback = parser_ex1.get_best_playback_interface()
             log.info("%s: %s",
-                     device_ex1.asound_info.idCard, ex1_playback.to_dict())
+                     device_ex1.asound_info.id_card, ex1_playback.to_dict())
 
             _ = ZitaBridgeAlsaToJack(
                 "EX1-I",
-                f"hw:{device_ex1.asound_info.idCard},0",
+                f"hw:{device_ex1.asound_info.id_card},0",
                 ex1_capture.channel_count,
                 parser_ex1.best_rate(ex1_capture.rates),
             )
             _ = ZitaBridgeJackToAlsa(
                 "EX1-O",
-                f"hw:{device_ex1.asound_info.idCard},0",
+                f"hw:{device_ex1.asound_info.id_card},0",
                 ex1_playback.channel_count,
                 parser_ex1.best_rate(ex1_playback.rates),
             )
 
             # REC
             log.info("REC: Creating JACK clients for '%s' ...",
-                     device_rec.asound_info.idCard)
+                     device_rec.asound_info.id_card)
 
-            parser_rec = AlsaStreamInfoParser(device_rec.asound_info.idCard)
+            parser_rec = AlsaStreamInfoParser(device_rec.asound_info.id_card)
 
             rec_capture = parser_rec.get_best_capture_interface()
-            log.info("%s: %s", device_rec.asound_info.idCard,
+            log.info("%s: %s", device_rec.asound_info.id_card,
                      rec_capture.to_dict())
 
             rec_playback = parser_rec.get_best_playback_interface()
-            log.info("%s: %s", device_rec.asound_info.idCard,
+            log.info("%s: %s", device_rec.asound_info.id_card,
                      rec_playback.to_dict())
 
             _ = ZitaBridgeAlsaToJack(
                 "REC-I",
-                f"hw:{device_rec.asound_info.idCard},0",
+                f"hw:{device_rec.asound_info.id_card},0",
                 rec_capture.channel_count,
                 parser_rec.best_rate(rec_capture.rates),
             )
             _ = ZitaBridgeJackToAlsa(
                 "REC-O",
-                f"hw:{device_rec.asound_info.idCard},0",
+                f"hw:{device_rec.asound_info.id_card},0",
                 rec_playback.channel_count,
                 parser_rec.best_rate(rec_playback.rates),
             )
@@ -142,7 +143,7 @@ def run_loop():
             time.sleep(3)
 
             log.info("Creating JACK connections for '%s' ...",
-                     device_lcl.asound_info.idCard)
+                     device_lcl.asound_info.id_card)
             _ = JackConnection.Factory.create("LCL-I:capture_1",
                                               "EX1-O:playback_1")
             _ = JackConnection.Factory.create("LCL-I:capture_1",
@@ -153,7 +154,7 @@ def run_loop():
                                               "REC-O:playback_2")
 
             log.info("Creating JACK connections for '%s' ...",
-                     device_ex1.asound_info.idCard)
+                     device_ex1.asound_info.id_card)
             _ = JackConnection.Factory.create("EX1-I:capture_1",
                                               "LCL-O:playback_1")
             _ = JackConnection.Factory.create("EX1-I:capture_1",
