@@ -42,7 +42,8 @@ class App():
     _VERSION_REQUIRED_MAJOR = 2
     _VERSION_REQUIRED_MINOR = 0
 
-    _VERSION = "2.0.1"
+    # Note: also adjust in pyproject.toml
+    _VERSION = "2.1.0"
     _PROG_NAME = "scnfmixr"
 
     def __init__(self):
@@ -109,39 +110,43 @@ class App():
 
             fsm = StateMachine()
             fsm.start()
-            time.sleep(2)
-            time.sleep(5)
 
-            # Select language.
-            for event in ["3"]:
-                fsm.invoke(event)
-            time.sleep(2)
+            while fsm.is_started:
+                time.sleep(1)
 
-            # Enter date
-            for event in ["2", "0", "2", "5", "0", "7", "0", "6"]:
-                fsm.invoke(event)
-            time.sleep(3)
+            # time.sleep(2)
+            # time.sleep(5)
 
-            # Enter time
-            for event in ["0", "5", "4", "2"]:
-                fsm.invoke(event)
-            time.sleep(2)
+            # # Select language.
+            # for event in ["3"]:
+            #     fsm.invoke(event)
+            # time.sleep(2)
 
-            # Enter name
-            for event in ["3", "1", "3", "3", "7", "6", "6", "7"]:
-                fsm.invoke(event)
-            time.sleep(3)
+            # # Enter date
+            # for event in ["2", "0", "2", "5", "0", "7", "0", "6"]:
+            #     fsm.invoke(event)
+            # time.sleep(3)
 
-            # Do sth else
-            for event in ["1", "3", "3", "2", "1", "9", "1"]:
-                fsm.invoke(event)
-            time.sleep(3)
+            # # Enter time
+            # for event in ["0", "5", "4", "2"]:
+            #     fsm.invoke(event)
+            # time.sleep(2)
 
-            end = time.time_ns() + 5000 * 10**6
-            while time.time_ns() < end:
+            # # Enter name
+            # for event in ["3", "1", "3", "3", "7", "6", "6", "7"]:
+            #     fsm.invoke(event)
+            # time.sleep(3)
 
-                log.info("Spinning ...")
+            # # Do sth else
+            # for event in ["1", "3", "3", "2", "1", "9", "1"]:
+            #     fsm.invoke(event)
+            # time.sleep(3)
 
-                time.sleep(500 / 1000)
+            # end = time.time_ns() + 5000 * 10**6
+            # while time.time_ns() < end:
 
-            log.info("Spinning ended.")
+            #     log.info("Spinning ...")
+
+            #     time.sleep(500 / 1000)
+
+            # log.info("Spinning ended.")

@@ -84,7 +84,7 @@ class StateMachine():
     """StateMachine of the application."""
 
     WAIT_INTERVAL_MS: int = 350
-    BLOCK_INTERVAL_MS: int = 5000
+    BLOCK_INTERVAL_MS: int = 1000
 
     _app_ctx: ApplicationContext
     _queue: ConcurrentQueueT[str]
@@ -103,6 +103,15 @@ class StateMachine():
         self.initialise()
         self._thread.start()
 
+    @property
+    def is_started(self) -> bool:
+        """Determines whether the state machine is started or not.
+
+        Returns:
+            bool: True, if the state machine is started; false otherwise.
+        """
+        return self._fsm.is_started
+
     def _worker(self) -> None:
         """The worker thread that dequeues and processes state machine events.
 
@@ -115,14 +124,19 @@ class StateMachine():
 
         log.debug("Starting worker ...")
 
+        message_counter: int = 0
         while True:
+            message_counter += 1
+
             try:
                 if self._do_cancel_worker.is_set():
 
                     log.info("Exiting worker ...")
                     break
 
-                log.debug("Trying to dequeue item ...")
+                if 0 == message_counter:
+                    message_counter = 0
+                    log.debug("Trying to dequeue item ...")
 
                 event = self._queue.dequeue(self.BLOCK_INTERVAL_MS)
 
