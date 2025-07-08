@@ -64,12 +64,12 @@ class InitialiseHi1(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        if not ctx.error:
-            log.info("Enqueueing event: '%s' [%s].",
-                     InitialiseHi1.Events.DETECT_DEVICE.name,
-                     InitialiseHi1.Events.DETECT_DEVICE.value)
+        # Always run detection. We cannot continue w/o.
+        log.info("Enqueueing event: '%s' [%s].",
+                 InitialiseHi1.Events.DETECT_DEVICE.name,
+                 InitialiseHi1.Events.DETECT_DEVICE.value)
 
-            ctx.events.enqueue(InitialiseHi1.Events.DETECT_DEVICE)
+        ctx.events.enqueue(InitialiseHi1.Events.DETECT_DEVICE)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.
