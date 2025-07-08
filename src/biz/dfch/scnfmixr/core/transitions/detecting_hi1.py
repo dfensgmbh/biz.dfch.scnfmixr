@@ -22,7 +22,6 @@
 
 """Module detecting_hi1."""
 
-from biz.dfch.asyn import ConcurrentQueueT
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext

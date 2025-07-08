@@ -24,7 +24,7 @@
 
 from .keyboard_handler import KeyboardHandler
 from .key_event_map import KeyEventMap
-from .detecting_h1_worker import DetectingHi1Worker
+from .detecting_hi1_worker import DetectingHi1Worker
 from .input_event_device_info import InputEventDeviceInfo
 from .input_event_device_visitor import InputEventDeviceVisitor
 

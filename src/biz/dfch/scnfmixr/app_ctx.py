@@ -27,40 +27,51 @@ import threading
 from typing import final
 
 from .app import LanguageCode
-from .name_input import DateTimeNameInput
-from .audio import AudioDeviceMap, RecordingParameters
+from .audio import AudioDevices, AudioDeviceMap
+from .audio import RecordingParameters
+from .audio import SetupDevice
 from .input_device_map import InputDeviceMap
+from .name_input import DateTimeNameInput
 from .storage_device_map import StorageDeviceMap
 
 
 @final
 class ApplicationContext():
-    """Global ApplicationContext."""
+    """Global ApplicationContext.
+
+    Attributes:
+        language (LanguageCode): The elected langeuage.
+        date_time_name_input (DateTimeNameInput): Date, time and track
+            information.
+        audio_device_map (AudioDeviceMap): USB to device identifier mapping.
+        storage_device_map (StorageDeviceMap): USB to device identifier mapping.
+        input_device_map (InputDeviceMap): USB to device identifier mapping.
+        recording_parameters (RecordingParameters): Selected recording
+            parameters.
+        audio_configuration_map (dict[AudioDevices, SetupDevice]): Contains
+            configuration parameters of audio devices.
+    """
 
     _instance = None
     _lock = threading.Lock()
 
-    @property
-    def language(self) -> LanguageCode:
-        """The currently active language."""
-
-        return self._language
-
-    @language.setter
-    def language(self, value: LanguageCode) -> None:
-
-        assert value and isinstance(value, LanguageCode)
-
-        self._language = value
+    language: LanguageCode
+    date_time_name_input: DateTimeNameInput
+    audio_device_map: AudioDeviceMap
+    storage_device_map: StorageDeviceMap
+    input_device_map: InputDeviceMap
+    recording_parameters: RecordingParameters
+    audio_configuration_map: dict[AudioDevices, SetupDevice]
 
     def __str__(self) -> str:
         result = {
-            "language": self._language,
+            "language": self.language,
             "snd": self.audio_device_map,
             "sto": self.storage_device_map,
             "inp": self.input_device_map,
             "rec": self.recording_parameters,
             "dat": str(self.date_time_name_input),
+            "dev": self.audio_configuration_map,
         }
 
         return str(result)
@@ -79,11 +90,12 @@ class ApplicationContext():
             cls._instance = super().__new__(cls)
 
             # Set default values here and not in __init__.
-            cls._instance.language = LanguageCode.get_default()
-            cls.date_time_name_input: DateTimeNameInput = DateTimeNameInput()
-            cls.audio_device_map: AudioDeviceMap = None
-            cls.storage_device_map: StorageDeviceMap = None
-            cls.input_device_map: InputDeviceMap = None
-            cls.recording_parameters: RecordingParameters = None
+            cls.language = LanguageCode.get_default()
+            cls.date_time_name_input = DateTimeNameInput()
+            cls.audio_device_map = {}
+            cls.storage_device_map = {}
+            cls.input_device_map = {}
+            cls.recording_parameters = None
+            cls.audio_configuration_map = {}
 
         return cls._instance

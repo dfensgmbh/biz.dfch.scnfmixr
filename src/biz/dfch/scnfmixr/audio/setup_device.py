@@ -134,3 +134,14 @@ class SetupDevice:  # pylint: disable=R0903
         log.info("Trying to detect device on '%s' ...", self.actual_usb_id)
         self.device_info = Usb.get_usb_device_info(self.actual_usb_id)
         self.asound_info = Asound.get_info(self.device_info)
+
+    def __str__(self) -> str:
+
+        result = {
+            "requested_usb_id": self.requested_usb_id,
+            "actual_usb_id": self.actual_usb_id,
+            "asound_info": self.asound_info,
+            "device_info": self.device_info,
+        }
+
+        return str(result)
