@@ -22,9 +22,14 @@
 
 """Module detecting_rc1."""
 
+from biz.dfch.logging import log
+
+from ...app import ApplicationContext
+from ...rc_devices import RcDevices
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
+from ...ui.keyboard import DetectingRc1Worker
 from ..transition_event import TransitionEvent
 
 
@@ -46,4 +51,21 @@ class DetectingRc1(TransitionBase):
             target_state=target)
 
     def invoke(self, _):
+
+        app_ctx = ApplicationContext()
+
+        value = app_ctx.storage_device_map[RcDevices.RC1]
+
+        log.info("Detecting storage device '%s' at '%s'...",
+                 RcDevices.RC1.name, value)
+
+        selector = DetectingRc1Worker(value)
+        result = selector.select()
+
+        if result is None:
+            return False
+
+        log.debug("Detected storage device '%s': %s",
+                  RcDevices.RC1.name, result)
+
         return True
