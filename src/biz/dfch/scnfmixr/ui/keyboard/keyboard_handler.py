@@ -42,6 +42,7 @@ class KeyboardHandler(EventHandler):
 
     _WAIT_INTERVAL_MS: int = 500
     _EVTEST_FULLNAME = "/usr/bin/evtest"
+    _EVTEST_OPTION_GRAB = "--grab"
 
     _pattern = re.compile(
         r"type 1 \(EV_KEY\), code ([^ ]+) \(([^)]+)\), value 1$"
@@ -133,6 +134,7 @@ class KeyboardHandler(EventHandler):
 
             cmd: list[str] = [
                 self._EVTEST_FULLNAME,
+                self._EVTEST_OPTION_GRAB,
                 self._device,
             ]
 
