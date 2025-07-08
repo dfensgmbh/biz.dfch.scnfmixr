@@ -20,20 +20,33 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package keyboard"""
+"""Module detecting_rc_wroker_base."""
 
-from .keyboard_handler import KeyboardHandler
-from .key_event_map import KeyEventMap
-from .detecting_hi1_worker import DetectingHi1Worker
-from .detecting_rc1_worker import DetectingRc1Worker
-from .input_event_device_info import InputEventDeviceInfo
-from .input_event_device_visitor import InputEventDeviceVisitor
+from .interface_detector_base import InterfaceDetectorBase
 
-__all__ = [
-    "KeyboardHandler",
-    "KeyEventMap",
-    "DetectingHi1Worker",
-    "DetectingRc1Worker",
-    "InputEventDeviceInfo",
-    "InputEventDeviceVisitor",
-]
+
+class DetectingRcWorkerBase(InterfaceDetectorBase):
+    """Base class for detecting storage devices."""
+
+    _UDEVADM_FULLNAME = "/usr/bin/udevadm"
+    _UDEVADM_OPTION_INFO = "info"
+    _UDEVADM_OPTION_ALL = "-a"
+    _UDEVADM_OPTION_NOP_PAGER = "--no-pager"
+    _UDEVADM_OPTION_NAME = "--name"
+
+    _DEV_INPUT_PATH: str = "/dev/"
+    _DEV_INPUT_EVENT_PREFIX: str = "sd"
+    _DEV_INPUT_EVENT_PATH_GLOB: str = (
+        _DEV_INPUT_PATH + _DEV_INPUT_EVENT_PREFIX + "*")
+
+    _value: str
+    _event_device_candidates: list[str]
+
+    def __init__(self, value: str):
+        super().__init__()
+
+        assert value and value.strip()
+
+        self._value = value
+
+        self._event_device_candidates = []

@@ -23,6 +23,7 @@
 """Module detecting_h1_worker."""
 
 import glob
+import os
 
 from text import MultiLineTextParser
 from biz.dfch.asyn import Process
@@ -38,8 +39,7 @@ class DetectingHi1Worker(InterfaceDetectorBase):
     _UDEVADM_OPTION_INFO = "info"
     _DEV_INPUT_PATH: str = "/dev/input/"
     _DEV_INPUT_EVENT_PREFIX: str = "event"
-    _DEV_INPUT_EVENT_PATH_GLOB: str = (
-        _DEV_INPUT_PATH + _DEV_INPUT_EVENT_PREFIX + "*")
+    _DEV_INPUT_EVENT_PATH_GLOB: str = _DEV_INPUT_PATH + _DEV_INPUT_EVENT_PREFIX + "*"
 
     _value: str
     _event_device_candidates: list[str]
@@ -61,8 +61,17 @@ class DetectingHi1Worker(InterfaceDetectorBase):
                 value specified in the ctor call.
         """
 
-        for candidate in glob.glob(self._DEV_INPUT_EVENT_PATH_GLOB):
+        for file in glob.glob(self._DEV_INPUT_EVENT_PATH_GLOB):
+            self._event_device_candidates.append(file)
 
+        # for file in os.listdir(self._DEV_INPUT_PATH):
+        #     if not file.startswith(self._DEV_INPUT_EVENT_PREFIX):
+        #         continue
+
+        #     event_device_fullname = os.path.join(self._DEV_INPUT_PATH, file)
+        #     self._event_device_candidates.append(event_device_fullname)
+
+        for candidate in self._event_device_candidates:
             cmd: list[str] = [
                 self._UDEVADM_FULLNAME,
                 self._UDEVADM_OPTION_INFO,
