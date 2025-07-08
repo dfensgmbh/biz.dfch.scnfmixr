@@ -24,6 +24,7 @@
 
 from __future__ import annotations
 from enum import StrEnum
+import time
 
 from biz.dfch.logging import log
 from ...ui import UiEventInfo
@@ -37,6 +38,8 @@ class InitialiseLcl(StateBase):
 
     Detects the local input/ouput (speakerphone).
     """
+
+    _WAIT_TIMEOUT_MS = 5000
 
     class Events(StrEnum):
         """Events for this state."""
@@ -66,6 +69,13 @@ class InitialiseLcl(StateBase):
 
         # If state machine was just started, we loop until transistion succeeds.
         if not ctx.previous:
+
+            # If detection failed, we wait before the next attempt.
+            # DFTODO - ugly to hard code the class name; but importing it
+            # fails, due to a circular reference.
+            if ctx.error == "DetectingLcl":
+                time.sleep(self._WAIT_TIMEOUT_MS / 1000)
+
             log.info("Enqueueing event: '%s' [%s].",
                      InitialiseLcl.Events.DETECT_DEVICE.name,
                      InitialiseLcl.Events.DETECT_DEVICE.value)

@@ -57,11 +57,11 @@ from .transitions import DetectingEx2, SkippingEx2
 from .states import InitialiseHi1
 from .transitions import DetectingHi1, SkippingHi1
 
-from .states import InitialiseHi2
-from .transitions import DetectingHi2, SkippingHi2
+# from .states import InitialiseHi2
+# from .transitions import DetectingHi2, SkippingHi2
 
-from .states import InitialiseHi3
-from .transitions import DetectingHi3, SkippingHi3
+# from .states import InitialiseHi3
+# from .transitions import DetectingHi3, SkippingHi3
 
 from .states import InitialiseRc1
 from .transitions import DetectingRc1, SkippingRc1, CleaningRc1
@@ -77,7 +77,8 @@ from .transitions import StartingRecording, SettingDate, StoppingSystem, Mountin
     # pylint: disable=C0301  # noqa: E501
 
 from .states import OnRecord
-from .transitions import StoppingRecording, SettingCuePoint, TogglingMute
+from .transitions import StoppingRecording, SettingCuePoint, TogglingMute, ShowingStatus \
+    # pylint: disable=C0301  # noqa: E501
 
 
 class StateMachine():
@@ -90,6 +91,8 @@ class StateMachine():
     _queue: ConcurrentQueueT[str]
     _do_cancel_worker: threading.Event
     _thread: threading.Thread
+    _ctx: ExecutionContext
+    _fsm: Fsm
 
     def __init__(self):
 
@@ -97,6 +100,8 @@ class StateMachine():
         self._queue: ConcurrentQueueT[str] = ConcurrentQueueT(str, True)
         self._do_cancel_worker = threading.Event()
         self._thread = threading.Thread(target=self._worker, daemon=True)
+        self._ctx = None
+        self._fsm = None
 
     def start(self) -> None:
         "Starts the state machine."
@@ -236,6 +241,8 @@ class StateMachine():
                                          onrecord_menu))
             .add_transition(StoppingRecording(OnRecord.Events.STOP_RECORDING,
                                               record_menu))
+            .add_transition(ShowingStatus(OnRecord.Events.SHOW_STATUS,
+                                          onrecord_menu))
         )
         (
             record_menu

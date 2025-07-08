@@ -20,52 +20,29 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module onrecord."""
+"""Module showing_status."""
 
-from __future__ import annotations
-from enum import StrEnum
-
-from biz.dfch.logging import log
 from ...ui import UiEventInfo
-from ...ui import ExecutionContext
+from ...ui import TransitionBase
 from ...ui import StateBase
-from ..state_event import StateEvent
+from ..transition_event import TransitionEvent
 
 
-class OnRecord(StateBase):
-    """Implements the record menu."""
+class ShowingStatus(TransitionBase):
+    """Showing status of recording."""
 
-    class Events(StrEnum):
-        """Events for this state."""
+    def __init__(self, event: str, target: StateBase):
 
-        MENU = "0"
-        STOP_RECORDING = "1"
-        SET_CUE = "2"
-        TOGGLE_MUTE = "3"
-        SHOW_STATUS = "5"
-
-    def __init__(self):
-        """Default ctor."""
+        assert event and event.strip()
+        assert target
 
         super().__init__(
-            info_enter=UiEventInfo(StateEvent.ONRECORD_ENTER, True),
-            info_leave=UiEventInfo(StateEvent.ONRECORD_LEAVE, True)
-        )
+            event,
+            info_enter=UiEventInfo(
+                TransitionEvent.SHOWING_STATUS_ENTER, False),
+            info_leave=UiEventInfo(
+                TransitionEvent.SHOWING_STATUS_LEAVE, False),
+            target_state=target)
 
-    def on_enter(self, ctx: ExecutionContext) -> None:
-        """Invoked upon entering the state.
-
-        Args:
-            ctx (ExecutionContext): The execution context of the state machine.
-        """
-
-        assert ctx and isinstance(ctx, ExecutionContext)
-
-    def on_leave(self, ctx: ExecutionContext) -> None:
-        """Invoked upon leaving the state.
-
-        Args:
-            ctx (ExecutionContext): The execution context of the state machine.
-        """
-
-        assert ctx and isinstance(ctx, ExecutionContext)
+    def invoke(self, _):
+        return True

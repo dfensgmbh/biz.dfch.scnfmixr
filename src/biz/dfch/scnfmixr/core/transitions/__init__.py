@@ -65,6 +65,7 @@ from .unmounting_storage import UnmountingStorage
 from .stopping_recording import StoppingRecording
 from .setting_cuepoint import SettingCuePoint
 from .toggling_mute import TogglingMute
+from .showing_status import ShowingStatus
 
 __all__ = [
     "DoingNothing",
@@ -106,6 +107,7 @@ __all__ = [
     "StoppingRecording",
     "TogglingMute",
     "SettingCuePoint",
+    "ShowingStatus",
 
     "ProcessingDigit",
 ]

@@ -113,6 +113,8 @@ class TransitionEvent(StrEnum):
     SETTING_CUEPOINT_LEAVE = auto()
     TOGGLING_MUTE_ENTER = auto()
     TOGGLING_MUTE_LEAVE = auto()
+    SHOWING_STATUS_ENTER = auto()
+    SHOWING_STATUS_LEAVE = auto()
 
     # Menu: Date, Time, Name
     PROCESSING_DIGIT_ENTER = auto()
