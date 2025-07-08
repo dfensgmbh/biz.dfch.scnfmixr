@@ -20,12 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from .AlsaToJack import AlsaToJack
-from .JackToAlsa import JackToAlsa
-from .JackConnection import JackConnection
-from .JackPort import JackPort
-from .ZitaBridgeAlsaToJack import ZitaBridgeAlsaToJack
-from .ZitaBridgeJackToAlsa import ZitaBridgeJackToAlsa
+from .alsa_to_jack import AlsaToJack
+from .jack_to_alsa import JackToAlsa
+from .jack_connection import JackConnection
+from .jack_port import JackPort
+from .zita_bridge_alsa_to_jack import ZitaBridgeAlsaToJack
+from .zita_bridge_jack_to_alsa import ZitaBridgeJackToAlsa
 
 __all__ = [
     "AlsaToJack",

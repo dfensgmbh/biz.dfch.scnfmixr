@@ -22,7 +22,7 @@
 
 """Module for creating a JACK to ALSA bridge."""
 
-from .AlsaJackBase import AlsaJackBase
+from .alsa_jack_base import AlsaJackBase
 
 
 class JackToAlsa(AlsaJackBase):

@@ -21,16 +21,16 @@
 # SOFTWARE.
 
 __all__ = [
-    "ZitaBridgeJackToAlsa",
+    "ZitaBridgeAlsaToJack",
 ]
 
-from .ZitaBridgeBase import ZitaBridgeBase
+from .zita_bridge_base import ZitaBridgeBase
 
 
-class ZitaBridgeJackToAlsa(ZitaBridgeBase):
-    """Creates a JACK client from an ALSA playback device."""
+class ZitaBridgeAlsaToJack(ZitaBridgeBase):
+    """Creates a JACK client from an ALSA capture device."""
 
-    _ZITA_J2A_FULLNAME = "/bin/zita-j2a"
+    _ZITA_A2J_FULLNAME = "/bin/zita-a2j"
 
     def __init__(self, name: str, device: str, channel_count: int, sampling_rate: int):
-        super().__init__(self._ZITA_J2A_FULLNAME, name, device, channel_count, sampling_rate)
+        super().__init__(self._ZITA_A2J_FULLNAME, name, device, channel_count, sampling_rate)

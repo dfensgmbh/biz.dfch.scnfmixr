@@ -33,7 +33,7 @@ from biz.dfch.asyn import Process
 from text import MultiLineTextParser
 from text import MultiLineTextParserContext
 
-from .JackConnection import JackConnection
+from .jack_connection import JackConnection
 
 
 @dataclass(frozen=True)

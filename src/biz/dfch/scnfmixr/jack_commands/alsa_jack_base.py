@@ -28,8 +28,8 @@ import time
 from biz.dfch.asyn import Process
 from biz.dfch.logging import log
 
-from .JackConnection import JackConnection
-from .JackPort import JackPort
+from .jack_connection import JackConnection
+from .jack_port import JackPort
 
 
 class AlsaJackBase(ABC):
