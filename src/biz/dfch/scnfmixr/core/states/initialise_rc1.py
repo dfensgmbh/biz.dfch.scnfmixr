@@ -45,6 +45,8 @@ class InitialiseRc1(StateBase):
         DETECT_DEVICE = "1"  # Detect the device.
         SKIP_DEVICE = "2"  # Skip the device.
         CLEAN_DEVICE = "3"  # Clean the device.
+        MOUNT_DEVICE = "4"  # Mount the device.
+        UNMOUNT_DEVICE = "5"  # Unmount the device.
 
     def __init__(self):
         """Default ctor."""

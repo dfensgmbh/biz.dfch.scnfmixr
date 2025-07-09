@@ -25,12 +25,12 @@
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
-from ...rc_devices import RcDevices
+from ...devices.storage import DetectingRc1Worker
+from ...public import RcDevices
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
 from ..transition_event import TransitionEvent
-from ...devices.storage import DetectingRc1Worker
 
 
 class DetectingRc1(TransitionBase):

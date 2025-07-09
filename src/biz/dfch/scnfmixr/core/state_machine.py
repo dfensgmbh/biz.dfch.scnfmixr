@@ -64,7 +64,8 @@ from .transitions import DetectingHi1, SkippingHi1
 # from .transitions import DetectingHi3, SkippingHi3
 
 from .states import InitialiseRc1
-from .transitions import DetectingRc1, SkippingRc1, CleaningRc1
+from .transitions import DetectingRc1, SkippingRc1, CleaningRc1, MountingRc1, UnmountingRc1 \
+    # pylint: disable=C0301  # noqa: E501
 
 from .states import InitialiseRc2
 from .transitions import DetectingRc2, SkippingRc2, CleaningRc2
@@ -149,18 +150,27 @@ class StateMachine():
                           event,
                           self._fsm.is_started)
 
-                result = self._fsm.invoke(event)
+                try:
 
-                if result:
-                    log.info(
-                        "Invocation of event '%s' SUCCEEDED. [is_started=%s]",
-                        event,
-                        self._fsm.is_started)
-                else:
-                    log.warning(
+                    result = self._fsm.invoke(event)
+
+                    if result:
+                        log.info(
+                            "Invocation of event '%s' SUCCEEDED. [is_started=%s]",  # noqa: E501
+                            event,
+                            self._fsm.is_started)
+                    else:
+                        log.warning(
+                            "Invocation of event '%s' FAILED. [is_started=%s]",
+                            event,
+                            self._fsm.is_started)
+
+                except Exception:
+                    log.error(
                         "Invocation of event '%s' FAILED. [is_started=%s]",
                         event,
                         self._fsm.is_started)
+                    raise
 
             # Upon empty queue, just continue and try again.
             except queue.Empty:
@@ -303,21 +313,29 @@ class StateMachine():
         )
         (
             initialise_rc2
+            .add_transition(DoingNothing(InitialiseRc2.Events.MENU,
+                                         system_menu))
             .add_transition(DetectingRc2(InitialiseRc2.Events.DETECT_DEVICE,
                                          set_date))
             .add_transition(SkippingRc2(InitialiseRc2.Events.SKIP_DEVICE,
-                                        final_state))
+                                        set_date))
             .add_transition(CleaningRc2(InitialiseRc2.Events.CLEAN_DEVICE,
                                         initialise_rc2))
         )
         (
             initialise_rc1
+            .add_transition(DoingNothing(InitialiseRc1.Events.MENU,
+                                         system_menu))
             .add_transition(DetectingRc1(InitialiseRc1.Events.DETECT_DEVICE,
                                          initialise_rc2))
             .add_transition(SkippingRc1(InitialiseRc1.Events.SKIP_DEVICE,
                                         initialise_rc2))
             .add_transition(CleaningRc1(InitialiseRc1.Events.CLEAN_DEVICE,
                                         initialise_rc1))
+            .add_transition(MountingRc1(InitialiseRc1.Events.MOUNT_DEVICE,
+                                        initialise_rc1))
+            .add_transition(UnmountingRc1(InitialiseRc1.Events.UNMOUNT_DEVICE,
+                                          initialise_rc1))
         )
         (
             initialise_ex2
