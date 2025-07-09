@@ -29,8 +29,8 @@ from ...rc_devices import RcDevices
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
-from ...ui.keyboard import DetectingRc1Worker
 from ..transition_event import TransitionEvent
+from ...devices.storage import DetectingRc1Worker
 
 
 class DetectingRc1(TransitionBase):

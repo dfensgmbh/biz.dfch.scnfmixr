@@ -29,7 +29,7 @@ from ...hi_devices import HiDevices
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
-from ...ui.keyboard import DetectingHi1Worker
+from ...devices.keyboard import DetectingHi1Worker
 from ...ui.keyboard import KeyboardHandler
 from ..transition_event import TransitionEvent
 

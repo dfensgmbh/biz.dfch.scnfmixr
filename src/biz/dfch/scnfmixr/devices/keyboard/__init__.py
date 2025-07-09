@@ -20,12 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package keyboard"""
+"""Package keyboard."""
 
-from .keyboard_handler import KeyboardHandler
-from .key_event_map import KeyEventMap
+from .detecting_hi1_worker import DetectingHi1Worker
+from .input_event_device_info import InputEventDeviceInfo
 
 __all__ = [
-    "KeyboardHandler",
-    "KeyEventMap",
+    "DetectingHi1Worker",
+    "InputEventDeviceInfo",
 ]

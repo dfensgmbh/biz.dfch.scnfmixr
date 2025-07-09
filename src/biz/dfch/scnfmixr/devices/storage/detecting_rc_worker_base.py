@@ -22,7 +22,7 @@
 
 """Module detecting_rc_wroker_base."""
 
-from .interface_detector_base import InterfaceDetectorBase
+from ..interface_detector_base import InterfaceDetectorBase
 
 
 class DetectingRcWorkerBase(InterfaceDetectorBase):
