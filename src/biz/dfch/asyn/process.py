@@ -217,6 +217,7 @@ class Process:
 
         encoding = encoding or locale.getpreferredencoding(False)
 
+        log.debug("Trying to start process... [%s]", args)
         # pylint: disable=consider-using-with
         result = subprocess.Popen(
             args=args,
