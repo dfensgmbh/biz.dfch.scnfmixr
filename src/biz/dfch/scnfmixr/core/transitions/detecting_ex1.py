@@ -26,7 +26,7 @@ from biz.dfch.logging import log
 
 from ...app_ctx import ApplicationContext
 from ...audio import SetupDevice
-from ...audio import AudioDevices
+from ...public.audio import AudioDevice
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
@@ -54,15 +54,15 @@ class DetectingEx1(TransitionBase):
         app_ctx = ApplicationContext()
 
         try:
-            value = app_ctx.audio_device_map[AudioDevices.EX1]
+            value = app_ctx.audio_device_map[AudioDevice.EX1]
             device = SetupDevice.Factory.create(value, 1)
-            app_ctx.audio_configuration_map[AudioDevices.EX1] = device
+            app_ctx.audio_configuration_map[AudioDevice.EX1] = device
 
             return True
 
         except Exception as ex:  # pylint: disable=W0718
 
             log.error("Device detection '%s' FAILED. [%s]",
-                      AudioDevices.EX1.name, ex)
+                      AudioDevice.EX1.name, ex)
 
             return False

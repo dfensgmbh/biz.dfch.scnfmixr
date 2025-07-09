@@ -20,13 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Logical name of audio devices in the system."""
+"Package audio."
 
-from enum import StrEnum, auto
+from __future__ import annotations
 
+from .audio_device import AudioDevice
+from .audio_device_map import AudioDeviceMap
 
-class AudioDevices(StrEnum):
-    """Logical names of audio devices in the system."""
-    LCL = auto()
-    EX1 = auto()
-    EX2 = auto()
+__all__ = [
+    "AudioDevice",
+    "AudioDeviceMap",
+]

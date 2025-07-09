@@ -26,7 +26,7 @@ from biz.dfch.logging import log
 
 from ...app import ApplicationContext
 from ...devices.storage import DetectingRc1Worker
-from ...public import RcDevices
+from ...public import StorageDevice
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
@@ -54,10 +54,10 @@ class DetectingRc1(TransitionBase):
 
         app_ctx = ApplicationContext()
 
-        value = app_ctx.storage_device_map[RcDevices.RC1]
+        value = app_ctx.storage_device_map[StorageDevice.RC1]
 
         log.info("Detecting storage device '%s' at '%s'...",
-                 RcDevices.RC1.name, value)
+                 StorageDevice.RC1.name, value)
 
         selector = DetectingRc1Worker(value)
         result = selector.select()
@@ -66,6 +66,6 @@ class DetectingRc1(TransitionBase):
             return False
 
         log.debug("Detected storage device '%s': %s",
-                  RcDevices.RC1.name, result)
+                  StorageDevice.RC1.name, result)
 
         return True

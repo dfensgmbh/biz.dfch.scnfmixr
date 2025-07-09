@@ -74,7 +74,7 @@ from .states import SetDate, SetTime, SetName
 from .transitions import ProcessingDigit
 
 from .states import Record
-from .transitions import StartingRecording, SettingDate, StoppingSystem, MountingStorage, UnmountingStorage \
+from .transitions import StartingRecording, SettingDate, StoppingSystem, MountingStorage, DisconnectingStorage \
     # pylint: disable=C0301  # noqa: E501
 
 from .states import OnRecord
@@ -262,8 +262,8 @@ class StateMachine():
                                               onrecord_menu))
             .add_transition(MountingStorage(Record.Events.MOUNT_STORAGE,
                                             final_state))
-            .add_transition(UnmountingStorage(Record.Events.UNMOUNT_STORAGE,
-                                              final_state))
+            .add_transition(DisconnectingStorage(Record.Events.UNMOUNT_STORAGE,
+                                                 final_state))
             .add_transition(StoppingSystem(Record.Events.STOP_SYSTEM,
                                            final_state))
             .add_transition(SettingDate(Record.Events.SET_DATE,

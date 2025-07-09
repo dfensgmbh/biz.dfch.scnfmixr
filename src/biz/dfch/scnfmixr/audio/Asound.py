@@ -29,9 +29,9 @@ from text import TextUtils
 
 from biz.dfch.logging import log
 
+from ..public.usb import UsbDeviceInfo
 from .asound_card_info import AsoundCardInfo
 from .proc_alsa_usb_device_info import ProcAlsaUsbDeviceInfo
-from .usb_device_info import UsbDeviceInfo
 
 __all__ = [
     "Asound",

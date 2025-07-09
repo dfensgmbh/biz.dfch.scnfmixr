@@ -22,24 +22,18 @@
 
 """Package audio."""
 
-from .asound_card_info import AsoundCardInfo
 from .Asound import Asound
-from .audio_device_map import AudioDeviceMap
-from .audio_devices import AudioDevices
+from .asound_card_info import AsoundCardInfo
 from .proc_alsa_usb_device_info import ProcAlsaUsbDeviceInfo
 from .recording_parameters import RecordingParameters
 from .setup_device import SetupDevice
-from .usb_device_info import UsbDeviceInfo
 from .Usb import Usb
 
 __all__ = [
-    "AsoundCardInfo",
     "Asound",
-    "AudioDeviceMap",
-    "AudioDevices",
+    "AsoundCardInfo",
     "ProcAlsaUsbDeviceInfo",
     "RecordingParameters",
     "SetupDevice",
-    "UsbDeviceInfo",
     "Usb",
 ]

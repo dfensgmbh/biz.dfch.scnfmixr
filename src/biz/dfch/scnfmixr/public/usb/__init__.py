@@ -20,8 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Mapping of audio devices to system ports."""
+"Package audio."
 
-from .audio_devices import AudioDevices
+from __future__ import annotations
 
-AudioDeviceMap = dict[AudioDevices, str]
+from .usb_device_info import UsbDeviceInfo
+
+__all__ = [
+    "UsbDeviceInfo",
+]

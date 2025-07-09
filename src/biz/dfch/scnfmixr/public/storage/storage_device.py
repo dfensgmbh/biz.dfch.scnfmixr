@@ -20,18 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"Package storage."
+"""Logical name of RC (recording storage) devices in the system."""
 
-from __future__ import annotations
+from enum import StrEnum, auto
 
-from .block_device_type import BlockDeviceType
-from .storage_device import StorageDevice
-from .storage_device_info import StorageDeviceInfo
-from .storage_device_map import StorageDeviceMap
 
-__all__ = [
-    "BlockDeviceType",
-    "StorageDevice",
-    "StorageDeviceInfo",
-    "StorageDeviceMap",
-]
+class StorageDevice(StrEnum):
+    """Logical names of RC (recording storage) devices in the system."""
+    RC1 = auto()
+    RC2 = auto()

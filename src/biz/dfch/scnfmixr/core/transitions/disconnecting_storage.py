@@ -25,15 +25,15 @@
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
-from ...public import RcDevices
+from ...devices.storage import DeviceOperations
+from ...public import StorageDevice
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
 from ..transition_event import TransitionEvent
-from ...devices.storage import DeviceOperations
 
 
-class UnmountingStorage(TransitionBase):
+class DisconnectingStorage(TransitionBase):
     """Unmounting storage."""
 
     def __init__(self, event: str, target: StateBase):
@@ -45,49 +45,50 @@ class UnmountingStorage(TransitionBase):
         super().__init__(
             event,
             info_enter=UiEventInfo(
-                TransitionEvent.UNMOUNTING_STORAGE_ENTER, False),
+                TransitionEvent.DISCONNECTING_STORAGE_ENTER, False),
             info_leave=UiEventInfo(
-                TransitionEvent.UNMOUNTING_STORAGE_LEAVE, False),
+                TransitionEvent.DISCONNECTING_STORAGE_LEAVE, False),
             target_state=target)
 
-    def invoke(self, _):
+    def invoke(self, _) -> bool:
+
+        result = True
 
         app_ctx = ApplicationContext()
 
-        value = app_ctx.storage_device_map[RcDevices.RC1]
+        for device in StorageDevice:
 
-        # RC1
-        log.debug("Unmounting storage device '%s' at '%s'...",
-                  RcDevices.RC1.name, value)
+            addr = app_ctx.storage_device_map.get(device, None)
+            if addr is None:
+                log.debug("Device '%s' not specified. Skipping ...",
+                          device.name)
+                continue
 
-        device_info = app_ctx.storage_configuration_map.get(RcDevices.RC1, None)
-        if device_info is None:
-            return False
+            device_info = app_ctx.storage_configuration_map.get(device, None)
+            if device_info is None:
+                log.debug("Device '%s' not configured. Skipping ...",
+                          device.name)
+                continue
 
-        result = False if device_info is None else DeviceOperations.unmount(
-            device_info.mount_point)
+            op = DeviceOperations(device_info)
 
-        if result:
-            log.info("Unmounting storage device '%s' SUCCEEDED.",
-                     RcDevices.RC1.name)
-        else:
-            log.error("Unmounting storage device '%s' FAILED.",
-                      RcDevices.RC1.name)
+            if op.is_mounted:
 
-        # RC2
-        log.debug("Unmounting storage device '%s' at '%s'...",
-                  RcDevices.RC2.name, value)
+                result = result and op.unmount()
+                if result:
+                    log.info("Unmounting storage device '%s' SUCCEEDED.",
+                             device.name)
+                else:
+                    log.error("Unmounting storage device '%s' FAILED.",
+                              device.name)
+                    continue
 
-        device_info = app_ctx.storage_configuration_map.get(RcDevices.RC2, None)
+            result = result and op.poweroff()
+            if result:
+                log.info("Powering off storage device '%s' SUCCEEDED.",
+                         device.name)
+            else:
+                log.error("Powering off storage device '%s' FAILED.",
+                          device.name)
 
-        result = False if device_info is None else DeviceOperations.unmount(
-            device_info.mount_point)
-
-        if result:
-            log.info("Unmounting storage device '%s' SUCCEEDED.",
-                     RcDevices.RC2.name)
-        else:
-            log.error("Unmounting storage device '%s' FAILED.",
-                      RcDevices.RC2.name)
-
-        return True
+        return result

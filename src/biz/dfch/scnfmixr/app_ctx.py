@@ -29,14 +29,14 @@ import threading
 from typing import final
 
 from .app import LanguageCode
-from .audio import AudioDevices, AudioDeviceMap
+from .public.audio import AudioDevice, AudioDeviceMap
 from .audio import RecordingParameters
 from .audio import SetupDevice
 from .input_device_map import InputDeviceMap
 from .name_input import DateTimeNameInput
 from .public import StorageDeviceInfo
 from .public import StorageDeviceMap
-from .public import RcDevices
+from .public import StorageDevice
 
 
 @final
@@ -80,8 +80,8 @@ class ApplicationContext():
     storage_device_map: StorageDeviceMap
     input_device_map: InputDeviceMap
     recording_parameters: RecordingParameters
-    audio_configuration_map: dict[AudioDevices, SetupDevice]
-    storage_configuration_map: dict[RcDevices, StorageDeviceInfo]
+    audio_configuration_map: dict[AudioDevice, SetupDevice]
+    storage_configuration_map: dict[StorageDevice, StorageDeviceInfo]
 
     def __str__(self) -> str:
         result = {

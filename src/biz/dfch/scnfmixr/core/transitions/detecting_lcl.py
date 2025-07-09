@@ -26,7 +26,7 @@ from biz.dfch.logging import log
 
 from ...app_ctx import ApplicationContext
 from ...audio import SetupDevice
-from ...audio import AudioDevices
+from ...public.audio import AudioDevice
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
@@ -56,15 +56,15 @@ class DetectingLcl(TransitionBase):
         app_ctx = ApplicationContext()
 
         try:
-            value = app_ctx.audio_device_map[AudioDevices.LCL]
+            value = app_ctx.audio_device_map[AudioDevice.LCL]
             device = SetupDevice.Factory.create(value, 1)
-            app_ctx.audio_configuration_map[AudioDevices.LCL] = device
+            app_ctx.audio_configuration_map[AudioDevice.LCL] = device
 
             return True
 
         except Exception as ex:  # pylint: disable=W0718
 
             log.error("Device detection '%s' FAILED. [%s]",
-                      AudioDevices.LCL.name, ex)
+                      AudioDevice.LCL.name, ex)
 
             return False

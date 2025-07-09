@@ -25,13 +25,13 @@
 from __future__ import annotations
 
 from .storage import BlockDeviceType
-from .storage import RcDevices
+from .storage import StorageDevice
 from .storage import StorageDeviceInfo
 from .storage import StorageDeviceMap
 
 __all__ = [
     "BlockDeviceType",
-    "RcDevices",
+    "StorageDevice",
     "StorageDeviceInfo",
     "StorageDeviceMap",
 ]

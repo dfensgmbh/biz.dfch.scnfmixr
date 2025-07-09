@@ -22,6 +22,6 @@
 
 """Mapping of storage devices to system ports."""
 
-from .rc_devices import RcDevices
+from .storage_device import StorageDevice
 
-StorageDeviceMap = dict[RcDevices, str]
+StorageDeviceMap = dict[StorageDevice, str]

@@ -25,7 +25,7 @@
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
-from ...public import RcDevices
+from ...public import StorageDevice
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
@@ -54,21 +54,22 @@ class UnmountingRc1(TransitionBase):
 
         app_ctx = ApplicationContext()
 
-        value = app_ctx.storage_device_map[RcDevices.RC1]
+        value = app_ctx.storage_device_map[StorageDevice.RC1]
 
         log.debug("Unmounting storage device '%s' at '%s'...",
-                  RcDevices.RC1.name, value)
+                  StorageDevice.RC1.name, value)
 
-        device_info = app_ctx.storage_configuration_map.get(RcDevices.RC1, None)
+        device_info = app_ctx.storage_configuration_map.get(
+            StorageDevice.RC1, None)
 
-        result = False if device_info is None else DeviceOperations.unmount(
-            device_info.mount_point)
+        result = False if device_info is None else DeviceOperations(
+            device_info).unmount()
 
         if result:
             log.info("Unmounting storage device '%s' SUCCEEDED.",
-                     RcDevices.RC1.name)
+                     StorageDevice.RC1.name)
         else:
             log.error("Unmounting storage device '%s' FAILED.",
-                      RcDevices.RC1.name)
+                      StorageDevice.RC1.name)
 
         return result

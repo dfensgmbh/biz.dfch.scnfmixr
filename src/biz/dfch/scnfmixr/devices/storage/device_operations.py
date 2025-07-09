@@ -23,6 +23,8 @@
 """Package device_operations."""
 
 from biz.dfch.asyn import Process
+from text import TextUtils
+from ...public.storage import StorageDeviceInfo
 
 __all__ = [
     "DeviceOperations",
@@ -30,55 +32,98 @@ __all__ = [
 
 
 class DeviceOperations():
-    """Provides operations on a storage device."""
+    """Provides operations on a storage device.
+
+    Attributes:
+        is_mounted (bool): Determines wether the device is mounted.
+    """
 
     _SUDO_FULLNAME = "/usr/bin/sudo"
+    _UDISKSCTL_FULLNAME = "/usr/bin/udisksctl"
+    _UDISKSCTL_CMD_UNMOUNT = "unmount"
+    _UDISKSCTL_CMD_POWEROFF = "power-off"
+    _UDISKSCTL_OPT_BLOCK_DEVICE = "-b"
+
+    _PROC_MOUNT_FULLNAME = "/proc/mounts"
+
     _MOUNT_FULLNAME = "/usr/bin/mount"
     _UMOUNT_FULLNAME = "/usr/bin/umount"
 
-    @staticmethod
-    def mount(device: str, mount_point: str) -> bool:
-        """Mounts a partition.
+    _device_info: StorageDeviceInfo
+
+    def __init__(self, value: StorageDeviceInfo):
+        """Initialises an instance of the object.
 
         Args:
-            device (str): Device to mount.
-            mount_point (str): Target directory to mount into.
-
-        Returns:
-            bool: True, if operation was successful. False, otherwise.
+            value (StorageDeviceInfo): The storage device to manipulate.
         """
 
-        assert device and device.strip()
-        assert mount_point and mount_point.strip()
+        assert value and isinstance(value, StorageDeviceInfo)
+
+        self._device_info = value
+
+    @property
+    def is_mounted(self) -> bool:
+        """Determines wether the device is mounted.
+
+        Returns:
+            bool: True, if the device is mounted; false, otherwise.
+        """
+
+        text = TextUtils().read_all_lines(self._PROC_MOUNT_FULLNAME)
+
+        return any(e.startswith(self._device_info.full_name) for e in text)
+
+    def mount(self) -> bool:
+        """Mounts a device.
+
+        Returns:
+            bool: True, if operation was successful; false, otherwise.
+        """
 
         cmd: list[str] = [
-            DeviceOperations._SUDO_FULLNAME,
-            DeviceOperations._MOUNT_FULLNAME,
-            device,
-            mount_point,
+            self._SUDO_FULLNAME,
+            self._MOUNT_FULLNAME,
+            self._device_info.full_name,
+            self._device_info.mount_point,
         ]
 
         process = Process.start(cmd, wait_on_completion=True)
 
         return 0 == process.exit_code
 
-    @staticmethod
-    def unmount(mount_point: str) -> bool:
-        """Unmounts a partition.
-
-        Args:
-            mount_point (str): Target directory to unmount from.
+    def unmount(self) -> bool:
+        """Unmounts a device.
 
         Returns:
-            bool: True, if operation was successful. False, otherwise.
+            bool: True, if operation was successful; false, otherwise.
         """
 
-        assert mount_point and mount_point.strip()
+        cmd: list[str] = [
+            self._SUDO_FULLNAME,
+            self._UDISKSCTL_FULLNAME,
+            self._UDISKSCTL_CMD_UNMOUNT,
+            self._UDISKSCTL_OPT_BLOCK_DEVICE,
+            self._device_info.full_name,
+        ]
+
+        process = Process.start(cmd, wait_on_completion=True)
+
+        return 0 == process.exit_code
+
+    def poweroff(self) -> bool:
+        """Powers off an unmounted device.
+
+        Returns:
+            bool: True, if operation was successful; false, otherwise.
+        """
 
         cmd: list[str] = [
-            DeviceOperations._SUDO_FULLNAME,
-            DeviceOperations._UMOUNT_FULLNAME,
-            mount_point,
+            self._SUDO_FULLNAME,
+            self._UDISKSCTL_FULLNAME,
+            self._UDISKSCTL_CMD_POWEROFF,
+            self._UDISKSCTL_OPT_BLOCK_DEVICE,
+            self._device_info.full_name,
         ]
 
         process = Process.start(cmd, wait_on_completion=True)

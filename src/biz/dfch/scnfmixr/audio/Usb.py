@@ -30,7 +30,7 @@ from typing import NoReturn
 from biz.dfch.logging import log
 
 from text import TextUtils
-from .usb_device_info import UsbDeviceInfo
+from ..public.usb import UsbDeviceInfo
 from .proc_alsa_usb_device_info import ProcAlsaUsbDeviceInfo
 
 __all__ = [
@@ -39,7 +39,7 @@ __all__ = [
 
 
 class Usb:
-    """Retrieves information about connected USB devices. 
+    """Retrieves information about connected USB devices.
 
     **OS and environment dependent!**
     """
@@ -84,7 +84,7 @@ class Usb:
 
         candidates = [
             name for name in sorted(devices.keys()) if name.startswith(usb_id)
-            ]
+        ]
 
         if not candidates:
             return None

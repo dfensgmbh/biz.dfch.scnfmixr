@@ -30,14 +30,14 @@ from biz.dfch.logging import log
 
 from text import TextUtils
 from ...app_ctx import ApplicationContext
-from ...public.storage.rc_devices import RcDevices
+from ...public.storage import StorageDevice
+from ...public.storage import BlockDeviceType
+from ...public.storage import StorageDeviceInfo
 from ...text import UdevadmInfoVisitor
 
 from .detecting_rc_worker_base import DetectingRcWorkerBase
 from .device_operations import DeviceOperations
 from .mount_point import MountPoint
-from ...public.storage.block_device_type import BlockDeviceType
-from ...public.storage.storage_device_info import StorageDeviceInfo
 
 
 class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
@@ -49,7 +49,7 @@ class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
     _SYS_BUS_USB_DEVICES_PATH = "/sys/bus/usb/devices/"
     _VENDOR_ID_FILENAME = "idVendor"
 
-    def select(self) -> str:
+    def select(self) -> str | None:
         """Selects a matching interface and returns it device path.
 
         Returns
@@ -136,6 +136,10 @@ class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
 
         result = max(candidates, key=lambda e: len(e.name0), default=None)
 
+        if result is None:
+            log.error("No storage device found at '%s'.", self._value)
+            return None
+
         # Note: we have to change the logic to start enumerating via lsblk and
         # then select the device.
         # Until then, we have to manually construct the StorageDeviceInfo.
@@ -148,9 +152,8 @@ class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
             BlockDeviceType.PARTITION.value,
             MountPoint.RC1.value)
 
-        app_ctx.storage_configuration_map[RcDevices.RC1] = device_info
+        app_ctx.storage_configuration_map[StorageDevice.RC1] = device_info
 
-        is_mounted = DeviceOperations.mount(
-            device_info.full_name, device_info.mount_point)
+        is_mounted = DeviceOperations(device_info).mount()
 
         return result if is_mounted else None

@@ -20,12 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Logical name of RC (recording storage) devices in the system."""
+"""Logical name of audio devices in the system."""
 
 from enum import StrEnum, auto
 
 
-class RcDevices(StrEnum):
-    """Logical names of RC (recording storage) devices in the system."""
-    RC1 = auto()
-    RC2 = auto()
+class AudioDevice(StrEnum):
+    """Logical names of audio devices in the system."""
+    LCL = auto()
+    EX1 = auto()
+    EX2 = auto()

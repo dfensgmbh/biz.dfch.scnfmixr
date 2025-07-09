@@ -20,18 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"Package storage."
+"Package input."
 
 from __future__ import annotations
 
-from .block_device_type import BlockDeviceType
-from .storage_device import StorageDevice
-from .storage_device_info import StorageDeviceInfo
-from .storage_device_map import StorageDeviceMap
-
 __all__ = [
-    "BlockDeviceType",
-    "StorageDevice",
-    "StorageDeviceInfo",
-    "StorageDeviceMap",
 ]

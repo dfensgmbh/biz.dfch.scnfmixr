@@ -26,9 +26,9 @@ from __future__ import annotations
 import time
 
 from biz.dfch.logging import log
+from ..public.usb import UsbDeviceInfo
 from .Asound import Asound
 from .asound_card_info import AsoundCardInfo
-from .usb_device_info import UsbDeviceInfo
 from .Usb import Usb
 
 

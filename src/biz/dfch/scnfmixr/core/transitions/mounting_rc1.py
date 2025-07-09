@@ -25,7 +25,7 @@
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
-from ...public.storage.rc_devices import RcDevices
+from ...public.storage import StorageDevice
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
@@ -54,20 +54,21 @@ class MountingRc1(TransitionBase):
 
         app_ctx = ApplicationContext()
 
-        value = app_ctx.storage_device_map[RcDevices.RC1]
+        value = app_ctx.storage_device_map[StorageDevice.RC1]
 
         log.debug("Mounting storage device '%s' at '%s'...",
-                  RcDevices.RC1.name, value)
+                  StorageDevice.RC1.name, value)
 
-        device: str = "/dev/sda1"
-        mount_point: str = "/mnt/rc1"
-        result = DeviceOperations.mount(device, mount_point)
+        device_info = app_ctx.storage_configuration_map.get(
+            StorageDevice.RC1, None)
+
+        result = DeviceOperations(device_info).mount()
 
         if result:
             log.info("Mounting storage device '%s' SUCCEEDED.",
-                     RcDevices.RC1.name)
+                     StorageDevice.RC1.name)
         else:
             log.error("Mounting storage device '%s' FAILED.",
-                      RcDevices.RC1.name)
+                      StorageDevice.RC1.name)
 
         return result

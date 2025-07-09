@@ -30,10 +30,11 @@ from biz.dfch.version import Version
 
 from .app_ctx import ApplicationContext
 from .args import Arguments
-from .audio import AudioDevices, RecordingParameters
+from .public.audio import AudioDevice
+from .audio import RecordingParameters
 from .core import StateMachine
 from .hi_devices import HiDevices
-from .public.storage.rc_devices import RcDevices
+from .public.storage.storage_device import StorageDevice
 
 
 class App():
@@ -68,13 +69,13 @@ class App():
         )
 
         app_ctx.audio_device_map = {
-            AudioDevices.LCL: args.LCL,
-            AudioDevices.EX1: args.EX1,
-            AudioDevices.EX2: args.EX2,
+            AudioDevice.LCL: args.LCL,
+            AudioDevice.EX1: args.EX1,
+            AudioDevice.EX2: args.EX2,
         }
         app_ctx.storage_device_map = {
-            RcDevices.RC1: args.RC1,
-            RcDevices.RC2: args.RC2,
+            StorageDevice.RC1: args.RC1,
+            StorageDevice.RC2: args.RC2,
         }
         app_ctx.input_device_map = {
             HiDevices.HI1: args.HI1,

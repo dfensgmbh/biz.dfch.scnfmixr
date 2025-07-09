@@ -62,7 +62,7 @@ from .starting_recording import StartingRecording
 from .stopping_system import StoppingSystem
 from .setting_date import SettingDate
 from .mounting_storage import MountingStorage
-from .unmounting_storage import UnmountingStorage
+from .disconnecting_storage import DisconnectingStorage
 
 from .stopping_recording import StoppingRecording
 from .setting_cuepoint import SettingCuePoint
@@ -105,7 +105,7 @@ __all__ = [
     "StartingRecording",
     "SettingDate",
     "MountingStorage",
-    "UnmountingStorage",
+    "DisconnectingStorage",
     "StoppingSystem",
 
     "StoppingRecording",

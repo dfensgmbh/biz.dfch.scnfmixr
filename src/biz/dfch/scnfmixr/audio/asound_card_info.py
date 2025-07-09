@@ -24,7 +24,7 @@
 
 from dataclasses import dataclass
 
-from .usb_device_info import UsbDeviceInfo
+from ..public.usb import UsbDeviceInfo
 
 __all__ = [
     "AsoundCardInfo",
