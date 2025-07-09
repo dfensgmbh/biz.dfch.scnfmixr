@@ -28,8 +28,6 @@ from text import MultiLineTextParser
 from text import MultiLineTextParserContext
 from text import MultiLineTextParserMap
 
-from biz.dfch.logging import log
-
 from ..text.visitor_base import VisitorBase
 
 __all__ = [
@@ -98,13 +96,10 @@ class UdevadmInfoVisitor(VisitorBase):
         value = ctx.text.removeprefix(ctx.keyword).strip("':")
         self._data["device0_path"] = value
 
-        log.info("[%s] '%s' [%s]", "_process_device", value, self._data)
-
         return True
 
     def _process_parent_device(self, ctx: MultiLineTextParserContext) -> bool:
         """Process parent device path."""
-        log.debug("_process_parent_device")
 
         self._parent_hierarchy += 1
         if 1 == self._parent_hierarchy:
@@ -123,7 +118,6 @@ class UdevadmInfoVisitor(VisitorBase):
 
     def _process_kernels(self, ctx: MultiLineTextParserContext) -> bool:
         """Process KERNELS."""
-        log.debug("_process_kernels")
 
         if 1 == self._parent_hierarchy:
             self._data["name1"] = ctx.text.removeprefix(ctx.keyword).strip('"')
