@@ -20,9 +20,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module detecting_rc_wroker_base."""
+"""Module detecting_rc_worker_base."""
+
+from __future__ import annotations
+import json
+
+from biz.dfch.logging import log
+from biz.dfch.asyn import Process
 
 from ..interface_detector_base import InterfaceDetectorBase
+from ...public.storage.storage_device_info import StorageDeviceInfo
+from ...public.storage.block_device_type import BlockDeviceType
 
 
 class DetectingRcWorkerBase(InterfaceDetectorBase):
@@ -34,10 +42,21 @@ class DetectingRcWorkerBase(InterfaceDetectorBase):
     _UDEVADM_OPTION_NOP_PAGER = "--no-pager"
     _UDEVADM_OPTION_NAME = "--name"
 
+    _LSBLK_FULLNAME = "/usr/bin/lsblk"
+    _LSBLK_OPTION_JSON = "--json"
+    _LSBLK_OPTION_OUTPUT = "-o"
+    _LSBLK_OPTION_OUTPUT_SEP = ","
+    _LSBLK_OPTION_OUTPUT_NAME = "name"
+    _LSBLK_OPTION_OUTPUT_TYPE = "type"
+    _LSBLK_OPTION_OUTPUT_REMOVABLE = "rm"
+    _LSBLK_OPTION_OUTPUT_COMBINED = _LSBLK_OPTION_OUTPUT_NAME + \
+        _LSBLK_OPTION_OUTPUT_SEP + _LSBLK_OPTION_OUTPUT_TYPE + \
+        _LSBLK_OPTION_OUTPUT_SEP + _LSBLK_OPTION_OUTPUT_REMOVABLE
+
     _DEV_INPUT_PATH: str = "/dev/"
-    _DEV_INPUT_EVENT_PREFIX: str = "sd"
-    _DEV_INPUT_EVENT_PATH_GLOB: str = (
-        _DEV_INPUT_PATH + _DEV_INPUT_EVENT_PREFIX + "*")
+    _DEV_STORAGE_PREFIX: str = "sd"
+    _DEV_STORAGE_PATH_GLOB: str = (
+        _DEV_INPUT_PATH + _DEV_STORAGE_PREFIX + "*")
 
     _value: str
     _event_device_candidates: list[str]
@@ -50,3 +69,74 @@ class DetectingRcWorkerBase(InterfaceDetectorBase):
         self._value = value
 
         self._event_device_candidates = []
+
+    def _get_removable_devices(self) -> list[StorageDeviceInfo]:
+
+        result: list[DetectingRcWorkerBase.StorageDeviceInfo] = []
+
+        def recurse(items):
+            """ Finds all items with rm == true.\
+{
+   "blockdevices": [
+      {
+         "name": "sda",
+         "rm": true,
+         "type": "disk",
+         "children": [
+            {
+               "name": "sda1",
+               "rm": true,
+               "type": "part"
+            }
+         ]
+      },{
+         "name": "mmcblk0",
+         "rm": false,
+         "type": "disk",
+         "children": [
+            {
+               "name": "mmcblk0p1",
+               "rm": false,
+               "type": "part"
+            },{
+               "name": "mmcblk0p2",
+               "rm": false,
+               "type": "part"
+            }
+         ]
+      }
+   ]
+}
+"""
+
+            for item in items:
+
+                if item.get(self._LSBLK_OPTION_OUTPUT_NAME) is True:
+                    device = StorageDeviceInfo(
+                        item.get(self._LSBLK_OPTION_OUTPUT_NAME),
+                        f"{self._DEV_INPUT_PATH}"
+                        f"{item.get(self._LSBLK_OPTION_OUTPUT_NAME)}",
+                        BlockDeviceType(
+                            item.get(self._LSBLK_OPTION_OUTPUT_TYPE)))
+                    result.append(device)
+
+                if "children" in device:
+                    recurse(item["children"])
+
+        cmd: list[str] = [
+            self._LSBLK_FULLNAME,
+            self._LSBLK_OPTION_OUTPUT,
+            self._LSBLK_OPTION_OUTPUT_COMBINED,
+            self._LSBLK_OPTION_JSON,
+        ]
+
+        process = Process.start(
+            cmd, wait_on_completion=True, capture_stdout=True)
+
+        text = process.stdout
+
+        x = '\n'.join(text)
+        log.debug("type '%s'. __%s__", type(x), x)
+        recurse(json.load(x))
+
+        return result

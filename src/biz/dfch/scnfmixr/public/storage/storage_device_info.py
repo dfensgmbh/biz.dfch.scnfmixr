@@ -20,18 +20,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package storage"""
+"""Module storage_device_info."""
 
-from ...public.storage.block_device_type import BlockDeviceType
-from .detecting_rc1_worker import DetectingRc1Worker
-from .device_operations import DeviceOperations
-from ...public.storage.storage_device_info import StorageDeviceInfo
-from .mount_point import MountPoint
 
-__all__ = [
-    "BlockDeviceType",
-    "DetectingRc1Worker",
-    "DeviceOperations",
-    "MountPoint",
-    "StorageDeviceInfo",
-]
+from dataclasses import dataclass
+
+
+from biz.dfch.scnfmixr.public.storage.block_device_type import BlockDeviceType
+
+
+@dataclass(frozen=True)
+class StorageDeviceInfo():
+    """Storage device info.
+
+    Attributes:
+        name (str): The name of the device.
+        full_name (str): The full path name of the device.
+        type (str): The blockdevice type of the device.
+        mount_point (str | None): The mount point or None.
+    """
+
+    name: str
+    full_name: str
+    type: BlockDeviceType
+    mount_point: str | None = None

@@ -20,18 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package storage"""
+"""Module mount_points."""
 
-from ...public.storage.block_device_type import BlockDeviceType
-from .detecting_rc1_worker import DetectingRc1Worker
-from .device_operations import DeviceOperations
-from ...public.storage.storage_device_info import StorageDeviceInfo
-from .mount_point import MountPoint
+from enum import StrEnum
 
-__all__ = [
-    "BlockDeviceType",
-    "DetectingRc1Worker",
-    "DeviceOperations",
-    "MountPoint",
-    "StorageDeviceInfo",
-]
+
+class MountPoint(StrEnum):
+    """The defined mount points of storage devices."""
+
+    RC1 = "/mnt/rc1"
+    RC2 = "/mnt/rc2"
+    CFG = "/mnt/cfg"

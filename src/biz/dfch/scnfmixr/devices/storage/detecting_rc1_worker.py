@@ -29,9 +29,15 @@ from biz.dfch.asyn import Process
 from biz.dfch.logging import log
 
 from text import TextUtils
+from ...app_ctx import ApplicationContext
+from ...public.storage.rc_devices import RcDevices
 from ...text import UdevadmInfoVisitor
 
 from .detecting_rc_worker_base import DetectingRcWorkerBase
+from .device_operations import DeviceOperations
+from .mount_point import MountPoint
+from ...public.storage.block_device_type import BlockDeviceType
+from ...public.storage.storage_device_info import StorageDeviceInfo
 
 
 class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
@@ -39,6 +45,7 @@ class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
 
     _USB_DEVICE_TYPE = "usb-storage"
 
+    _DEV_PATH = "/dev/"
     _SYS_BUS_USB_DEVICES_PATH = "/sys/bus/usb/devices/"
     _VENDOR_ID_FILENAME = "idVendor"
 
@@ -46,23 +53,27 @@ class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
         """Selects a matching interface and returns it device path.
 
         Returns
-            str: The device path of an HID input event device that matches the
+            str: The device path of an storqage device that matches the
                 value specified in the ctor call.
         """
 
+        app_ctx = ApplicationContext()
+
         candidates: list[UdevadmInfoVisitor.Data] = []
 
-        for device in glob.glob(self._DEV_INPUT_EVENT_PATH_GLOB):
+        devices = glob.glob(self._DEV_STORAGE_PATH_GLOB)
+        # devices = [d.name for d in self._get_removable_devices()]
+        for full_name in devices:
 
             log.debug("Retrieving udevadm info of device '%s' ...",
-                      device)
+                      full_name)
             cmd: list[str] = [
                 self._UDEVADM_FULLNAME,
                 self._UDEVADM_OPTION_INFO,
                 self._UDEVADM_OPTION_NOP_PAGER,
                 self._UDEVADM_OPTION_ALL,
                 self._UDEVADM_OPTION_NAME,
-                device,
+                full_name,
             ]
 
             process = Process.start(
@@ -70,16 +81,16 @@ class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
 
             text = process.stdout
             log.info("Retrieving udevadm info of device '%s' SUCCEEDED. [%s]",
-                     device, len(text))
+                     full_name, len(text))
 
             log.debug("Parsing udevadm info of device '%s' ...",
-                      device)
+                      full_name)
             visitor = UdevadmInfoVisitor()
             visitor.visit(text)
 
             result = visitor.get_result()
             log.info("Parsing udevadm info of device '%s' SUCCEEDED. [%s]",
-                     device, result)
+                     full_name, result)
 
             if (
                 self._value != result.usb_id
@@ -88,7 +99,7 @@ class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
                 log.debug(
                     "Selecting device '%s' as candidate FAILED [%s != %a]. "
                     "Skipping ...",
-                    device,
+                    full_name,
                     self._value,
                     result.usb_id
                 )
@@ -110,7 +121,7 @@ class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
                 log.debug(
                     "Selecting device '%s' as candidate FAILED [%s not in %a]. "
                     "Skipping ...",
-                    device,
+                    full_name,
                     vendor_id,
                     vendor_ids
                 )
@@ -120,9 +131,26 @@ class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
                 "Selecting device '%s' as candidate [usb_id %s] [name0 %s].",
                 result.usb_id,
                 result.name0,
-                device)
+                full_name)
             candidates.append(result)
 
         result = max(candidates, key=lambda e: len(e.name0), default=None)
 
-        return result
+        # Note: we have to change the logic to start enumerating via lsblk and
+        # then select the device.
+        # Until then, we have to manually construct the StorageDeviceInfo.
+        # And for that, as of now we have to assume the type: partition.
+        # Yes, I know ...
+        device_info = StorageDeviceInfo(
+            result.name0,
+            os.path.join(self._DEV_PATH, result.name0),
+            # Fix this!
+            BlockDeviceType.PARTITION.value,
+            MountPoint.RC1.value)
+
+        app_ctx.storage_configuration_map[RcDevices.RC1] = device_info
+
+        is_mounted = DeviceOperations.mount(
+            device_info.full_name, device_info.mount_point)
+
+        return result if is_mounted else None

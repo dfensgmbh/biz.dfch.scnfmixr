@@ -20,18 +20,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package storage"""
+"Package public."
 
-from ...public.storage.block_device_type import BlockDeviceType
-from .detecting_rc1_worker import DetectingRc1Worker
-from .device_operations import DeviceOperations
-from ...public.storage.storage_device_info import StorageDeviceInfo
-from .mount_point import MountPoint
+from __future__ import annotations
+
+from .storage import BlockDeviceType
+from .storage import RcDevices
+from .storage import StorageDeviceInfo
+from .storage import StorageDeviceMap
 
 __all__ = [
     "BlockDeviceType",
-    "DetectingRc1Worker",
-    "DeviceOperations",
-    "MountPoint",
+    "RcDevices",
     "StorageDeviceInfo",
+    "StorageDeviceMap",
 ]

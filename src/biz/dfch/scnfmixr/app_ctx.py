@@ -22,6 +22,8 @@
 
 """Module app_ctx."""
 
+from __future__ import annotations
+from enum import StrEnum, auto
 import threading
 
 from typing import final
@@ -32,7 +34,9 @@ from .audio import RecordingParameters
 from .audio import SetupDevice
 from .input_device_map import InputDeviceMap
 from .name_input import DateTimeNameInput
-from .storage_device_map import StorageDeviceMap
+from .public import StorageDeviceInfo
+from .public import StorageDeviceMap
+from .public import RcDevices
 
 
 @final
@@ -50,7 +54,22 @@ class ApplicationContext():
             parameters.
         audio_configuration_map (dict[AudioDevices, SetupDevice]): Contains
             configuration parameters of audio devices.
+        storage_configuration_map (dict[RcDevices, BlockDeviceType]): Contains
+            configuratoin parameters of storage devices.
     """
+
+    class Keys(StrEnum):
+        """Keys in the application context."""
+
+        LANGUAGE = auto()
+        AUDIO_MAP = auto()
+        STORAGE_MAP = auto()
+        INPUT_MAP = auto()
+        REC = auto()
+        DAT = auto()
+        AUDIO_CFG = auto()
+        STORAGE_CFG = auto()
+        INPUT_CFG = auto()
 
     _instance = None
     _lock = threading.Lock()
@@ -62,16 +81,19 @@ class ApplicationContext():
     input_device_map: InputDeviceMap
     recording_parameters: RecordingParameters
     audio_configuration_map: dict[AudioDevices, SetupDevice]
+    storage_configuration_map: dict[RcDevices, StorageDeviceInfo]
 
     def __str__(self) -> str:
         result = {
-            "language": self.language,
-            "snd": self.audio_device_map,
-            "sto": self.storage_device_map,
-            "inp": self.input_device_map,
-            "rec": self.recording_parameters,
-            "dat": str(self.date_time_name_input),
-            "dev": self.audio_configuration_map,
+            ApplicationContext.Keys.LANGUAGE: self.language,
+            ApplicationContext.Keys.AUDIO_MAP: self.audio_device_map,
+            ApplicationContext.Keys.STORAGE_MAP: self.storage_device_map,
+            ApplicationContext.Keys.INPUT_MAP: self.input_device_map,
+            ApplicationContext.Keys.REC: self.recording_parameters,
+            ApplicationContext.Keys.DAT: str(self.date_time_name_input),
+            ApplicationContext.Keys.AUDIO_CFG: self.audio_configuration_map,
+            ApplicationContext.Keys.STORAGE_CFG: self.storage_configuration_map,
+            ApplicationContext.Keys.INPUT_CFG: None,
         }
 
         return str(result)
@@ -89,8 +111,9 @@ class ApplicationContext():
 
             cls._instance = super().__new__(cls)
 
-            # Set default values here and not in __init__. 
-            # Ok. But why?
+            # Set default values here and not in __init__.
+            # Ok. But why? I forgot.
+            # Sth to do with singleton and cls initialisation.
             cls.language = LanguageCode.DEFAULT
             cls.date_time_name_input = DateTimeNameInput()
             cls.audio_device_map = {}
@@ -98,5 +121,6 @@ class ApplicationContext():
             cls.input_device_map = {}
             cls.recording_parameters = None
             cls.audio_configuration_map = {}
+            cls.storage_configuration_map = {}
 
         return cls._instance

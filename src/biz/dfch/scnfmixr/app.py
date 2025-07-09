@@ -33,7 +33,7 @@ from .args import Arguments
 from .audio import AudioDevices, RecordingParameters
 from .core import StateMachine
 from .hi_devices import HiDevices
-from .rc_devices import RcDevices
+from .public.storage.rc_devices import RcDevices
 
 
 class App():

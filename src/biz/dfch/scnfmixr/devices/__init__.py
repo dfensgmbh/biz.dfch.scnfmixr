@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package devices"""
+"""Package devices."""
 
 from .interface_detector_base import InterfaceDetectorBase
 
