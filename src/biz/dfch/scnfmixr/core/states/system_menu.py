@@ -45,6 +45,7 @@ class SystemMenu(StateBase):
         SET_TIME = "5"
         SET_NAME = "6"
         DETECT_STORAGE = "7"
+        DISCONNECT_STORAGE = "8"
         STOP_SYSTEM = "9"
 
     def __init__(self):

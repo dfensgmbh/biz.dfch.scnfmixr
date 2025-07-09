@@ -32,5 +32,4 @@ __all__ = [
     "StateEvent",
     "StateMachine",
     "TransitionEvent",
-    # "UserInteractionBase",
 ]

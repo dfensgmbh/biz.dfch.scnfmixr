@@ -42,7 +42,7 @@ class Record(StateBase):
         START_RECORDING = "1"
         SET_DATE = "2"
         MOUNT_STORAGE = "7"
-        UNMOUNT_STORAGE = "8"
+        DISCONNECT_STORAGE = "8"
         STOP_SYSTEM = "9"
 
     def __init__(self):

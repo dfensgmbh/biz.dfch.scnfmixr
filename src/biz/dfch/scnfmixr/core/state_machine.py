@@ -232,6 +232,8 @@ class StateMachine():
                                          record_menu))
             .add_transition(DoingNothing(SystemMenu.Events.DETECT_STORAGE,
                                          initialise_rc1))
+            .add_transition(DisconnectingStorage(SystemMenu.Events.DISCONNECT_STORAGE,  # noqa: E501
+                                                 system_menu))
             .add_transition(DoingNothing(SystemMenu.Events.STOP_SYSTEM,
                                          final_state))
             .add_transition(DoingNothing(SystemMenu.Events.SET_DATE,
@@ -262,8 +264,8 @@ class StateMachine():
                                               onrecord_menu))
             .add_transition(MountingStorage(Record.Events.MOUNT_STORAGE,
                                             final_state))
-            .add_transition(DisconnectingStorage(Record.Events.UNMOUNT_STORAGE,
-                                                 final_state))
+            .add_transition(DisconnectingStorage(Record.Events.DISCONNECT_STORAGE,  # noqa: E501
+                                                 system_menu))
             .add_transition(StoppingSystem(Record.Events.STOP_SYSTEM,
                                            final_state))
             .add_transition(SettingDate(Record.Events.SET_DATE,
