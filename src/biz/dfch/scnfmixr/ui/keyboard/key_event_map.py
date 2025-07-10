@@ -55,6 +55,7 @@ class KeyEventMap(StrEnum):
     KEY_8 = "8"
     KEY_9 = "9"
 
+    KEY_DOT = "."
     KEY_KPDOT = "."
 
     KEY_KPPLUS = "+"
@@ -63,10 +64,10 @@ class KeyEventMap(StrEnum):
     KEY_KPSLASH = "/"
     KEY_EQUAL = "="
 
-    KEY_KPENTER = "|"
-    KEY_ENTER = "|"
+    KEY_KPENTER = "Ö"
+    KEY_ENTER = "Ö"
 
-    KEY_TAB = "?"
-    KEY_BACKSPACE = "?"
+    KEY_TAB = "Ü"
+    KEY_BACKSPACE = "Ä"
 
     KEY_NUMLOCK = "?"
