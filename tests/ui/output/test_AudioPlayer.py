@@ -27,7 +27,7 @@ import time
 import unittest
 
 from biz.dfch.scnfmixr.audio.audio_player import AudioPlayer
-from jack_commands.AlsaToJack import AlsaToJack
+from biz.dfch.scnfmixr.jack_commands import AlsaToJack
 
 
 class TestAudioPlayer(unittest.TestCase):

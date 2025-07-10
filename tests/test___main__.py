@@ -24,10 +24,11 @@ import unittest
 from unittest.mock import MagicMock, mock_open, patch
 
 from text import TextUtils
-from env_embedded import Usb
+from biz.dfch.scnfmixr.audio import Usb
 
 
 class MainTest(unittest.TestCase):
+    """Test __main__.py."""
 
     # Arrange
     expected_builtins_open = "This is a mock file content"
@@ -52,8 +53,10 @@ class MainTest(unittest.TestCase):
         expected_idVendor = "1234"
         expected_idProduct = "ABCD"
         mock_builtins_open.side_effect = [
-            MagicMock(__enter__=lambda s: MagicMock(readline=lambda: expected_idVendor)),
-            MagicMock(__enter__=lambda s: MagicMock(readline=lambda: expected_idProduct)),
+            MagicMock(__enter__=lambda s: MagicMock(
+                readline=lambda: expected_idVendor)),
+            MagicMock(__enter__=lambda s: MagicMock(
+                readline=lambda: expected_idProduct)),
         ]
         # Act
         result = Usb.get_usbid("arbitrary-usb-id")
