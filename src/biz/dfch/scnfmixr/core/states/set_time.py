@@ -50,6 +50,8 @@ class SetTime(StateBase):
         DIGIT_7 = "7"
         DIGIT_8 = "8"
         DIGIT_9 = "9"
+        BACK_SPACE = "£"
+        ENTER = "!"
         JUMP_NEXT = "|"
 
     def __init__(self):
@@ -78,7 +80,7 @@ class SetTime(StateBase):
         if app_ctx.date_time_name_input.is_valid_time:
 
             log.info("Time fully entered: '%s'.",
-                     app_ctx.date_time_name_input.time)
+                     app_ctx.date_time_name_input.get_time())
 
             log.info("Enqueueing event: '%s' [%s].",
                      SetTime.Events.JUMP_NEXT.name,

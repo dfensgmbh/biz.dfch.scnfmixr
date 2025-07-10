@@ -64,10 +64,10 @@ class KeyEventMap(StrEnum):
     KEY_KPSLASH = "/"
     KEY_EQUAL = "="
 
-    KEY_KPENTER = "Ö"
-    KEY_ENTER = "Ö"
+    KEY_KPENTER = "!"
+    KEY_ENTER = "!"
 
-    KEY_TAB = "Ü"
-    KEY_BACKSPACE = "Ä"
+    KEY_TAB = "$"
+    KEY_BACKSPACE = "£"
 
     KEY_NUMLOCK = "?"

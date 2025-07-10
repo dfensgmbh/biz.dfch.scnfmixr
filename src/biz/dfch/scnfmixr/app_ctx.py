@@ -33,7 +33,7 @@ from .public.audio import AudioDevice, AudioDeviceMap
 from .audio import RecordingParameters
 from .audio import SetupDevice
 from .input_device_map import InputDeviceMap
-from .name_input import DateTimeNameInput
+from .date_time_name_input import DateTimeNameInput
 from .public import StorageDeviceInfo
 from .public import StorageDeviceMap
 from .public import StorageDevice

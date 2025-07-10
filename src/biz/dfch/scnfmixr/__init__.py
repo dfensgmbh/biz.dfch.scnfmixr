@@ -26,7 +26,7 @@ from biz.dfch.i18n import LanguageCode
 
 from .app import App
 from .app_ctx import ApplicationContext
-from .name_input import DateTimeNameInput
+from .date_time_name_input import DateTimeNameInput
 from .public.storage import StorageDevice
 from .public.storage import StorageDeviceMap
 from .hi_devices import HiDevices

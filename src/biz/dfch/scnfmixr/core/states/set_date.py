@@ -50,6 +50,8 @@ class SetDate(StateBase):
         DIGIT_7 = "7"
         DIGIT_8 = "8"
         DIGIT_9 = "9"
+        BACK_SPACE = "£"
+        ENTER = "!"
         JUMP_NEXT = "|"
 
     def __init__(self):
@@ -78,7 +80,7 @@ class SetDate(StateBase):
         if app_ctx.date_time_name_input.is_valid_date:
 
             log.info("Date fully entered: '%s'.",
-                     app_ctx.date_time_name_input.date)
+                     app_ctx.date_time_name_input.get_date())
 
             log.info("Enqueueing event: '%s' [%s].",
                      SetDate.Events.JUMP_NEXT.name,
