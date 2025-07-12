@@ -20,60 +20,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module DoingNothing."""
+"""Module returning_false."""
 
-from ..fsm import TransitionBase
-from ..fsm import StateBase
-
-
-class DoingNothing(TransitionBase):
-    """Noop: this transition does nothing and returns True."""
-
-    # def __init__(self, event: str, target: StateBase):
-    #     """Default ctor."""
-
-    #     super().__init__(
-    #         event,
-    #         info_enter=None,
-    #         info_leave=None,
-    #         target_state=target)
-
-    # def invoke(self, ctx):
-    #     return True
+from biz.dfch.scnfmixr.core.fsm import StateBase, TransitionBase
 
 
-class DoingNothing2(TransitionBase):
-    """Noop: this transition does nothing."""
+# pylint: disable=R0903
+class ReturningFalse(TransitionBase):
+    """Noop: this transition does nothing and returns False."""
 
     def __init__(self, event: str, target: StateBase):
-        """Default ctor."""
 
         assert event and event.strip()
         assert target
 
         super().__init__(
             event,
-            info_enter=None,
-            info_leave=None,
-            target_state=target)
-
-    def invoke(self, _):
-        return True
-
-
-class FailingTransition(TransitionBase):
-    """Noop: this transition does nothing."""
-
-    def __init__(self, event: str, target: StateBase):
-        """Default ctor."""
-
-        assert event and event.strip()
-        assert target
-
-        super().__init__(
-            event,
-            info_enter=None,
-            info_leave=None,
             target_state=target)
 
     def invoke(self, _):

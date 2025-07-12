@@ -38,7 +38,7 @@ from .fsm import ExecutionContext, Fsm
 from .states import FinalState
 
 from .states import SystemMenu
-from .transitions import DoingNothing
+from .transitions import ReturningTrue
 
 from .states import SelectLanguage
 from .transitions import SelectingEnglish, SelectingGerman, SelectingFrench, SelectingItalian \
@@ -218,34 +218,34 @@ class StateMachine:
         # Define Transitions
         (
             final_state
-            .add_transition(DoingNothing(FinalState.Events.MENU,
-                                         final_state))
+            .add_transition(ReturningTrue(FinalState.Events.MENU,
+                                          final_state))
         )
         (
             system_menu
-            .add_transition(DoingNothing(SystemMenu.Events.MENU,
-                                         system_menu))
-            .add_transition(DoingNothing(SystemMenu.Events.SELECT_LANGUAGE,
-                                         select_language))
-            .add_transition(DoingNothing(SystemMenu.Events.SELECT_RECORD,
-                                         record_menu))
-            .add_transition(DoingNothing(SystemMenu.Events.DETECT_STORAGE,
-                                         initialise_rc1))
+            .add_transition(ReturningTrue(SystemMenu.Events.MENU,
+                                          system_menu))
+            .add_transition(ReturningTrue(SystemMenu.Events.SELECT_LANGUAGE,
+                                          select_language))
+            .add_transition(ReturningTrue(SystemMenu.Events.SELECT_RECORD,
+                                          record_menu))
+            .add_transition(ReturningTrue(SystemMenu.Events.DETECT_STORAGE,
+                                          initialise_rc1))
             .add_transition(DisconnectingStorage(SystemMenu.Events.DISCONNECT_STORAGE,  # noqa: E501  # pylint: disable=C0301
                                                  system_menu))
-            .add_transition(DoingNothing(SystemMenu.Events.STOP_SYSTEM,
-                                         final_state))
-            .add_transition(DoingNothing(SystemMenu.Events.SET_DATE,
-                                         set_date))
-            .add_transition(DoingNothing(SystemMenu.Events.SET_TIME,
-                                         set_time))
-            .add_transition(DoingNothing(SystemMenu.Events.SET_NAME,
-                                         set_name))
+            .add_transition(ReturningTrue(SystemMenu.Events.STOP_SYSTEM,
+                                          final_state))
+            .add_transition(ReturningTrue(SystemMenu.Events.SET_DATE,
+                                          set_date))
+            .add_transition(ReturningTrue(SystemMenu.Events.SET_TIME,
+                                          set_time))
+            .add_transition(ReturningTrue(SystemMenu.Events.SET_NAME,
+                                          set_name))
         )
         (
             onrecord_menu
-            .add_transition(DoingNothing(OnRecord.Events.MENU,
-                                         system_menu))
+            .add_transition(ReturningTrue(OnRecord.Events.MENU,
+                                          system_menu))
             .add_transition(SettingCuePoint(OnRecord.Events.SET_CUE,
                                             onrecord_menu))
             .add_transition(TogglingMute(OnRecord.Events.TOGGLE_MUTE,
@@ -257,8 +257,8 @@ class StateMachine:
         )
         (
             record_menu
-            .add_transition(DoingNothing(Record.Events.MENU,
-                                         system_menu))
+            .add_transition(ReturningTrue(Record.Events.MENU,
+                                          system_menu))
             .add_transition(StartingRecording(Record.Events.START_RECORDING,
                                               onrecord_menu))
             .add_transition(MountingStorage(Record.Events.MOUNT_STORAGE,
@@ -284,7 +284,7 @@ class StateMachine:
             .add_transition(ProcessingDigit(SetName.Events.DIGIT_9, set_name))
             .add_transition(ProcessingDigit(SetName.Events.BACK_SPACE, set_name))  # noqa: E501  ## pylint: disable=C0301
             .add_transition(ProcessingDigit(SetName.Events.ENTER, set_name))
-            .add_transition(DoingNothing(SetName.Events.JUMP_NEXT, record_menu))
+            .add_transition(ReturningTrue(SetName.Events.JUMP_NEXT, record_menu))  # noqa: E501  ## pylint: disable=C0301
         )
         (
             set_time
@@ -300,7 +300,7 @@ class StateMachine:
             .add_transition(ProcessingDigit(SetTime.Events.DIGIT_9, set_time))
             .add_transition(ProcessingDigit(SetTime.Events.BACK_SPACE, set_time))  # noqa: E501  ## pylint: disable=C0301
             .add_transition(ProcessingDigit(SetTime.Events.ENTER, set_time))
-            .add_transition(DoingNothing(SetTime.Events.JUMP_NEXT, set_name))
+            .add_transition(ReturningTrue(SetTime.Events.JUMP_NEXT, set_name))
         )
         (
             set_date
@@ -316,12 +316,12 @@ class StateMachine:
             .add_transition(ProcessingDigit(SetDate.Events.DIGIT_9, set_date))
             .add_transition(ProcessingDigit(SetDate.Events.BACK_SPACE, set_date))  # noqa: E501  ## pylint: disable=C0301
             .add_transition(ProcessingDigit(SetDate.Events.ENTER, set_date))
-            .add_transition(DoingNothing(SetDate.Events.JUMP_NEXT, set_time))
+            .add_transition(ReturningTrue(SetDate.Events.JUMP_NEXT, set_time))
         )
         (
             initialise_rc2
-            .add_transition(DoingNothing(InitialiseRc2.Events.MENU,
-                                         system_menu))
+            .add_transition(ReturningTrue(InitialiseRc2.Events.MENU,
+                                          system_menu))
             .add_transition(DetectingRc2(InitialiseRc2.Events.DETECT_DEVICE,
                                          set_date))
             .add_transition(SkippingRc2(InitialiseRc2.Events.SKIP_DEVICE,
@@ -331,8 +331,8 @@ class StateMachine:
         )
         (
             initialise_rc1
-            .add_transition(DoingNothing(InitialiseRc1.Events.MENU,
-                                         system_menu))
+            .add_transition(ReturningTrue(InitialiseRc1.Events.MENU,
+                                          system_menu))
             .add_transition(DetectingRc1(InitialiseRc1.Events.DETECT_DEVICE,
                                          initialise_rc2))
             .add_transition(SkippingRc1(InitialiseRc1.Events.SKIP_DEVICE,
@@ -360,7 +360,7 @@ class StateMachine:
         )
         (
             select_language
-            .add_transition(DoingNothing(
+            .add_transition(ReturningTrue(
                 SelectLanguage.Events.MENU,
                 system_menu))
             .add_transition(SelectingEnglish(
@@ -385,8 +385,8 @@ class StateMachine:
         )
         (
             initialise_lcl
-            .add_transition(DoingNothing(InitialiseLcl.Events.MENU,
-                                         system_menu))
+            .add_transition(ReturningTrue(InitialiseLcl.Events.MENU,
+                                          system_menu))
             .add_transition(DetectingLcl(InitialiseLcl.Events.DETECT_DEVICE,
                                          initialise_hi1))
             .add_transition(SkippingLcl(InitialiseLcl.Events.SKIP_DEVICE,
@@ -404,7 +404,7 @@ class StateMachine:
         log.info("Initialising state machine SUCCEEDED.")
 
     def invoke(self, event: str) -> None:
-        """Sets up the state machine."""
+        """Invoke an event on the state machine."""
 
         assert event and isinstance(event, str) and 1 == len(event)
 

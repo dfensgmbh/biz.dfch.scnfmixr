@@ -46,4 +46,4 @@ class CleaningRc2(TransitionBase):
             target_state=target)
 
     def invoke(self, _):
-        return True
+        raise NotImplementedError("Not yet implemented.")

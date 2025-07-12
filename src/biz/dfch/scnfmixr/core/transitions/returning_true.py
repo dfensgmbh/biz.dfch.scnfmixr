@@ -20,30 +20,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module cleaning_rc1."""
+"""Module returning_true."""
 
-from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
-from ..transition_event import TransitionEvent
 
 
-class CleaningRc1(TransitionBase):
-    """Cleaning device RC1."""
+# pylint: disable=R0903
+class ReturningTrue(TransitionBase):
+    """Noop: this transition does nothing and returns True."""
 
     def __init__(self, event: str, target: StateBase):
-        """Default ctor."""
 
         assert event and event.strip()
         assert target
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.CLEANING_DEVICE_RC1_ENTER, False),
-            info_leave=UiEventInfo(
-                TransitionEvent.CLEANING_DEVICE_RC1_LEAVE, False),
             target_state=target)
 
     def invoke(self, _):
-        raise NotImplementedError("Not yet implemented.")
+        return False

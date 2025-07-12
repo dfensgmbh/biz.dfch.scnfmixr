@@ -22,9 +22,8 @@
 
 """Modules transitions."""
 
-from .doing_nothing import DoingNothing
-from .doing_nothing import DoingNothing2
-from .doing_nothing import FailingTransition
+from .returning_true import ReturningTrue
+from .returning_false import ReturningFalse
 
 from .selecting_english import SelectingEnglish
 from .selecting_german import SelectingGerman
@@ -70,9 +69,8 @@ from .toggling_mute import TogglingMute
 from .showing_status import ShowingStatus
 
 __all__ = [
-    "DoingNothing",
-    "DoingNothing2",
-    "FailingTransition",
+    "ReturningTrue",
+    "ReturningFalse",
 
     "SelectingEnglish",
     "SelectingGerman",

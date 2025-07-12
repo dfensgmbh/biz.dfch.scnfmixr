@@ -31,16 +31,20 @@ from .initialise_hi1 import InitialiseHi1
 from .select_language import SelectLanguage
 from .initialise_hi2 import InitialiseHi2
 from .initialise_hi3 import InitialiseHi3
+from .select_language import SelectLanguage
 from .initialise_ex1 import InitialiseEx1
 from .initialise_ex2 import InitialiseEx2
 from .initialise_rc1 import InitialiseRc1
 from .initialise_rc2 import InitialiseRc2
+
 from .set_date import SetDate
 from .set_time import SetTime
 from .set_name import SetName
 
 from .record import Record
 from .onrecord import OnRecord
+
+from .final_state import FinalState
 
 
 __all__ = [
@@ -67,4 +71,6 @@ __all__ = [
 
     "Record",
     "OnRecord",
+
+    "FinalState",
 ]
