@@ -200,7 +200,7 @@ class Asound:
                     info.product,
                     info.version,
                 )
-                return AsoundCardInfo(usb_device_info=info, id_card=card_id)
+                return AsoundCardInfo(usb_device_info=info, card_id=card_id)
 
             except Exception:  # pylint: disable=broad-exception-caught
                 continue

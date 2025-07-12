@@ -20,20 +20,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package audio."""
+"Package constant."
 
-from .Asound import Asound
-from .asound_card_info import AsoundCardInfo
-from .proc_alsa_usb_device_info import ProcAlsaUsbDeviceInfo
-from .recording_parameters import RecordingParameters
-from .audio_device_info import AudioDeviceInfo
-from .Usb import Usb
+from enum import StrEnum
 
-__all__ = [
-    "Asound",
-    "AsoundCardInfo",
-    "ProcAlsaUsbDeviceInfo",
-    "RecordingParameters",
-    "AudioDeviceInfo",
-    "Usb",
-]
+
+class Constant(StrEnum):
+    """JACK constants."""
+
+    JACK_INFIX = "-"
+    JACK_INPUT = "I"
+    JACK_OUTPUT = "O"
+
+    ALSA_NAME_PREFIX = "hw:"
+    ALSA_NAME_SEPARATOR = ","
+    ALSA_NAME_INTERFACE = "0"

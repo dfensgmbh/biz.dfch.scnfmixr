@@ -24,10 +24,21 @@
 
 from __future__ import annotations
 
+from .alsa_inferface_info import AlsaInterfaceInfo
 from .audio_device import AudioDevice
 from .audio_device_map import AudioDeviceMap
+from .bit_depth import BitDepth
+from .constant import Constant
+from .format import Format
+from .sample_rate import SampleRate
+
 
 __all__ = [
+    "AlsaInterfaceInfo",
     "AudioDevice",
     "AudioDeviceMap",
+    "BitDepth",
+    "Constant",
+    "Format",
+    "SampleRate",
 ]

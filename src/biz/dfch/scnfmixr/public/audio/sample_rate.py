@@ -20,20 +20,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package audio."""
+"""Module sample_rate."""
 
-from .Asound import Asound
-from .asound_card_info import AsoundCardInfo
-from .proc_alsa_usb_device_info import ProcAlsaUsbDeviceInfo
-from .recording_parameters import RecordingParameters
-from .audio_device_info import AudioDeviceInfo
-from .Usb import Usb
+from enum import Enum
 
-__all__ = [
-    "Asound",
-    "AsoundCardInfo",
-    "ProcAlsaUsbDeviceInfo",
-    "RecordingParameters",
-    "AudioDeviceInfo",
-    "Usb",
-]
+
+class SampleRate(Enum):
+    """Supported sample rates."""
+    R08000 = 8000
+    R16000 = 16000
+    R24000 = 24000
+    R32000 = 32000
+    R44100 = 44100
+    CD = R44100
+    R48000 = 48000
+    R88200 = 88200
+    R96000 = 96000
+    SACD = R96000
+    DEFAULT = 48000

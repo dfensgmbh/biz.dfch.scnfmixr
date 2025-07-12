@@ -20,20 +20,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package audio."""
+"""Module format."""
 
-from .Asound import Asound
-from .asound_card_info import AsoundCardInfo
-from .proc_alsa_usb_device_info import ProcAlsaUsbDeviceInfo
-from .recording_parameters import RecordingParameters
-from .audio_device_info import AudioDeviceInfo
-from .Usb import Usb
+from enum import StrEnum
 
-__all__ = [
-    "Asound",
-    "AsoundCardInfo",
-    "ProcAlsaUsbDeviceInfo",
-    "RecordingParameters",
-    "AudioDeviceInfo",
-    "Usb",
-]
+from .bit_depth import BitDepth
+
+
+class Format(StrEnum):
+    """Audio format."""
+    S16_LE = "S16_LE"
+    S24_LE = "S24_LE"
+    S32_LE = "S32_LE"
+    S24_3LE = "S32_3LE"
+    FLOAT_LE = "FLOAT_LE"
+    DEFAULT = S16_LE
+
+    def get_bit_depth(self) -> int:
+        """Returns the bit depth of a format."""
+        match self:
+            case Format.S16_LE:
+                return BitDepth.B16
+            case Format.S24_LE | Format.S24_3LE:
+                return BitDepth.B24
+            case Format.S32_LE:
+                return BitDepth.B32
+            case _:
+                raise LookupError

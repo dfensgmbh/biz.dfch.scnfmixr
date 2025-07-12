@@ -30,7 +30,15 @@ __all__ = ["AlsaStreamInterfaceInfo"]
 
 @dataclass
 class AlsaStreamInterfaceInfo:
-    """Contains information about an ALSA stream interface."""
+    """Contains information about an ALSA stream interface.
+
+    state (AlsaStreamInfoVisitorState): The state of the interface.
+    format (str): Supported format of interface.
+    channel_count (int): Supported channel count of interface.
+    bit_depth (int): Supported bit depth of interface.
+    map (list[str]): ???
+    rates (list[int]): Available sample rates of interface.
+    """
 
     state: AlsaStreamInfoVisitorState = AlsaStreamInfoVisitorState.DEFAULT
     format: str = None
@@ -39,11 +47,16 @@ class AlsaStreamInterfaceInfo:
     map: list[str] = field(default_factory=list)
     rates: list[int] = field(default_factory=list)
 
+    def get_best_rate(self) -> int:
+        """Returns the best sampling rate from a list of sampling rates."""
+
+        return max((r for r in self.rates if r <= 48000), default=0)
+
     def to_dict(self) -> dict[str, Any]:
         """Converts ALSA stream information into a dictionary.
 
         Returns:
-            Dict (str, Any): A key-value map containining the ALSA stream
+            Dict (str, Any): A key-value map containing the ALSA stream
                 information.
         """
 

@@ -37,8 +37,8 @@ class AsoundCardInfo:
 
     Attributes:
         usb_device_info (UsbDeviceInfo): USB information about the device.
-        id_card (int): The ALSA card id (counting from '0').
+        card_id (int): The ALSA card id (counting from '0').
     """
 
     usb_device_info: UsbDeviceInfo
-    id_card: int
+    card_id: int

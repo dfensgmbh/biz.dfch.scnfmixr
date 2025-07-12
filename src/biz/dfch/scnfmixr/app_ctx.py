@@ -31,7 +31,7 @@ from typing import final
 from .app import LanguageCode
 from .public.audio import AudioDevice, AudioDeviceMap
 from .audio import RecordingParameters
-from .audio import SetupDevice
+from .audio import AudioDeviceInfo
 from .input_device_map import InputDeviceMap
 from .date_time_name_input import DateTimeNameInput
 from .public import StorageDeviceInfo
@@ -80,7 +80,7 @@ class ApplicationContext():
     storage_device_map: StorageDeviceMap
     input_device_map: InputDeviceMap
     recording_parameters: RecordingParameters
-    audio_configuration_map: dict[AudioDevice, SetupDevice]
+    audio_configuration_map: dict[AudioDevice, AudioDeviceInfo]
     storage_configuration_map: dict[StorageDevice, StorageDeviceInfo]
 
     def __str__(self) -> str:

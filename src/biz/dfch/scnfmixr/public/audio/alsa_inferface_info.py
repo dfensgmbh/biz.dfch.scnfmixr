@@ -20,20 +20,40 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package audio."""
+"""Module alsa_inferface_info."""
 
-from .Asound import Asound
-from .asound_card_info import AsoundCardInfo
-from .proc_alsa_usb_device_info import ProcAlsaUsbDeviceInfo
-from .recording_parameters import RecordingParameters
-from .audio_device_info import AudioDeviceInfo
-from .Usb import Usb
+from dataclasses import dataclass
 
-__all__ = [
-    "Asound",
-    "AsoundCardInfo",
-    "ProcAlsaUsbDeviceInfo",
-    "RecordingParameters",
-    "AudioDeviceInfo",
-    "Usb",
-]
+from .sample_rate import SampleRate
+from .format import Format
+from .bit_depth import BitDepth
+
+
+@dataclass(frozen=True)
+class AlsaInterfaceInfo():
+    """Audio parameters of card and interface.
+
+    Attributes:
+        card_id (int): The ALSA card id.
+        interface_id (int): The interface id of the card.
+        format (Format): The format of the interface.
+        channel_count (int): The number of channels of the interface.
+        sample_rate (SampleRate): The sample rate of the interface.
+        bit_depth (BitDepth): The bit depth of the interface.
+    """
+
+    card_id: int
+    interface_id: int = 0
+    format: Format = Format.DEFAULT
+    channel_count: int = 1
+    sample_rate: SampleRate = SampleRate.DEFAULT
+    bit_depth: BitDepth = BitDepth.DEFAULT
+
+    def __post_init__(self):
+
+        assert 0 < self.card_id
+        assert 0 <= self.interface_id
+        assert self.format in Format
+        assert 1 <= self.channel_count
+        assert self.sample_rate in SampleRate
+        assert self.bit_depth in BitDepth

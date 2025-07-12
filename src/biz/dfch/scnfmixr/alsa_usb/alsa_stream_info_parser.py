@@ -33,8 +33,13 @@ from .alsa_stream_interface_info import AlsaStreamInterfaceInfo
 class AlsaStreamInfoParser(MultiLineTextParser):
     """Implements a parser for ALSA stream information."""
 
+    _indent: str
+    _spacing: int
+
+    interface_id: int
+
     @overload
-    def __init__(self, id_card: int) -> None:
+    def __init__(self, card_id: int) -> None:
         ...
 
     @overload
@@ -45,22 +50,26 @@ class AlsaStreamInfoParser(MultiLineTextParser):
         """Creates an ALSA stream info parser.
 
         Args:
-            value (int, list): Either the ALSA id of the sound card or the
+            value (int, list[str]): Either the ALSA id of the sound card or the
                 contents of an ALSA stream info file as a list of strings.
         """
 
-        _INDENT = " "
-        _SPACING = 2
+        self._indent = " "
+        self._spacing = 2
 
         assert value
-        assert isinstance(value, (str, list))
+        assert isinstance(value, (int, list))
+
+        self.interface_id = 0
 
         text = value
         if isinstance(value, int):
             id_card = value
             assert 0 <= id_card
 
-            stream_fullname = f"/proc/asound/card{id_card}/stream0"
+            stream_fullname = (
+                f"/proc/asound/card{id_card}/"
+                f"stream{self.interface_id}")
             text = TextUtils().read_all_lines(stream_fullname)
 
         visitor = AlsaStreamInfoVisitor()
@@ -75,7 +84,8 @@ class AlsaStreamInfoParser(MultiLineTextParser):
             "Channel map:": visitor.process_map,
         }
 
-        super().__init__(indent=_INDENT, length=_SPACING, dic=callbacks)
+        super().__init__(
+            indent=self._indent, length=self._spacing, dic=callbacks)
         super().parse(text)
 
         self.visitor = visitor
@@ -135,5 +145,9 @@ class AlsaStreamInfoParser(MultiLineTextParser):
         return result
 
     def best_rate(self, rates: list[int]) -> int:
-        """Returns the best sampling rate from a list of sampling rates."""
+        """Returns the best sampling rate from a list of sampling rates.
+
+        **DEPRECATED**: Do not use this method. Instead use `get_best_rate()`
+        from capture or playback interface.
+        """
         return max((r for r in rates if r <= 48000), default=0)

@@ -20,20 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package audio."""
+"""Module bit_depth."""
 
-from .Asound import Asound
-from .asound_card_info import AsoundCardInfo
-from .proc_alsa_usb_device_info import ProcAlsaUsbDeviceInfo
-from .recording_parameters import RecordingParameters
-from .audio_device_info import AudioDeviceInfo
-from .Usb import Usb
+from enum import Enum
 
-__all__ = [
-    "Asound",
-    "AsoundCardInfo",
-    "ProcAlsaUsbDeviceInfo",
-    "RecordingParameters",
-    "AudioDeviceInfo",
-    "Usb",
-]
+
+class BitDepth(Enum):
+    """Audio bit depth."""
+    B16 = 16
+    B24 = 24
+    B32 = 32
+    DEFAULT = B16

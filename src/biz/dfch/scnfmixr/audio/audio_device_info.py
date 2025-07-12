@@ -26,18 +26,22 @@ from __future__ import annotations
 import time
 
 from biz.dfch.logging import log
+from ..alsa_usb import AlsaStreamInfoParser
 from ..public.usb import UsbDeviceInfo
+from ..public.audio import AlsaInterfaceInfo
+from ..public.audio import Format
+from ..public.audio import SampleRate
 from .Asound import Asound
 from .asound_card_info import AsoundCardInfo
 from .Usb import Usb
 
 
 __all__ = [
-    "SetupDevice",
+    "AudioDeviceInfo",
 ]
 
 
-class SetupDevice:  # pylint: disable=R0903
+class AudioDeviceInfo:  # pylint: disable=R0903
     """Detects and sets up a ALSA USB device.
 
     Attributes:
@@ -45,23 +49,29 @@ class SetupDevice:  # pylint: disable=R0903
         actual_usb_id (str): The actual USB id of the sound device.
         device_info (UsbDeviceInfo): Contains USB device information.
         asound_info (AsoundCardInfo): Contains ALSA device information.
+        source (AlsaInterfaceInfo): Contains interface information about the
+            ALSA capture device.
+        sink (AlsaInterfaceInfo): Contains interface information about the
+            ALSA playback device.
     """
 
     requested_usb_id: str
     actual_usb_id: str
     device_info: UsbDeviceInfo
     asound_info: AsoundCardInfo
+    source: AlsaInterfaceInfo
+    sink: AlsaInterfaceInfo
 
     class Factory:  # pylint: disable=R0903
-        """Factory class for creating `SetupDevice` instances."""
+        """Factory class for creating `AudioDeviceInfo` instances."""
 
         @staticmethod
         def create(
             usb_id: str,
             max_attempts: int = 0,
             wait_interval_ms: int = 1000
-        ) -> SetupDevice:
-            """Factory method for creating `SetupDevice` instances.
+        ) -> AudioDeviceInfo:
+            """Factory method for creating `AudioDeviceInfo` instances.
 
             Args:
                 usb_id (str): The USB id to detect and setup.
@@ -72,14 +82,14 @@ class SetupDevice:  # pylint: disable=R0903
                     attempts.
 
             Returns:
-                SetupDevice: A successfully created device instance.
+                AudioDeviceInfo: A successfully created device instance.
 
             Raises:
                 RuntimeError: If the device could not be created within the
                     given number of attempts.
             """
 
-            assert usb_id and usb_id
+            assert usb_id and usb_id.strip()
             assert 0 <= max_attempts
             assert 0 <= wait_interval_ms
 
@@ -88,7 +98,7 @@ class SetupDevice:  # pylint: disable=R0903
             while True:
                 try:
 
-                    return SetupDevice(usb_id)
+                    return AudioDeviceInfo(usb_id)
 
                 except Exception as ex:  # pylint: disable=W0718
 
@@ -131,9 +141,37 @@ class SetupDevice:  # pylint: disable=R0903
         log.info("Mapped requested usb_id: [%s / %s]",
                  self.requested_usb_id, self.actual_usb_id)
 
-        log.info("Trying to detect device on '%s' ...", self.actual_usb_id)
+        log.debug("Detecting device on '%s' ...", self.actual_usb_id)
+
         self.device_info = Usb.get_usb_device_info(self.actual_usb_id)
+        log.info("[usb_device_info '%s']: [%s]",
+                 self.actual_usb_id, self.device_info)
         self.asound_info = Asound.get_info(self.device_info)
+        log.info("[asound_card_info '%s']: [%s]",
+                 self.actual_usb_id, self.asound_info)
+
+        parser = AlsaStreamInfoParser(self.asound_info.card_id)
+        capture_interface = parser.get_best_capture_interface()
+        log.debug(capture_interface)
+        self.source = AlsaInterfaceInfo(
+            card_id=self.asound_info.card_id,
+            interface_id=parser.interface_id,
+            channel_count=capture_interface.channel_count,
+            format=Format(capture_interface.format),
+            bit_depth=Format(capture_interface.format).get_bit_depth(),
+            sample_rate=SampleRate(capture_interface.get_best_rate()),
+        )
+        playback_interface = parser.get_best_playback_interface()
+        self.sink = AlsaInterfaceInfo(
+            card_id=self.asound_info.card_id,
+            interface_id=parser.interface_id,
+            channel_count=playback_interface.channel_count,
+            format=Format(playback_interface.format),
+            sample_rate=SampleRate(playback_interface.get_best_rate()),
+            bit_depth=Format(playback_interface.format).get_bit_depth(),
+        )
+
+        log.info("Detecting device on '%s' SUCCEEDED.", self.actual_usb_id)
 
     def __str__(self) -> str:
 
@@ -141,7 +179,12 @@ class SetupDevice:  # pylint: disable=R0903
             "requested_usb_id": self.requested_usb_id,
             "actual_usb_id": self.actual_usb_id,
             "asound_info": self.asound_info,
-            "device_info": self.device_info,
+            "source": self.source,
+            "sink": self.sink,
         }
 
         return str(result)
+
+    def __repr__(self) -> str:
+
+        return self.__str__()
