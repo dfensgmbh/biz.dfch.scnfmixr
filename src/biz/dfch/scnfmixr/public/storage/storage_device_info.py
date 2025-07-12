@@ -26,7 +26,7 @@
 from dataclasses import dataclass
 
 
-from ...public.storage.block_device_type import BlockDeviceType
+from ...public.storage import BlockDeviceType
 
 
 @dataclass(frozen=True)

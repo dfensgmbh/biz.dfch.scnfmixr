@@ -22,10 +22,10 @@
 
 """Package storage"""
 
-from ...public.storage.block_device_type import BlockDeviceType
+from ...public.storage import BlockDeviceType
 from .detecting_rc1_worker import DetectingRc1Worker
 from .device_operations import DeviceOperations
-from ...public.storage.storage_device_info import StorageDeviceInfo
+from ...public.storage import StorageDeviceInfo
 from .mount_point import MountPoint
 
 __all__ = [

@@ -186,5 +186,4 @@ class AudioDeviceInfo:  # pylint: disable=R0903
         return str(result)
 
     def __repr__(self) -> str:
-
         return self.__str__()

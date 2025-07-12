@@ -67,12 +67,13 @@ class SelectLanguage(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        app_ctx = ApplicationContext()
+        app_ctx = ApplicationContext.Factory.get()
 
         # If the language code was not selected via CLI, let the user choose.
         log.debug("Currently selected language: '%s' [%s].",
-                  app_ctx.language.name, app_ctx.language.value)
-        match app_ctx.language:
+                  app_ctx.ui_parameters.language.name,
+                  app_ctx.ui_parameters.language.value)
+        match app_ctx.ui_parameters.language:
             case LanguageCode.EN:
                 ctx.events.enqueue(SelectLanguage.Events.SELECT_ENGLISH)
             case LanguageCode.DE:

@@ -29,6 +29,7 @@ from .audio_device import AudioDevice
 from .audio_device_map import AudioDeviceMap
 from .bit_depth import BitDepth
 from .constant import Constant
+from .file_format import FileFormat
 from .format import Format
 from .sample_rate import SampleRate
 
@@ -39,6 +40,7 @@ __all__ = [
     "AudioDeviceMap",
     "BitDepth",
     "Constant",
+    "FileFormat",
     "Format",
     "SampleRate",
 ]

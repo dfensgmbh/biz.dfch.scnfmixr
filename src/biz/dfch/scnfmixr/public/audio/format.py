@@ -28,16 +28,18 @@ from .bit_depth import BitDepth
 
 
 class Format(StrEnum):
-    """Audio format."""
+    """Audio encoding format."""
+
     S16_LE = "S16_LE"
     S24_LE = "S24_LE"
+    S24_3LE = "S24_3LE"
     S32_LE = "S32_LE"
-    S24_3LE = "S32_3LE"
     FLOAT_LE = "FLOAT_LE"
-    DEFAULT = S16_LE
+    DEFAULT = S24_3LE
 
     def get_bit_depth(self) -> int:
         """Returns the bit depth of a format."""
+
         match self:
             case Format.S16_LE:
                 return BitDepth.B16

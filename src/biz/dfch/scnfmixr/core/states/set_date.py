@@ -73,7 +73,7 @@ class SetDate(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        app_ctx = ApplicationContext()
+        app_ctx = ApplicationContext.Factory.get()
         log.info("Date entered: [%s].",
                  app_ctx.date_time_name_input.is_valid_date)
 

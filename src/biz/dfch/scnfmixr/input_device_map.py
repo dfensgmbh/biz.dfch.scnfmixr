@@ -22,6 +22,6 @@
 
 """Mapping of HI devices to system ports."""
 
-from .hi_devices import HiDevices
+from .public.input import InputDevice
 
-InputDeviceMap = dict[HiDevices, str]
+InputDeviceMap = dict[InputDevice, str]

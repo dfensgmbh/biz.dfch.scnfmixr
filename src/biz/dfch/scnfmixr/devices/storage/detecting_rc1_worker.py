@@ -29,7 +29,7 @@ from biz.dfch.asyn import Process
 from biz.dfch.logging import log
 
 from text import TextUtils
-from ...app_ctx import ApplicationContext
+from ...application_context import ApplicationContext
 from ...public.storage import StorageDevice
 from ...public.storage import BlockDeviceType
 from ...public.storage import StorageDeviceInfo
@@ -57,7 +57,7 @@ class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
                 value specified in the ctor call.
         """
 
-        app_ctx = ApplicationContext()
+        app_ctx = ApplicationContext.Factory.get()
 
         candidates: list[UdevadmInfoVisitor.Data] = []
 

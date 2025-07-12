@@ -25,7 +25,7 @@
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
-from ...hi_devices import HiDevices
+from ...public.input import InputDevice
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
@@ -54,7 +54,9 @@ class DetectingHi1(TransitionBase):
 
     def invoke(self, ctx):
 
-        value = ApplicationContext().input_device_map[HiDevices.HI1]
+        app_ctx = ApplicationContext.Factory.get()
+        
+        value = app_ctx.input_device_map[InputDevice.HI1]
         worker = DetectingHi1Worker(value)
         device = worker.select()
 

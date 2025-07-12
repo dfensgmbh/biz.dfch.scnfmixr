@@ -20,25 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package scnfmix."""
+"Module usb_port."
 
-from biz.dfch.i18n import LanguageCode
+from enum import StrEnum
 
-from .app import App
-from .application_context import ApplicationContext
-from .date_time_name_input import DateTimeNameInput
-from .public.storage import StorageDevice
-from .public.storage import StorageDeviceMap
-from .public.input.input_device import InputDevice
-from .input_device_map import InputDeviceMap
 
-__all__ = [
-    "App",
-    "ApplicationContext",
-    "DateTimeNameInput",
-    "LanguageCode",
-    "StorageDevice",
-    "StorageDeviceMap",
-    "InputDevice",
-    "InputDeviceMap",
-]
+class UsbPort(StrEnum):
+    """Raspberry Pi 5 internal USB port numbering."""
+
+    TOP_LEFT = "3-1"
+    TOP_RIGHT = "1-2"
+    BOTTOM_LEFT = "1-1"
+    BOTTOM_RIGHT = "3-2"

@@ -29,8 +29,8 @@ from biz.dfch.logging import log
 from biz.dfch.asyn import Process
 
 from ..interface_detector_base import InterfaceDetectorBase
-from ...public.storage.storage_device_info import StorageDeviceInfo
-from ...public.storage.block_device_type import BlockDeviceType
+from ...public.storage import StorageDeviceInfo
+from ...public.storage import BlockDeviceType
 
 
 class DetectingRcWorkerBase(InterfaceDetectorBase):

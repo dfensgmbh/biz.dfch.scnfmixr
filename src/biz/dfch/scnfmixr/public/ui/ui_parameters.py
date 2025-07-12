@@ -20,25 +20,35 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package scnfmix."""
+"Module ui_parameters."
+
+from __future__ import annotations
+from enum import StrEnum, auto
 
 from biz.dfch.i18n import LanguageCode
 
-from .app import App
-from .application_context import ApplicationContext
-from .date_time_name_input import DateTimeNameInput
-from .public.storage import StorageDevice
-from .public.storage import StorageDeviceMap
-from .public.input.input_device import InputDevice
-from .input_device_map import InputDeviceMap
 
-__all__ = [
-    "App",
-    "ApplicationContext",
-    "DateTimeNameInput",
-    "LanguageCode",
-    "StorageDevice",
-    "StorageDeviceMap",
-    "InputDevice",
-    "InputDeviceMap",
-]
+# pylint: disable=R0903
+class UiParameters:
+    """UI parameters for the application."""
+
+    class Keys(StrEnum):
+        """Keys in this class."""
+
+        LANGUAGE = auto()
+
+    language: LanguageCode
+
+    def __init__(self):
+        self.language = LanguageCode.DEFAULT
+
+    def __str__(self) -> str:
+
+        result = {
+            "language": self.language
+        }
+
+        return str(result)
+
+    def __repr__(self) -> str:
+        return self.__str__()

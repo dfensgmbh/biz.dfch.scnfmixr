@@ -26,7 +26,7 @@ from biz.dfch.logging import log
 
 from ...app import ApplicationContext
 from ...devices.storage import DetectingRc1Worker
-from ...public import StorageDevice
+from ...public.storage import StorageDevice
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
 from ...ui import StateBase
@@ -52,7 +52,7 @@ class DetectingRc1(TransitionBase):
 
     def invoke(self, _):
 
-        app_ctx = ApplicationContext()
+        app_ctx = ApplicationContext.Factory.get()
 
         value = app_ctx.storage_device_map[StorageDevice.RC1]
 

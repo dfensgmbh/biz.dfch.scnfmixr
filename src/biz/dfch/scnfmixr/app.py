@@ -28,15 +28,15 @@ from biz.dfch.i18n import LanguageCode
 from biz.dfch.logging import log
 from biz.dfch.version import Version
 
-from .app_ctx import ApplicationContext
+from .application_context import ApplicationContext
 from .args import Arguments
-from .public.audio import AudioDevice
-from .audio import RecordingParameters
 from .core import StateMachine
-from .hi_devices import HiDevices
+from .public.input import InputDevice
+from .public.audio import AudioDevice, Format, FileFormat
 from .public.storage.storage_device import StorageDevice
 
 
+# pylint: disable=R0903
 class App:
     """The application."""
 
@@ -48,25 +48,30 @@ class App:
     _PROG_NAME = "scnfmixr"
 
     def __init__(self):
-        """Creates an instance of this class."""
 
         Version().ensure_minimum_version(
             self._VERSION_REQUIRED_MAJOR,
             self._VERSION_REQUIRED_MINOR)
 
     def invoke(self) -> None:
-        """Main entry point for this"""
+        """Main entry point for this class."""
 
         args = Arguments(prog_name=self._PROG_NAME, version=self._VERSION).get()
 
-        app_ctx = ApplicationContext()
+        app_ctx = ApplicationContext.Factory.get()
 
-        app_ctx.recording_parameters = RecordingParameters(
-            format=args.format,
-            sampling_rate=args.sampling_rate,
-            bit_depth=args.bit_depth,
-            is_dual=args.dual_recording,
-        )
+        rec_params = app_ctx.recording_parameters
+        rec_params.file_format = FileFormat(args.file_format)
+        rec_params.sampling_rate = args.sampling_rate
+        match args.bit_depth:
+            case 16:
+                rec_params.format = Format.S16_LE
+            case 24:
+                rec_params.format = Format.S24_3LE
+            case 32:
+                rec_params.format = Format.S32_LE
+            case _:
+                rec_params.format = Format.S24_3LE
 
         app_ctx.audio_device_map = {
             AudioDevice.LCL: args.LCL,
@@ -78,11 +83,11 @@ class App:
             StorageDevice.RC2: args.RC2,
         }
         app_ctx.input_device_map = {
-            HiDevices.HI1: args.HI1,
-            HiDevices.HI2: args.HI2,
-            HiDevices.HI3: args.HI3,
+            InputDevice.HI1: args.HI1,
+            InputDevice.HI2: args.HI2,
+            InputDevice.HI3: args.HI3,
         }
-        app_ctx.language = LanguageCode[args.language]
+        app_ctx.ui_parameters.language = LanguageCode[args.language]
 
         log.info("Snd map: '%s'.", app_ctx.audio_device_map)
         log.info("Sto map: '%s'.", app_ctx.storage_device_map)
@@ -115,40 +120,3 @@ class App:
 
             while fsm.is_started:
                 time.sleep(1)
-
-            # time.sleep(2)
-            # time.sleep(5)
-
-            # # Select language.
-            # for event in ["3"]:
-            #     fsm.invoke(event)
-            # time.sleep(2)
-
-            # # Enter date
-            # for event in ["2", "0", "2", "5", "0", "7", "0", "6"]:
-            #     fsm.invoke(event)
-            # time.sleep(3)
-
-            # # Enter time
-            # for event in ["0", "5", "4", "2"]:
-            #     fsm.invoke(event)
-            # time.sleep(2)
-
-            # # Enter name
-            # for event in ["3", "1", "3", "3", "7", "6", "6", "7"]:
-            #     fsm.invoke(event)
-            # time.sleep(3)
-
-            # # Do sth else
-            # for event in ["1", "3", "3", "2", "1", "9", "1"]:
-            #     fsm.invoke(event)
-            # time.sleep(3)
-
-            # end = time.time_ns() + 5000 * 10**6
-            # while time.time_ns() < end:
-
-            #     log.info("Spinning ...")
-
-            #     time.sleep(500 / 1000)
-
-            # log.info("Spinning ended.")

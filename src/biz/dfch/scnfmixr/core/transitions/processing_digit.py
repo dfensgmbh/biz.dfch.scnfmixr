@@ -50,7 +50,7 @@ class ProcessingDigit(TransitionBase):
 
         log.info("ctx.source: '%s'. ctx.event: '%s'.", ctx.source, ctx.event)
 
-        app_ctx = ApplicationContext()
+        app_ctx = ApplicationContext.Factory.get()
 
         if SetDate.__name__ == ctx.source:
             log.debug("Processing date ...")

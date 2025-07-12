@@ -24,14 +24,5 @@
 
 from __future__ import annotations
 
-from .storage import BlockDeviceType
-from .storage import StorageDevice
-from .storage import StorageDeviceInfo
-from .storage import StorageDeviceMap
-
 __all__ = [
-    "BlockDeviceType",
-    "StorageDevice",
-    "StorageDeviceInfo",
-    "StorageDeviceMap",
 ]

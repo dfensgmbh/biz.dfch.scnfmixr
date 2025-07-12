@@ -24,27 +24,31 @@
 
 from __future__ import annotations
 from enum import StrEnum, auto
-import threading
+from threading import Lock
 
+from typing import ClassVar
 from typing import final
 
-from .app import LanguageCode
-from .public.audio import AudioDevice, AudioDeviceMap
+from biz.dfch.logging import log
+
 from .audio import RecordingParameters
 from .audio import AudioDeviceInfo
-from .input_device_map import InputDeviceMap
 from .date_time_name_input import DateTimeNameInput
-from .public import StorageDeviceInfo
-from .public import StorageDeviceMap
-from .public import StorageDevice
+from .input_device_map import InputDeviceMap
+from .public.storage import StorageDeviceInfo
+from .public.storage import StorageDeviceMap
+from .public.storage import StorageDevice
+from .public.audio import AudioDevice, AudioDeviceMap
+from .public.ui import UiParameters
 
 
 @final
-class ApplicationContext:
+class ApplicationContext:  # pylint: disable=R0903
     """Global ApplicationContext.
 
     Attributes:
-        language (LanguageCode): The elected langeuage.
+        ui_parameters (UiParameters): Contains UI parameters of the
+            application.
         date_time_name_input (DateTimeNameInput): Date, time and track
             information.
         audio_device_map (AudioDeviceMap): USB to device identifier mapping.
@@ -59,9 +63,9 @@ class ApplicationContext:
     """
 
     class Keys(StrEnum):
-        """Keys in the application context."""
+        """Keys in this class."""
 
-        LANGUAGE = auto()
+        UI = auto()
         AUDIO_MAP = auto()
         STORAGE_MAP = auto()
         INPUT_MAP = auto()
@@ -72,9 +76,9 @@ class ApplicationContext:
         INPUT_CFG = auto()
 
     _instance = None
-    _lock = threading.Lock()
+    _lock = Lock()
 
-    language: LanguageCode
+    ui_parameters: UiParameters
     date_time_name_input: DateTimeNameInput
     audio_device_map: AudioDeviceMap
     storage_device_map: StorageDeviceMap
@@ -83,9 +87,28 @@ class ApplicationContext:
     audio_configuration_map: dict[AudioDevice, AudioDeviceInfo]
     storage_configuration_map: dict[StorageDevice, StorageDeviceInfo]
 
+    def __init__(self):
+        """Private ctor. Use Factory to create an instance of this object."""
+
+        if not ApplicationContext.Factory._lock.locked():
+            raise RuntimeError("Private ctor. Use Factory instead.")
+
+        log.debug("Initialising application context ...")
+
+        self.ui_parameters = UiParameters()
+        self.date_time_name_input = DateTimeNameInput()
+        self.audio_device_map = {}
+        self.storage_device_map = {}
+        self.input_device_map = {}
+        self.recording_parameters = RecordingParameters()
+        self.audio_configuration_map = {}
+        self.storage_configuration_map = {}
+
+        log.info("Initialising application context SUCCEEDED. [%s]", self)
+
     def __str__(self) -> str:
         result = {
-            ApplicationContext.Keys.LANGUAGE: self.language,
+            ApplicationContext.Keys.UI: self.ui_parameters,
             ApplicationContext.Keys.AUDIO_MAP: self.audio_device_map,
             ApplicationContext.Keys.STORAGE_MAP: self.storage_device_map,
             ApplicationContext.Keys.INPUT_MAP: self.input_device_map,
@@ -93,34 +116,30 @@ class ApplicationContext:
             ApplicationContext.Keys.DAT: str(self.date_time_name_input),
             ApplicationContext.Keys.AUDIO_CFG: self.audio_configuration_map,
             ApplicationContext.Keys.STORAGE_CFG: self.storage_configuration_map,
-            ApplicationContext.Keys.INPUT_CFG: None,
+            ApplicationContext.Keys.INPUT_CFG: self.storage_configuration_map,
         }
 
         return str(result)
 
-    def __new__(cls):
-        """Thread safe instance creation."""
+    # pylint: disable=R0903
+    class Factory:
+        """Factory class."""
 
-        if cls._instance:
-            return cls._instance
+        __instance__: ClassVar[ApplicationContext] = None
+        _lock: ClassVar[Lock] = Lock()
 
-        with cls._lock:
+        @staticmethod
+        def get() -> ApplicationContext:
+            """Returns the singleton instance."""
 
-            if cls._instance:
-                return cls._instance
+            if ApplicationContext.Factory.__instance__ is not None:
+                return ApplicationContext.Factory.__instance__
 
-            cls._instance = super().__new__(cls)
+            with ApplicationContext.Factory._lock:
 
-            # Set default values here and not in __init__.
-            # Ok. But why? I forgot.
-            # Sth to do with singleton and cls initialisation.
-            cls.language = LanguageCode.DEFAULT
-            cls.date_time_name_input = DateTimeNameInput()
-            cls.audio_device_map = {}
-            cls.storage_device_map = {}
-            cls.input_device_map = {}
-            cls.recording_parameters = None
-            cls.audio_configuration_map = {}
-            cls.storage_configuration_map = {}
+                if ApplicationContext.Factory.__instance__ is not None:
+                    return ApplicationContext.Factory.__instance__
 
-        return cls._instance
+                ApplicationContext.Factory.__instance__ = ApplicationContext()
+
+            return ApplicationContext.Factory.__instance__

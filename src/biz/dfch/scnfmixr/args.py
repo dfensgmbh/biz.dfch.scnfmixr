@@ -27,6 +27,11 @@ from dataclasses import dataclass
 import re
 
 from biz.dfch.i18n import LanguageCode
+from .public.audio import FileFormat, Format, SampleRate, AudioDevice
+from .public.system import UsbPort
+from .public.storage import StorageDevice
+from .public.input import InputDevice
+
 
 __all__ = [
     "Arguments",
@@ -77,6 +82,7 @@ class Arguments():
             argparse.Namspace: The namespace of the parsed argumentt.
         """
 
+        # pylint: disable=C0301
         description = f"""%(prog)s (Secure Conference Mixer and Recorder), v{self.version}
 
 Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
@@ -114,53 +120,63 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
 
         # Audio format and audio parameters.
         parser.add_argument(
-            "--format", "-f",
+            "--file-format", "-ff",
             type=str,
-            choices=["flac", "wav", "mp3"],
-            default="flac",
+            choices=[
+                FileFormat.DEFAULT.value,
+                FileFormat.FLAC.value,
+                FileFormat.WAV.value,
+                FileFormat.MP3.value,
+                FileFormat],
+            default=FileFormat.DEFAULT.value,
             help="Select format of the recording."
         )
         parser.add_argument(
             "--sampling-rate", "-r",
             type=int,
-            choices=[48000, 8000, 16000, 32000, 44100],
-            default=48000,
+            choices=[
+                SampleRate.DEFAULT.value,
+                SampleRate.R08000.value,
+                SampleRate.R16000.value,
+                SampleRate.R32000.value,
+                SampleRate.R44100.value,
+                SampleRate.R48000.value,
+                SampleRate.R88200.value,
+                SampleRate.R96000.value],
+            default=SampleRate.DEFAULT.value,
             help="Select the sampling rate of the recording."
         )
         parser.add_argument(
             "--bit-depth", "-b",
             type=int,
-            choices=[24, 16, 32],
-            default=24,
+            choices=[
+                Format.S16_LE.get_bit_depth(),
+                Format.S24_3LE.get_bit_depth(),
+                Format.S32_LE.get_bit_depth()],
+            default=Format.DEFAULT.get_bit_depth(),
             help="Select the bit depth of the recording."
-        )
-        parser.add_argument(
-            "--dual-recording", "-d",
-            action="store_true",
-            help=("Enable dual recording to storage devices in parallel "
-                  "(if connected).")
         )
 
         # Audio devices.
         parser.add_argument(
             "--local", "-lcl",
             type=str,
-            dest="LCL",
-            default="1-1",
+            dest=AudioDevice.LCL.name,
+            default=UsbPort.BOTTOM_LEFT.value,
             help="Specifies USB port for local audio device."
         )
         parser.add_argument(
             "--external1", "-ex1",
             type=str,
-            dest="EX1",
-            default="1-2",
+            dest=AudioDevice.EX1.name,
+            default=UsbPort.TOP_RIGHT.value,
             help="Specifies USB port for external audio device 1."
         )
         parser.add_argument(
             "--external2", "-ex2",
             type=str,
-            dest="EX2",
-            default="3-2",
+            dest=AudioDevice.EX2.name,
+            default=UsbPort.BOTTOM_RIGHT.value,
             help="Specifies USB port for external audio device 2."
         )
 
@@ -168,14 +184,14 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
         parser.add_argument(
             "--storage1", "-rc1",
             type=str,
-            dest="RC1",
+            dest=StorageDevice.RC1.name,
             default="4-1.3",
             help="Specifies USB port for storage device 1."
         )
         parser.add_argument(
             "--storage2", "-rc2",
             type=str,
-            dest="RC2",
+            dest=StorageDevice.RC2.name,
             default="4-1.1",
             help="Specifies USB port for storage device 2."
         )
@@ -184,21 +200,21 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
         parser.add_argument(
             "--input1", "-hi1",
             type=str,
-            dest="HI1",
+            dest=InputDevice.HI1.name,
             default="3-1.4",
             help="Specifies USB port for keyboard."
         )
         parser.add_argument(
             "--input2", "-hi2",
             type=str,
-            dest="HI2",
+            dest=InputDevice.HI2.name,
             default="3-1.4",
             help="Specifies USB port for Elgato Streamdeck."
         )
         parser.add_argument(
             "--input3", "-hi3",
             type=str,
-            dest="HI3",
+            dest=InputDevice.HI3.name,
             default="3-1.4",
             help="Specifies USB port for MorningStar MIDI controller."
         )

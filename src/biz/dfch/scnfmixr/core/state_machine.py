@@ -97,7 +97,7 @@ class StateMachine:
 
     def __init__(self):
 
-        self._app_ctx = ApplicationContext()
+        self._app_ctx = ApplicationContext.Factory.get()
         self._queue: ConcurrentQueueT[str] = ConcurrentQueueT(str, True)
         self._do_cancel_worker = threading.Event()
         self._thread = threading.Thread(target=self._worker, daemon=True)

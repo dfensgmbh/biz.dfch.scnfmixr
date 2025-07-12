@@ -52,7 +52,7 @@ class DetectingRc2(TransitionBase):
 
     def invoke(self, _):
 
-        app_ctx = ApplicationContext()
+        app_ctx = ApplicationContext.Factory.get()
 
         value = app_ctx.storage_device_map[StorageDevice.RC2]
 

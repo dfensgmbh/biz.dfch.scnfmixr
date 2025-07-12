@@ -72,7 +72,7 @@ class SetName(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        app_ctx = ApplicationContext()
+        app_ctx = ApplicationContext.Factory.get()
         log.info("Name entered: [%s].",
                  app_ctx.date_time_name_input.is_valid_name)
 

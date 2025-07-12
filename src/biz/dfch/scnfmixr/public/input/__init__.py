@@ -24,5 +24,8 @@
 
 from __future__ import annotations
 
+from .input_device import InputDevice
+
 __all__ = [
+    "InputDevice",
 ]

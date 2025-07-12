@@ -24,7 +24,7 @@
 
 from biz.dfch.i18n import I18n
 
-from ..app_ctx import ApplicationContext
+from ..application_context import ApplicationContext
 from ..audio.audio_player import AudioPlayer
 from .user_interacton_base import UserInteractionBase
 from .ui_event_info import UiEventInfo
@@ -48,9 +48,10 @@ class UserInteractionAudio(UserInteractionBase):
         assert item
         assert isinstance(item, UiEventInfo)
 
-        app_ctx = ApplicationContext()
+        app_ctx = ApplicationContext.Factory.get()
 
-        path = I18n.get_resource_path(f"{item.name}.wav", app_ctx.language)
+        path = I18n.get_resource_path(f"{item.name}.wav",
+                                      app_ctx.ui_parameters.language)
 
         self._player.clear(True)
         self._player.enqueue((path, item.is_loop))

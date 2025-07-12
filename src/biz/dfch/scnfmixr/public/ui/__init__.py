@@ -20,13 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Logical name of HI devices in the system."""
+"Package ui."
 
-from enum import StrEnum, auto
+from __future__ import annotations
 
+from .ui_parameters import UiParameters
 
-class HiDevices(StrEnum):
-    """Logical names of HI devices in the system."""
-    HI1 = auto()
-    HI2 = auto()
-    HI3 = auto()
+__all__ = [
+    "UiParameters",
+]

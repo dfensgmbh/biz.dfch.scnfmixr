@@ -22,22 +22,20 @@
 
 """Module SelectingItalian."""
 
-from biz.dfch.logging import log
-
-from ...app import ApplicationContext
 from ...ui import LanguageCode
 from ...ui import UiEventInfo
-from ...ui import ExecutionContext
-from ...ui import TransitionBase
 from ...ui import StateBase
 from ..transition_event import TransitionEvent
 
+from .selecting_language_base import SelectingLanguageBase
 
-class SelectingItalian(TransitionBase):
+# pylint: disable=R0903
+
+
+class SelectingItalian(SelectingLanguageBase):
     """Class SelectingItalian."""
 
     def __init__(self, event: str, target: StateBase):
-        """Default ctor."""
 
         super().__init__(
             event=event,
@@ -45,16 +43,5 @@ class SelectingItalian(TransitionBase):
                 TransitionEvent.SELECTING_ITALIAN_ENTER, False),
             info_leave=UiEventInfo(
                 TransitionEvent.SELECTING_ITALIAN_LEAVE, False),
-            target_state=target)
-
-    def invoke(self, ctx: ExecutionContext) -> bool:
-
-        assert ctx and isinstance(ctx, ExecutionContext)
-
-        previous = ApplicationContext().language
-        ApplicationContext().language = LanguageCode.IT
-
-        log.info("Set language from '%s' to '%s'.",
-                 previous, ApplicationContext().language)
-
-        return True
+            target_state=target,
+            language=LanguageCode.IT)

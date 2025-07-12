@@ -24,7 +24,7 @@
 
 from biz.dfch.logging import log
 
-from ...app_ctx import ApplicationContext
+from ...application_context import ApplicationContext
 from ...audio import AudioDeviceInfo
 from ...public.audio import AudioDevice
 from ...ui import UiEventInfo
@@ -51,7 +51,7 @@ class DetectingEx1(TransitionBase):
             target_state=target)
 
     def invoke(self, _):
-        app_ctx = ApplicationContext()
+        app_ctx = ApplicationContext.Factory.get()
 
         try:
             value = app_ctx.audio_device_map[AudioDevice.EX1]
