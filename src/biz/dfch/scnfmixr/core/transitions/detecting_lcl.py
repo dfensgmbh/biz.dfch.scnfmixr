@@ -25,7 +25,7 @@
 from biz.dfch.logging import log
 
 from ...app_ctx import ApplicationContext
-from ...audio import SetupDevice
+from ...audio import AudioDeviceInfo
 from ...public.audio import AudioDevice
 from ...ui import UiEventInfo
 from ...ui import TransitionBase
@@ -36,20 +36,17 @@ from ..transition_event import TransitionEvent
 class DetectingLcl(TransitionBase):
     """Detecting device LCL."""
 
-    def __init__(self, event: str, target: StateBase):
-        """Default ctor."""
+    def __init__(self, event: str, target_state: StateBase):
 
         assert event and event.strip()
-        assert target
+        assert target_state
 
         super().__init__(
             event,
             info_enter=None,
             info_leave=UiEventInfo(
                 TransitionEvent.DETECTING_DEVICE_LCL_LEAVE, False),
-            target_state=target)
-
-        self._has_run_once = False
+            target_state=target_state)
 
     def invoke(self, _):
 
@@ -57,14 +54,14 @@ class DetectingLcl(TransitionBase):
 
         try:
             value = app_ctx.audio_device_map[AudioDevice.LCL]
-            device = SetupDevice.Factory.create(value, 1)
-            app_ctx.audio_configuration_map[AudioDevice.LCL] = device
+            device_info = AudioDeviceInfo.Factory.create(value, max_attempts=1)
+            app_ctx.audio_configuration_map[AudioDevice.LCL] = device_info
 
             return True
 
         except Exception as ex:  # pylint: disable=W0718
 
             log.error("Device detection '%s' FAILED. [%s]",
-                      AudioDevice.LCL.name, ex)
+                      AudioDevice.LCL.name, ex, exc_info=True)
 
             return False
