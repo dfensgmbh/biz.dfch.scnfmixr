@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Test for application_context."""
+
 import unittest
 from biz.dfch.scnfmixr.application_context import ApplicationContext
 from biz.dfch.scnfmixr.audio import RecordingParameters
