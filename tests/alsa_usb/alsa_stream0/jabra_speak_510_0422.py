@@ -20,26 +20,42 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from .epos_expand_30t import INFO as EposExpand30T
-from .epos_expand_40t import INFO as EposExpand40T
-from .jabra_evolve_20 import INFO as JabraEvolve20
-from .jabra_speak_510_0420 import INFO as JabraSpeak5100420
-from .jabra_speak_510_0422 import INFO as JabraSpeak5100422
-from .jabra_speak2_J75 import INFO as JabraSpeak2J75
-from .macro_silicon_ms2109 import INFO as MacroSiliconMS2109
-from .ugreen_ktmicro import INFO as UgreenKtMicro
-from .sound_devices_mixpre6ii import INFO as MixPre6II
-from .interface_44100_capture_only import INFO as Capture44100
+"""0b0e:0422 GN Netcom Jabra SPEAK 510 USB
 
-__all__ = [
-    "EposExpand30T",
-    "EposExpand40T",
-    "JabraEvolve20",
-    "JabraSpeak5100420",
-    "JabraSpeak5100422",
-    "JabraSpeak2J75",
-    "MacroSiliconMS2109",
-    "UgreenKtMicro",
-    "MixPre6II",
-    "Capture44100",
-]
+ 2 [USB            ]: USB-Audio - Jabra SPEAK 510 USB
+                      Jabra SPEAK 510 USB at usb-xhci-hcd.0-1, full speed
+"""
+
+INFO = """\
+Jabra SPEAK 510 USB at usb-xhci-hcd.0-1, full speed : USB Audio
+
+Playback:
+  Status: Running
+    Interface = 1
+    Altset = 1
+    Packet Size = 192
+    Momentary freq = 48000 Hz (0x30.0000)
+  Interface 1
+    Altset 1
+    Format: S16_LE
+    Channels: 2
+    Endpoint: 0x03 (3 OUT) (NONE)
+    Rates: 8000, 16000, 48000
+    Bits: 16
+    Channel map: FL FR
+
+Capture:
+  Status: Running
+    Interface = 2
+    Altset = 1
+    Packet Size = 32
+    Momentary freq = 16000 Hz (0x10.0000)
+  Interface 2
+    Altset 1
+    Format: S16_LE
+    Channels: 1
+    Endpoint: 0x83 (3 IN) (NONE)
+    Rates: 16000
+    Bits: 16
+    Channel map: MONO
+""".splitlines()

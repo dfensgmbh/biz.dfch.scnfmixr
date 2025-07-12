@@ -20,26 +20,34 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from .epos_expand_30t import INFO as EposExpand30T
-from .epos_expand_40t import INFO as EposExpand40T
-from .jabra_evolve_20 import INFO as JabraEvolve20
-from .jabra_speak_510_0420 import INFO as JabraSpeak5100420
-from .jabra_speak_510_0422 import INFO as JabraSpeak5100422
-from .jabra_speak2_J75 import INFO as JabraSpeak2J75
-from .macro_silicon_ms2109 import INFO as MacroSiliconMS2109
-from .ugreen_ktmicro import INFO as UgreenKtMicro
-from .sound_devices_mixpre6ii import INFO as MixPre6II
-from .interface_44100_capture_only import INFO as Capture44100
+"""1395:0386 DSEA A/S EPOS EXPAND 40T
 
-__all__ = [
-    "EposExpand30T",
-    "EposExpand40T",
-    "JabraEvolve20",
-    "JabraSpeak5100420",
-    "JabraSpeak5100422",
-    "JabraSpeak2J75",
-    "MacroSiliconMS2109",
-    "UgreenKtMicro",
-    "MixPre6II",
-    "Capture44100",
-]
+2 [E40T           ]: USB-Audio - EPOS EXPAND 40T
+                     EPOS EPOS EXPAND 40T at usb-xhci-hcd.0-1, full speed
+"""
+
+INFO = """\
+EPOS EPOS EXPAND 40T at usb-xhci-hcd.0-1, full speed : USB Audio
+
+Playback:
+  Status: Stop
+  Interface 1
+    Altset 1
+    Format: S16_LE
+    Channels: 2
+    Endpoint: 0x03 (3 OUT) (NONE)
+    Rates: 48000
+    Bits: 16
+    Channel map: FL FR
+
+Capture:
+  Status: Stop
+  Interface 2
+    Altset 1
+    Format: S16_LE
+    Channels: 1
+    Endpoint: 0x83 (3 IN) (NONE)
+    Rates: 16000
+    Bits: 16
+    Channel map: MONO
+""".splitlines()
