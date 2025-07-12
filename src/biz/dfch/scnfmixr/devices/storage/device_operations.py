@@ -31,7 +31,7 @@ __all__ = [
 ]
 
 
-class DeviceOperations():
+class DeviceOperations:
     """Provides operations on a storage device.
 
     Attributes:

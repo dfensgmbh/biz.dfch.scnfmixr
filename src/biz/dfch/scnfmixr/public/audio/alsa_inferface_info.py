@@ -30,7 +30,7 @@ from .bit_depth import BitDepth
 
 
 @dataclass(frozen=True)
-class AlsaInterfaceInfo():
+class AlsaInterfaceInfo:
     """Audio parameters of card and interface.
 
     Attributes:

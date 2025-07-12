@@ -198,7 +198,7 @@ class JackConnection:
 
         raise RuntimeError(message)
 
-    class ConnectionVisitor():
+    class ConnectionVisitor:
         """A visitor for parsing `jack_lsp` connection output."""
 
         def __init__(self):
@@ -253,7 +253,7 @@ class JackConnection:
             self.items.append(ctx.text)
             return True
 
-    class PortVisitor():
+    class PortVisitor:
         """A visitor for parsing `jack_lsp` port output."""
 
         def __init__(self):

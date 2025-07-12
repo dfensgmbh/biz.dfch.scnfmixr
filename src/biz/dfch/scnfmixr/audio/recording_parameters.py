@@ -26,7 +26,7 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class RecordingParameters():
+class RecordingParameters:
     """Recording parameters.
 
     Attributes:
@@ -34,7 +34,7 @@ class RecordingParameters():
         sampling_rate (int): The sampling rate of the recording.
         bit_depth (int): Bits per sample of the recording.
         is_dual (bool): True, if recording will be written to 2 storage
-            devices; false otherwise (default). 
+            devices; false otherwise (default).
     """
 
     format: str

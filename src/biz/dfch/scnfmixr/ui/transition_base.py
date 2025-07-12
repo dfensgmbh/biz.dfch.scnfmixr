@@ -37,7 +37,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(frozen=True)
-class TransitionBase():
+class TransitionBase:
     """Class for the defintion of a transition in a state in a finite state
         machine.
         Attributes:

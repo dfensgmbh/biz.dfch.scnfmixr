@@ -34,7 +34,7 @@ __all__ = ["StateBase"]
 
 
 @dataclass(frozen=True)
-class StateBase():
+class StateBase:
     """Class for defining a state in a finite state machine.
         Attributes:
             info_start (EventAudioInfo, optional): The base (language

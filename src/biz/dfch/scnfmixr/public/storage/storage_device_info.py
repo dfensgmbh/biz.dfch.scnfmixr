@@ -30,7 +30,7 @@ from ...public.storage.block_device_type import BlockDeviceType
 
 
 @dataclass(frozen=True)
-class StorageDeviceInfo():
+class StorageDeviceInfo:
     """Storage device info.
 
     Attributes:

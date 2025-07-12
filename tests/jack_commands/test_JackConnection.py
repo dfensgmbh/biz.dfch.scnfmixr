@@ -32,7 +32,7 @@ from text import MultiLineTextParserContext
 class TestJackConnection(unittest.TestCase):
     """Testing JackConnection"""
 
-    class MyVisitor():
+    class MyVisitor:
         """A visitor for parsing `jack_lsp` output."""
 
         def __init__(self):

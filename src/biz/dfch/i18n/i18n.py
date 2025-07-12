@@ -29,7 +29,7 @@ import sys
 from .language_code import LanguageCode
 
 
-class I18n():
+class I18n:
     """Internationalisation module."""
 
     _RES_PATH = "res"

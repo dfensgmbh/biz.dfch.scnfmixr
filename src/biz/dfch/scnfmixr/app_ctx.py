@@ -40,7 +40,7 @@ from .public import StorageDevice
 
 
 @final
-class ApplicationContext():
+class ApplicationContext:
     """Global ApplicationContext.
 
     Attributes:

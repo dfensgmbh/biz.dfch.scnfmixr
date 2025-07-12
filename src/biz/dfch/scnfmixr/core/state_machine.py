@@ -82,7 +82,7 @@ from .transitions import StoppingRecording, SettingCuePoint, TogglingMute, Showi
     # pylint: disable=C0301  # noqa: E501
 
 
-class StateMachine():
+class StateMachine:
     """StateMachine of the application."""
 
     WAIT_INTERVAL_MS: int = 250
@@ -283,7 +283,7 @@ class StateMachine():
             .add_transition(ProcessingDigit(SetName.Events.DIGIT_7, set_name))
             .add_transition(ProcessingDigit(SetName.Events.DIGIT_8, set_name))
             .add_transition(ProcessingDigit(SetName.Events.DIGIT_9, set_name))
-            .add_transition(ProcessingDigit(SetName.Events.BACK_SPACE, set_name))
+            .add_transition(ProcessingDigit(SetName.Events.BACK_SPACE, set_name))  # noqa: E501  ## pylint: disable=C0301
             .add_transition(ProcessingDigit(SetName.Events.ENTER, set_name))
             .add_transition(DoingNothing(SetName.Events.JUMP_NEXT, record_menu))
         )
@@ -299,7 +299,7 @@ class StateMachine():
             .add_transition(ProcessingDigit(SetTime.Events.DIGIT_7, set_time))
             .add_transition(ProcessingDigit(SetTime.Events.DIGIT_8, set_time))
             .add_transition(ProcessingDigit(SetTime.Events.DIGIT_9, set_time))
-            .add_transition(ProcessingDigit(SetTime.Events.BACK_SPACE, set_time))
+            .add_transition(ProcessingDigit(SetTime.Events.BACK_SPACE, set_time))  # noqa: E501  ## pylint: disable=C0301
             .add_transition(ProcessingDigit(SetTime.Events.ENTER, set_time))
             .add_transition(DoingNothing(SetTime.Events.JUMP_NEXT, set_name))
         )
@@ -315,7 +315,7 @@ class StateMachine():
             .add_transition(ProcessingDigit(SetDate.Events.DIGIT_7, set_date))
             .add_transition(ProcessingDigit(SetDate.Events.DIGIT_8, set_date))
             .add_transition(ProcessingDigit(SetDate.Events.DIGIT_9, set_date))
-            .add_transition(ProcessingDigit(SetDate.Events.BACK_SPACE, set_date))
+            .add_transition(ProcessingDigit(SetDate.Events.BACK_SPACE, set_date))  # noqa: E501  ## pylint: disable=C0301
             .add_transition(ProcessingDigit(SetDate.Events.ENTER, set_date))
             .add_transition(DoingNothing(SetDate.Events.JUMP_NEXT, set_time))
         )

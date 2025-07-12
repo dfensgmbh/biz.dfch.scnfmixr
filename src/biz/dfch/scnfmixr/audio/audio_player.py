@@ -34,7 +34,7 @@ __all__ = [
 ]
 
 
-class AudioPlayer():
+class AudioPlayer:
     """Defines the audio player for output handling."""
 
     WAIT_INTERVAL_MS: int = 250

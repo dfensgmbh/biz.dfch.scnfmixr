@@ -240,7 +240,9 @@ class Process:
                     process._popen.stdout, process._STDOUT)
             )
             log.debug(
-                "Starting reading from pipe '%s' [%s] ...", process._STDOUT, result.pid)
+                "Starting reading from pipe '%s' [%s] ...",
+                process._STDOUT,
+                result.pid)
             process._stdout_thread.start()
 
         if capture_stderr:
@@ -249,7 +251,9 @@ class Process:
                     process._popen.stderr, process._STDERR)
             )
             log.debug(
-                "Starting reading from pipe '%s' [%s] ...", process._STDERR, result.pid)
+                "Starting reading from pipe '%s' [%s] ...",
+                process._STDERR,
+                result.pid)
             process._stderr_thread.start()
 
         if not wait_on_completion:

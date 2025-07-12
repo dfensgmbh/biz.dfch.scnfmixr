@@ -31,13 +31,12 @@ from biz.dfch.logging import log
 from biz.dfch.asyn import Process
 
 from text import MultiLineTextParser
-from text import MultiLineTextParserContext
 
 from .jack_connection import JackConnection
 
 
 @dataclass(frozen=True)
-class JackPort():
+class JackPort:
     """Represents a JACK port.
 
     Attributes:

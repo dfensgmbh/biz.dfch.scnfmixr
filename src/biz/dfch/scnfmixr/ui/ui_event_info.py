@@ -27,7 +27,7 @@ from enum import StrEnum
 
 
 @dataclass(frozen=True)
-class UiEventInfo():
+class UiEventInfo:
     """Audio information for state and transition enter and leave events.
 
     Attributes:

@@ -39,7 +39,7 @@ class UdevadmInfoVisitor(VisitorBase):
     """Visitor for parsing `udevadm info -a --name /dev/X`."""
 
     @dataclass(frozen=True)
-    class Data():
+    class Data:
         """Parsed USB device data.
 
         Attributes:

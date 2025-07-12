@@ -37,7 +37,7 @@ from .hi_devices import HiDevices
 from .public.storage.storage_device import StorageDevice
 
 
-class App():
+class App:
     """The application."""
 
     _VERSION_REQUIRED_MAJOR = 2
@@ -91,6 +91,7 @@ class App():
         log.info("App ctx: '%s'.", app_ctx)
 
         if args.test:
+            # pylint: disable=C0415
             from biz.dfch.asyn import ConcurrentQueueT
             from .core.transitions.detecting_hi1 import DetectingHi1
             from .ui import ExecutionContext

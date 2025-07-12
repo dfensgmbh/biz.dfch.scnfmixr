@@ -42,6 +42,13 @@ class AlsaJackBase(ABC):
             rate (int): The rate in Hz of the ALSA device.
     """
 
+    _ports: list[JackPort]
+    _suffix: str
+    name: str
+    device: str
+    channels: int
+    rate: int
+
     _ZITA_A2J_BRIDGE = "/usr/bin/zita-a2j"
     _JACK_PORT_INFIX = ":"
     _ZITA_A2J_PORT_SUFFIX = "capture_"
