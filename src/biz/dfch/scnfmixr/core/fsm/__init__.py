@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Package fsm."""
+
 from __future__ import annotations
 
 from biz.dfch.i18n import LanguageCode

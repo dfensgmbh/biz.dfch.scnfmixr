@@ -22,8 +22,8 @@
 
 """Module skipping_ex1."""
 
-from ...ui import StateBase, TransitionBase
-from ...ui import UiEventInfo
+from ..fsm import StateBase, TransitionBase
+from ..fsm import UiEventInfo
 from ..transition_event import TransitionEvent
 
 

@@ -22,8 +22,8 @@
 
 """Module DoingNothing."""
 
-from ...ui import TransitionBase
-from ...ui import StateBase
+from ..fsm import TransitionBase
+from ..fsm import StateBase
 
 
 class DoingNothing(TransitionBase):

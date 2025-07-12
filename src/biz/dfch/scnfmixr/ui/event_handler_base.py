@@ -34,7 +34,7 @@ class EventHandlerBase(ABC):
     Attributes:
         stop_processing (Event): Signalled when stop is invoked.
         sync_root (Lock): A non-reentrant lock for synchronisation.
-        queue (ConcurrentQueueT[str]): The event queue to be fed by the 
+        queue (ConcurrentQueueT[str]): The event queue to be fed by the
             event handler.
     """
 

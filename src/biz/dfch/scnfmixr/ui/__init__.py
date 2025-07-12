@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Package ui."""
+
 from __future__ import annotations
 
 from .user_interaction_audio import UserInteractionAudio

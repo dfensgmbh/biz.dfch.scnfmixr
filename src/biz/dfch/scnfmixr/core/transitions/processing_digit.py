@@ -26,8 +26,8 @@ from biz.dfch.logging import log
 
 from ...app import ApplicationContext
 
-from ...ui import StateBase, TransitionBase
-from ...ui import UiEventInfo
+from ..fsm import StateBase, TransitionBase
+from ..fsm import UiEventInfo
 
 from ..states import SetDate, SetTime, SetName
 from ..transition_event import TransitionEvent

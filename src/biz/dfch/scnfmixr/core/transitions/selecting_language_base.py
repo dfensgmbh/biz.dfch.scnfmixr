@@ -23,11 +23,11 @@
 """Module selecting_language_base."""
 
 from biz.dfch.logging import log
-from biz.dfch.scnfmixr.app import ApplicationContext
-from biz.dfch.scnfmixr.ui import LanguageCode
-from biz.dfch.scnfmixr.ui import StateBase
-from biz.dfch.scnfmixr.ui import TransitionBase
-from biz.dfch.scnfmixr.ui import UiEventInfo
+from biz.dfch.i18n import LanguageCode
+from ...app import ApplicationContext
+from ..fsm import StateBase
+from ..fsm import TransitionBase
+from ..fsm import UiEventInfo
 
 
 # pylint: disable=R0903

@@ -27,9 +27,9 @@ from biz.dfch.logging import log
 from ...application_context import ApplicationContext
 from ...audio import AudioDeviceInfo
 from ...public.audio import AudioDevice
-from ...ui import UiEventInfo
-from ...ui import TransitionBase
-from ...ui import StateBase
+from ..fsm import UiEventInfo
+from ..fsm import TransitionBase
+from ..fsm import StateBase
 from ..transition_event import TransitionEvent
 
 

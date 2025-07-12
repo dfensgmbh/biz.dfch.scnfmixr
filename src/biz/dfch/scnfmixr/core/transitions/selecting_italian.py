@@ -22,9 +22,9 @@
 
 """Module SelectingItalian."""
 
-from ...ui import LanguageCode
-from ...ui import UiEventInfo
-from ...ui import StateBase
+from biz.dfch.i18n import LanguageCode
+from ..fsm import UiEventInfo
+from ..fsm import StateBase
 from ..transition_event import TransitionEvent
 
 from .selecting_language_base import SelectingLanguageBase

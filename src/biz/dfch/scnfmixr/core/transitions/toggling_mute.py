@@ -22,9 +22,9 @@
 
 """Module toggling_mute."""
 
-from ...ui import UiEventInfo
-from ...ui import TransitionBase
-from ...ui import StateBase
+from ..fsm import UiEventInfo
+from ..fsm import TransitionBase
+from ..fsm import StateBase
 from ..transition_event import TransitionEvent
 
 

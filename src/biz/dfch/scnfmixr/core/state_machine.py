@@ -28,17 +28,16 @@ import threading
 import time
 
 from biz.dfch.logging import log
+from biz.dfch.asyn import ConcurrentQueueT
 
-from ..ui.fsm import ExecutionContext, Fsm
-from ..ui.user_interaction_audio import UserInteractionAudio
-
+from ..ui import UserInteractionAudio
 from ..app import ApplicationContext
-from ...asyn import ConcurrentQueueT
+from .fsm import ExecutionContext, Fsm
+
 
 from .states import FinalState
 
 from .states import SystemMenu
-
 from .transitions import DoingNothing
 
 from .states import SelectLanguage
@@ -156,7 +155,7 @@ class StateMachine:
 
                     if result:
                         log.info(
-                            "Invocation of event '%s' SUCCEEDED. [is_started=%s]",  # noqa: E501
+                            "Invocation of event '%s' SUCCEEDED. [is_started=%s]",  # noqa: E501  # pylint: disable=C0301
                             event,
                             self._fsm.is_started)
                     else:
@@ -232,7 +231,7 @@ class StateMachine:
                                          record_menu))
             .add_transition(DoingNothing(SystemMenu.Events.DETECT_STORAGE,
                                          initialise_rc1))
-            .add_transition(DisconnectingStorage(SystemMenu.Events.DISCONNECT_STORAGE,  # noqa: E501
+            .add_transition(DisconnectingStorage(SystemMenu.Events.DISCONNECT_STORAGE,  # noqa: E501  # pylint: disable=C0301
                                                  system_menu))
             .add_transition(DoingNothing(SystemMenu.Events.STOP_SYSTEM,
                                          final_state))
@@ -264,7 +263,7 @@ class StateMachine:
                                               onrecord_menu))
             .add_transition(MountingStorage(Record.Events.MOUNT_STORAGE,
                                             final_state))
-            .add_transition(DisconnectingStorage(Record.Events.DISCONNECT_STORAGE,  # noqa: E501
+            .add_transition(DisconnectingStorage(Record.Events.DISCONNECT_STORAGE,  # noqa: E501  # pylint: disable=C0301
                                                  system_menu))
             .add_transition(StoppingSystem(Record.Events.STOP_SYSTEM,
                                            final_state))

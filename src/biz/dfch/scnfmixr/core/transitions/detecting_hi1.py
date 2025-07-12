@@ -26,14 +26,15 @@ from biz.dfch.logging import log
 
 from ...app import ApplicationContext
 from ...public.input import InputDevice
-from ...ui import UiEventInfo
-from ...ui import TransitionBase
-from ...ui import StateBase
+from ..fsm import UiEventInfo
+from ..fsm import TransitionBase
+from ..fsm import StateBase
 from ...devices.keyboard import DetectingHi1Worker
-from ...ui.keyboard import KeyboardHandler
+from ...ui import KeyboardHandler
 from ..transition_event import TransitionEvent
 
 
+# pylint: disable=R0903
 class DetectingHi1(TransitionBase):
     """Detecting device HI1."""
 
@@ -55,7 +56,7 @@ class DetectingHi1(TransitionBase):
     def invoke(self, ctx):
 
         app_ctx = ApplicationContext.Factory.get()
-        
+
         value = app_ctx.input_device_map[InputDevice.HI1]
         worker = DetectingHi1Worker(value)
         device = worker.select()
