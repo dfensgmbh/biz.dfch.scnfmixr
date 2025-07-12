@@ -32,22 +32,18 @@ class TestApplicationContext(unittest.TestCase):
         """Ensure that ApplicationContext returns the same instance every
         time."""
 
-        instance1 = ApplicationContext.Factory.get()
-        instance2 = ApplicationContext.Factory.get()
-        self.assertIs(instance1, instance2,
+        sut1 = ApplicationContext.Factory.get()
+        sut2 = ApplicationContext.Factory.get()
+        self.assertIs(sut1, sut2,
                       "ApplicationContext is not a singleton")
 
     def test_recording_parameters_initialised_succeeds(self):
         """Ensure that recording_parameters is initialised and is an instance
         of RecordingParameters."""
 
-        app_ctx = ApplicationContext.Factory.get()
-        self.assertIsNotNone(app_ctx.recording_parameters,
-                             "recording_parameters is None")
-        self.assertIsInstance(
-            app_ctx.recording_parameters,
-            RecordingParameters,
-            "recording_parameters is not of type RecordingParameters")
+        sut = ApplicationContext.Factory.get()
+        self.assertIsNotNone(sut.recording_parameters)
+        self.assertIsInstance(sut.recording_parameters, RecordingParameters)
 
     def test_direct_instantiation_throws(self):
         """Ensure that directly calling the constructor raises RuntimeError."""
@@ -59,12 +55,13 @@ class TestApplicationContext(unittest.TestCase):
     def test_str_representation_contains_keys_succeeds(self):
         """Ensure that __str__ returns a string with expected keys."""
 
-        app_ctx = ApplicationContext.Factory.get()
+        sut = ApplicationContext.Factory.get()
 
-        s = str(app_ctx)
-        self.assertIn("audio_map", s)
-        self.assertIn("rec", s)
-        self.assertIn("dat", s)
+        result = str(sut)
+
+        self.assertIn("audio_map", result)
+        self.assertIn("rec", result)
+        self.assertIn("dat", result)
 
 
 if __name__ == "__main__":
