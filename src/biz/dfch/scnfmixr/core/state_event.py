@@ -57,6 +57,9 @@ class StateEvent(StrEnum):
     SET_NAME_ENTER = auto()
     SET_NAME_LEAVE = auto()
 
+    INIT_AUDIO_ENTER = auto()
+    INIT_AUDIO_LEAVE = auto()
+
     SYSTEM_MENU_ENTER = auto()
     SYSTEM_MENU_LEAVE = auto()
 

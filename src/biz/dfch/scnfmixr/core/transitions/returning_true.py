@@ -40,4 +40,4 @@ class ReturningTrue(TransitionBase):
             target_state=target)
 
     def invoke(self, _):
-        return False
+        return True

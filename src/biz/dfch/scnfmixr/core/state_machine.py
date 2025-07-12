@@ -72,6 +72,9 @@ from .transitions import DetectingRc2, SkippingRc2, CleaningRc2
 from .states import SetDate, SetTime, SetName
 from .transitions import ProcessingDigit
 
+from .states import InitialiseAudio
+from .transitions import InitialisingAudio
+
 from .states import Record
 from .transitions import StartingRecording, SettingDate, StoppingSystem, MountingStorage, DisconnectingStorage \
     # pylint: disable=C0301  # noqa: E501
@@ -211,6 +214,7 @@ class StateMachine:
         set_time = SetTime()
         set_name = SetName()
         record_menu = Record()
+        initialise_audio = InitialiseAudio()
         onrecord_menu = OnRecord()
         system_menu = SystemMenu()
         final_state = FinalState()
@@ -271,6 +275,13 @@ class StateMachine:
                                         set_date))
         )
         (
+            initialise_audio
+            .add_transition(InitialisingAudio(InitialiseAudio.Events.INIT_AUDIO,
+                                              record_menu))
+            .add_transition(InitialisingAudio(InitialiseAudio.Events.SKIP_AUDIO,
+                                              system_menu))
+        )
+        (
             set_name
             .add_transition(ProcessingDigit(SetName.Events.DIGIT_0, set_name))
             .add_transition(ProcessingDigit(SetName.Events.DIGIT_1, set_name))
@@ -284,7 +295,7 @@ class StateMachine:
             .add_transition(ProcessingDigit(SetName.Events.DIGIT_9, set_name))
             .add_transition(ProcessingDigit(SetName.Events.BACK_SPACE, set_name))  # noqa: E501  ## pylint: disable=C0301
             .add_transition(ProcessingDigit(SetName.Events.ENTER, set_name))
-            .add_transition(ReturningTrue(SetName.Events.JUMP_NEXT, record_menu))  # noqa: E501  ## pylint: disable=C0301
+            .add_transition(ReturningTrue(SetName.Events.JUMP_NEXT, initialise_audio))  # noqa: E501  ## pylint: disable=C0301
         )
         (
             set_time

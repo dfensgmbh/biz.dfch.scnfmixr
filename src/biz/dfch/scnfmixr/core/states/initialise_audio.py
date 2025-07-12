@@ -1,0 +1,88 @@
+# MIT License
+
+# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+"""Module initialise_audio."""
+
+from __future__ import annotations
+from enum import StrEnum
+import time
+
+from biz.dfch.logging import log
+from ..fsm import UiEventInfo
+from ..fsm import ExecutionContext
+from ..fsm import StateBase
+from ..state_event import StateEvent
+
+
+class InitialiseAudio(StateBase):
+    """Initialise audio system."""
+
+    _WAIT_TIMEOUT_MS = 5000
+
+    class Events(StrEnum):
+        """Events for this state."""
+
+        MENU = "0"  # Return to the next menu in the hierarchy.
+        INIT_AUDIO = "1"  # Initialise audio system.
+        SKIP_AUDIO = "2"  # Skip audio initialisation.
+
+    def __init__(self):
+
+        super().__init__(
+            info_enter=UiEventInfo(
+                StateEvent.INIT_AUDIO_ENTER, True),
+            info_leave=UiEventInfo(
+                StateEvent.INIT_AUDIO_LEAVE, True)
+        )
+
+    def on_enter(self, ctx: ExecutionContext) -> None:
+        """Invoked upon entering the state.
+
+        Args:
+            ctx (ExecutionContext): The execution context of the state machine.
+        """
+
+        assert ctx and isinstance(ctx, ExecutionContext)
+
+        # If state machine was just started, we loop until transistion succeeds.
+        if not ctx.error:
+
+            # If detection failed, we wait before the next attempt.
+            # DFTODO - ugly to hard code the class name; but importing it
+            # fails, due to a circular reference.
+            if ctx.error == "InitialisingAudio":
+                time.sleep(self._WAIT_TIMEOUT_MS / 1000)
+
+            log.info("Enqueueing event: '%s' [%s].",
+                     InitialiseAudio.Events.INIT_AUDIO.name,
+                     InitialiseAudio.Events.INIT_AUDIO.value)
+
+            ctx.events.enqueue(InitialiseAudio.Events.INIT_AUDIO)
+
+    def on_leave(self, ctx: ExecutionContext) -> None:
+        """Invoked upon leaving the state.
+
+        Args:
+            ctx (ExecutionContext): The execution context of the state machine.
+        """
+
+        assert ctx and isinstance(ctx, ExecutionContext)

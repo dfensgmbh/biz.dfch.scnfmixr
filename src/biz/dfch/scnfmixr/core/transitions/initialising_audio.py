@@ -20,57 +20,34 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module states."""
+"""Module initialising_audio."""
 
-from __future__ import annotations
-
-from .system_menu import SystemMenu
-from .initialise_lcl import InitialiseLcl
-from .initialise_hi1 import InitialiseHi1
-from .initialise_hi2 import InitialiseHi2
-from .initialise_hi3 import InitialiseHi3
-from .select_language import SelectLanguage
-from .initialise_ex1 import InitialiseEx1
-from .initialise_ex2 import InitialiseEx2
-from .initialise_rc1 import InitialiseRc1
-from .initialise_rc2 import InitialiseRc2
-
-from .set_date import SetDate
-from .set_time import SetTime
-from .set_name import SetName
-
-from .initialise_audio import InitialiseAudio
-
-from .record import Record
-from .onrecord import OnRecord
-
-from .final_state import FinalState
+from ..fsm import UiEventInfo
+from ..fsm import TransitionBase
+from ..fsm import StateBase
+from ..fsm import ExecutionContext
+from ..transition_event import TransitionEvent
 
 
-__all__ = [
-    "SystemMenu",
+# pylint: disable=R0903
+class InitialisingAudio(TransitionBase):
+    """Initialsing the audio system."""
 
-    "InitialiseLcl",
-    "InitialiseHi1",
-    # Currently not used.
-    "InitialiseHi2",
-    "InitialiseHi3",
-    "SelectLanguage",
+    def __init__(self, event: str, target: StateBase):
 
-    "InitialiseEx1",
-    "InitialiseEx2",
+        assert event and event.strip()
+        assert target
 
-    "InitialiseRc1",
-    "InitialiseRc2",
+        super().__init__(
+            event,
+            info_enter=UiEventInfo(
+                TransitionEvent.INITIALISING_AUDIO_ENTER, False),
+            info_leave=UiEventInfo(
+                TransitionEvent.INITIALISING_AUDIO_LEAVE, False),
+            target_state=target)
 
-    "SetDate",
-    "SetTime",
-    "SetName",
+    def invoke(self, ctx: ExecutionContext):
 
-    "InitialiseAudio",
+        assert ctx
 
-    "Record",
-    "OnRecord",
-
-    "FinalState",
-]
+        return True

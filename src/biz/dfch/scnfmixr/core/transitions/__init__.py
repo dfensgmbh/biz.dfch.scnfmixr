@@ -57,6 +57,7 @@ from .cleaning_rc2 import CleaningRc2
 
 from .processing_digit import ProcessingDigit
 
+from .initialising_audio import InitialisingAudio
 from .starting_recording import StartingRecording
 from .stopping_system import StoppingSystem
 from .setting_date import SettingDate
@@ -99,6 +100,8 @@ __all__ = [
     "DetectingRc2",
     "SkippingRc2",
     "CleaningRc2",
+
+    "InitialisingAudio",
 
     "StartingRecording",
     "SettingDate",

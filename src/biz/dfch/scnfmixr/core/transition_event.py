@@ -94,6 +94,10 @@ class TransitionEvent(StrEnum):
     SELECTING_ITALIAN_ENTER = auto()
     SELECTING_ITALIAN_LEAVE = auto()
 
+    # Menu: Initialise audio.
+    INITIALISING_AUDIO_ENTER = auto()
+    INITIALISING_AUDIO_LEAVE = auto()
+
     # Menu: Record.
     STARTING_RECORDING_ENETR = auto()
     STARTING_RECORDING_LEAVE = auto()
