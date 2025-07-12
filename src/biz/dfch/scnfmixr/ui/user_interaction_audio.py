@@ -25,9 +25,9 @@
 from biz.dfch.i18n import I18n
 
 from ..application_context import ApplicationContext
-from .audio_player import AudioPlayer
 from ..core.fsm import UserInteractionBase
 from ..core.fsm import UiEventInfo
+from .audio_player import AudioPlayer
 
 __all__ = [
     "UserInteractionAudio",

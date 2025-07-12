@@ -29,8 +29,8 @@ import time
 from biz.dfch.asyn import Process, ConcurrentQueueT
 from biz.dfch.logging import log
 
+from ..public.input import KeyboardEventMap
 from .event_handler_base import EventHandlerBase
-from ..public.input.keyboard_event_map import KeyboardEventMap
 
 
 class KeyboardHandler(EventHandlerBase):
