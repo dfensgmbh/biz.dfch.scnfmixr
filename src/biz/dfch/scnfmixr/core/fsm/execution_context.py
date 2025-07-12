@@ -25,7 +25,7 @@
 from dataclasses import dataclass, field
 from threading import Event
 
-from ...asyn import ConcurrentQueueT
+from biz.dfch.asyn import ConcurrentQueueT
 
 
 @dataclass(frozen=True)

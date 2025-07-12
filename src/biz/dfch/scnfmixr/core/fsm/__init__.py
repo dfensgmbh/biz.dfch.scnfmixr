@@ -20,19 +20,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module user_interaction_base."""
+from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from biz.dfch.i18n import LanguageCode
 
 from .ui_event_info import UiEventInfo
+from .execution_context import ExecutionContext
+from .fsm import Fsm
+from .state_base import StateBase
+from .transition_base import TransitionBase
+from .user_interacton_base import UserInteractionBase
 
-
-class UserInteractionBase(ABC):
-    """Base class for user interaction."""
-
-    @abstractmethod
-    def update(self, item: UiEventInfo) -> None:
-        """Updates the presentation layer."""
-
-        assert item
-        assert isinstance(item, UiEventInfo)
+__all__ = [
+    "UiEventInfo",
+    "ExecutionContext",
+    "Fsm",
+    "LanguageCode",
+    "StateBase",
+    "TransitionBase",
+    "UserInteractionBase",
+]

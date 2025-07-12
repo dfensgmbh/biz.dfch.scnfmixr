@@ -29,12 +29,12 @@ import time
 from biz.dfch.asyn import Process, ConcurrentQueueT
 from biz.dfch.logging import log
 
-from ..event_handler import EventHandler
-from .key_event_map import KeyEventMap
+from .event_handler_base import EventHandlerBase
+from ..public.input.keyboard_event_map import KeyboardEventMap
 
 
-class KeyboardHandler(EventHandler):
-    """Handles keyboard input.
+class KeyboardHandler(EventHandlerBase):
+    """Handles keyboard input (Hi1).
 
     Internally, it uses `evtest` for reading keyboard scan codes (and not
     actual keys ike 'A').
@@ -117,10 +117,10 @@ class KeyboardHandler(EventHandler):
 
         result = default
 
-        if key not in KeyEventMap.__members__:
+        if key not in KeyboardEventMap.__members__:
             return default
 
-        result = KeyEventMap[key].value
+        result = KeyboardEventMap[key].value
 
         return result
 

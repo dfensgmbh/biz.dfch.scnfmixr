@@ -122,6 +122,7 @@ class Fsm:
 
         return self._is_in_transit
 
+    # pylint: disable=R0914
     def _to_string_internal(
             self,
             state: StateBase,
@@ -316,6 +317,7 @@ class Fsm:
 
         return result
 
+    # pylint: disable=R0911
     def invoke(self, event: str) -> bool:
         """Invokes a transition for the current state based on the specified
         event.

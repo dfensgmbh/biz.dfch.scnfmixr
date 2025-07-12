@@ -20,54 +20,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module key_event_map"""
+"""Module user_interaction_base."""
 
-from enum import StrEnum
+from abc import ABC, abstractmethod
+
+from .ui_event_info import UiEventInfo
 
 
-class KeyEventMap(StrEnum):
-    """Maps keyboard key codes to state machine events.
+# pylint: disable=R0903
+class UserInteractionBase(ABC):
+    """Base class for user interaction."""
 
-    Be cautious when defining entries for `KEY_KPPLUS` and similar. These will
-    only work on a numeric keypad and not on the main part of the keyboard (as
-    only the scan code are processed (and not keys in combination like SHIFT).
-    """
+    @abstractmethod
+    def update(self, item: UiEventInfo) -> None:
+        """Updates the presentation layer."""
 
-    KEY_KP0 = "0"
-    KEY_KP1 = "1"
-    KEY_KP2 = "2"
-    KEY_KP3 = "3"
-    KEY_KP4 = "4"
-    KEY_KP5 = "5"
-    KEY_KP6 = "6"
-    KEY_KP7 = "7"
-    KEY_KP8 = "8"
-    KEY_KP9 = "9"
-
-    KEY_0 = "0"
-    KEY_1 = "1"
-    KEY_2 = "2"
-    KEY_3 = "3"
-    KEY_4 = "4"
-    KEY_5 = "5"
-    KEY_6 = "6"
-    KEY_7 = "7"
-    KEY_8 = "8"
-    KEY_9 = "9"
-
-    KEY_DOT = "."
-    KEY_KPDOT = "."
-
-    KEY_KPPLUS = "+"
-    KEY_KPMINUS = "-"
-    KEY_KPASTERISK = "*"
-    KEY_KPSLASH = "/"
-    KEY_EQUAL = "="
-
-    KEY_KPENTER = "!"
-    KEY_ENTER = "!"
-
-    KEY_TAB = "$"
-    KEY_BACKSPACE = "£"
-
-    KEY_NUMLOCK = "?"
+        assert item
+        assert isinstance(item, UiEventInfo)

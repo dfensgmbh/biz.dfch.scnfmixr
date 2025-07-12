@@ -25,7 +25,9 @@
 from __future__ import annotations
 
 from .input_device import InputDevice
+from .keyboard_event_map import KeyboardEventMap
 
 __all__ = [
     "InputDevice",
+    "KeyboardEventMap",
 ]

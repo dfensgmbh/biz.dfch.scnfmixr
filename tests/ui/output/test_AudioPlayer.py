@@ -26,7 +26,7 @@ from pathlib import Path
 import time
 import unittest
 
-from biz.dfch.scnfmixr.audio.audio_player import AudioPlayer
+from biz.dfch.scnfmixr.ui.audio_player import AudioPlayer
 from biz.dfch.scnfmixr.jack_commands import AlsaToJack
 
 

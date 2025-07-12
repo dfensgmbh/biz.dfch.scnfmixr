@@ -28,7 +28,7 @@ from threading import Event, Lock
 from biz.dfch.asyn import ConcurrentQueueT
 
 
-class EventHandler(ABC):
+class EventHandlerBase(ABC):
     """Defines the abstract base class for input handling.
 
     Attributes:
