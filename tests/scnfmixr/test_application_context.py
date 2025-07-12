@@ -28,7 +28,7 @@ from biz.dfch.scnfmixr.audio import RecordingParameters
 class TestApplicationContext(unittest.TestCase):
     """Test the ApplicationContext."""
 
-    def test_singleton_identity(self):
+    def test_singleton_identity_succeeds(self):
         """Ensure that ApplicationContext returns the same instance every
         time."""
 
@@ -37,8 +37,8 @@ class TestApplicationContext(unittest.TestCase):
         self.assertIs(instance1, instance2,
                       "ApplicationContext is not a singleton")
 
-    def test_recording_parameters_initialized(self):
-        """Ensure that recording_parameters is initialized and is an instance
+    def test_recording_parameters_initialised_succeeds(self):
+        """Ensure that recording_parameters is initialised and is an instance
         of RecordingParameters."""
 
         app_ctx = ApplicationContext.Factory.get()
@@ -49,14 +49,14 @@ class TestApplicationContext(unittest.TestCase):
             RecordingParameters,
             "recording_parameters is not of type RecordingParameters")
 
-    def test_no_direct_instantiation(self):
+    def test_direct_instantiation_throws(self):
         """Ensure that directly calling the constructor raises RuntimeError."""
 
         with self.assertRaises(RuntimeError):
             # Attempting to instantiate directly without acquiring the lock
             ApplicationContext()
 
-    def test_str_representation_contains_keys(self):
+    def test_str_representation_contains_keys_succeeds(self):
         """Ensure that __str__ returns a string with expected keys."""
 
         app_ctx = ApplicationContext.Factory.get()
