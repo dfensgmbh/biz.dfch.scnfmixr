@@ -113,6 +113,13 @@ class JackPort:
             1 == len(result)
             and self.name == result[0])
 
+    def is_index(self, idx: int) -> bool:
+        """Determines whether the port matches the specified index."""
+
+        assert 0 < idx
+
+        return self.name.endswith(f"_{idx}")
+
     def get_connections(self) -> list[JackPort]:
         """
         Retrieves the list of JACK ports currently connected to this port.

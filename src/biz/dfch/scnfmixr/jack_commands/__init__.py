@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from .alsa_jack_base import AlsaJackBase
 from .alsa_to_jack import AlsaToJack
 from .jack_to_alsa import JackToAlsa
 from .jack_connection import JackConnection
@@ -28,6 +29,7 @@ from .zita_bridge_alsa_to_jack import ZitaBridgeAlsaToJack
 from .zita_bridge_jack_to_alsa import ZitaBridgeJackToAlsa
 
 __all__ = [
+    "AlsaJackBase",
     "AlsaToJack",
     "JackConnection",
     "JackPort",

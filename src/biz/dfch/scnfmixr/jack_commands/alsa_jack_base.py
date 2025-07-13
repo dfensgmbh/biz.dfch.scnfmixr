@@ -42,6 +42,7 @@ class AlsaJackBase(ABC):
             rate (int): The rate in Hz of the ALSA device.
     """
 
+    _process: Process
     _ports: list[JackPort]
     _suffix: str
     name: str
@@ -67,17 +68,18 @@ class AlsaJackBase(ABC):
         assert suffix and suffix.strip()
         assert name and name.strip()
         assert device and device.strip()
+        assert isinstance(channels, int)
         assert 1 <= channels
+        assert isinstance(rate, int)
         assert 0 < rate
 
+        self._process = None
         self._ports: list[JackPort] = []
         self._suffix = suffix
         self.name = name
         self.device = device
         self.channels = channels
         self.rate = rate
-
-        self._process = None
 
         cmd: list[str] = []
         cmd.append(bridge)
@@ -116,6 +118,12 @@ class AlsaJackBase(ABC):
 
             log.info("Jack ports for '%s': %s", jack_base_name, result)
             break
+
+    @property
+    def is_started(self) -> bool:
+        """Determines whether the process is started or not."""
+
+        return self._process is not None and self._process.is_running
 
     def get_ports(self) -> list[JackPort]:
         """Retrieves all JACK ports for this bridge."""
