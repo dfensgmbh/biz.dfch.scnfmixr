@@ -200,8 +200,6 @@ class JackPort:
         process.stop(force=True)
 
         conns = self.get_connections()
-
-        conns = self.get_connections()
         if conns is None or not isinstance(conns, list):
             return False
 
