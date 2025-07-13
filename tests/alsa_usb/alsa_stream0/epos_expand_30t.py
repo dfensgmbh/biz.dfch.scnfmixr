@@ -50,4 +50,4 @@ Capture:
     Rates: 16000
     Bits: 16
     Channel map: MONO
-""".splitlines()
+""".splitlines()  # noqa: E501 # pylint: disable=C0301

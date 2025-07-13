@@ -28,8 +28,13 @@ from .jabra_speak_510_0422 import INFO as JabraSpeak5100422
 from .jabra_speak2_J75 import INFO as JabraSpeak2J75
 from .macro_silicon_ms2109 import INFO as MacroSiliconMS2109
 from .ugreen_ktmicro import INFO as UgreenKtMicro
+from .sound_devices_mixpre3ii_2020 import INFO as MixPre3II2020
 from .sound_devices_mixpre6ii import INFO as MixPre6II
 from .interface_44100_capture_only import INFO as Capture44100
+from .icybox_ib_ac527 import INFO as IcyBoxAc527
+from .sabrent import INFO as Sabrent
+from .ugreen_a2 import INFO as UgreenA2
+from .antlion_audio import INFO as Antlion
 
 __all__ = [
     "EposExpand30T",
@@ -40,6 +45,11 @@ __all__ = [
     "JabraSpeak2J75",
     "MacroSiliconMS2109",
     "UgreenKtMicro",
+    "MixPre3II2020",
     "MixPre6II",
     "Capture44100",
+    "IcyBoxAc527",
+    "Sabrent",
+    "UgreenA2",
+    "Antlion",
 ]

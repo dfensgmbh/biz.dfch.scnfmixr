@@ -40,4 +40,4 @@ Capture:
     Rates: 48000 - 48000 (continuous)
     Data packet interval: 1000 us
     Bits: 0
-""".splitlines()
+""".splitlines()  # noqa: E501 # pylint: disable=C0301

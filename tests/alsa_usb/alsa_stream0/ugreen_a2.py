@@ -20,38 +20,34 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""UGREEN KTMicro KT USB"""  # noqa: E501 # pylint: disable=C0301
+"""0d8c:0014 C-Media Electronics, Inc. Audio Adapter (Unitek Y-247A)
+
+ 3 [Device         ]: USB-Audio - USB Audio Device
+                      C-Media Electronics Inc. USB Audio Device at usb-xhci-hcd.0-2, full speed
+"""  # noqa: E501 # pylint: disable=C0301
 
 INFO = """\
-KTMicro KT USB Audio at usb-xhci-hcd.0-1.1, full speed : USB Audio
+C-Media Electronics Inc. USB Audio Device at usb-xhci-hcd.0-2, full speed : USB Audio
 
 Playback:
-  Status: Stop
-  Interface 2
-    Altset 1
-    Format: S16_LE
-    Channels: 2
-    Endpoint: 0x01 (1 OUT) (ADAPTIVE)
-    Rates: 44100, 48000, 96000
-    Bits: 16
-    Channel map: FL FR
-  Interface 2
-    Altset 2
-    Format: S24_3LE
-    Channels: 2
-    Endpoint: 0x01 (1 OUT) (ADAPTIVE)
-    Rates: 44100, 48000, 96000
-    Bits: 24
-    Channel map: FL FR
-
-Capture:
   Status: Stop
   Interface 1
     Altset 1
     Format: S16_LE
+    Channels: 2
+    Endpoint: 0x01 (1 OUT) (ADAPTIVE)
+    Rates: 48000, 44100
+    Bits: 16
+    Channel map: FL FR
+
+Capture:
+  Status: Stop
+  Interface 2
+    Altset 1
+    Format: S16_LE
     Channels: 1
-    Endpoint: 0x81 (1 IN) (ASYNC)
-    Rates: 44100, 48000
+    Endpoint: 0x82 (2 IN) (SYNC)
+    Rates: 48000, 44100
     Bits: 16
     Channel map: MONO
 """.splitlines()  # noqa: E501 # pylint: disable=C0301

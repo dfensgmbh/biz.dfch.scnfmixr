@@ -23,4 +23,4 @@
 """"""  # noqa: E501 # pylint: disable=C0301
 
 INFO = """\
-""".splitlines()
+""".splitlines()  # noqa: E501 # pylint: disable=C0301

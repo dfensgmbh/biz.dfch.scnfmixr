@@ -83,4 +83,4 @@ Capture:
     Data packet interval: 1000 us
     Bits: 24
     Channel map: FL FR
-""".splitlines()
+""".splitlines()  # noqa: E501 # pylint: disable=C0301
