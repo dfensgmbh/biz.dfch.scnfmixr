@@ -39,6 +39,7 @@ from .public.storage import StorageDeviceInfo
 from .public.storage import StorageDeviceMap
 from .public.storage import StorageDevice
 from .public.audio import AudioDevice, AudioDeviceMap
+from .public.mixer import InputOrOutput
 from .public.ui import UiParameters
 
 
@@ -74,6 +75,7 @@ class ApplicationContext:  # pylint: disable=R0903
         AUDIO_CFG = auto()
         STORAGE_CFG = auto()
         INPUT_CFG = auto()
+        XPUTS = auto()
 
     _instance = None
     _lock = Lock()
@@ -86,6 +88,7 @@ class ApplicationContext:  # pylint: disable=R0903
     recording_parameters: RecordingParameters
     audio_configuration_map: dict[AudioDevice, AudioDeviceInfo]
     storage_configuration_map: dict[StorageDevice, StorageDeviceInfo]
+    xputs: set[InputOrOutput]
 
     def __init__(self):
         """Private ctor. Use Factory to create an instance of this object."""
@@ -103,6 +106,7 @@ class ApplicationContext:  # pylint: disable=R0903
         self.recording_parameters = RecordingParameters()
         self.audio_configuration_map = {}
         self.storage_configuration_map = {}
+        self.xputs = set()
 
         log.info("Initialising application context SUCCEEDED. [%s]", self)
 
@@ -117,6 +121,7 @@ class ApplicationContext:  # pylint: disable=R0903
             ApplicationContext.Keys.AUDIO_CFG: self.audio_configuration_map,
             ApplicationContext.Keys.STORAGE_CFG: self.storage_configuration_map,
             ApplicationContext.Keys.INPUT_CFG: self.storage_configuration_map,
+            ApplicationContext.Keys.XPUTS: self.xputs,
         }
 
         return str(result)
@@ -125,21 +130,21 @@ class ApplicationContext:  # pylint: disable=R0903
     class Factory:
         """Factory class."""
 
-        __instance__: ClassVar[ApplicationContext] = None
+        __instance: ClassVar[ApplicationContext] = None
         _lock: ClassVar[Lock] = Lock()
 
         @staticmethod
         def get() -> ApplicationContext:
             """Returns the singleton instance."""
 
-            if ApplicationContext.Factory.__instance__ is not None:
-                return ApplicationContext.Factory.__instance__
+            if ApplicationContext.Factory.__instance is not None:
+                return ApplicationContext.Factory.__instance
 
             with ApplicationContext.Factory._lock:
 
-                if ApplicationContext.Factory.__instance__ is not None:
-                    return ApplicationContext.Factory.__instance__
+                if ApplicationContext.Factory.__instance is not None:
+                    return ApplicationContext.Factory.__instance
 
-                ApplicationContext.Factory.__instance__ = ApplicationContext()
+                ApplicationContext.Factory.__instance = ApplicationContext()
 
-            return ApplicationContext.Factory.__instance__
+            return ApplicationContext.Factory.__instance

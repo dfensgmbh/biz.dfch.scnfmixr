@@ -33,11 +33,11 @@ from ..fsm import StateBase
 from ..transition_event import TransitionEvent
 
 
+# pylint: disable=R0903
 class DetectingRc2(TransitionBase):
     """Detecting device RC2."""
 
     def __init__(self, event: str, target: StateBase):
-        """Default ctor."""
 
         assert event and event.strip()
         assert target

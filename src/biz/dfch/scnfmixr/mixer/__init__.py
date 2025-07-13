@@ -20,18 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package constant."""
+"""Package mixer."""
 
-from enum import StrEnum
+from .audio_mixer import AudioMixer
+from .audio_mixer import AudioMixerConfiguration
+from .audio_mixer import ConnectionParameters
 
 
-class Constant(StrEnum):
-    """JACK constants."""
-
-    JACK_INFIX = "-"
-    JACK_INPUT = "I"
-    JACK_OUTPUT = "O"
-
-    ALSA_NAME_PREFIX = "hw:"
-    ALSA_NAME_SEPARATOR = ","
-    ALSA_NAME_INTERFACE = "0"
+__all__ = [
+    "AudioMixer",
+    "AudioMixerConfiguration",
+    "ConnectionParameters",
+]

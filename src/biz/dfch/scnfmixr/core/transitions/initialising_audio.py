@@ -22,6 +22,13 @@
 
 """Module initialising_audio."""
 
+import time
+
+from ...app import ApplicationContext
+from ...mixer import AudioMixer
+from ...mixer import AudioMixerConfiguration
+from ...mixer import ConnectionParameters
+from ...public.audio import AudioDevice
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
@@ -31,7 +38,9 @@ from ..transition_event import TransitionEvent
 
 # pylint: disable=R0903
 class InitialisingAudio(TransitionBase):
-    """Initialsing the audio system."""
+    """Initialising the audio system."""
+
+    _app_ctx: ApplicationContext
 
     def __init__(self, event: str, target: StateBase):
 
@@ -46,8 +55,46 @@ class InitialisingAudio(TransitionBase):
                 TransitionEvent.INITIALISING_AUDIO_LEAVE, False),
             target_state=target)
 
+        self._app_ctx = ApplicationContext.Factory.get()
+
     def invoke(self, ctx: ExecutionContext):
 
         assert ctx
+
+        mixer = AudioMixer.Factory.get()
+        assert mixer
+
+        info_lcl = self._app_ctx.audio_configuration_map.get(
+            AudioDevice.LCL, None)
+        assert info_lcl is not None
+
+        cfg = AudioMixerConfiguration()
+
+        for obj in self._app_ctx.xputs:
+            cfg.add_xput(obj)
+
+        cfg.add_connection(ConnectionParameters(
+            this=f"{AudioDevice.LCL.name}-I",
+            other=f"{AudioDevice.EX1.name}-O",
+        )).add_connection(ConnectionParameters(
+            this=f"{AudioDevice.LCL.name}-I",
+            other=f"{AudioDevice.EX2.name}-O"
+        )).add_connection(ConnectionParameters(
+            this=f"{AudioDevice.EX1.name}-I",
+            other=f"{AudioDevice.LCL.name}-O"
+        )).add_connection(ConnectionParameters(
+            this=f"{AudioDevice.EX1.name}-I",
+            other=f"{AudioDevice.EX2.name}-O"
+        )).add_connection(ConnectionParameters(
+            this=f"{AudioDevice.EX2.name}-I",
+            other=f"{AudioDevice.LCL.name}-O"
+        )).add_connection(ConnectionParameters(
+            this=f"{AudioDevice.EX2.name}-I",
+            other=f"{AudioDevice.EX1.name}-O"
+        ))
+
+        mixer.initialise(cfg)
+        # time.sleep(15)
+        # mixer.stop()
 
         return True

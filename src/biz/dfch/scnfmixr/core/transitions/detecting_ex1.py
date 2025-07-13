@@ -27,12 +27,14 @@ from biz.dfch.logging import log
 from ...application_context import ApplicationContext
 from ...audio import AudioDeviceInfo
 from ...public.audio import AudioDevice
+from ...public.mixer import AudioInput, AudioOutput
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
 from ..transition_event import TransitionEvent
 
 
+# pylint: disable=R0903
 class DetectingEx1(TransitionBase):
     """Detecting device EX1."""
 
@@ -53,16 +55,23 @@ class DetectingEx1(TransitionBase):
     def invoke(self, _):
         app_ctx = ApplicationContext.Factory.get()
 
-        try:
-            value = app_ctx.audio_device_map[AudioDevice.EX1]
-            device_info = AudioDeviceInfo.Factory.create(value, max_attempts=1)
-            app_ctx.audio_configuration_map[AudioDevice.EX1] = device_info
+        device = AudioDevice.EX1
 
+        try:
+            value = app_ctx.audio_device_map[device]
+            device_info = AudioDeviceInfo.Factory.create(value, max_attempts=1)
+            app_ctx.audio_configuration_map[device] = device_info
+
+            audio_input = AudioInput(device.name, device_info.source)
+            audio_output = AudioOutput(device.name, device_info.sink)
+            app_ctx.xputs.add(audio_input)
+            app_ctx.xputs.add(audio_output)
+            
             return True
 
         except Exception as ex:  # pylint: disable=W0718
 
             log.error("Device detection '%s' FAILED. [%s]",
-                      AudioDevice.EX1.name, ex, exc_info=True)
+                      device.name, ex, exc_info=True)
 
             return False
