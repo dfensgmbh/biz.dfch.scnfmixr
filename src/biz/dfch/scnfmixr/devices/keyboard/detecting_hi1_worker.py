@@ -61,7 +61,9 @@ class DetectingHi1Worker(InterfaceDetectorBase):
                 value specified in the ctor call.
         """
 
-        for candidate in glob.glob(self._DEV_INPUT_EVENT_PATH_GLOB):
+        candidates = sorted(glob.glob(self._DEV_INPUT_EVENT_PATH_GLOB),
+                            key=lambda e: (len(e), e))
+        for candidate in candidates:
 
             cmd: list[str] = [
                 self._UDEVADM_FULLNAME,
