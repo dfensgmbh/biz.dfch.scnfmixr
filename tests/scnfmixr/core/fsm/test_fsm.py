@@ -24,14 +24,21 @@
 
 import unittest
 
-from biz.dfch.scnfmixr.ui import ExecutionContext
-from biz.dfch.scnfmixr.ui import Fsm
-from biz.dfch.scnfmixr.ui import StateBase
-from biz.dfch.scnfmixr.ui import TransitionBase
+from biz.dfch.scnfmixr.core.fsm import ExecutionContext
+from biz.dfch.scnfmixr.core.fsm import Fsm
+from biz.dfch.scnfmixr.core.fsm import StateBase
+from biz.dfch.scnfmixr.core.fsm import TransitionBase
+from biz.dfch.scnfmixr.core.fsm import UserInteractionBase
 
 
 class TestFsm(unittest.TestCase):
     """Tests a finite state machine."""
+
+    class ArbitraryUserInteractionBase(UserInteractionBase):
+        """Arbtirary implementation."""
+
+        def update(self, item):
+            return
 
     class ArbitraryState1(StateBase):
         """Defines an arbitrary state for testing purposes."""
@@ -66,8 +73,9 @@ class TestFsm(unittest.TestCase):
             info_enter=None,
             info_leave=None)
         ctx = ExecutionContext(None, None)
+        ui = TestFsm.ArbitraryUserInteractionBase()
 
-        sut = Fsm(initial_state, ctx)
+        sut = Fsm(initial_state, ctx, ui)
 
         self.assertIsNotNone(sut)
         self.assertIsInstance(sut.current_state, StateBase)
@@ -100,8 +108,9 @@ class TestFsm(unittest.TestCase):
         initial_state.add_transition(transition_to_end_state)
         end_state.add_transition(transition_to_initial_state)
         ctx = ExecutionContext(None, None)
+        ui = TestFsm.ArbitraryUserInteractionBase()
 
-        sut = Fsm(initial_state, ctx)
+        sut = Fsm(initial_state, ctx, ui)
         self.assertIsNotNone(sut)
         self.assertEqual(TestFsm.ArbitraryState1, type(sut.current_state))
 

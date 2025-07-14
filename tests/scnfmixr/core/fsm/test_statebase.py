@@ -24,10 +24,10 @@
 
 import unittest
 
-from biz.dfch.scnfmixr.ui import UiEventInfo
-from biz.dfch.scnfmixr.ui import ExecutionContext
-from biz.dfch.scnfmixr.ui import StateBase
-from biz.dfch.scnfmixr.ui import TransitionBase
+from biz.dfch.scnfmixr.core.fsm import UiEventInfo
+from biz.dfch.scnfmixr.core.fsm import ExecutionContext
+from biz.dfch.scnfmixr.core.fsm import StateBase
+from biz.dfch.scnfmixr.core.fsm import TransitionBase
 
 
 class TestStateBase(unittest.TestCase):
