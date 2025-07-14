@@ -23,9 +23,7 @@
 """Module app_notification."""
 
 from __future__ import annotations
-from threading import Event
-from threading import Lock
-from threading import Thread
+import threading
 from typing import ClassVar
 from typing import Callable
 from enum import Enum, auto
@@ -46,9 +44,8 @@ class AppNotification:  # pylint: disable=R0903
 
         SHUTDOWN = auto()
 
-    _sync_root: Lock
-    _callbacks: list[Callable[[Event], None]]
-    _signal: Event
+    _sync_root: threading.Lock
+    _callbacks: list[Callable[[threading.Event], None]]
 
     def __init__(self):
         """Private ctor. Use Factory to create an instance of this object."""
@@ -56,11 +53,10 @@ class AppNotification:  # pylint: disable=R0903
         if not AppNotification.Factory._lock.locked():
             raise RuntimeError("Private ctor. Use Factory instead.")
 
-        self._sync_root = Lock()
+        self._sync_root = threading.Lock()
         self._callbacks = []
-        self._signal = Event()
 
-    def register(self, action: Callable[[Event], None]) -> None:
+    def register(self, action: Callable[[threading.Event], None]) -> None:
         """Registers action.
 
         Args:
@@ -109,7 +105,7 @@ class AppNotification:  # pylint: disable=R0903
                     action(event)
 
                     log.info(
-                        ("Dispatching event '%s' to action '%s' SUCCEEDED. "
+                        ("Dispatching event '%s' to action '%s' OK. "
                          "[%s/%s]"),
                         event, action,
                         index+1, count)
@@ -123,7 +119,8 @@ class AppNotification:  # pylint: disable=R0903
                         exc_info=True)
 
         if AppNotification.Event.SHUTDOWN != event:
-            Thread(target=dispatch, args=(event,), daemon=True).start()
+            threading.Thread(target=dispatch, args=(
+                event,), daemon=True).start()
             return
 
         dispatch(event)
@@ -136,7 +133,7 @@ class AppNotification:  # pylint: disable=R0903
         """Factory class."""
 
         __instance: ClassVar[AppNotification] = None
-        _lock: ClassVar[Lock] = Lock()
+        _lock: ClassVar[threading.Lock] = threading.Lock()
 
         @staticmethod
         def get() -> AppNotification:

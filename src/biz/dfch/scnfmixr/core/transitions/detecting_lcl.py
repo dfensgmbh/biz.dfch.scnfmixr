@@ -26,6 +26,8 @@ from biz.dfch.logging import log
 
 from ...application_context import ApplicationContext
 from ...audio import AudioDeviceInfo
+from ...mixer import AudioMixer
+from ...mixer import AudioMixerConfiguration
 from ...public.audio import AudioDevice
 from ...public.mixer import AudioInput, AudioOutput
 from ..fsm import UiEventInfo
@@ -66,6 +68,8 @@ class DetectingLcl(TransitionBase):
             app_ctx.xputs.add(audio_input)
             app_ctx.xputs.add(audio_output)
 
+            self._initialise_local_audio(audio_output)
+
             return True
 
         except Exception as ex:  # pylint: disable=W0718
@@ -74,3 +78,19 @@ class DetectingLcl(TransitionBase):
                       device.name, ex, exc_info=True)
 
             return False
+
+    def _initialise_local_audio(self, device: AudioOutput) -> None:
+        """Initialises the audio mixer for local playback."""
+
+        mixer = AudioMixer.Factory.get()
+        assert mixer
+
+        cfg = AudioMixerConfiguration.get_default()
+        cfg.default_output = device.name
+        cfg.add_xput(device)
+        mixer.initialise(cfg)
+
+        ports = device._alsa_jack_base.get_ports()
+
+        for port in ports:
+            log.debug("[%s] port '%s'", device.name, port.name)

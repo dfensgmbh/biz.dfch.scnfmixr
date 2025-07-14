@@ -29,6 +29,8 @@ import time
 from biz.dfch.logging import log
 from biz.dfch.asyn import Process
 
+from ..mixer import AudioMixer
+
 __all__ = [
     "AudioPlayer",
 ]
@@ -47,8 +49,17 @@ class AudioPlayer:
     _ECASOUND_OPTION_QUIET = "-q"
     _ECASOUND_OPTION_GLOBAL = "-G"
     _ECASOUND_OPTION_INPUT = "-i"
+    _ECASOUND_OPTION_AUDIOLOOP = "audioloop"
     _ECASOUND_OPTION_OUTPUT = "-o"
     _ECASOUND_OPTION_LOOP = "-tl"
+    _ECASOUND_OPTION_TRANSPORT_NO = "notransport"
+
+    _process: Process
+    _do_cancel_worker: threading.Event
+    _do_cancel_item: bool
+    _queue: queue.Queue[tuple[str, bool]]
+    _jack_name: str
+    _thread: threading.Thread
 
     def __init__(self, jack_name: str) -> None:
         """Returns an instance of this class."""
@@ -58,11 +69,29 @@ class AudioPlayer:
         self._process = None
         self._do_cancel_worker = threading.Event()
         self._do_cancel_item = False
-        self._queue: queue.Queue[tuple[str, bool]] = queue.Queue()
+        self._queue = queue.Queue()
         self._jack_name = jack_name
 
         self._thread = threading.Thread(target=self._worker, daemon=True)
         self._thread.start()
+
+        AudioMixer.Factory.get().register(self.audio_mixer_on_notify)
+
+    def audio_mixer_on_notify(self, event: AudioMixer.Event) -> None:
+        """Handles notification DEFAULT_OUTPUT_CHANGED."""
+
+        if event is None or not isinstance(event, AudioMixer.Event):
+            return
+
+        match event:
+            case AudioMixer.Event.DEFAULT_OUTPUT_CHANGED:
+                value = AudioMixer.Factory.get()._cfg.default_output
+                if value != self._jack_name:
+                    log.debug("Changing output value form '%s' to '%s'",
+                              value, self._jack_name)
+                self._jack_name = value
+            case _:
+                return
 
     def _worker(self):
         """The worker thread that plays and stops the audio files.
@@ -140,16 +169,25 @@ class AudioPlayer:
                     f"{self._ECASOuND_OUTPUT_NAME}"
                     f"{self._ECASOUND_OPTION_DELIMITER}"
                     f"{self._ECASOuND_PORT_NAME}"
+                    f"{self._ECASOUND_OPTION_DELIMITER}"
+                    f"{self._ECASOUND_OPTION_TRANSPORT_NO}"
                 )
                 cmd.append(self._ECASOUND_OPTION_INPUT)
-                cmd.append(file)
+                if do_loop:
+                    cmd.append(
+                        f"{self._ECASOUND_OPTION_AUDIOLOOP}"
+                        f"{self._ECASOUND_OPTION_DELIMITER}"
+                        f"{file}"
+                    )
+                else:
+                    cmd.append(file)
                 cmd.append(self._ECASOUND_OPTION_OUTPUT)
                 cmd.append(
                     f"{self._ECASOuND_OUTPUT_NAME}"
                     f"{self._ECASOUND_OPTION_DELIMITER}"
                     f"{self._jack_name}")
-                if do_loop:
-                    cmd.append(self._ECASOUND_OPTION_LOOP)
+                # if do_loop:
+                #     cmd.append(self._ECASOUND_OPTION_LOOP)
                 self._process = Process.start(cmd)
                 process_message_counter = 0
 

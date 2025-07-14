@@ -62,7 +62,8 @@ class InitialisingAudio(TransitionBase):
         mixer = AudioMixer.Factory.get()
         assert mixer
 
-        cfg = AudioMixerConfiguration()
+        cfg = AudioMixerConfiguration().get_default()
+        cfg.default_output = Connection.sink(AudioDevice.LCL.name)
 
         for obj in self._app_ctx.xputs:
             cfg.add_xput(obj)

@@ -155,7 +155,7 @@ class AudioInput(AudioInputOrOutput, Input):
                           source.name, sink.name)
                 return False
 
-            log.info("Connecting '%s' to '%s' SUCCEEDED.",
+            log.info("Connecting '%s' to '%s' OK.",
                      source.name, sink.name)
 
         return True
@@ -193,7 +193,7 @@ class AudioInput(AudioInputOrOutput, Input):
                           source.name, sink.name)
                 return False
 
-            log.info("Connecting '%s' to '%s' SUCCEEDED.",
+            log.info("Connecting '%s' to '%s' OK.",
                      source.name, sink.name)
 
         return True
@@ -228,7 +228,7 @@ class AudioInput(AudioInputOrOutput, Input):
                           source.name, sink.name)
                 return False
 
-            log.info("Connecting '%s' to '%s' SUCCEEDED.",
+            log.info("Connecting '%s' to '%s' OK.",
                      source.name, sink.name)
 
         return True
@@ -278,7 +278,7 @@ class AudioInput(AudioInputOrOutput, Input):
                       source.name, sink.name)
             return False
 
-        log.info("Connecting '%s' to '%s' SUCCEEDED.",
+        log.info("Connecting '%s' to '%s' OK.",
                  source.name, sink.name)
 
         return True

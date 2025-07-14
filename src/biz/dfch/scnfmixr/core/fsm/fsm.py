@@ -413,6 +413,7 @@ class Fsm:
 
                 log.debug("Invoking 'on_enter' for '%s' ...",
                           type(self._current_state).__name__)
+                self._ui.update(self.current_state.info_enter)
                 ctx = ExecutionContext(
                     source=type(self._current_state).__name__,
                     error=type(transition).__name__,

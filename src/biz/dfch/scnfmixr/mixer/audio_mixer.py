@@ -25,8 +25,9 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum, StrEnum, auto
-from threading import Lock
+import threading
 from typing import ClassVar
+from typing import Callable
 from typing import Self
 from typing import overload
 
@@ -72,7 +73,7 @@ class RoutingMatrix:
 
         object.__setattr__(self, "_mtx", {})
 
-        log.debug("Initialising RoutingMatrix SUCCEEDED. [%s]", self._mtx)
+        log.debug("Initialising RoutingMatrix OK. [%s]", self._mtx)
 
     def add_input(self) -> bool:
         """Adds an input"""
@@ -82,7 +83,7 @@ class RoutingMatrix:
         """Factory class."""
 
         __instance: ClassVar[RoutingMatrix | None] = None
-        _lock: ClassVar[Lock] = Lock()
+        _lock: ClassVar[threading.Lock] = threading.Lock()
 
         @staticmethod
         def get() -> RoutingMatrix:
@@ -112,14 +113,20 @@ class ChannelStripName(StrEnum):
 
 
 class AudioMixerConfiguration:
-    """The AudioMixer configuration."""
+    """The AudioMixer configuration.
 
-    xputs: set[InputOrOutput]
+    Attributes:
+    """
 
+    _DEFAULT_OUTPUT = "system"
+
+    default_output: str
     conns: set[Connection]
+    xputs: set[InputOrOutput]
 
     def __init__(self):
 
+        self.default_output = self._DEFAULT_OUTPUT
         self.conns = set()
         self.xputs = set()
 
@@ -127,7 +134,10 @@ class AudioMixerConfiguration:
     def get_default() -> Self:
         """Returns a default configuration."""
 
-        return AudioMixerConfiguration()
+        result = AudioMixerConfiguration()
+        result.default_output = AudioMixerConfiguration._DEFAULT_OUTPUT
+
+        return result
 
     def get_xput(self, name: str) -> InputOrOutput:
         """Gets an input or output based on its name from the configuration
@@ -175,7 +185,7 @@ class AudioMixerConfiguration:
         self.xputs.add(value)
 
         log.info(
-            "Adding object '%s' SUCCEEDED [%s].", value.name, len(self.xputs))
+            "Adding object '%s' OK [%s].", value.name, len(self.xputs))
 
     def remove_xput(self, name: str) -> None:
         """Removes an input or ouput object from the configuration set."""
@@ -190,7 +200,7 @@ class AudioMixerConfiguration:
 
         self.xputs.remove(result)
 
-        log.info("Removing object '%s' SUCCEEDED [%s].", name, len(self.xputs))
+        log.info("Removing object '%s' OK [%s].", name, len(self.xputs))
 
     def add_connection(self, params: Connection) -> Self:
         """Adds a connection request."""
@@ -226,17 +236,29 @@ class AudioMixer:
     Attributes:
     """
 
+    _sync_root: threading.Lock
+    _callbacks: list[Callable[[threading.Event], None]]
     _state: AudioMixerState
     _routing_matrix: RoutingMatrix
     _cfg: AudioMixerConfiguration
 
-    # pylint: disable=R0903
+    class Event(Enum):
+        """Notification events."""
 
-    class Factory:
+        CONFIGURATION_CHANGING = auto()
+        CONFIGURATION_CHANGED = auto()
+        DEFAULT_OUTPUT_CHANGED = auto()
+        STARTING = auto()
+        STARTED = auto()
+        STOPPING = auto()
+        STOPPED = auto()
+        STATE_CHANGED = auto()
+
+    class Factory:  # pylint: disable=R0903
         """Factory class."""
 
         __instance: ClassVar[AudioMixer | None] = None
-        _sync_root: ClassVar[Lock] = Lock()
+        _sync_root: ClassVar[threading.Lock] = threading.Lock()
 
         @staticmethod
         def get() -> AudioMixer:
@@ -254,10 +276,13 @@ class AudioMixer:
 
             return AudioMixer.Factory.__instance
 
-    def on_shutdown(self, event: AppNotification.Event):
+    def app_on_shutdown(self, event: AppNotification.Event):
         """Process SHUTDOWN notification."""
 
-        if event is None or AppNotification.Event.SHUTDOWN != event:
+        if event is None or not isinstance(event, AppNotification.Event):
+            return
+
+        if AppNotification.Event.SHUTDOWN != event:
             return
 
         log.info("on_shutdown: Stopping ...")
@@ -274,13 +299,18 @@ class AudioMixer:
 
         log.debug("Initialising ...")
 
-        self._state = AudioMixerState.STOPPED
-        self._routing_matrix = RoutingMatrix.Factory.get()
+        self._sync_root = threading.Lock()
+        self._callbacks = []
         self._cfg = None
+        app_ctx = ApplicationContext.Factory.get()
+        app_ctx.notification.register(self.app_on_shutdown)
 
-        ApplicationContext.Factory.get().notification.register(self.on_shutdown)
+        # Set private field directly, as not everything is initialised yet.
+        self._state = AudioMixerState.STOPPED
 
-        log.info("Initialising SUCCEEDED.")
+        self._routing_matrix = RoutingMatrix.Factory.get()
+
+        log.info("Initialising OK.")
 
     @overload
     def initialise(self) -> bool:
@@ -318,7 +348,20 @@ class AudioMixer:
             result = self.stop()
             assert result
 
+        self.signal(AudioMixer.Event.CONFIGURATION_CHANGING)
+
+        has_default_output_changed = self._cfg is None or (
+            self._cfg.default_output != cfg.default_output
+        )
+        log.debug("%s: Default output: [NEW: %s]",
+                  has_default_output_changed,
+                  cfg.default_output)
         self._cfg = cfg
+
+        if has_default_output_changed:
+            self.signal(AudioMixer.Event.DEFAULT_OUTPUT_CHANGED)
+
+        self.signal(AudioMixer.Event.CONFIGURATION_CHANGED)
 
         result = self.start()
 
@@ -344,6 +387,22 @@ class AudioMixer:
 
         return self._state
 
+    def _set_state(self, value: AudioMixerState) -> None:
+        """Private: Sets the private field _state of the audio mixer."""
+
+        self._state = value
+        self.signal(AudioMixer.Event.STATE_CHANGED)
+
+        match value:
+            case AudioMixerState.STARTED:
+                self.signal(AudioMixer.Event.STARTED)
+            case AudioMixerState.STARTING:
+                self.signal(AudioMixer.Event.STARTING)
+            case AudioMixerState.STOPPING:
+                self.signal(AudioMixer.Event.STOPPING)
+            case AudioMixerState.STOPPED:
+                self.signal(AudioMixer.Event.STOPPED)
+
     def start(self) -> bool:
         """Starts the audio mixer.
 
@@ -363,6 +422,8 @@ class AudioMixer:
         if AudioMixerState.STOPPED != self._state:
             return result
 
+        self.signal(AudioMixer.Event.STARTING)
+
         for source in self._cfg.xputs:
 
             log.debug("Starting '%s' [%s] ...",
@@ -371,13 +432,13 @@ class AudioMixer:
             result = source.start()
 
             if result:
-                log.info("Starting '%s' [%s] SUCCEEDED.",
+                log.info("Starting '%s' [%s] OK.",
                          source.name, type(source).__name__)
             else:
                 log.error("Starting '%s' [%s] FAILED.",
                           source.name, type(source).__name__)
 
-                self._state = AudioMixerState.ERROR
+                self._set_state(AudioMixerState.ERROR)
                 return False
 
         for conn in self._cfg.conns:
@@ -409,14 +470,14 @@ class AudioMixer:
                           conn.this, conn.idx_this, conn.other, conn.idx_other)
                 continue
 
-            log.info("Connecting '%s' [%s] to '%s' [%s] SUCCEEDED.",
+            log.info("Connecting '%s' [%s] to '%s' [%s] OK.",
                      conn.this, conn.idx_this, conn.other, conn.idx_other)
 
-        self._state = AudioMixerState.STARTED
-        result = AudioMixerState.STARTED == self._state
+        self._set_state(AudioMixerState.STARTED)
+        result = True
 
         if result:
-            log.info("Starting SUCCEEDED.")
+            log.info("Starting OK.")
         else:
             log.error("Starting FAILED.")
 
@@ -437,6 +498,7 @@ class AudioMixer:
         if AudioMixerState.STARTED != self._state:
             return result
 
+        self.signal(AudioMixer.Event.STOPPING)
         for xput in self._cfg.xputs:
 
             log.debug("Stopping '%s' [%s] ...", xput.name, type(xput).__name__)
@@ -444,20 +506,21 @@ class AudioMixer:
             result = xput.stop()
 
             if result:
-                log.info("Stopping '%s' [%s] SUCCEEDED.",
+                log.info("Stopping '%s' [%s] OK.",
                          xput.name, type(xput).__name__)
             else:
                 log.error("Stopping '%s' [%s] FAILED.",
                           xput.name, type(xput).__name__)
 
-                self._state = AudioMixerState.ERROR
+                self._set_state(AudioMixerState.ERROR)
                 return False
 
-        self._state = AudioMixerState.STOPPED
-        result = AudioMixerState.STOPPED == self._state
+        self._set_state(AudioMixerState.STOPPED)
+        result = True
 
         if result:
-            log.info("Stopping SUCCEEDED.")
+            log.info("Stopping OK.")
+            self.signal(AudioMixer.Event.STOPPED)
         else:
             log.error("Stopping FAILED.")
 
@@ -475,3 +538,67 @@ class AudioMixer:
         result = self.start()
 
         return result
+
+    def register(self, action: Callable[[Event], None]) -> None:
+        """Registers an action.
+
+        Args:
+            action (Callable[[Event], None]): The action to register.
+        Returns:
+            None:
+        """
+
+        assert action and callable(action)
+
+        log.debug("Registering action '%s' ...", action)
+
+        with self._sync_root:
+            self._callbacks.append(action)
+
+        log.info("Registering action '%s' COMPLETED.", action)
+
+    def signal(self, event: AudioMixer.Event) -> None:
+        """Signals the specified event to all registered actions.
+
+        Args:
+            event (Event): The event to signal.
+
+        Returns:
+            None:
+        """
+
+        assert event is not None and isinstance(event, AudioMixer.Event)
+
+        def dispatch(event: AudioMixer.Event) -> None:
+            """Dispatcher for event notificiations."""
+
+            with self._sync_root:
+                actions = list(self._callbacks)
+
+            count = len(actions)
+            for index, action in enumerate(actions):
+
+                try:
+                    log.debug(
+                        ("Dispatching event '%s' to action '%s' .... "
+                         "[%s/%s]"),
+                        event, action,
+                        index+1, count)
+
+                    action(event)
+
+                    log.info(
+                        ("Dispatching event '%s' to action '%s' OK. "
+                         "[%s/%s]"),
+                        event, action,
+                        index+1, count)
+
+                except Exception:  # pylint: disable=W0718
+                    log.error(
+                        ("Dispatching event '%s' to action '%s' FAILED. "
+                         "[%s/%s]"),
+                        event, action,
+                        index+1, count,
+                        exc_info=True)
+
+        threading.Thread(target=dispatch, args=(event,), daemon=True).start()
