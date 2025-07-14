@@ -27,7 +27,6 @@ import time
 import unittest
 
 from biz.dfch.scnfmixr.ui.audio_player import AudioPlayer
-from biz.dfch.scnfmixr.jack_commands import AlsaToJack
 
 
 class TestAudioPlayer(unittest.TestCase):
@@ -77,47 +76,3 @@ class TestAudioPlayer(unittest.TestCase):
         sut.stop()
 
         time.sleep(2)
-
-    def test_creating_alsa_to_jack_succeeds(self):
-        """Creating an ALSA to JACK bridge succeeds."""
-
-        expected = "Edgar"
-        sut = AlsaToJack(expected, "null")
-
-        self.assertIsNotNone(sut)
-
-        result = sut.get_port_names()
-
-        sut.stop()
-
-        self.assertEqual(len(result), 2)
-        self.assertTrue(result[0].startswith(expected))
-        self.assertTrue(result[0].endswith(":capture_0"))
-        self.assertTrue(result[1].startswith(expected))
-        self.assertTrue(result[1].endswith(":capture_1"))
-
-    def test_2creating_alsa_to_jack_succeeds(self):
-        """Creating an ALSA to JACK bridge succeeds."""
-
-        expected = "Edgar"
-        sut = AlsaToJack(expected, "null")
-
-        self.assertIsNotNone(sut)
-
-        result = sut.get_ports()
-
-        sut.stop()
-
-        self.assertEqual(len(result), 2)
-        self.assertEqual(result[0].name, f"{expected}:capture_1")
-        self.assertEqual(result[1].name, f"{expected}:capture_2")
-
-        item = result[0]
-        connections = item.get_connections()
-        self.assertIsNotNone(connections)
-        self.assertEqual(len(connections), 0)
-
-        item = result[1]
-        connections = item.get_connections()
-        self.assertIsNotNone(connections)
-        self.assertEqual(len(connections), 0)

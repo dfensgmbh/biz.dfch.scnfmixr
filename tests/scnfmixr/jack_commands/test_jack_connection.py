@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Testing JACK connections. Platform dependent."""
+"""Testing JACK connections via MultiLineTextParser. Platform dependent."""
 
 import re
 import unittest
