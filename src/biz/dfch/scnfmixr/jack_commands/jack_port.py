@@ -63,7 +63,7 @@ class JackPort:
     def get_ports(name: str | None = None) -> list[JackPort]:
         """Retrieves a list of all JACK ports."""
 
-        result : list[JackPort] = []
+        result: list[JackPort] = []
 
         cmd: list[str] = []
         cmd.append(JackPort._JACK_LSP_FULLNAME)
@@ -173,7 +173,7 @@ class JackPort:
 
         return result
 
-    def connect_to(self, other: str) -> bool:
+    def connect_to(self, other: str, verify: bool = False) -> bool:
         """Connects this port to the specified other port.
 
         Args:
@@ -193,10 +193,16 @@ class JackPort:
 
         log.debug("Connecting '%s' to '%s' ...", self.name, other)
 
-        process = Process.start(cmd, True, capture_stdout=False)
+        if not verify:
+            process = Process.start(cmd, wait_on_completion=False)
+            return True
+
+        process = Process.start(cmd, wait_on_completion=True)
         while process.is_running:
             sleep(0.1)
 
+        # DFTODO Why do we try to stop the process, 
+        # if it is not running any more?
         process.stop(force=True)
 
         conns = self.get_connections()
@@ -205,10 +211,14 @@ class JackPort:
 
         result = any(conn.name == other for conn in conns)
 
-        log.info("Connecting '%s' to '%s' %s.",
-                 self.name,
-                 other,
-                 "SUCCEEDED" if result else "FAILED")
+        if result:
+            log.info("Connecting '%s' to '%s' SUCCEEDED.",
+                     self.name,
+                     other)
+        else:
+            log.error("Connecting '%s' to '%s' FAILED.",
+                      self.name,
+                      other)
 
         return result
 
