@@ -20,34 +20,45 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Module test_usb."""
+
 import unittest
 from unittest.mock import mock_open, patch
 
-from env_embedded import Usb
+from biz.dfch.scnfmixr.audio import Usb
 
 
 class TestUsb(unittest.TestCase):
+    """TestUsb"""
 
     # Arrange
     @patch("os.path.isfile", return_value=True)
-    @patch("builtins.open", new_callable=mock_open, read_data="This is a mock file content")
-    def test_get_usbid_returns_usbid(self, mock_builtins_open, mock_os_path_isfile):
+    @patch("builtins.open", new_callable=mock_open,
+           read_data="This is a mock file content")
+    def test_get_usbid_returns_usbid(
+            self,
+            mock_builtins_open,
+            mock_os_path_isfile
+    ):
+        """Testing returned usb_id."""
 
-        expected_idVendor = "1234"
-        expected_idProduct = "ABCD"
+        expected_vendor_id = "1234"
+        expected_product_id = "ABCD"
         mock_builtins_open.side_effect = [
-            mock_open(read_data=expected_idVendor).return_value,
-            mock_open(read_data=expected_idProduct).return_value,
+            mock_open(read_data=expected_vendor_id).return_value,
+            mock_open(read_data=expected_product_id).return_value,
         ]
 
         # Act
         result = Usb.get_usbid("arbitrary-usb-id")
 
         # Assert
-        self.assertEqual(result, f"{expected_idVendor}:{expected_idProduct}")
+        self.assertEqual(result, f"{expected_vendor_id}:{expected_product_id}")
         self.assertEqual(mock_os_path_isfile.call_count, 2)
         self.assertEqual(mock_builtins_open.call_count, 2)
 
     def test_get_usbid_with_empty_id_throws(self):
+        """An empty id throws."""
+
         with self.assertRaises(AssertionError):
             Usb.get_usbid(None)
