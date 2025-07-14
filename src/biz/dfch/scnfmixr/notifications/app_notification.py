@@ -122,7 +122,11 @@ class AppNotification:  # pylint: disable=R0903
                         index+1, count,
                         exc_info=True)
 
-        Thread(target=dispatch, args=(event,), daemon=True).start()
+        if AppNotification.Event.SHUTDOWN != event:
+            Thread(target=dispatch, args=(event,), daemon=True).start()
+            return
+
+        dispatch(event)
 
     def signal_shutdown(self) -> None:
         """Signals a SHUTDOWN event."""
