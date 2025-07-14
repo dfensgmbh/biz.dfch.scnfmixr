@@ -35,7 +35,7 @@ from ..state_event import StateEvent
 class SystemMenu(StateBase):
     """Implements State1 of the application."""
 
-    class Events(StrEnum):
+    class Event(StrEnum):
         """Events for this state."""
 
         MENU = "0"

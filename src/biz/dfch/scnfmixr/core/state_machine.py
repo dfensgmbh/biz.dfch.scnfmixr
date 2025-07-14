@@ -222,185 +222,185 @@ class StateMachine:
         # Define Transitions
         (
             final_state
-            .add_transition(ReturningTrue(FinalState.Events.MENU,
+            .add_transition(ReturningTrue(FinalState.Event.MENU,
                                           final_state))
         )
         (
             system_menu
-            .add_transition(ReturningTrue(SystemMenu.Events.MENU,
+            .add_transition(ReturningTrue(SystemMenu.Event.MENU,
                                           system_menu))
-            .add_transition(ReturningTrue(SystemMenu.Events.SELECT_LANGUAGE,
+            .add_transition(ReturningTrue(SystemMenu.Event.SELECT_LANGUAGE,
                                           select_language))
-            .add_transition(ReturningTrue(SystemMenu.Events.SELECT_RECORD,
+            .add_transition(ReturningTrue(SystemMenu.Event.SELECT_RECORD,
                                           record_menu))
-            .add_transition(ReturningTrue(SystemMenu.Events.DETECT_STORAGE,
+            .add_transition(ReturningTrue(SystemMenu.Event.DETECT_STORAGE,
                                           initialise_rc1))
-            .add_transition(DisconnectingStorage(SystemMenu.Events.DISCONNECT_STORAGE,  # noqa: E501  # pylint: disable=C0301
+            .add_transition(DisconnectingStorage(SystemMenu.Event.DISCONNECT_STORAGE,  # noqa: E501  # pylint: disable=C0301
                                                  system_menu))
-            .add_transition(ReturningTrue(SystemMenu.Events.STOP_SYSTEM,
+            .add_transition(ReturningTrue(SystemMenu.Event.STOP_SYSTEM,
                                           final_state))
-            .add_transition(ReturningTrue(SystemMenu.Events.SET_DATE,
+            .add_transition(ReturningTrue(SystemMenu.Event.SET_DATE,
                                           set_date))
-            .add_transition(ReturningTrue(SystemMenu.Events.SET_TIME,
+            .add_transition(ReturningTrue(SystemMenu.Event.SET_TIME,
                                           set_time))
-            .add_transition(ReturningTrue(SystemMenu.Events.SET_NAME,
+            .add_transition(ReturningTrue(SystemMenu.Event.SET_NAME,
                                           set_name))
         )
         (
             onrecord_menu
-            .add_transition(ReturningTrue(OnRecord.Events.MENU,
+            .add_transition(ReturningTrue(OnRecord.Event.MENU,
                                           system_menu))
-            .add_transition(SettingCuePoint(OnRecord.Events.SET_CUE,
+            .add_transition(SettingCuePoint(OnRecord.Event.SET_CUE,
                                             onrecord_menu))
-            .add_transition(TogglingMute(OnRecord.Events.TOGGLE_MUTE,
+            .add_transition(TogglingMute(OnRecord.Event.TOGGLE_MUTE,
                                          onrecord_menu))
-            .add_transition(StoppingRecording(OnRecord.Events.STOP_RECORDING,
+            .add_transition(StoppingRecording(OnRecord.Event.STOP_RECORDING,
                                               record_menu))
-            .add_transition(ShowingStatus(OnRecord.Events.SHOW_STATUS,
+            .add_transition(ShowingStatus(OnRecord.Event.SHOW_STATUS,
                                           onrecord_menu))
         )
         (
             record_menu
-            .add_transition(ReturningTrue(Record.Events.MENU,
+            .add_transition(ReturningTrue(Record.Event.MENU,
                                           system_menu))
-            .add_transition(StartingRecording(Record.Events.START_RECORDING,
+            .add_transition(StartingRecording(Record.Event.START_RECORDING,
                                               onrecord_menu))
-            .add_transition(MountingStorage(Record.Events.MOUNT_STORAGE,
+            .add_transition(MountingStorage(Record.Event.MOUNT_STORAGE,
                                             final_state))
-            .add_transition(DisconnectingStorage(Record.Events.DISCONNECT_STORAGE,  # noqa: E501  # pylint: disable=C0301
+            .add_transition(DisconnectingStorage(Record.Event.DISCONNECT_STORAGE,  # noqa: E501  # pylint: disable=C0301
                                                  system_menu))
-            .add_transition(StoppingSystem(Record.Events.STOP_SYSTEM,
+            .add_transition(StoppingSystem(Record.Event.STOP_SYSTEM,
                                            final_state))
-            .add_transition(SettingDate(Record.Events.SET_DATE,
+            .add_transition(SettingDate(Record.Event.SET_DATE,
                                         set_date))
         )
         (
             initialise_audio
-            .add_transition(InitialisingAudio(InitialiseAudio.Events.INIT_AUDIO,
+            .add_transition(InitialisingAudio(InitialiseAudio.Event.INIT_AUDIO,
                                               record_menu))
-            .add_transition(InitialisingAudio(InitialiseAudio.Events.SKIP_AUDIO,
+            .add_transition(InitialisingAudio(InitialiseAudio.Event.SKIP_AUDIO,
                                               system_menu))
         )
         (
             set_name
-            .add_transition(ProcessingDigit(SetName.Events.DIGIT_0, set_name))
-            .add_transition(ProcessingDigit(SetName.Events.DIGIT_1, set_name))
-            .add_transition(ProcessingDigit(SetName.Events.DIGIT_2, set_name))
-            .add_transition(ProcessingDigit(SetName.Events.DIGIT_3, set_name))
-            .add_transition(ProcessingDigit(SetName.Events.DIGIT_4, set_name))
-            .add_transition(ProcessingDigit(SetName.Events.DIGIT_5, set_name))
-            .add_transition(ProcessingDigit(SetName.Events.DIGIT_6, set_name))
-            .add_transition(ProcessingDigit(SetName.Events.DIGIT_7, set_name))
-            .add_transition(ProcessingDigit(SetName.Events.DIGIT_8, set_name))
-            .add_transition(ProcessingDigit(SetName.Events.DIGIT_9, set_name))
-            .add_transition(ProcessingDigit(SetName.Events.BACK_SPACE, set_name))  # noqa: E501  ## pylint: disable=C0301
-            .add_transition(ProcessingDigit(SetName.Events.ENTER, set_name))
-            .add_transition(ReturningTrue(SetName.Events.JUMP_NEXT, initialise_audio))  # noqa: E501  ## pylint: disable=C0301
+            .add_transition(ProcessingDigit(SetName.Event.DIGIT_0, set_name))
+            .add_transition(ProcessingDigit(SetName.Event.DIGIT_1, set_name))
+            .add_transition(ProcessingDigit(SetName.Event.DIGIT_2, set_name))
+            .add_transition(ProcessingDigit(SetName.Event.DIGIT_3, set_name))
+            .add_transition(ProcessingDigit(SetName.Event.DIGIT_4, set_name))
+            .add_transition(ProcessingDigit(SetName.Event.DIGIT_5, set_name))
+            .add_transition(ProcessingDigit(SetName.Event.DIGIT_6, set_name))
+            .add_transition(ProcessingDigit(SetName.Event.DIGIT_7, set_name))
+            .add_transition(ProcessingDigit(SetName.Event.DIGIT_8, set_name))
+            .add_transition(ProcessingDigit(SetName.Event.DIGIT_9, set_name))
+            .add_transition(ProcessingDigit(SetName.Event.BACK_SPACE, set_name))  # noqa: E501  ## pylint: disable=C0301
+            .add_transition(ProcessingDigit(SetName.Event.ENTER, set_name))
+            .add_transition(ReturningTrue(SetName.Event.JUMP_NEXT, initialise_audio))  # noqa: E501  ## pylint: disable=C0301
         )
         (
             set_time
-            .add_transition(ProcessingDigit(SetTime.Events.DIGIT_0, set_time))
-            .add_transition(ProcessingDigit(SetTime.Events.DIGIT_1, set_time))
-            .add_transition(ProcessingDigit(SetTime.Events.DIGIT_2, set_time))
-            .add_transition(ProcessingDigit(SetTime.Events.DIGIT_3, set_time))
-            .add_transition(ProcessingDigit(SetTime.Events.DIGIT_4, set_time))
-            .add_transition(ProcessingDigit(SetTime.Events.DIGIT_5, set_time))
-            .add_transition(ProcessingDigit(SetTime.Events.DIGIT_6, set_time))
-            .add_transition(ProcessingDigit(SetTime.Events.DIGIT_7, set_time))
-            .add_transition(ProcessingDigit(SetTime.Events.DIGIT_8, set_time))
-            .add_transition(ProcessingDigit(SetTime.Events.DIGIT_9, set_time))
-            .add_transition(ProcessingDigit(SetTime.Events.BACK_SPACE, set_time))  # noqa: E501  ## pylint: disable=C0301
-            .add_transition(ProcessingDigit(SetTime.Events.ENTER, set_time))
-            .add_transition(ReturningTrue(SetTime.Events.JUMP_NEXT, set_name))
+            .add_transition(ProcessingDigit(SetTime.Event.DIGIT_0, set_time))
+            .add_transition(ProcessingDigit(SetTime.Event.DIGIT_1, set_time))
+            .add_transition(ProcessingDigit(SetTime.Event.DIGIT_2, set_time))
+            .add_transition(ProcessingDigit(SetTime.Event.DIGIT_3, set_time))
+            .add_transition(ProcessingDigit(SetTime.Event.DIGIT_4, set_time))
+            .add_transition(ProcessingDigit(SetTime.Event.DIGIT_5, set_time))
+            .add_transition(ProcessingDigit(SetTime.Event.DIGIT_6, set_time))
+            .add_transition(ProcessingDigit(SetTime.Event.DIGIT_7, set_time))
+            .add_transition(ProcessingDigit(SetTime.Event.DIGIT_8, set_time))
+            .add_transition(ProcessingDigit(SetTime.Event.DIGIT_9, set_time))
+            .add_transition(ProcessingDigit(SetTime.Event.BACK_SPACE, set_time))  # noqa: E501  ## pylint: disable=C0301
+            .add_transition(ProcessingDigit(SetTime.Event.ENTER, set_time))
+            .add_transition(ReturningTrue(SetTime.Event.JUMP_NEXT, set_name))
         )
         (
             set_date
-            .add_transition(ProcessingDigit(SetDate.Events.DIGIT_0, set_date))
-            .add_transition(ProcessingDigit(SetDate.Events.DIGIT_1, set_date))
-            .add_transition(ProcessingDigit(SetDate.Events.DIGIT_2, set_date))
-            .add_transition(ProcessingDigit(SetDate.Events.DIGIT_3, set_date))
-            .add_transition(ProcessingDigit(SetDate.Events.DIGIT_4, set_date))
-            .add_transition(ProcessingDigit(SetDate.Events.DIGIT_5, set_date))
-            .add_transition(ProcessingDigit(SetDate.Events.DIGIT_6, set_date))
-            .add_transition(ProcessingDigit(SetDate.Events.DIGIT_7, set_date))
-            .add_transition(ProcessingDigit(SetDate.Events.DIGIT_8, set_date))
-            .add_transition(ProcessingDigit(SetDate.Events.DIGIT_9, set_date))
-            .add_transition(ProcessingDigit(SetDate.Events.BACK_SPACE, set_date))  # noqa: E501  ## pylint: disable=C0301
-            .add_transition(ProcessingDigit(SetDate.Events.ENTER, set_date))
-            .add_transition(ReturningTrue(SetDate.Events.JUMP_NEXT, set_time))
+            .add_transition(ProcessingDigit(SetDate.Event.DIGIT_0, set_date))
+            .add_transition(ProcessingDigit(SetDate.Event.DIGIT_1, set_date))
+            .add_transition(ProcessingDigit(SetDate.Event.DIGIT_2, set_date))
+            .add_transition(ProcessingDigit(SetDate.Event.DIGIT_3, set_date))
+            .add_transition(ProcessingDigit(SetDate.Event.DIGIT_4, set_date))
+            .add_transition(ProcessingDigit(SetDate.Event.DIGIT_5, set_date))
+            .add_transition(ProcessingDigit(SetDate.Event.DIGIT_6, set_date))
+            .add_transition(ProcessingDigit(SetDate.Event.DIGIT_7, set_date))
+            .add_transition(ProcessingDigit(SetDate.Event.DIGIT_8, set_date))
+            .add_transition(ProcessingDigit(SetDate.Event.DIGIT_9, set_date))
+            .add_transition(ProcessingDigit(SetDate.Event.BACK_SPACE, set_date))  # noqa: E501  ## pylint: disable=C0301
+            .add_transition(ProcessingDigit(SetDate.Event.ENTER, set_date))
+            .add_transition(ReturningTrue(SetDate.Event.JUMP_NEXT, set_time))
         )
         (
             initialise_rc2
-            .add_transition(ReturningTrue(InitialiseRc2.Events.MENU,
+            .add_transition(ReturningTrue(InitialiseRc2.Event.MENU,
                                           system_menu))
-            .add_transition(DetectingRc2(InitialiseRc2.Events.DETECT_DEVICE,
+            .add_transition(DetectingRc2(InitialiseRc2.Event.DETECT_DEVICE,
                                          set_date))
-            .add_transition(SkippingRc2(InitialiseRc2.Events.SKIP_DEVICE,
+            .add_transition(SkippingRc2(InitialiseRc2.Event.SKIP_DEVICE,
                                         set_date))
-            .add_transition(CleaningRc2(InitialiseRc2.Events.CLEAN_DEVICE,
+            .add_transition(CleaningRc2(InitialiseRc2.Event.CLEAN_DEVICE,
                                         initialise_rc2))
         )
         (
             initialise_rc1
-            .add_transition(ReturningTrue(InitialiseRc1.Events.MENU,
+            .add_transition(ReturningTrue(InitialiseRc1.Event.MENU,
                                           system_menu))
-            .add_transition(DetectingRc1(InitialiseRc1.Events.DETECT_DEVICE,
+            .add_transition(DetectingRc1(InitialiseRc1.Event.DETECT_DEVICE,
                                          initialise_rc2))
-            .add_transition(SkippingRc1(InitialiseRc1.Events.SKIP_DEVICE,
+            .add_transition(SkippingRc1(InitialiseRc1.Event.SKIP_DEVICE,
                                         initialise_rc2))
-            .add_transition(CleaningRc1(InitialiseRc1.Events.CLEAN_DEVICE,
+            .add_transition(CleaningRc1(InitialiseRc1.Event.CLEAN_DEVICE,
                                         initialise_rc1))
-            .add_transition(MountingRc1(InitialiseRc1.Events.MOUNT_DEVICE,
+            .add_transition(MountingRc1(InitialiseRc1.Event.MOUNT_DEVICE,
                                         initialise_rc1))
-            .add_transition(UnmountingRc1(InitialiseRc1.Events.UNMOUNT_DEVICE,
+            .add_transition(UnmountingRc1(InitialiseRc1.Event.UNMOUNT_DEVICE,
                                           initialise_rc1))
         )
         (
             initialise_ex2
-            .add_transition(DetectingEx2(InitialiseEx2.Events.DETECT_DEVICE,
+            .add_transition(DetectingEx2(InitialiseEx2.Event.DETECT_DEVICE,
                                          initialise_rc1))
-            .add_transition(SkippingEx2(InitialiseEx2.Events.SKIP_DEVICE,
+            .add_transition(SkippingEx2(InitialiseEx2.Event.SKIP_DEVICE,
                                         initialise_rc1))
         )
         (
             initialise_ex1
-            .add_transition(DetectingEx1(InitialiseEx1.Events.DETECT_DEVICE,
+            .add_transition(DetectingEx1(InitialiseEx1.Event.DETECT_DEVICE,
                                          initialise_ex2))
-            .add_transition(SkippingEx1(InitialiseEx1.Events.SKIP_DEVICE,
+            .add_transition(SkippingEx1(InitialiseEx1.Event.SKIP_DEVICE,
                                         initialise_ex2))
         )
         (
             select_language
             .add_transition(ReturningTrue(
-                SelectLanguage.Events.MENU,
+                SelectLanguage.Event.MENU,
                 system_menu))
             .add_transition(SelectingEnglish(
-                SelectLanguage.Events.SELECT_ENGLISH,
+                SelectLanguage.Event.SELECT_ENGLISH,
                 initialise_ex1))
             .add_transition(SelectingGerman(
-                SelectLanguage.Events.SELECT_GERMAN,
+                SelectLanguage.Event.SELECT_GERMAN,
                 initialise_ex1))
             .add_transition(SelectingFrench(
-                SelectLanguage.Events.SELECT_FRENCH,
+                SelectLanguage.Event.SELECT_FRENCH,
                 initialise_ex1))
             .add_transition(SelectingItalian(
-                SelectLanguage.Events.SELECT_ITALIAN,
+                SelectLanguage.Event.SELECT_ITALIAN,
                 initialise_ex1))
         )
         (
             initialise_hi1
-            .add_transition(DetectingHi1(InitialiseHi1.Events.DETECT_DEVICE,
+            .add_transition(DetectingHi1(InitialiseHi1.Event.DETECT_DEVICE,
                                          select_language))
-            .add_transition(SkippingHi1(InitialiseHi1.Events.SKIP_DEVICE,
+            .add_transition(SkippingHi1(InitialiseHi1.Event.SKIP_DEVICE,
                                         select_language))
         )
         (
             initialise_lcl
-            .add_transition(ReturningTrue(InitialiseLcl.Events.MENU,
+            .add_transition(ReturningTrue(InitialiseLcl.Event.MENU,
                                           system_menu))
-            .add_transition(DetectingLcl(InitialiseLcl.Events.DETECT_DEVICE,
+            .add_transition(DetectingLcl(InitialiseLcl.Event.DETECT_DEVICE,
                                          initialise_hi1))
-            .add_transition(SkippingLcl(InitialiseLcl.Events.SKIP_DEVICE,
+            .add_transition(SkippingLcl(InitialiseLcl.Event.SKIP_DEVICE,
                                         initialise_hi1))
         )
 

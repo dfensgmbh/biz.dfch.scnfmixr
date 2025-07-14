@@ -35,7 +35,7 @@ from ..state_event import StateEvent
 class Record(StateBase):
     """Implements the record menu."""
 
-    class Events(StrEnum):
+    class Event(StrEnum):
         """Events for this state."""
 
         MENU = "0"

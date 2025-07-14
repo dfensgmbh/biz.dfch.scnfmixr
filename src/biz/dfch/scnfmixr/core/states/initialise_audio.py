@@ -38,7 +38,7 @@ class InitialiseAudio(StateBase):
 
     _WAIT_TIMEOUT_MS = 5000
 
-    class Events(StrEnum):
+    class Event(StrEnum):
         """Events for this state."""
 
         MENU = "0"  # Return to the next menu in the hierarchy.
@@ -73,10 +73,10 @@ class InitialiseAudio(StateBase):
                 time.sleep(self._WAIT_TIMEOUT_MS / 1000)
 
             log.info("Enqueueing event: '%s' [%s].",
-                     InitialiseAudio.Events.INIT_AUDIO.name,
-                     InitialiseAudio.Events.INIT_AUDIO.value)
+                     InitialiseAudio.Event.INIT_AUDIO.name,
+                     InitialiseAudio.Event.INIT_AUDIO.value)
 
-            ctx.events.enqueue(InitialiseAudio.Events.INIT_AUDIO)
+            ctx.events.enqueue(InitialiseAudio.Event.INIT_AUDIO)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

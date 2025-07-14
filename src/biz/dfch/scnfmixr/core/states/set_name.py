@@ -36,7 +36,7 @@ from ..state_event import StateEvent
 class SetName(StateBase):
     """Implements Name input processing."""
 
-    class Events(StrEnum):
+    class Event(StrEnum):
         """Events for this state."""
 
         DIGIT_0 = "0"
@@ -82,10 +82,10 @@ class SetName(StateBase):
                      app_ctx.date_time_name_input.get_name())
 
             log.info("Enqueueing event: '%s' [%s].",
-                     SetName.Events.JUMP_NEXT.name,
-                     SetName.Events.JUMP_NEXT.value)
+                     SetName.Event.JUMP_NEXT.name,
+                     SetName.Event.JUMP_NEXT.value)
             ctx.events.clear()
-            ctx.events.enqueue(SetName.Events.JUMP_NEXT)
+            ctx.events.enqueue(SetName.Event.JUMP_NEXT)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

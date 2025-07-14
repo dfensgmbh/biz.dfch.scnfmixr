@@ -24,7 +24,6 @@
 
 from __future__ import annotations
 from enum import StrEnum
-import time
 
 from biz.dfch.logging import log
 
@@ -38,7 +37,7 @@ from ..state_event import StateEvent
 class FinalState(StateBase):
     """Implements FinalState of the application."""
 
-    class Events(StrEnum):
+    class Event(StrEnum):
         """Events for this state."""
 
         MENU = "0"
@@ -70,8 +69,6 @@ class FinalState(StateBase):
         log.debug("Stopping state machine.")
         ctx.signal_stop.set()
         log.info("Stopping state machine RETURNED.")
-
-        time.sleep(15)
 
         log.info("Application context: '%s'.", app_ctx)
 

@@ -37,7 +37,7 @@ from ..state_event import StateEvent
 class SetDate(StateBase):
     """Implements Date input processing."""
 
-    class Events(StrEnum):
+    class Event(StrEnum):
         """Events for this state."""
 
         DIGIT_0 = "0"
@@ -83,10 +83,10 @@ class SetDate(StateBase):
                      app_ctx.date_time_name_input.get_date())
 
             log.info("Enqueueing event: '%s' [%s].",
-                     SetDate.Events.JUMP_NEXT.name,
-                     SetDate.Events.JUMP_NEXT.value)
+                     SetDate.Event.JUMP_NEXT.name,
+                     SetDate.Event.JUMP_NEXT.value)
             ctx.events.clear()
-            ctx.events.enqueue(SetDate.Events.JUMP_NEXT)
+            ctx.events.enqueue(SetDate.Event.JUMP_NEXT)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

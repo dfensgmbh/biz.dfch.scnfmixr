@@ -38,7 +38,7 @@ class InitialiseEx1(StateBase):
     Detects the external input/ouput (phone 1).
     """
 
-    class Events(StrEnum):
+    class Event(StrEnum):
         """Events for this state."""
 
         MENU = "0"  # Return to the next menu in the hierarchy.
@@ -66,10 +66,10 @@ class InitialiseEx1(StateBase):
 
         if not ctx.error:
             log.info("Enqueueing event: '%s' [%s].",
-                     InitialiseEx1.Events.DETECT_DEVICE.name,
-                     InitialiseEx1.Events.DETECT_DEVICE.value)
+                     InitialiseEx1.Event.DETECT_DEVICE.name,
+                     InitialiseEx1.Event.DETECT_DEVICE.value)
 
-            ctx.events.enqueue(InitialiseEx1.Events.DETECT_DEVICE)
+            ctx.events.enqueue(InitialiseEx1.Event.DETECT_DEVICE)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

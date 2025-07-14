@@ -38,7 +38,7 @@ class InitialiseRc2(StateBase):
     Detects the storage device (USB iStorage Memory Stick).
     """
 
-    class Events(StrEnum):
+    class Event(StrEnum):
         """Events for this state."""
 
         MENU = "0"  # Return to the next menu in the hierarchy.
@@ -67,10 +67,10 @@ class InitialiseRc2(StateBase):
 
         if not ctx.error:
             log.info("Enqueueing event: '%s' [%s].",
-                     InitialiseRc2.Events.DETECT_DEVICE.name,
-                     InitialiseRc2.Events.DETECT_DEVICE.value)
+                     InitialiseRc2.Event.DETECT_DEVICE.name,
+                     InitialiseRc2.Event.DETECT_DEVICE.value)
 
-            ctx.events.enqueue(InitialiseRc2.Events.DETECT_DEVICE)
+            ctx.events.enqueue(InitialiseRc2.Event.DETECT_DEVICE)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

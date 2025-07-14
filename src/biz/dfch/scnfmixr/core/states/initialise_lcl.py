@@ -41,7 +41,7 @@ class InitialiseLcl(StateBase):
 
     _WAIT_TIMEOUT_MS = 5000
 
-    class Events(StrEnum):
+    class Event(StrEnum):
         """Events for this state."""
 
         MENU = "0"  # Return to the next menu in the hierarchy.
@@ -77,10 +77,10 @@ class InitialiseLcl(StateBase):
                 time.sleep(self._WAIT_TIMEOUT_MS / 1000)
 
             log.info("Enqueueing event: '%s' [%s].",
-                     InitialiseLcl.Events.DETECT_DEVICE.name,
-                     InitialiseLcl.Events.DETECT_DEVICE.value)
+                     InitialiseLcl.Event.DETECT_DEVICE.name,
+                     InitialiseLcl.Event.DETECT_DEVICE.value)
 
-            ctx.events.enqueue(InitialiseLcl.Events.DETECT_DEVICE)
+            ctx.events.enqueue(InitialiseLcl.Event.DETECT_DEVICE)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

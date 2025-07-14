@@ -38,7 +38,7 @@ from ..state_event import StateEvent
 class SelectLanguage(StateBase):
     """Implements LanguageSelection of the application."""
 
-    class Events(StrEnum):
+    class Event(StrEnum):
         """Events for this state."""
 
         MENU = "0"
@@ -75,13 +75,13 @@ class SelectLanguage(StateBase):
                   app_ctx.ui_parameters.language.value)
         match app_ctx.ui_parameters.language:
             case LanguageCode.EN:
-                ctx.events.enqueue(SelectLanguage.Events.SELECT_ENGLISH)
+                ctx.events.enqueue(SelectLanguage.Event.SELECT_ENGLISH)
             case LanguageCode.DE:
-                ctx.events.enqueue(SelectLanguage.Events.SELECT_GERMAN)
+                ctx.events.enqueue(SelectLanguage.Event.SELECT_GERMAN)
             case LanguageCode.FR:
-                ctx.events.enqueue(SelectLanguage.Events.SELECT_FRENCH)
+                ctx.events.enqueue(SelectLanguage.Event.SELECT_FRENCH)
             case LanguageCode.IT:
-                ctx.events.enqueue(SelectLanguage.Events.SELECT_ITALIAN)
+                ctx.events.enqueue(SelectLanguage.Event.SELECT_ITALIAN)
             case _:
                 pass
 
