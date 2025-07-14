@@ -30,6 +30,8 @@ import time
 from biz.dfch.asyn import Process, ConcurrentQueueT
 from biz.dfch.logging import log
 
+from ..app import ApplicationContext
+from ..notifications import AppNotification
 from ..public.input import KeyboardEventMap
 from .event_handler_base import EventHandlerBase
 
@@ -55,6 +57,18 @@ class KeyboardHandler(EventHandlerBase):
     _thread: Thread
     _process: Process
 
+    def on_shutdown(self, event: AppNotification.Event) -> None:
+        """Process SHUTDOWN notification."""
+
+        if event is None or AppNotification.Event.SHUTDOWN != event:
+            return
+
+        log.debug("on_shutdown: Stopping ...")
+
+        self.dispose()
+
+        log.debug("on_shutdown: Stopping COMPLETED.")
+
     def __init__(self, queue: ConcurrentQueueT[str], device: str):
 
         super().__init__(queue)
@@ -65,6 +79,8 @@ class KeyboardHandler(EventHandlerBase):
         self._is_paused = False
         self._device = device
         self._thread = Thread(target=self._worker, daemon=True)
+
+        ApplicationContext.Factory.get().notification.register(self.on_shutdown)
 
     def dispose(self):
         """Dispose method for stopping child process `evtest`."""

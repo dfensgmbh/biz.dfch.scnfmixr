@@ -20,47 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module audio_output."""
+"""Package scnfmix."""
 
-from ...jack_commands import JackToAlsa
+from .app_notification import AppNotification
 
-from ..audio import AlsaInterfaceInfo
-from ..audio import Constant
-from .audio_input_or_output import AudioInputOrOutput
-from .connection import Connection
-from .output import Output
 
 __all__ = [
-    "AudioOutput",
+    "AppNotification",
 ]
-
-
-# pylint: disable=R0903
-class AudioOutput(AudioInputOrOutput, Output):
-    """Represents an audio output."""
-
-    def __init__(self, name: str, cfg: AlsaInterfaceInfo):
-        super().__init__(
-            Connection.sink(name),
-            cfg)
-
-    def start(self) -> bool:
-
-        self._alsa_jack_base = JackToAlsa(
-            name=self.name,
-            device=Constant.get_raw_device_name(
-                self.cfg.card_id, self.cfg.interface_id
-            ),
-            channels=self.cfg.channel_count,
-            rate=self.cfg.sample_rate.value)
-
-        return self._alsa_jack_base.is_started
-
-    def stop(self) -> bool:
-
-        self._alsa_jack_base.stop()
-
-        return not self._alsa_jack_base.is_started
-
-    def connect_to(self, other) -> bool:
-        ...

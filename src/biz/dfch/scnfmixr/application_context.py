@@ -42,6 +42,8 @@ from .public.audio import AudioDevice, AudioDeviceMap
 from .public.mixer import InputOrOutput
 from .public.ui import UiParameters
 
+from .notifications import AppNotification
+
 
 @final
 class ApplicationContext:  # pylint: disable=R0903,R0902
@@ -81,6 +83,7 @@ class ApplicationContext:  # pylint: disable=R0903,R0902
     _instance = None
     _lock = Lock()
 
+    notification: AppNotification
     ui_parameters: UiParameters
     date_time_name_input: DateTimeNameInput
     audio_device_map: AudioDeviceMap
@@ -99,6 +102,7 @@ class ApplicationContext:  # pylint: disable=R0903,R0902
 
         log.debug("Initialising application context ...")
 
+        self.notification = AppNotification.Factory.get()
         self.ui_parameters = UiParameters()
         self.date_time_name_input = DateTimeNameInput()
         self.audio_device_map = {}

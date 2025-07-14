@@ -28,9 +28,10 @@ from ...jack_commands import AlsaToJack, JackPort
 
 from ..audio import AlsaInterfaceInfo
 from ..audio import Constant
-from ..mixer import Connection
+
 from .audio_input_or_output import AudioInputOrOutput
 from .audio_output import AudioOutput
+from .connection import Connection
 from .input import Input
 from .input_or_output import InputOrOutput
 from .output import Output
@@ -46,7 +47,7 @@ class AudioInput(AudioInputOrOutput, Input):
 
     def __init__(self, name: str, cfg: AlsaInterfaceInfo):
         super().__init__(
-            Connection.sink(name),
+            Connection.source(name),
             cfg)
 
     def start(self) -> bool:
@@ -70,13 +71,13 @@ class AudioInput(AudioInputOrOutput, Input):
     def connect_to(
             self,
             other: InputOrOutput,
-            idx_source: int = 0,
-            idx_sink: int = 0
+            idx: int = 0,
+            idx_other: int = 0
     ) -> bool:
 
         assert other and isinstance(other, Output)
-        assert 0 <= idx_source
-        assert 0 <= idx_sink
+        assert 0 <= idx
+        assert 0 <= idx_other
 
         if isinstance(other, AudioOutput):
 
@@ -84,7 +85,7 @@ class AudioInput(AudioInputOrOutput, Input):
             sinks = other._alsa_jack_base.get_ports()
 
             # Connect from all to all.
-            if 0 == idx_source and 0 == idx_sink:
+            if 0 == idx and 0 == idx_other:
 
                 if len(sources) != len(sinks):
                     log.warning("Port count differs. ['%s': %s] [%s: %s]",
@@ -106,31 +107,34 @@ class AudioInput(AudioInputOrOutput, Input):
                     )
 
             # Connect from all to specific other.
-            elif 0 == idx_source and 0 != idx_sink:
+            elif 0 == idx and 0 != idx_other:
 
                 result = self._connect_source_all_sink_one(
                     sources,
-                    other.name, sinks, idx_sink
+                    other.name, sinks, idx_other
                 )
 
             # Connect from specific to all other.
-            elif 0 != idx_source and 0 == idx_sink:
+            elif 0 != idx and 0 == idx_other:
 
                 result = self._connect_source_one_sink_all(
                     self.name,
-                    sources, idx_source, sinks
+                    sources, idx, sinks
                 )
 
             # Connect from specific to specific other.
-            elif 0 != idx_source and 0 != idx_sink:
+            elif 0 != idx and 0 != idx_other:
 
                 result = self._connect_source_one_sink_one(
                     self.name,
-                    sources, idx_source, other.name, sinks, idx_sink)
+                    sources, idx, other.name, sinks, idx_other)
             else:
                 raise NotImplementedError(type(other))
 
             return result
+
+        raise NotImplementedError(
+            "Only AudioOutput is currently supported.")
 
     def _connect_source_all_sink_all(
             self,

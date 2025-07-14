@@ -24,6 +24,7 @@
 
 from __future__ import annotations
 from enum import StrEnum
+import time
 
 from biz.dfch.logging import log
 
@@ -58,11 +59,23 @@ class FinalState(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        log.info("Stopping state machine.")
-        ctx.signal_stop.set()
-
         app_ctx = ApplicationContext.Factory.get()
-        log.info("App ctx: '%s'.", app_ctx)
+
+        log.debug("Initiating application termination ...")
+
+        log.debug("Signalling stop event ...")
+        app_ctx.notification.signal_shutdown()
+        log.info("Signalling stop event COMPLETED.")
+
+        log.debug("Stopping state machine.")
+        ctx.signal_stop.set()
+        log.info("Stopping state machine RETURNED.")
+
+        time.sleep(15)
+
+        log.info("Application context: '%s'.", app_ctx)
+
+        log.info("Initiating application termination COMPLETED.")
 
         return True
 

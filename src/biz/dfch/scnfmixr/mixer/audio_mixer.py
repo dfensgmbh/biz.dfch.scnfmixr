@@ -31,12 +31,13 @@ from typing import Self
 from typing import overload
 
 from biz.dfch.logging import log
+from ..app import ApplicationContext
+from ..notifications import AppNotification
 from ..public.mixer import Connection
 from ..public.mixer import Input
 from ..public.mixer import InputOrOutput
 
 from ..public.audio import AudioDevice
-from ..public.mixer import Constant
 
 
 __all__ = [
@@ -122,6 +123,12 @@ class AudioMixerConfiguration:
         self.conns = set()
         self.xputs = set()
 
+    @staticmethod
+    def get_default() -> Self:
+        """Returns a default configuration."""
+
+        return AudioMixerConfiguration()
+
     def get_xput(self, name: str) -> InputOrOutput:
         """Gets an input or output based on its name from the configuration
         set."""
@@ -138,7 +145,7 @@ class AudioMixerConfiguration:
         """Gets an input based on its name from the configuration set."""
 
         assert name and name.strip()
-        actual_name = f"{name}{Constant.JACK_INFIX}{Constant.JACK_INPUT}"
+        actual_name = Connection.source(name)
         assert any(e.name == actual_name for e in self.xputs)
 
         result = self.get_xput(actual_name)
@@ -149,7 +156,7 @@ class AudioMixerConfiguration:
         """Gets an output based on its name from the configuration set."""
 
         assert name and name.strip()
-        actual_name = f"{name}{Constant.JACK_INFIX}{Constant.JACK_OUTPUT}"
+        actual_name = Connection.sink(name)
         assert any(e.name == actual_name for e in self.xputs)
 
         result = self.get_xput(actual_name)
@@ -161,7 +168,7 @@ class AudioMixerConfiguration:
 
         assert value is not None
         assert value.name and value.name.strip()
-        assert not any(e.name == value.name for e in self.xputs)
+        assert not any(e.name == value.name for e in self.xputs), value
 
         log.debug("Adding object '%s' ...", value.name)
 
@@ -247,18 +254,33 @@ class AudioMixer:
 
             return AudioMixer.Factory.__instance
 
+    def on_shutdown(self, event: AppNotification.Event):
+        """Process SHUTDOWN notification."""
+
+        if event is None or AppNotification.Event.SHUTDOWN != event:
+            return
+
+        log.info("on_shutdown: Stopping ...")
+
+        result = self.stop()
+
+        log.info("on_shutdown: Stopping result: %s",
+                 result)
+
     def __init__(self):
 
         if not AudioMixer.Factory._sync_root.locked():
             raise RuntimeError("Private ctor. Use Factory instead.")
 
-        log.debug("Initialising AudioMixer ...")
+        log.debug("Initialising ...")
 
         self._state = AudioMixerState.STOPPED
         self._routing_matrix = RoutingMatrix.Factory.get()
         self._cfg = None
 
-        log.info("Initialising AudioMixer SUCCEEDED.")
+        ApplicationContext.Factory.get().notification.register(self.on_shutdown)
+
+        log.info("Initialising SUCCEEDED.")
 
     @overload
     def initialise(self) -> bool:
@@ -268,7 +290,12 @@ class AudioMixer:
     def initialise(self, cfg: AudioMixerConfiguration) -> bool:
         ...
 
-    def initialise(self, cfg: AudioMixerConfiguration | None) -> bool:
+    def initialise(
+            self,
+            cfg: AudioMixerConfiguration | None = (
+                AudioMixerConfiguration.get_default()
+            )
+    ) -> bool:
         """Initialise the audio mixer. If the mixer has already been
         initialised, it will be re-initialised. Existing connections will be
         removed. Audio will temporarily stop.
@@ -282,9 +309,12 @@ class AudioMixer:
                 otherwise.
         """
 
-        assert cfg is not None or isinstance(cfg, AudioMixerConfiguration)
+        assert cfg is None or isinstance(cfg, AudioMixerConfiguration)
 
-        if self._cfg is not None:
+        if cfg is None:
+            cfg = AudioMixerConfiguration()
+
+        if self.is_started:
             result = self.stop()
             assert result
 
@@ -324,7 +354,10 @@ class AudioMixer:
 
         result = False
 
+        log.debug("Starting ...")
+
         if self._cfg is None:
+            log.error("No configuration exists.")
             return result
 
         if AudioMixerState.STOPPED != self._state:
@@ -380,6 +413,12 @@ class AudioMixer:
                      conn.this, conn.idx_this, conn.other, conn.idx_other)
 
         self._state = AudioMixerState.STARTED
+        result = AudioMixerState.STARTED == self._state
+
+        if result:
+            log.info("Starting SUCCEEDED.")
+        else:
+            log.error("Starting FAILED.")
 
         return result
 
@@ -392,6 +431,8 @@ class AudioMixer:
         """
 
         result = False
+
+        log.debug("Stopping ...")
 
         if AudioMixerState.STARTED != self._state:
             return result
@@ -413,6 +454,12 @@ class AudioMixer:
                 return False
 
         self._state = AudioMixerState.STOPPED
+        result = AudioMixerState.STOPPED == self._state
+
+        if result:
+            log.info("Stopping SUCCEEDED.")
+        else:
+            log.error("Stopping FAILED.")
 
         return result
 
