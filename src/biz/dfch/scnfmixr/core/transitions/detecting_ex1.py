@@ -66,7 +66,7 @@ class DetectingEx1(TransitionBase):
             audio_output = AudioOutput(device.name, device_info.sink)
             app_ctx.xputs.add(audio_input)
             app_ctx.xputs.add(audio_output)
-            
+
             return True
 
         except Exception as ex:  # pylint: disable=W0718
