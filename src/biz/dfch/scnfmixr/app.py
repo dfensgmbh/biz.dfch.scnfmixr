@@ -32,6 +32,8 @@ from biz.dfch.version import Version
 from .application_context import ApplicationContext
 from .args import Arguments
 from .core import StateMachine
+from .mixer import AudioMixer
+from .mixer import AudioMixerConfiguration
 from .public.input import InputDevice
 from .public.audio import AudioDevice, Format, FileFormat
 from .public.storage.storage_device import StorageDevice
@@ -124,6 +126,9 @@ class App:
 
         if args.service:
             log.info("Arg 'startup' detected.")
+
+            cfg = AudioMixerConfiguration.get_default()
+            AudioMixer.Factory.get().initialise(cfg)
 
             fsm = StateMachine()
             fsm.start()
