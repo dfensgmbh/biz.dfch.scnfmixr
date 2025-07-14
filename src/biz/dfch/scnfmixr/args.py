@@ -117,6 +117,21 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
             default=LanguageCode.DEFAULT.name,
             help="Select the user interface language."
         )
+        parser.add_argument(
+            "--use-current-date", "-cd",
+            action="store_true",
+            help="Use current date."
+        )
+        parser.add_argument(
+            "--use-current-time", "-ct",
+            action="store_true",
+            help="Use current time."
+        )
+        parser.add_argument(
+            "--use-random-name", "-rn",
+            action="store_true",
+            help="Use random name."
+        )
 
         # Audio format and audio parameters.
         parser.add_argument(

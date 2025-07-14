@@ -23,6 +23,7 @@
 """Main app module."""
 
 import time
+import datetime
 
 from biz.dfch.i18n import LanguageCode
 from biz.dfch.logging import log
@@ -88,6 +89,15 @@ class App:
             InputDevice.HI3: args.HI3,
         }
         app_ctx.ui_parameters.language = LanguageCode[args.language]
+
+        now = datetime.datetime.now()
+        if args.use_current_date:
+            app_ctx.date_time_name_input.set_date(now.date())
+        if args.use_current_time:
+            current_time = datetime.time(now.time().hour, now.time().minute)
+            app_ctx.date_time_name_input.set_time(current_time)
+        if args.use_random_name:
+            app_ctx.date_time_name_input.set_pseudo_random_name()
 
         log.info("Snd map: '%s'.", app_ctx.audio_device_map)
         log.info("Sto map: '%s'.", app_ctx.storage_device_map)

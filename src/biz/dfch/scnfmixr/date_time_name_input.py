@@ -23,6 +23,8 @@
 """Module date_time_name_input."""
 
 import datetime
+import random
+import string
 
 
 class DateTimeNameInput():
@@ -66,36 +68,63 @@ class DateTimeNameInput():
         return str(result)
 
     def get_datetime(self) -> datetime:
-        """Returns the recorded date and time."""
-        return datetime.datetime(
-            self._date.year, self._date.month, self._date.day,
-            self._time.hour, self._time.minute)
+        """Returns the date and time."""
+        return datetime.datetime.combine(self._date, self._time)
 
     def get_date(self) -> datetime.date:
-        """Returns the recorded date."""
+        """Returns the date."""
         return self._date
 
+    def set_date(self, value: datetime.date) -> None:
+        """Sets the date."""
+
+        assert value is not None and isinstance(value, datetime.date)
+
+        self._date = value
+
     def get_time(self) -> datetime.time:
-        """Returns the recorded time."""
+        """Returns the time."""
         return self._time
 
+    def set_time(self, value: datetime.time) -> None:
+        """Sets the time."""
+
+        assert value is not None and isinstance(value, datetime.time)
+
+        self._time = value
+
     def get_name(self) -> datetime.time:
-        """Returns the recorded name."""
+        """Returns the name."""
         return self._name
+
+    def set_name(self, value: str) -> None:
+        """Sets the name."""
+
+        assert value and value.strip()
+
+        self._name = value
+
+    def set_pseudo_random_name(self) -> None:
+        """Sets a pseudo random name."""
+
+        pool = string.ascii_lowercase + string.digits
+        value = ''.join(random.choices(pool, k=8))
+
+        self._name = value
 
     @property
     def is_valid_date(self) -> bool:
-        """Determines whether the recorded date is a valid date."""
+        """Determines whether the date is a valid date."""
         return bool(self._date)
 
     @property
     def is_valid_time(self) -> bool:
-        """Determines whether the recorded time is a valid time."""
+        """Determines whether the time is a valid time."""
         return bool(self._time)
 
     @property
     def is_valid_name(self) -> bool:
-        """Determines whether the recorded name is a valid name."""
+        """Determines whether the name is a valid name."""
         return bool(self._name)
 
     def reset(self) -> None:
