@@ -136,7 +136,7 @@ class JackPort:
             for item in JackConnection.get_connections(self.name)
         ]
 
-        log.info("Retrieving connections to '%s' [%s] SUCCEEDED. %s", self.name,
+        log.info("Retrieving connections to '%s' [%s] OK. %s", self.name,
                  len(result), result)
 
         return result
@@ -169,7 +169,7 @@ class JackPort:
 
         log.debug("Disconnecting all from '%s' %s.",
                   self.name,
-                  "SUCCEEDED" if result else "FAILED")
+                  "OK" if result else "FAILED")
 
         return result
 
@@ -201,7 +201,7 @@ class JackPort:
         while process.is_running:
             sleep(0.1)
 
-        # DFTODO Why do we try to stop the process, 
+        # DFTODO Why do we try to stop the process,
         # if it is not running any more?
         process.stop(force=True)
 
@@ -212,7 +212,7 @@ class JackPort:
         result = any(conn.name == other for conn in conns)
 
         if result:
-            log.info("Connecting '%s' to '%s' SUCCEEDED.",
+            log.info("Connecting '%s' to '%s' OK.",
                      self.name,
                      other)
         else:
@@ -257,6 +257,6 @@ class JackPort:
         log.info("Disconnecting '%s' from '%s' %s.",
                  self.name,
                  other,
-                 "SUCCEEDED" if result else "FAILED")
+                 "OK" if result else "FAILED")
 
         return result

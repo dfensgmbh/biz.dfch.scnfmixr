@@ -65,7 +65,7 @@ class MountingRc1(TransitionBase):
         result = DeviceOperations(device_info).mount()
 
         if result:
-            log.info("Mounting storage device '%s' SUCCEEDED.",
+            log.info("Mounting storage device '%s' OK.",
                      StorageDevice.RC1.name)
         else:
             log.error("Mounting storage device '%s' FAILED.",

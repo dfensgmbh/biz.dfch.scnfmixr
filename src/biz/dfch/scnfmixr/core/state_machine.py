@@ -158,7 +158,7 @@ class StateMachine:
 
                     if result:
                         log.info(
-                            "Invocation of event '%s' SUCCEEDED. [is_started=%s]",  # noqa: E501  # pylint: disable=C0301
+                            "Invocation of event '%s' OK. [is_started=%s]",  # noqa: E501  # pylint: disable=C0301
                             event,
                             self._fsm.is_started)
                     else:
@@ -413,7 +413,7 @@ class StateMachine:
         # for line in self._fsm.visualise():
         #     log.debug(line)
 
-        log.info("Initialising state machine SUCCEEDED.")
+        log.info("Initialising state machine OK.")
 
     def invoke(self, event: str) -> None:
         """Invoke an event on the state machine."""

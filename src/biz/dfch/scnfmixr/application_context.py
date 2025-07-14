@@ -113,7 +113,7 @@ class ApplicationContext:  # pylint: disable=R0903,R0902
         self.storage_configuration_map = {}
         self.xputs = set()
 
-        log.info("Initialising application context SUCCEEDED. [%s]", self)
+        log.info("Initialising application context OK. [%s]", self)
 
     def __str__(self) -> str:
         result = {

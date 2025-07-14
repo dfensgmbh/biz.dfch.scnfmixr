@@ -66,7 +66,7 @@ class UnmountingRc1(TransitionBase):
             device_info).unmount()
 
         if result:
-            log.info("Unmounting storage device '%s' SUCCEEDED.",
+            log.info("Unmounting storage device '%s' OK.",
                      StorageDevice.RC1.name)
         else:
             log.error("Unmounting storage device '%s' FAILED.",

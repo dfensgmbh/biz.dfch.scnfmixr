@@ -171,7 +171,7 @@ class AudioDeviceInfo:  # pylint: disable=R0903
             bit_depth=Format(playback_interface.format).get_bit_depth(),
         )
 
-        log.info("Detecting device on '%s' SUCCEEDED.", self.actual_usb_id)
+        log.info("Detecting device on '%s' OK.", self.actual_usb_id)
 
     def __str__(self) -> str:
 

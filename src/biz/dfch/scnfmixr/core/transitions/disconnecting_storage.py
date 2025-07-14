@@ -76,7 +76,7 @@ class DisconnectingStorage(TransitionBase):
 
                 result = result and op.unmount()
                 if result:
-                    log.info("Unmounting storage device '%s' SUCCEEDED.",
+                    log.info("Unmounting storage device '%s' OK.",
                              device.name)
                 else:
                     log.error("Unmounting storage device '%s' FAILED.",
@@ -85,7 +85,7 @@ class DisconnectingStorage(TransitionBase):
 
             result = result and op.poweroff()
             if result:
-                log.info("Powering off storage device '%s' SUCCEEDED.",
+                log.info("Powering off storage device '%s' OK.",
                          device.name)
             else:
                 log.error("Powering off storage device '%s' FAILED.",

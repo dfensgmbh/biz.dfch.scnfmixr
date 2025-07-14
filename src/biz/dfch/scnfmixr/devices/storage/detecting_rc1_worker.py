@@ -80,7 +80,7 @@ class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
                 cmd, wait_on_completion=True, capture_stdout=True)
 
             text = process.stdout
-            log.info("Retrieving udevadm info of device '%s' SUCCEEDED. [%s]",
+            log.info("Retrieving udevadm info of device '%s' OK. [%s]",
                      full_name, len(text))
 
             log.debug("Parsing udevadm info of device '%s' ...",
@@ -89,7 +89,7 @@ class DetectingRc1Worker(DetectingRcWorkerBase):  # pylint: disable=R0903
             visitor.visit(text)
 
             result = visitor.get_result()
-            log.info("Parsing udevadm info of device '%s' SUCCEEDED. [%s]",
+            log.info("Parsing udevadm info of device '%s' OK. [%s]",
                      full_name, result)
 
             if (

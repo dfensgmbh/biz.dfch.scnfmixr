@@ -97,7 +97,7 @@ class AudioPlayer:
                         self._process = None
 
                         log.info(
-                            "Cancelling currently playing item [%s] SUCCEEDED.",
+                            "Cancelling currently playing item [%s] OK.",
                             pid)
 
                     self._do_cancel_item = False

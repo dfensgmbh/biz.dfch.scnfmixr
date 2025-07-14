@@ -247,7 +247,7 @@ class Fsm:
             log.info("Invoking 'on_enter' for '%s' RETURNED.",
                      type(self._current_state).__name__)
 
-            log.info("Starting state machine SUCCEEDED.")
+            log.info("Starting state machine OK.")
 
         if ctx.signal_stop.is_set():
             ctx.signal_stop.clear()
@@ -286,7 +286,7 @@ class Fsm:
 
             self._is_started = False
 
-            log.info("Stopping state machine SUCCEEDED.")
+            log.info("Stopping state machine OK.")
 
             return True
 
@@ -313,7 +313,7 @@ class Fsm:
 
             self.start()
 
-        log.info("Restarting state machine SUCCEEDED.")
+        log.info("Restarting state machine OK.")
 
         return result
 
@@ -432,7 +432,7 @@ class Fsm:
 
                 return result
 
-            log.info("Invoking transition '%s' for '%s' SUCCEEDED.",
+            log.info("Invoking transition '%s' for '%s' OK.",
                      type(transition).__name__,
                      type(self._current_state).__name__)
 
