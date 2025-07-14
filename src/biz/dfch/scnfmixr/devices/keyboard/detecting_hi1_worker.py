@@ -61,8 +61,15 @@ class DetectingHi1Worker(InterfaceDetectorBase):
                 value specified in the ctor call.
         """
 
+        # Note: as it seems, the input device is always "event5". So, process
+        # it first, to speed things up in test.
         candidates = sorted(glob.glob(self._DEV_INPUT_EVENT_PATH_GLOB),
                             key=lambda e: (len(e), e))
+        device = next((e for e in candidates if e.endswith("event5")), None)
+        if device:
+            candidates.remove(device)
+            candidates.insert(0, device)
+
         for candidate in candidates:
 
             cmd: list[str] = [
