@@ -62,10 +62,6 @@ class InitialisingAudio(TransitionBase):
         mixer = AudioMixer.Factory.get()
         assert mixer
 
-        info_lcl = self._app_ctx.audio_configuration_map.get(
-            AudioDevice.LCL, None)
-        assert info_lcl is not None
-
         cfg = AudioMixerConfiguration()
 
         for obj in self._app_ctx.xputs:
@@ -92,7 +88,5 @@ class InitialisingAudio(TransitionBase):
         ))
 
         mixer.initialise(cfg)
-        # time.sleep(15)
-        # mixer.stop()
 
         return True

@@ -405,6 +405,7 @@ class StateMachine:
         )
 
         self._ctx = ExecutionContext(None, None, events=self._queue)
+        # DFTODO - adjust to something dynamic.
         ui = UserInteractionAudio("system")
         self._fsm = Fsm(initialise_lcl, self._ctx, ui)
         self._fsm.start()
