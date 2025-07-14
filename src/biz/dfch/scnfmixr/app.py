@@ -99,8 +99,8 @@ class App:
             # pylint: disable=C0415
             from biz.dfch.asyn import ConcurrentQueueT
             from .core.transitions.detecting_hi1 import DetectingHi1
-            from .ui import ExecutionContext
-            from .ui import StateBase
+            from .core.fsm import ExecutionContext
+            from .core.fsm import StateBase
 
             fsm = StateMachine()
 

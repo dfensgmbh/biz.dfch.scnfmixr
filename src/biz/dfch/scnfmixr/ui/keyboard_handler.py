@@ -22,6 +22,7 @@
 
 """Module defining the class keyboard input handling."""
 
+from __future__ import annotations
 import re
 from threading import Thread
 import time

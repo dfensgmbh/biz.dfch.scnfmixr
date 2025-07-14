@@ -44,10 +44,11 @@ from .public.ui import UiParameters
 
 
 @final
-class ApplicationContext:  # pylint: disable=R0903
+class ApplicationContext:  # pylint: disable=R0903,R0902
     """Global ApplicationContext.
 
     Attributes:
+        notification (AppNotification): Notification facility.
         ui_parameters (UiParameters): Contains UI parameters of the
             application.
         date_time_name_input (DateTimeNameInput): Date, time and track
