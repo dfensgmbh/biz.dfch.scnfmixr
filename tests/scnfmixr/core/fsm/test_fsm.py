@@ -114,6 +114,14 @@ class TestFsm(unittest.TestCase):
         self.assertIsNotNone(sut)
         self.assertEqual(TestFsm.ArbitraryState1, type(sut.current_state))
 
+        # Valid event, but will fail, as fsm is not started
+        result = sut.invoke("0")
+        self.assertFalse(result)
+
+        # Start fsm
+        result = sut.start()
+        self.assertTrue(result)
+
         # Invalid event, will stay in same state.
         result = sut.invoke("9")
         self.assertFalse(result)
