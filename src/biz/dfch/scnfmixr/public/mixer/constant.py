@@ -20,32 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package mixer."""
+"""Package constant."""
 
-from __future__ import annotations
+from enum import StrEnum
 
-from .audio_input import AudioInput
-from .audio_input_or_output import AudioInputOrOutput
-from .audio_output import AudioOutput
-from .connection import Connection
-from .constant import Constant
-from .input_or_output import InputOrOutput
-from .input import Input
-from .output import Output
-from .file_input_or_output import FileInputOrOutput
-from .file_input import FileInput
-from .file_output import FileOutput
 
-__all__ = [
-    "Connection",
-    "Constant",
-    "InputOrOutput",
-    "Input",
-    "Output",
-    "FileInputOrOutput",
-    "FileInput",
-    "FileOutput",
-    "AudioInputOrOutput",
-    "AudioInput",
-    "AudioOutput",
-]
+class Constant(StrEnum):
+    """Mixer port constants."""
+
+    JACK_INFIX = "-"
+    JACK_INPUT = "I"
+    JACK_OUTPUT = "O"

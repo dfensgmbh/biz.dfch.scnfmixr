@@ -26,7 +26,9 @@ from biz.dfch.logging import log
 
 from ...jack_commands import AlsaToJack, JackPort
 
-from ..audio import AlsaInterfaceInfo, Constant
+from ..audio import AlsaInterfaceInfo
+from ..audio import Constant
+from ..mixer import Connection
 from .audio_input_or_output import AudioInputOrOutput
 from .audio_output import AudioOutput
 from .input import Input
@@ -44,14 +46,16 @@ class AudioInput(AudioInputOrOutput, Input):
 
     def __init__(self, name: str, cfg: AlsaInterfaceInfo):
         super().__init__(
-            f"{name}{Constant.JACK_INFIX}{Constant.JACK_INPUT}",
+            Connection.sink(name),
             cfg)
 
     def start(self) -> bool:
 
         self._alsa_jack_base = AlsaToJack(
             name=self.name,
-            device=f"hw:{self.cfg.card_id},{self.cfg.interface_id}",
+            device=Constant.get_raw_device_name(
+                self.cfg.card_id, self.cfg.interface_id
+            ),
             channels=self.cfg.channel_count,
             rate=self.cfg.sample_rate.value)
 

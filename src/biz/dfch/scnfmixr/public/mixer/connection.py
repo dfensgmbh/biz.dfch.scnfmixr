@@ -20,32 +20,44 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package mixer."""
+"""Module connection_parameters."""
 
-from __future__ import annotations
+from dataclasses import dataclass
 
-from .audio_input import AudioInput
-from .audio_input_or_output import AudioInputOrOutput
-from .audio_output import AudioOutput
-from .connection import Connection
 from .constant import Constant
-from .input_or_output import InputOrOutput
-from .input import Input
-from .output import Output
-from .file_input_or_output import FileInputOrOutput
-from .file_input import FileInput
-from .file_output import FileOutput
 
-__all__ = [
-    "Connection",
-    "Constant",
-    "InputOrOutput",
-    "Input",
-    "Output",
-    "FileInputOrOutput",
-    "FileInput",
-    "FileOutput",
-    "AudioInputOrOutput",
-    "AudioInput",
-    "AudioOutput",
-]
+
+@dataclass(frozen=True)
+class Connection:
+    """Parameters for a routing entry."""
+
+    this: str
+    other: str
+    idx_this: int = 0
+    idx_other: int = 0
+
+    @staticmethod
+    def source(value: str) -> str:
+        """Gets the source name of the specified value."""
+
+        assert value and value.strip()
+
+        input_suffix = f"{Constant.JACK_INFIX}{Constant.JACK_INPUT}"
+
+        if value.endswith(input_suffix):
+            return value
+
+        return f"{value}{input_suffix}"
+
+    @staticmethod
+    def sink(value: str) -> str:
+        """Gets the sink name of the specified value."""
+
+        assert value and value.strip()
+
+        output_suffix = f"{Constant.JACK_INFIX}{Constant.JACK_OUTPUT}"
+
+        if value.endswith(output_suffix):
+            return value
+
+        return f"{value}{output_suffix}"

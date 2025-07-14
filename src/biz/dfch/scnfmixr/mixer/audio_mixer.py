@@ -31,11 +31,12 @@ from typing import Self
 from typing import overload
 
 from biz.dfch.logging import log
+from ..public.mixer import Connection
 from ..public.mixer import Input
 from ..public.mixer import InputOrOutput
 
 from ..public.audio import AudioDevice
-from ..public.audio import Constant
+from ..public.mixer import Constant
 
 
 __all__ = [
@@ -109,21 +110,12 @@ class ChannelStripName(StrEnum):
     LIM = auto()
 
 
-@dataclass(frozen=True)
-class ConnectionParameters:
-    """Parameters for a routing entry."""
-    this: str
-    other: str
-    idx_this: int = 0
-    idx_other: int = 0
-
-
 class AudioMixerConfiguration:
     """The AudioMixer configuration."""
 
     xputs: set[InputOrOutput]
 
-    conns: set[ConnectionParameters]
+    conns: set[Connection]
 
     def __init__(self):
 
@@ -193,7 +185,7 @@ class AudioMixerConfiguration:
 
         log.info("Removing object '%s' SUCCEEDED [%s].", name, len(self.xputs))
 
-    def add_connection(self, params: ConnectionParameters) -> Self:
+    def add_connection(self, params: Connection) -> Self:
         """Adds a connection request."""
 
         assert params is not None

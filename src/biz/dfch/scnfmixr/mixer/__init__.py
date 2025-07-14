@@ -23,12 +23,12 @@
 """Package mixer."""
 
 from .audio_mixer import AudioMixer
+from .audio_mixer import AudioMixerState
 from .audio_mixer import AudioMixerConfiguration
-from .audio_mixer import ConnectionParameters
 
 
 __all__ = [
     "AudioMixer",
+    "AudioMixerState",
     "AudioMixerConfiguration",
-    "ConnectionParameters",
 ]

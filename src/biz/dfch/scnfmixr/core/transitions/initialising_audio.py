@@ -22,12 +22,10 @@
 
 """Module initialising_audio."""
 
-import time
-
 from ...app import ApplicationContext
 from ...mixer import AudioMixer
 from ...mixer import AudioMixerConfiguration
-from ...mixer import ConnectionParameters
+from ...public.mixer import Connection
 from ...public.audio import AudioDevice
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
@@ -73,24 +71,24 @@ class InitialisingAudio(TransitionBase):
         for obj in self._app_ctx.xputs:
             cfg.add_xput(obj)
 
-        cfg.add_connection(ConnectionParameters(
-            this=f"{AudioDevice.LCL.name}-I",
-            other=f"{AudioDevice.EX1.name}-O",
-        )).add_connection(ConnectionParameters(
-            this=f"{AudioDevice.LCL.name}-I",
-            other=f"{AudioDevice.EX2.name}-O"
-        )).add_connection(ConnectionParameters(
-            this=f"{AudioDevice.EX1.name}-I",
-            other=f"{AudioDevice.LCL.name}-O"
-        )).add_connection(ConnectionParameters(
-            this=f"{AudioDevice.EX1.name}-I",
-            other=f"{AudioDevice.EX2.name}-O"
-        )).add_connection(ConnectionParameters(
-            this=f"{AudioDevice.EX2.name}-I",
-            other=f"{AudioDevice.LCL.name}-O"
-        )).add_connection(ConnectionParameters(
-            this=f"{AudioDevice.EX2.name}-I",
-            other=f"{AudioDevice.EX1.name}-O"
+        cfg.add_connection(Connection(
+            this=Connection.source(AudioDevice.LCL.name),
+            other=Connection.sink(AudioDevice.EX1.name),
+        )).add_connection(Connection(
+            this=Connection.source(AudioDevice.LCL.name),
+            other=Connection.sink(AudioDevice.EX2.name),
+        )).add_connection(Connection(
+            this=Connection.source(AudioDevice.EX1.name),
+            other=Connection.sink(AudioDevice.LCL.name),
+        )).add_connection(Connection(
+            this=Connection.source(AudioDevice.EX1.name),
+            other=Connection.sink(AudioDevice.EX2.name),
+        )).add_connection(Connection(
+            this=Connection.source(AudioDevice.EX2.name),
+            other=Connection.sink(AudioDevice.LCL.name),
+        )).add_connection(Connection(
+            this=Connection.source(AudioDevice.EX2.name),
+            other=Connection.sink(AudioDevice.EX1.name),
         ))
 
         mixer.initialise(cfg)
