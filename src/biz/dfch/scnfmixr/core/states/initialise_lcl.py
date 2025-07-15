@@ -53,9 +53,9 @@ class InitialiseLcl(StateBase):
 
         super().__init__(
             info_enter=UiEventInfo(
-                StateEvent.DETECT_LCL_ENTER, True),
+                StateEvent.INITIALISE_LCL_ENTER, True),
             info_leave=UiEventInfo(
-                StateEvent.DETECT_LCL_LEAVE, True)
+                StateEvent.INITIALISE_LCL_LEAVE, True)
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

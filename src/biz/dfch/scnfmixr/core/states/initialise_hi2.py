@@ -50,9 +50,9 @@ class InitialiseHi2(StateBase):
 
         super().__init__(
             info_enter=UiEventInfo(
-                StateEvent.DETECT_HI2_ENTER, True),
+                StateEvent.INITIALISE_HI2_ENTER, True),
             info_leave=UiEventInfo(
-                StateEvent.DETECT_HI2_LEAVE, True)
+                StateEvent.INITIALISE_HI2_LEAVE, True)
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

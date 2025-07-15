@@ -40,9 +40,9 @@ class StoppingRecording(TransitionBase):
         super().__init__(
             event,
             info_enter=UiEventInfo(
-                TransitionEvent.STOPPING_RECORDING_ENETR, False),
+                TransitionEvent.STOPPING_RECORDING_ENTER, False),
             info_leave=UiEventInfo(
-                TransitionEvent.STOPPING_RECORDING_ENETR, False),
+                TransitionEvent.STOPPING_RECORDING_LEAVE, False),
             target_state=target)
 
     def invoke(self, _):
