@@ -422,7 +422,7 @@ class AudioMixer:
         if AudioMixerState.STOPPED != self._state:
             return result
 
-        self.signal(AudioMixer.Event.STARTING)
+        self._set_state(AudioMixerState.STARTING)
 
         for source in self._cfg.xputs:
 
@@ -498,7 +498,8 @@ class AudioMixer:
         if AudioMixerState.STARTED != self._state:
             return result
 
-        self.signal(AudioMixer.Event.STOPPING)
+        self._set_state(AudioMixer.Event.STOPPING)
+
         for xput in self._cfg.xputs:
 
             log.debug("Stopping '%s' [%s] ...", xput.name, type(xput).__name__)
@@ -520,7 +521,6 @@ class AudioMixer:
 
         if result:
             log.info("Stopping OK.")
-            self.signal(AudioMixer.Event.STOPPED)
         else:
             log.error("Stopping FAILED.")
 
