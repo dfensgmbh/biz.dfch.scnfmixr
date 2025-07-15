@@ -25,7 +25,8 @@
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
-from ...devices.storage import DetectingRc1Worker
+# from ...devices.storage import DetectingRc1Worker
+from ...devices.storage import DetectingRcWorker
 from ...public.storage import StorageDevice
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
@@ -52,21 +53,22 @@ class DetectingRc2(TransitionBase):
 
     def invoke(self, _):
 
+        device = StorageDevice.RC2
+
         app_ctx = ApplicationContext.Factory.get()
 
-        value = app_ctx.storage_device_map[StorageDevice.RC2]
+        value = app_ctx.storage_device_map[device]
 
         log.info("Detecting storage device '%s' at '%s'...",
-                 StorageDevice.RC2.name, value)
+                 device.name, value)
 
-        raise NotImplementedError(
-            "Detection and initialisation of RC2 not yet implemented.")
-
-        selector = DetectingRc1Worker(value)
+        selector = DetectingRcWorker(device, value)
         result = selector.select()
 
         if result is None:
             return False
 
         log.debug("Detected storage device '%s': %s",
-                  StorageDevice.RC2.name, result)
+                  device.name, result)
+
+        return True

@@ -23,14 +23,14 @@
 """Package storage"""
 
 from ...public.storage import BlockDeviceType
-from .detecting_rc1_worker import DetectingRc1Worker
+from .detecting_rc_worker import DetectingRcWorker
 from .device_operations import DeviceOperations
 from ...public.storage import StorageDeviceInfo
 from .mount_point import MountPoint
 
 __all__ = [
     "BlockDeviceType",
-    "DetectingRc1Worker",
+    "DetectingRcWorker",
     "DeviceOperations",
     "MountPoint",
     "StorageDeviceInfo",
