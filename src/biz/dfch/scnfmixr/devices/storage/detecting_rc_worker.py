@@ -225,13 +225,13 @@ class DetectingRcWorker(InterfaceDetectorBase):
 
                 log.debug(
                     "Selecting device '%s' as candidate FAILED "
-                    "[%s != %sr] [%s != %sm]. "
+                    "[%sr != %sa] [%sm != %sa]. "
                     "Skipping ...",
                     full_name,
                     self._requested_usb_id,
                     result.usb_id,
-                    self._requested_usb_id,
                     mapped_usb_id,
+                    result.usb_id,
                 )
                 continue
 
