@@ -26,12 +26,10 @@ from ...public.storage import BlockDeviceType
 from .detecting_rc_worker import DetectingRcWorker
 from .device_operations import DeviceOperations
 from ...public.storage import StorageDeviceInfo
-from .mount_point import MountPoint
 
 __all__ = [
     "BlockDeviceType",
     "DetectingRcWorker",
     "DeviceOperations",
-    "MountPoint",
     "StorageDeviceInfo",
 ]

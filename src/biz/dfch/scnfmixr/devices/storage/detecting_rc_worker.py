@@ -31,15 +31,15 @@ from text import TextUtils
 from biz.dfch.logging import log
 from biz.dfch.asyn import Process
 
-from ..interface_detector_base import InterfaceDetectorBase
+from ...app import ApplicationContext
+from ...public.storage import BlockDeviceType
+from ...public.storage import MountPoint
 from ...public.storage import StorageDevice
 from ...public.storage import StorageDeviceInfo
-from ...public.storage import BlockDeviceType
-from ...application_context import ApplicationContext
 from ...text import UdevadmInfoVisitor
+from ..interface_detector_base import InterfaceDetectorBase
 
 from .device_operations import DeviceOperations
-from .mount_point import MountPoint
 
 
 class DetectingRcWorker(InterfaceDetectorBase):
@@ -62,14 +62,13 @@ class DetectingRcWorker(InterfaceDetectorBase):
         _LSBLK_OPTION_OUTPUT_SEP + _LSBLK_OPTION_OUTPUT_TYPE + \
         _LSBLK_OPTION_OUTPUT_SEP + _LSBLK_OPTION_OUTPUT_REMOVABLE
 
-    _DEV_INPUT_PATH: str = "/dev/"
+    _DEV_PATH: str = "/dev/"
     _DEV_STORAGE_PREFIX: str = "sd"
     _DEV_STORAGE_PATH_GLOB: str = (
-        _DEV_INPUT_PATH + _DEV_STORAGE_PREFIX + "*")
+        _DEV_PATH + _DEV_STORAGE_PREFIX + "*")
 
     _USB_DEVICE_TYPE = "usb-storage"
 
-    _DEV_PATH = "/dev/"
     _SYS_BUS_USB_DEVICES_PATH = "/sys/bus/usb/devices/"
     _VENDOR_ID_FILENAME = "idVendor"
     _PRODUCT_ID_FILENAME = "idProduct"
@@ -145,7 +144,7 @@ class DetectingRcWorker(InterfaceDetectorBase):
                 if item.get(self._LSBLK_OPTION_OUTPUT_NAME) is True:
                     device = StorageDeviceInfo(
                         item.get(self._LSBLK_OPTION_OUTPUT_NAME),
-                        f"{self._DEV_INPUT_PATH}"
+                        f"{self._DEV_PATH}"
                         f"{item.get(self._LSBLK_OPTION_OUTPUT_NAME)}",
                         BlockDeviceType(
                             item.get(self._LSBLK_OPTION_OUTPUT_TYPE)))

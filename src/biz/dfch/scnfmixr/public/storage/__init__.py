@@ -25,6 +25,8 @@
 from __future__ import annotations
 
 from .block_device_type import BlockDeviceType
+from .file_name import FileName
+from .mount_point import MountPoint
 from .storage_device import StorageDevice
 from .storage_device_info import StorageDeviceInfo
 from .storage_device_map import StorageDeviceMap
@@ -32,6 +34,8 @@ from .storage_parameters import StorageParameters
 
 __all__ = [
     "BlockDeviceType",
+    "FileName",
+    "MountPoint",
     "StorageDevice",
     "StorageDeviceInfo",
     "StorageDeviceMap",

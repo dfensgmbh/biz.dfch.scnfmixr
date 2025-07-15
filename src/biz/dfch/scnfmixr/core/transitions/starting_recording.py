@@ -22,6 +22,11 @@
 
 """Module starting_recording."""
 
+from biz.dfch.logging import log
+
+from ...app import ApplicationContext
+from ...public.storage import FileName
+from ...public.system import SystemTime
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
@@ -46,4 +51,25 @@ class StartingRecording(TransitionBase):
             target_state=target)
 
     def invoke(self, _):
+
+        app_ctx = ApplicationContext.Factory.get()
+        base_name = app_ctx.date_time_name_input.get_name()
+        now = SystemTime.Factory.get().now()
+
+        suffix = "MX01"
+        for device, device_info in app_ctx.storage_configuration_map.items():
+
+            file = FileName(
+                path_name=device_info.mount_point,
+                base_name=base_name,
+                dt=now,
+                suffix=suffix
+            )
+
+            log.debug("[%s] Filename '%s' [path: %s] [file %s]",
+                      device.name,
+                      file.fullname,
+                      file.direxists,
+                      file.exists)
+
         return True

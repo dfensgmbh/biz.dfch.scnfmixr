@@ -23,87 +23,13 @@
 """Module file_name."""
 
 from __future__ import annotations
-from datetime import datetime, timedelta
-from os import path
-from string import ascii_lowercase
-from threading import Lock
-from typing import ClassVar, overload
+import os
+from datetime import datetime
 
-from biz.dfch.logging import log
 
 __all__ = [
     "FileName"
 ]
-
-
-# pylint: disable=R0903
-class SystemTime:
-    """Represents the corrected system time."""
-
-    _delta: timedelta
-
-    def __init__(self, value: timedelta):
-
-        if not SystemTime.Factory._sync_root.locked():
-            raise RuntimeError("Private ctor. Use Factory instead.")
-
-        self._delta = timedelta()
-
-    def _get_current_datetime() -> datetime:
-        """Internal: gets the current datetime of the underlying system."""
-
-        return datetime.now()
-
-    def set(self, value: datetime) -> timedelta:
-        """Sets the system date and time.
-        
-        Args:
-            value (datetime): The new datetime to be set.
-        
-        Returns:
-            timedelta: The delta between the specified datetime in `value` and
-                the datetime of the underlying system.
-        """
-
-        assert value and isinstance(value, datetime)
-
-        with SystemTime.Factory._sync_root:
-
-            now = self._get_current_datetime()
-
-            self._delta = now - value
-
-        return self._delta
-
-    @property
-    def now(self) -> datetime:
-        """Returns the current datetime."""
-
-        result = self._get_current_datetime + self._delta
-
-        return result
-
-    class Factory:
-        """Factory class for creating `SystemTime` singelton."""
-
-        __instance: ClassVar[SystemTime | None] = None
-        _sync_root: ClassVar[Lock] = Lock()
-
-        @staticmethod
-        def get() -> SystemTime:
-            """Gets the system time instance."""
-
-            if SystemTime.Factory.__instance:
-                return SystemTime.Factory.__instance
-
-            with SystemTime.Factory._sync_root:
-
-                if SystemTime.Factory.__instance:
-                    return SystemTime.Factory.__instance
-
-                SystemTime.Factory.__instance = SystemTime()
-
-            return SystemTime.Factory.__instance
 
 
 class FileName:  # pylint: disable=R0903
@@ -111,13 +37,31 @@ class FileName:  # pylint: disable=R0903
 
     _value: str
 
-    def __init__(self, value: str):
-        if not FileName.Factory._sync_root.locked():
-            raise RuntimeError("Private ctor. Use Factory instead.")
+    def __init__(
+            self,
+            path_name: str,
+            base_name: str,
+            dt: datetime,
+            suffix: str,
+            separator: str = "--",
+            extension: str = "flac"
+    ) -> None:
+        """Creates an instance of the object."""
 
-        assert value and value.strip()
+        assert path_name and path_name.strip()
+        assert base_name and base_name.strip()
+        assert suffix and suffix.strip()
+        assert dt and isinstance(dt, datetime)
 
-        self._value = value
+        file_name = (
+            f"{base_name}{separator}"
+            f"{dt.isoformat()[0:19].replace(':', '-')}{separator}"
+            f"{suffix}{separator}"
+            f"{extension}"
+        )
+
+        full_name = os.path.join(path_name, file_name)
+        self._value = full_name
 
     @property
     def exists(self) -> bool:
@@ -127,30 +71,51 @@ class FileName:  # pylint: disable=R0903
             bool: True, if the file name exists; false, otherwise.
         """
 
-        return path.exists(self._value)
+        return os.path.exists(self._value)
 
-    # pylint: disable=R0903
-    class Factory:
-        """Factory class for creating `FileName` instances."""
+    @property
+    def direxists(self) -> bool:
+        """Determines whether the directory exists.
 
-        _SEPARATOR: str = "---"
-        _sync_root: ClassVar[Lock] = Lock()
+        Returns:
+            bool: True, if the directory exists; false, otherwise.
+        """
 
-        @staticmethod
-        def create(
-            prefix: str,
-            wait_interval_ms: int = 1000,
-            suffix: str,
-            separator: str = Factory._SEPARATOR
-        ) -> FileName:
-            """Factory method for creating `FileName` instances.
-            """
+        return os.path.exists(self.dirname)
 
-            assert prefix and prefix.strip()
-            assert suffix and suffix.strip()
-            assert separator and separator.strip()
+    @property
+    def dirname(self) -> str:
+        """Returns the directory part of the filename."""
 
-            with FileName.Factory._syncroot:
-                result = FileName()
+        return os.path.dirname(self._value)
 
-            return result
+    @property
+    def filename(self) -> str:
+        """Returns the filename part of the filename."""
+
+        return self._value.removeprefix(os.path.dirname(self._value))
+
+    @property
+    def fullname(self) -> str:
+        """Returns the full name of the file."""
+
+        return self._value
+
+    def delete(self) -> bool:
+        """Removes an existing file.
+
+        Raises:
+            FileNotFoundError: If the file does not exist.
+            Exception: Any other execption raised by `os.remove`.
+        """
+
+        if not self.exists:
+            raise FileNotFoundError(self._value)
+
+        os.remove(self._value)
+
+    def __str__(self):
+        return self._value
+
+    def __repl__(self):
+        return self.__str__
