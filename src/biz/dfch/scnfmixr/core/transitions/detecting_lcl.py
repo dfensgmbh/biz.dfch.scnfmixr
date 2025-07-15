@@ -26,6 +26,7 @@ from biz.dfch.logging import log
 
 from ...application_context import ApplicationContext
 from ...audio import AudioDeviceInfo
+from ...audio import UsbAudioDeviceNotDetectedError
 from ...mixer import AudioMixer
 from ...mixer import AudioMixerConfiguration
 from ...public.audio import AudioDevice
@@ -60,6 +61,8 @@ class DetectingLcl(TransitionBase):
 
         try:
             value = app_ctx.audio_device_map[device]
+            log.debug("Detecting '%s' on '%s' ...", device, value)
+
             device_info = AudioDeviceInfo.Factory.create(value, max_attempts=1)
             app_ctx.audio_configuration_map[device] = device_info
 
@@ -68,9 +71,18 @@ class DetectingLcl(TransitionBase):
             app_ctx.xputs.add(audio_input)
             app_ctx.xputs.add(audio_output)
 
+            log.debug("Detecting '%s' on '%s' OK.", device, value)
+
             self._initialise_local_audio(audio_output)
 
             return True
+
+        except UsbAudioDeviceNotDetectedError as ex:
+
+            log.error("Device detection '%s' FAILED. [%s]",
+                      device.name, ex)
+
+            return False
 
         except Exception as ex:  # pylint: disable=W0718
 

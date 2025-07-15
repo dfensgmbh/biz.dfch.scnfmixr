@@ -1,6 +1,6 @@
 # MIT License
 
-# Copyright (c) 2024, 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ from __future__ import annotations
 import time
 
 from biz.dfch.logging import log
+from .usb_audio_device_not_detected_error import UsbAudioDeviceNotDetectedError
 from ..alsa_usb import AlsaStreamInfoParser
 from ..public.usb import UsbDeviceInfo
 from ..public.audio import AlsaInterfaceInfo
@@ -100,24 +101,28 @@ class AudioDeviceInfo:  # pylint: disable=R0903
 
                     return AudioDeviceInfo(usb_id)
 
-                except Exception as ex:  # pylint: disable=W0718
+                except UsbAudioDeviceNotDetectedError:  # pylint: disable=W0718
 
                     current_attempt += 1
                     if max_attempts and current_attempt >= max_attempts:
-
-                        message = (f"Usb '{usb_id}' not detected "
-                                   f"[{current_attempt}/{max_attempts}].")
-                        log.error(message)
-                        raise RuntimeError(message) from ex
+                        raise
 
                     log.debug(
-                        "Usb '%s' not detected. Waiting %s ms [%s/%s].",
+                        ("USB audio device not detected at '%s'. "
+                         "Waiting %s ms [%s/%s]."),
                         usb_id,
                         wait_interval_ms,
                         current_attempt,
                         max_attempts,
                     )
                     time.sleep(wait_interval_ms / 1000.0)
+
+                except Exception as ex:
+
+                    message = (f"USB audio device not detected at '{usb_id}'. "
+                               f"[{ex}]")
+                    log.error(message, exc_info=True)
+                    raise RuntimeError(message) from ex
 
     def __init__(self, usb_id: str):
 
@@ -136,7 +141,7 @@ class AudioDeviceInfo:  # pylint: disable=R0903
         if self.actual_usb_id is None:
             message = f"Requested USB id '{self.requested_usb_id} not found."
             log.error(message)
-            raise RuntimeError(message)
+            raise UsbAudioDeviceNotDetectedError(self.requested_usb_id)
 
         log.info("Mapped requested usb_id: [%s / %s]",
                  self.requested_usb_id, self.actual_usb_id)

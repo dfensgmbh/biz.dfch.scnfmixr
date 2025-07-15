@@ -20,22 +20,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package audio."""
+"""Module usb_audio_device_not_detected_error."""
 
-from .Asound import Asound
-from .asound_card_info import AsoundCardInfo
-from .proc_alsa_usb_device_info import ProcAlsaUsbDeviceInfo
-from .recording_parameters import RecordingParameters
-from .audio_device_info import AudioDeviceInfo
-from .usb_audio_device_not_detected_error import UsbAudioDeviceNotDetectedError
-from .Usb import Usb
 
-__all__ = [
-    "Asound",
-    "AsoundCardInfo",
-    "ProcAlsaUsbDeviceInfo",
-    "RecordingParameters",
-    "AudioDeviceInfo",
-    "UsbAudioDeviceNotDetectedError",
-    "Usb",
-]
+class UsbAudioDeviceNotDetectedError(Exception):
+    """Exception for failed USB audio device detection."""
+
+    message: str
+    usb_id: str
+
+    def __init__(self, usb_id: str | None = None):
+        if usb_id:
+            message = (
+                f"USB audio device not detected at '{usb_id}'."
+            )
+        else:
+            message = "USB audio device not detected."
+
+        super().__init__(message)
+
+        self.message = message
+        self.usb_id = usb_id
+
+    def __str__(self) -> str:
+        return self.message
+
+    def __repr__(self):
+        return self.__str__()
