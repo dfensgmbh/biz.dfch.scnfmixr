@@ -50,8 +50,8 @@ class DateTimeNameInput2():
 
     def __init__(self):
 
-        self._date: datetime.date = None
-        self._time: datetime.time = None
+        self._date = None
+        self._time = None
         self._name = None
         self._datestring = ""
         self._timestring = ""
@@ -69,43 +69,43 @@ class DateTimeNameInput2():
         return str(result)
 
     def get_datetime(self) -> datetime:
-        """Returns the recorded date and time."""
+        """Returns the date and time."""
         return datetime.datetime(
             self._date.year, self._date.month, self._date.day,
             self._time.hour, self._time.minute)
 
     def get_date(self) -> datetime.date:
-        """Returns the recorded date."""
+        """Returns the date."""
         return self._date
 
     def get_time(self) -> datetime.time:
-        """Returns the recorded time."""
+        """Returns the time."""
         return self._time
 
     def get_name(self) -> datetime.time:
-        """Returns the recorded name."""
+        """Returns the name."""
         return self._name
 
     @property
     def is_valid_date(self) -> bool:
-        """Determines whether the recorded date is a valid date."""
+        """Determines whether the date is a valid date."""
         return bool(self._date)
 
     @property
     def is_valid_time(self) -> bool:
-        """Determines whether the recorded time is a valid time."""
+        """Determines whether the time is a valid time."""
         return bool(self._time)
 
     @property
     def is_valid_name(self) -> bool:
-        """Determines whether the recorded name is a valid name."""
+        """Determines whether the name is a valid name."""
         return bool(self._name)
 
     def reset(self) -> None:
         """Resets all data."""
 
-        self._date: datetime.date = None
-        self._time: datetime.time = None
+        self._date = None
+        self._time = None
         self._name = None
         self._datestring = ""
         self._timestring = ""

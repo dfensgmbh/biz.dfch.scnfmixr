@@ -28,6 +28,7 @@ from enum import StrEnum
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
+from ...public.system import SystemTime
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
@@ -77,16 +78,17 @@ class SetTime(StateBase):
         log.info("Time entered: [%s].",
                  app_ctx.date_time_name_input.is_valid_time)
 
-        if app_ctx.date_time_name_input.is_valid_time:
+        if not app_ctx.date_time_name_input.is_valid_time:
+            return
 
-            log.info("Time fully entered: '%s'.",
-                     app_ctx.date_time_name_input.get_time())
+        log.info("Time fully entered: '%s'.",
+                 app_ctx.date_time_name_input.get_time())
 
-            log.info("Enqueueing event: '%s' [%s].",
-                     SetTime.Event.JUMP_NEXT.name,
-                     SetTime.Event.JUMP_NEXT.value)
-            ctx.events.clear()
-            ctx.events.enqueue(SetTime.Event.JUMP_NEXT)
+        log.info("Enqueueing event: '%s' [%s].",
+                 SetTime.Event.JUMP_NEXT.name,
+                 SetTime.Event.JUMP_NEXT.value)
+        ctx.events.clear()
+        ctx.events.enqueue(SetTime.Event.JUMP_NEXT)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

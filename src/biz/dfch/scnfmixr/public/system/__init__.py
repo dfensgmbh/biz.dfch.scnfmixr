@@ -22,10 +22,11 @@
 
 """Package system."""
 
-from __future__ import annotations
-
+from .system_time import SystemTime
 from .usb_port import UsbPort
 
+
 __all__ = [
+    "SystemTime",
     "UsbPort",
 ]

@@ -26,6 +26,8 @@ import datetime
 import random
 import string
 
+from .public.system import SystemTime
+
 
 class DateTimeNameInput():
     """Processes and represents date, time and name input."""
@@ -49,8 +51,8 @@ class DateTimeNameInput():
 
     def __init__(self):
 
-        self._date: datetime.date = None
-        self._time: datetime.time = None
+        self._date = None
+        self._time = None
         self._name = None
         self._datestring = ""
         self._timestring = ""
@@ -80,7 +82,11 @@ class DateTimeNameInput():
 
         assert value is not None and isinstance(value, datetime.date)
 
+        self._datestring = ""
         self._date = value
+
+        st = SystemTime.Factory.get()
+        st.set(datetime.datetime.combine(value, st.now().time()))
 
     def get_time(self) -> datetime.time:
         """Returns the time."""
@@ -91,7 +97,11 @@ class DateTimeNameInput():
 
         assert value is not None and isinstance(value, datetime.time)
 
+        self._timestring = ""
         self._time = value
+
+        st = SystemTime.Factory.get()
+        st.set(datetime.datetime.combine(st.now().date(), value))
 
     def get_name(self) -> datetime.time:
         """Returns the name."""
@@ -102,6 +112,7 @@ class DateTimeNameInput():
 
         assert value and value.strip()
 
+        self._namestring = ""
         self._name = value
 
     def set_pseudo_random_name(self) -> None:
@@ -130,8 +141,8 @@ class DateTimeNameInput():
     def reset(self) -> None:
         """Resets all data."""
 
-        self._date: datetime.date = None
-        self._time: datetime.time = None
+        self._date = None
+        self._time = None
         self._name = None
         self._datestring = ""
         self._timestring = ""
@@ -192,7 +203,7 @@ class DateTimeNameInput():
             if result is None:
                 return True
 
-            self._date = result
+            self.set_date(result)
             return True
 
         digit = int(value)
@@ -221,7 +232,7 @@ class DateTimeNameInput():
             if result is None:
                 return True
 
-            self._time = result
+            self.set_time(result)
             return True
 
         digit = int(value)

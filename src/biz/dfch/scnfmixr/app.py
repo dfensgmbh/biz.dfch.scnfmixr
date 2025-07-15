@@ -37,10 +37,10 @@ from .mixer import AudioMixerConfiguration
 from .public.input import InputDevice
 from .public.audio import AudioDevice, Format, FileFormat
 from .public.storage.storage_device import StorageDevice
+from .public.system import SystemTime
 
 
-# pylint: disable=R0903
-class App:
+class App:  # pylint: disable=R0903
     """The application."""
 
     _VERSION_REQUIRED_MAJOR = 2
@@ -92,12 +92,11 @@ class App:
         }
         app_ctx.ui_parameters.language = LanguageCode[args.language]
 
-        now = datetime.datetime.now()
+        now = SystemTime.Factory.get().set().now()
         if args.use_current_date:
             app_ctx.date_time_name_input.set_date(now.date())
         if args.use_current_time:
-            current_time = datetime.time(now.time().hour, now.time().minute)
-            app_ctx.date_time_name_input.set_time(current_time)
+            app_ctx.date_time_name_input.set_time(now.time())
         if args.use_random_name:
             app_ctx.date_time_name_input.set_pseudo_random_name()
 
