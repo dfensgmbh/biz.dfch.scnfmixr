@@ -33,7 +33,7 @@ _LOGGER_FILE = "logging.conf"
 
 
 try:
-    logging.config.fileConfig(I18n.get_runtime_path(_LOGGER_FILE))
+    logging.config.fileConfig(I18n.Factory.get().get_runtime_path(_LOGGER_FILE))
     log = logging.getLogger(_LOGGER_NAME)
     log.debug("Logging configuration initialised from '%s'.",
               _LOGGER_FILE)

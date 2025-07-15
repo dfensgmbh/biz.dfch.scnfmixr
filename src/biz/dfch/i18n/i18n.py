@@ -22,9 +22,12 @@
 
 """Module i18n."""
 
+from __future__ import annotations
 import os
 from pathlib import Path
 import sys
+from threading import Lock
+from typing import ClassVar
 
 from .language_code import LanguageCode
 
@@ -34,8 +37,78 @@ class I18n:
 
     _RES_PATH = "res"
 
-    @staticmethod
-    def get_runtime_path(relative_path: str) -> str:
+    _path: str
+
+    def __init__(self, value: str):
+
+        if not I18n.Factory._sync_root.locked():
+            raise RuntimeError("Private ctor. Use Factory instead.")
+
+        assert value is not None and isinstance(value, str)
+
+        self._path = value
+
+    class Factory:  # pylint: disable=R0903
+        """Factory class for creating `I18n` instances."""
+
+        __instance: ClassVar[I18n | None] = None
+        _sync_root: ClassVar[Lock] = Lock()
+
+        @staticmethod
+        def _reset(value: str | None = None) -> None:
+            """Internal: Reset the initial value of the path."""
+
+            assert I18n.Factory.__instance
+
+            if not value:
+                value = ""
+
+            with I18n.Factory._sync_root:
+                I18n._path = value  # pylint: disable=W0212
+
+        @staticmethod
+        def create(value: str | None = None) -> I18n:
+            """Creates the `I18n` singleton instance.
+
+            Args:
+                value (str | None): A relative path, "" or None. Default is
+                    `None`.
+
+            Returns:
+                I18: An instance of the object.
+
+            Raises:
+                AssertionError: If the instance has already been created.
+            """
+
+            assert not I18n.Factory.__instance
+
+            if not value:
+                value = ""
+
+            with I18n.Factory._sync_root:
+                assert not I18n.Factory.__instance
+
+                I18n.Factory.__instance = I18n(value)
+
+            return I18n.Factory.__instance
+
+        @staticmethod
+        def get() -> I18n:
+            """Returns the `I18n` singleton instance.
+
+            Returns:
+                I18: An instance of the object.
+
+            Raises:
+                AssertionError: If the instance has not been created.
+            """
+
+            assert I18n.Factory.__instance
+
+            return I18n.Factory.__instance
+
+    def get_runtime_path(self, relative_path: str) -> str:
         """Resolves a relative path to the runtime path.
 
         Args:
@@ -54,14 +127,18 @@ class I18n:
 
         if getattr(sys, "frozen", False):
             # Determine whether we run as binary "onefile".
-            base_path = sys._MEIPASS  # pylint: disable=W0212
+            base_path = getattr(sys, "_MEIPASS", None)
+            assert base_path
         else:
-            base_path = os.getcwd()
+            base_path = os.path.join(os.getcwd(), self._path)
 
         return os.path.normpath(os.path.join(base_path, relative_path))
 
-    @staticmethod
-    def get_resource_path(item: str, code: LanguageCode | None = None) -> str:
+    def get_resource_path(
+            self,
+            item: str,
+            code: LanguageCode | None = None
+    ) -> str:
         """Returns the normalised resource path for an item.
 
         Args:
@@ -87,4 +164,4 @@ class I18n:
         else:
             result = os.path.join(I18n._RES_PATH, path)
 
-        return I18n.get_runtime_path(result)
+        return self.get_runtime_path(result)
