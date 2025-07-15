@@ -120,23 +120,6 @@ class App:  # pylint: disable=R0903
         log.info("Rec opt: '%s'.", app_ctx.recording_parameters)
         log.info("App ctx: '%s'.", app_ctx)
 
-        if args.test:
-            # pylint: disable=C0415
-            from biz.dfch.asyn import ConcurrentQueueT
-            from .core.transitions.detecting_hi1 import DetectingHi1
-            from .core.fsm import ExecutionContext
-            from .core.fsm import StateBase
-
-            fsm = StateMachine()
-
-            state = StateBase(None, None)
-            transition = DetectingHi1("0", state)
-            ctx = ExecutionContext(
-                None, None, events=ConcurrentQueueT(str, True))
-            transition.invoke(ctx)
-
-            return
-
         if args.service:
             log.info("Arg 'startup' detected.")
 

@@ -245,11 +245,6 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
                   "'2009:7064' [iStorage datAshur Pro 64GB].")
         )
 
-        parser.add_argument(
-            "--test", "-t",
-            action="store_true",
-            help="Test HID detection."
-        )
         result = parser.parse_args()
 
         return result
