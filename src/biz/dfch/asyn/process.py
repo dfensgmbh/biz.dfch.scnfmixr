@@ -225,6 +225,7 @@ class Process:
             encoding=encoding,
             text=True,
             bufsize=1,
+            start_new_session=True,
             stdout=subprocess.PIPE if capture_stdout else subprocess.DEVNULL,
             stderr=subprocess.PIPE if capture_stderr else subprocess.DEVNULL,
             **kwargs,
