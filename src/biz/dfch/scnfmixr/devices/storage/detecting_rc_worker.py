@@ -72,7 +72,9 @@ class DetectingRcWorker(InterfaceDetectorBase):
     _DEV_PATH = "/dev/"
     _SYS_BUS_USB_DEVICES_PATH = "/sys/bus/usb/devices/"
     _VENDOR_ID_FILENAME = "idVendor"
+    _PRODUCT_ID_FILENAME = "idProduct"
 
+    _app_ctx: ApplicationContext
     _device: StorageDevice
     _requested_usb_id: str
     _event_device_candidates: list[str]
@@ -93,6 +95,7 @@ class DetectingRcWorker(InterfaceDetectorBase):
         assert device and isinstance(device, StorageDevice)
         assert value and value.strip()
 
+        self._app_ctx = ApplicationContext.Factory.get()
         self._device = device
         self._requested_usb_id = value
 
@@ -177,8 +180,6 @@ class DetectingRcWorker(InterfaceDetectorBase):
                 value specified in the ctor call.
         """
 
-        app_ctx = ApplicationContext.Factory.get()
-
         candidates: list[UdevadmInfoVisitor.Data] = []
 
         devices = glob.glob(self._DEV_STORAGE_PATH_GLOB)
@@ -245,9 +246,20 @@ class DetectingRcWorker(InterfaceDetectorBase):
                 self._SYS_BUS_USB_DEVICES_PATH,
                 result.usb_id,
                 self._VENDOR_ID_FILENAME)
-            vendor_id = TextUtils().read_first_line(filename)
+            vendor_id = TextUtils().read_first_line(filename).lower()
+            filename = os.path.join(
+                self._SYS_BUS_USB_DEVICES_PATH,
+                result.usb_id,
+                self._PRODUCT_ID_FILENAME)
+            product_id = TextUtils().read_first_line(filename).lower()
 
-            if vendor_id not in vendor_ids:
+            whitelist = self._app_ctx.storage_parameters.allowed_usb_ids
+            is_match = any(
+                (pid is None or pid == product_id) and vid == vendor_id
+                for vid, pid in whitelist
+            )
+
+            if not is_match:
                 log.debug(
                     "Selecting device '%s' as candidate FAILED [%s not in %a]. "
                     "Skipping ...",
@@ -283,7 +295,7 @@ class DetectingRcWorker(InterfaceDetectorBase):
             BlockDeviceType.PARTITION.value,
             MountPoint[self._device.name].value)
 
-        app_ctx.storage_configuration_map[self._device] = device_info
+        self._app_ctx.storage_configuration_map[self._device] = device_info
 
         is_mounted = DeviceOperations(device_info).mount()
 

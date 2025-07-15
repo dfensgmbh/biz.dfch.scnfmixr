@@ -60,7 +60,7 @@ class Arguments():
 
         Args:
             value (str): The value to validate. Must be of the following
-                format: [0-9a-fA-F]{4}.
+                format: '^[0-9a-fA-F]{4}(:[0-9a-fA-F]{4})?$'
         Returns:
             str: The unmodified value.
 
@@ -69,11 +69,12 @@ class Arguments():
                 string.
         """
 
-        if re.fullmatch(r'[0-9A-Fa-f]{4}', value):
-            return str
+        if re.fullmatch(r'^[0-9a-fA-F]{4}(:[0-9a-fA-F]{4})?$', value):
+            return value
 
         raise argparse.ArgumentTypeError(
-            f"'{value}' is not valid. Format: '[0-9a-fA-F]{{4}}'.")
+            f"'{value}' is not valid. Format: "
+            f"'^[0-9a-fA-F]{4}(:[0-9a-fA-F]{4})?$'.")
 
     def get(self) -> argparse.Namespace:
         """Returns an instance to the argument parser.
@@ -234,12 +235,14 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
             help="Specifies USB port for MorningStar MIDI controller."
         )
         parser.add_argument(
-            "--allowed-storage-vendor-ids",
+            "--allowed-storage-usb-ids",
             type=self._validate_hex_string,
             nargs="+",
-            dest="RC_VENDOR_IDS",
+            # Use name: StorageParameters.allowed_usb_ids
+            dest="allowed_usb_ids",
             default=["2009"],
-            help="RC Storage vendor id whitelist; e.g. 2009: iStorage."
+            help=("RC Storage vendor id whitelist; e.g. '2009' [iStorage], "
+                  "'2009:7064' [iStorage datAshur Pro 64GB].")
         )
 
         parser.add_argument(

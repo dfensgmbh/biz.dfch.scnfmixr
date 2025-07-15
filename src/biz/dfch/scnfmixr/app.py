@@ -101,6 +101,20 @@ class App:
         if args.use_random_name:
             app_ctx.date_time_name_input.set_pseudo_random_name()
 
+        # Note: Use name from StorageParameters.allowed_usb_ids.
+        usb_ids = args.allowed_usb_ids
+        if usb_ids:
+            for usb_id in usb_ids:
+                segments = usb_id.split(':')
+                assert 1 <= len(segments) <= 2
+                match len(segments):
+                    case 1:
+                        pair = (segments[0].lower(), None)
+                    case 2:
+                        pair = (segments[0].lower(), segments[1].lower())
+
+                app_ctx.storage_parameters.allowed_usb_ids.append(pair)
+
         log.info("Snd map: '%s'.", app_ctx.audio_device_map)
         log.info("Sto map: '%s'.", app_ctx.storage_device_map)
         log.info("Inp map: '%s'.", app_ctx.input_device_map)

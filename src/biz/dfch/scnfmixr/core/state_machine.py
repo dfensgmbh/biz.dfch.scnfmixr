@@ -67,7 +67,8 @@ from .transitions import DetectingRc1, SkippingRc1, CleaningRc1, MountingRc1, Un
     # pylint: disable=C0301  # noqa: E501
 
 from .states import InitialiseRc2
-from .transitions import DetectingRc2, SkippingRc2, CleaningRc2
+from .transitions import DetectingRc2, SkippingRc2, CleaningRc2, MountingRc2, UnmountingRc2 \
+    # pylint: disable=C0301  # noqa: E501
 
 from .states import SetDate, SetTime, SetName
 from .transitions import ProcessingDigit
@@ -339,6 +340,10 @@ class StateMachine:
                                         set_date))
             .add_transition(CleaningRc2(InitialiseRc2.Event.CLEAN_DEVICE,
                                         initialise_rc2))
+            .add_transition(MountingRc2(InitialiseRc2.Event.MOUNT_DEVICE,
+                                        initialise_rc2))
+            .add_transition(UnmountingRc2(InitialiseRc2.Event.UNMOUNT_DEVICE,
+                                          initialise_rc2))
         )
         (
             initialise_rc1

@@ -20,20 +20,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package storage."""
+"""Additional storage parameters."""
 
-from __future__ import annotations
+from dataclasses import dataclass, field
 
-from .block_device_type import BlockDeviceType
-from .storage_device import StorageDevice
-from .storage_device_info import StorageDeviceInfo
-from .storage_device_map import StorageDeviceMap
-from .storage_parameters import StorageParameters
 
-__all__ = [
-    "BlockDeviceType",
-    "StorageDevice",
-    "StorageDeviceInfo",
-    "StorageDeviceMap",
-    "StorageParameters",
-]
+@dataclass(frozen=True)
+class StorageParameters:
+    """Storage parameters.
+
+    Note: allowed_usb_ids is hard coded referenced in argparse parameters.
+
+    Attributes:
+        allowed_usb_ids (list[tuple[str, str]]): A tuple consisting of vendor
+            id and product id. Product id can be `None`.
+    """
+
+    allowed_usb_ids: list[tuple[str, str]] = field(default_factory=list)

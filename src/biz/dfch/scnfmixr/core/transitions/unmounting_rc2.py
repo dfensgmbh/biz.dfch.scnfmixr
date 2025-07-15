@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module unmounting_rc1."""
+"""Module unmounting_rc2."""
 
 from biz.dfch.logging import log
 
@@ -33,8 +33,8 @@ from ...devices.storage import DeviceOperations
 from ..transition_event import TransitionEvent
 
 
-class UnmountingRc1(TransitionBase):
-    """Unmounting RC1."""
+class UnmountingRc2(TransitionBase):
+    """Unmounting RC2."""
 
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""
@@ -45,14 +45,14 @@ class UnmountingRc1(TransitionBase):
         super().__init__(
             event,
             info_enter=UiEventInfo(
-                TransitionEvent.DETECTING_DEVICE_RC1_ENTER, False),
+                TransitionEvent.DETECTING_DEVICE_RC2_ENTER, False),
             info_leave=UiEventInfo(
-                TransitionEvent.DETECTING_DEVICE_RC1_LEAVE, False),
+                TransitionEvent.DETECTING_DEVICE_RC2_LEAVE, False),
             target_state=target)
 
     def invoke(self, _):
 
-        device = StorageDevice.RC1
+        device = StorageDevice.RC2
 
         app_ctx = ApplicationContext.Factory.get()
 

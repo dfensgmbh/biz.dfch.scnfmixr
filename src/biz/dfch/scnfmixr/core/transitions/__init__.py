@@ -54,6 +54,8 @@ from .unmounting_rc1 import UnmountingRc1
 from .detecting_rc2 import DetectingRc2
 from .skipping_rc2 import SkippingRc2
 from .cleaning_rc2 import CleaningRc2
+from .mounting_rc2 import MountingRc2
+from .unmounting_rc2 import UnmountingRc2
 
 from .processing_digit import ProcessingDigit
 
@@ -100,6 +102,8 @@ __all__ = [
     "DetectingRc2",
     "SkippingRc2",
     "CleaningRc2",
+    "MountingRc2",
+    "UnmountingRc2",
 
     "InitialisingAudio",
 

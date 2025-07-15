@@ -35,9 +35,10 @@ from .audio import RecordingParameters
 from .audio import AudioDeviceInfo
 from .date_time_name_input import DateTimeNameInput
 from .input_device_map import InputDeviceMap
+from .public.storage import StorageDevice
 from .public.storage import StorageDeviceInfo
 from .public.storage import StorageDeviceMap
-from .public.storage import StorageDevice
+from .public.storage import StorageParameters
 from .public.audio import AudioDevice, AudioDeviceMap
 from .public.mixer import InputOrOutput
 from .public.ui import UiParameters
@@ -79,6 +80,7 @@ class ApplicationContext:  # pylint: disable=R0903,R0902
         STORAGE_CFG = auto()
         INPUT_CFG = auto()
         XPUTS = auto()
+        STORAGE_PRM = auto()
 
     _instance = None
     _lock = Lock()
@@ -92,6 +94,7 @@ class ApplicationContext:  # pylint: disable=R0903,R0902
     recording_parameters: RecordingParameters
     audio_configuration_map: dict[AudioDevice, AudioDeviceInfo]
     storage_configuration_map: dict[StorageDevice, StorageDeviceInfo]
+    storage_parameters: StorageParameters
     xputs: set[InputOrOutput]
 
     def __init__(self):
@@ -111,6 +114,7 @@ class ApplicationContext:  # pylint: disable=R0903,R0902
         self.recording_parameters = RecordingParameters()
         self.audio_configuration_map = {}
         self.storage_configuration_map = {}
+        self.storage_parameters = StorageParameters()
         self.xputs = set()
 
         log.info("Initialising application context OK. [%s]", self)
@@ -127,6 +131,7 @@ class ApplicationContext:  # pylint: disable=R0903,R0902
             ApplicationContext.Keys.STORAGE_CFG: self.storage_configuration_map,
             ApplicationContext.Keys.INPUT_CFG: self.storage_configuration_map,
             ApplicationContext.Keys.XPUTS: self.xputs,
+            ApplicationContext.Keys.STORAGE_PRM: self.storage_parameters,
         }
 
         return str(result)

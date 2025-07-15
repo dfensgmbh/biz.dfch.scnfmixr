@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module unmounting_rc1."""
+"""Module mounting_rc2."""
 
 from biz.dfch.logging import log
 
@@ -29,12 +29,12 @@ from ...public.storage import StorageDevice
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
-from ...devices.storage import DeviceOperations
 from ..transition_event import TransitionEvent
+from ...devices.storage import DeviceOperations
 
 
-class UnmountingRc1(TransitionBase):
-    """Unmounting RC1."""
+class MountingRc2(TransitionBase):
+    """Mounting RC2."""
 
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""
@@ -45,33 +45,30 @@ class UnmountingRc1(TransitionBase):
         super().__init__(
             event,
             info_enter=UiEventInfo(
-                TransitionEvent.DETECTING_DEVICE_RC1_ENTER, False),
+                TransitionEvent.DETECTING_DEVICE_RC2_ENTER, False),
             info_leave=UiEventInfo(
-                TransitionEvent.DETECTING_DEVICE_RC1_LEAVE, False),
+                TransitionEvent.DETECTING_DEVICE_RC2_LEAVE, False),
             target_state=target)
 
     def invoke(self, _):
 
-        device = StorageDevice.RC1
-
         app_ctx = ApplicationContext.Factory.get()
 
-        value = app_ctx.storage_device_map[device]
+        value = app_ctx.storage_device_map[StorageDevice.RC2]
 
-        log.debug("Unmounting storage device '%s' at '%s'...",
-                  device.name, value)
+        log.debug("Mounting storage device '%s' at '%s'...",
+                  StorageDevice.RC2.name, value)
 
         device_info = app_ctx.storage_configuration_map.get(
-            device, None)
+            StorageDevice.RC2, None)
 
-        result = False if device_info is None else DeviceOperations(
-            device_info).unmount()
+        result = DeviceOperations(device_info).mount()
 
         if result:
-            log.info("Unmounting storage device '%s' OK.",
-                     device.name)
+            log.info("Mounting storage device '%s' OK.",
+                     StorageDevice.RC2.name)
         else:
-            log.error("Unmounting storage device '%s' FAILED.",
-                      device.name)
+            log.error("Mounting storage device '%s' FAILED.",
+                      StorageDevice.RC2.name)
 
         return result
