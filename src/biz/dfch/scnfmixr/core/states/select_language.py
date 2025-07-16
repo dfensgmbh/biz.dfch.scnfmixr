@@ -28,6 +28,7 @@ from enum import StrEnum
 from biz.dfch.logging import log
 from biz.dfch.i18n import LanguageCode
 
+from ...public.system.messages import SystemMessage
 from ...app import ApplicationContext
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
@@ -75,13 +76,21 @@ class SelectLanguage(StateBase):
                   app_ctx.ui_parameters.language.value)
         match app_ctx.ui_parameters.language:
             case LanguageCode.EN:
-                ctx.events.enqueue(SelectLanguage.Event.SELECT_ENGLISH)
+                msg = SystemMessage.InputEvent(
+                    SelectLanguage.Event.SELECT_ENGLISH)
+                ctx.events.publish_first(msg)
             case LanguageCode.DE:
-                ctx.events.enqueue(SelectLanguage.Event.SELECT_GERMAN)
+                msg = SystemMessage.InputEvent(
+                    SelectLanguage.Event.SELECT_GERMAN)
+                ctx.events.publish_first(msg)
             case LanguageCode.FR:
-                ctx.events.enqueue(SelectLanguage.Event.SELECT_FRENCH)
+                msg = SystemMessage.InputEvent(
+                    SelectLanguage.Event.SELECT_FRENCH)
+                ctx.events.publish_first(msg)
             case LanguageCode.IT:
-                ctx.events.enqueue(SelectLanguage.Event.SELECT_ITALIAN)
+                msg = SystemMessage.InputEvent(
+                    SelectLanguage.Event.SELECT_ITALIAN)
+                ctx.events.publish_first(msg)
             case _:
                 pass
 

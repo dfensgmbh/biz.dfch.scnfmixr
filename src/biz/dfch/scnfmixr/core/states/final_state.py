@@ -32,6 +32,9 @@ from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
 from ..state_event import StateEvent
+from ...system import MessageQueue
+
+from ...public.system.messages import SystemMessage
 
 
 class FinalState(StateBase):
@@ -59,6 +62,9 @@ class FinalState(StateBase):
         assert ctx and isinstance(ctx, ExecutionContext)
 
         app_ctx = ApplicationContext.Factory.get()
+
+        mq = MessageQueue.Factory.get()
+        mq.publish(SystemMessage.Shutdown())
 
         log.debug("Initiating application termination ...")
 

@@ -31,6 +31,8 @@ from biz.dfch.logging import log
 from .user_interacton_base import UserInteractionBase
 from .execution_context import ExecutionContext
 from .state_base import StateBase
+from ...public.system.messages import SystemMessage
+from ...system import MessageQueue
 
 __all__ = ["Fsm"]
 
@@ -50,6 +52,8 @@ class Fsm:
     Attributes:
         current_state (State): The current state of the state machine.
     """
+
+    _message_queue = MessageQueue.Factory.get()
 
     def __init__(self,
                  initial_state: StateBase,
@@ -221,6 +225,8 @@ class Fsm:
         """
 
         log.info("Starting state machine ...")
+        self._message_queue.publish(
+            SystemMessage.StateMachine.StateMachineStarting())
 
         if self._is_started:
             log.warning("Starting state machine FAILED. Already started. [1]")
@@ -247,7 +253,10 @@ class Fsm:
             log.info("Invoking 'on_enter' for '%s' RETURNED.",
                      type(self._current_state).__name__)
 
-            log.info("Starting state machine OK.")
+        self._message_queue.publish(
+            SystemMessage.StateMachine.StateMachineStarted())
+
+        log.info("Starting state machine OK.")
 
         if ctx.signal_stop.is_set():
             ctx.signal_stop.clear()
@@ -272,6 +281,8 @@ class Fsm:
         """
 
         log.info("Stopping state machine ...")
+        self._message_queue.publish(
+            SystemMessage.StateMachine.StateMachineStopping())
 
         if not self._is_started:
             log.warning(
@@ -286,9 +297,11 @@ class Fsm:
 
             self._is_started = False
 
-            log.info("Stopping state machine OK.")
+        self._message_queue.publish(
+            SystemMessage.StateMachine.StateMachineStopped())
+        log.info("Stopping state machine OK.")
 
-            return True
+        return True
 
     def restart(self) -> None:
         """Stops and starts the state machine. Only starts the state machine if

@@ -22,8 +22,7 @@
 
 """Main app module."""
 
-import time
-import datetime
+from threading import Event
 
 from biz.dfch.i18n import LanguageCode
 from biz.dfch.logging import log
@@ -34,10 +33,13 @@ from .args import Arguments
 from .core import StateMachine
 from .mixer import AudioMixer
 from .mixer import AudioMixerConfiguration
+from .system import MessageQueue
 from .public.input import InputDevice
 from .public.audio import AudioDevice, Format, FileFormat
 from .public.storage.storage_device import StorageDevice
 from .public.system import SystemTime
+from .public.system.messages import SystemMessage
+from .public.system import MessageBase
 
 
 class App:  # pylint: disable=R0903
@@ -50,11 +52,16 @@ class App:  # pylint: disable=R0903
     _VERSION = "2.1.0"
     _PROG_NAME = "scnfmixr"
 
+    _signal_stop: Event
+
     def __init__(self):
 
         Version().ensure_minimum_version(
             self._VERSION_REQUIRED_MAJOR,
             self._VERSION_REQUIRED_MINOR)
+
+        self._signal_stop = Event()
+        self._signal_stop.clear()
 
     def invoke(self) -> None:
         """Main entry point for this class."""
@@ -121,7 +128,11 @@ class App:  # pylint: disable=R0903
         log.info("App ctx: '%s'.", app_ctx)
 
         if args.service:
-            log.info("Arg 'startup' detected.")
+            log.info("Arg 'service' detected.")
+
+            # Start main message queue.
+            mq = MessageQueue.Factory.get()
+            mq.register(self._on_message)
 
             cfg = AudioMixerConfiguration.get_default()
             AudioMixer.Factory.get().initialise(cfg)
@@ -129,5 +140,15 @@ class App:  # pylint: disable=R0903
             fsm = StateMachine()
             fsm.start()
 
-            while fsm.is_started:
-                time.sleep(1)
+            self._signal_stop.wait()
+
+            log.debug("Signalling application shutdown OK.")
+
+    def _on_message(self, message: MessageBase) -> None:
+        if not isinstance(
+                message,
+                SystemMessage.StateMachine.StateMachineStopped):
+            return
+
+        log.debug("Signalling application shutdown ...")
+        self._signal_stop.set()

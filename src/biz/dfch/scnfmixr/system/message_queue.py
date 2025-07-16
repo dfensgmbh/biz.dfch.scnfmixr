@@ -99,13 +99,14 @@ class MessageQueue():  # pylint: disable=R0902
 
             return MessageQueue.Factory.__instance
 
-    def _process_message(self, message: MessageBase) -> None:
+    def _process_message(
+            self,
+            message: MessageBase,
+            callbacks: list[Callable[[MessageBase], None]]
+    ) -> None:
         """Processes a single message."""
 
         assert message and isinstance(message, MessageBase)
-
-        with self._sync_root:
-            callbacks = list(self._callbacks)
 
         for action in callbacks:
             try:
@@ -141,11 +142,16 @@ class MessageQueue():  # pylint: disable=R0902
                 self._queue_high.clear()
                 queue_default = list(self._queue_default)
                 self._queue_default.clear()
+                callbacks = list(self._callbacks)
+
+            if 0 == len(callbacks):
+                log.debug("No actions registered. Discarding events.")
+                return
 
             for message in queue_high:
-                self._process_message(message)
+                self._process_message(message, callbacks)
             for message in queue_default:
-                self._process_message(message)
+                self._process_message(message, callbacks)
 
         except Exception as ex:  # pylint: disable=W0718
             log.error("_process_messages: An error occurred: '%s'.",
@@ -201,7 +207,11 @@ class MessageQueue():  # pylint: disable=R0902
             items = [items]
 
         for item in items:
+
             assert isinstance(item, MessageBase)
+
+            log.debug("Received '%s' [%s].", item.name, item.priority)
+
             if MessagePriority.HIGH <= item.priority:
                 if at_first:
                     self._queue_high.enqueue_first(item)
@@ -312,3 +322,7 @@ class MessageQueue():  # pylint: disable=R0902
                 return True
             except ValueError:
                 return False
+
+    def __len__(self) -> int:
+        """Returns the length of the queue."""
+        return len(self._queue_high) + len(self._queue_default)

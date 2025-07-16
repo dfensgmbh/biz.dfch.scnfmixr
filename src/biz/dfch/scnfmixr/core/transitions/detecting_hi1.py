@@ -67,8 +67,9 @@ class DetectingHi1(TransitionBase):
 
         log.debug("Input device detected at: '%s'", device)
 
-        self._handler = KeyboardHandler(ctx.events, device)
+        self._handler = KeyboardHandler(device)
         log.debug("Starting keyboard processing ...")
         self._handler.start()
+        log.info("Starting keyboard processing OK.")
 
         return True

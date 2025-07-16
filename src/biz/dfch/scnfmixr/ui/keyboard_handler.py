@@ -27,13 +27,15 @@ import re
 from threading import Thread
 import time
 
-from biz.dfch.asyn import Process, ConcurrentQueueT
+from biz.dfch.asyn import Process
 from biz.dfch.logging import log
 
-from ..app import ApplicationContext
-from ..notifications import AppNotification
 from ..public.input import KeyboardEventMap
 from .event_handler_base import EventHandlerBase
+
+from ..system import MessageQueue
+from ..public.system import MessageBase
+from ..public.system.messages import SystemMessage
 
 
 class KeyboardHandler(EventHandlerBase):
@@ -57,13 +59,10 @@ class KeyboardHandler(EventHandlerBase):
     _thread: Thread
     _process: Process
 
-    def app_on_shutdown(self, event: AppNotification.Event) -> None:
-        """Process SHUTDOWN notification."""
+    def _on_shutdown(self, message: MessageBase) -> None:
+        """SystemShutdown."""
 
-        if event is None or not isinstance(event, AppNotification.Event):
-            return
-
-        if AppNotification.Event.SHUTDOWN != event:
+        if not isinstance(message, SystemMessage.Shutdown):
             return
 
         log.debug("on_shutdown: Stopping ...")
@@ -72,9 +71,9 @@ class KeyboardHandler(EventHandlerBase):
 
         log.debug("on_shutdown: Stopping COMPLETED.")
 
-    def __init__(self, queue: ConcurrentQueueT[str], device: str):
+    def __init__(self, device: str):
 
-        super().__init__(queue)
+        super().__init__()
 
         assert device and device.strip()
 
@@ -83,7 +82,7 @@ class KeyboardHandler(EventHandlerBase):
         self._device = device
         self._thread = Thread(target=self._worker, daemon=True)
 
-        ApplicationContext.Factory.get().notification.register(self.app_on_shutdown)
+        MessageQueue.Factory.get().register(self._on_shutdown)
 
     def dispose(self):
         """Dispose method for stopping child process `evtest`."""
@@ -121,7 +120,7 @@ class KeyboardHandler(EventHandlerBase):
                     log.debug("Code: '%s'. Key: '%s'. Translated: '%s'.",
                               code, key, translated)
 
-                    self.queue.enqueue(translated)
+                    self.queue.publish(SystemMessage.InputEvent(translated))
 
             except Exception as ex:  # pylint: disable=W0718
                 log.error("An error occurred. [%s]", ex, exc_info=True)

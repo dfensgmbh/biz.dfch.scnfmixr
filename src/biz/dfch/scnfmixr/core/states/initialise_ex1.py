@@ -26,6 +26,7 @@ from __future__ import annotations
 from enum import StrEnum
 
 from biz.dfch.logging import log
+from ...public.system.messages import SystemMessage
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
@@ -69,7 +70,8 @@ class InitialiseEx1(StateBase):
                      InitialiseEx1.Event.DETECT_DEVICE.name,
                      InitialiseEx1.Event.DETECT_DEVICE.value)
 
-            ctx.events.enqueue(InitialiseEx1.Event.DETECT_DEVICE)
+            msg = SystemMessage.InputEvent(InitialiseEx1.Event.DETECT_DEVICE)
+            ctx.events.publish_first(msg)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

@@ -25,7 +25,7 @@
 from abc import ABC, abstractmethod
 from threading import Event, Lock
 
-from biz.dfch.asyn import ConcurrentQueueT
+from ..system import MessageQueue
 
 
 class EventHandlerBase(ABC):
@@ -34,47 +34,47 @@ class EventHandlerBase(ABC):
     Attributes:
         stop_processing (Event): Signalled when stop is invoked.
         sync_root (Lock): A non-reentrant lock for synchronisation.
-        queue (ConcurrentQueueT[str]): The event queue to be fed by the
+        queue (MessageQueue): The event queue to be used by the
             event handler.
     """
 
     stop_processing: Event
     sync_root: Lock
-    queue: ConcurrentQueueT[str]
+    queue: MessageQueue
     _is_paused: bool
 
-    def __init__(self, queue: ConcurrentQueueT[str]):
+    def __init__(self):
 
         super().__init__()
 
-        assert queue
-
         self.stop_processing = Event()
         self.sync_root = Lock()
-        self.queue = queue
+        self.queue = MessageQueue.Factory.get()
         self._is_paused = False
 
     @abstractmethod
     def start(self):
-        """
+        """Starts the handler.
+
         Return:
-            bool: True, if successful, false otherwise.
+            bool: True, if successful; false otherwise.
         """
 
         return False
 
     @abstractmethod
     def stop(self):
-        """
+        """Stops the handler.
+
         Return:
-            bool: True, if successful, false otherwise.
+            bool: True, if successful; false otherwise.
         """
 
         return False
 
     @property
     def is_started(self) -> bool:
-        """Determines whether keyboard processing is active or not.
+        """Determines whether input processing is active or not.
 
         Returns:
             bool: True, if processing is started; false, otherwise.
@@ -84,7 +84,7 @@ class EventHandlerBase(ABC):
 
     @property
     def is_paused(self) -> bool:
-        """Determines whether keyboard processing is paused or not.
+        """Determines whether input processing is paused or not.
 
         Returns:
             bool: True, if processing is paused; false, otherwise.
@@ -93,7 +93,7 @@ class EventHandlerBase(ABC):
         return not self.stop_processing.is_set()
 
     def pause(self) -> bool:
-        """Pauses keyboard processing.
+        """Pauses input processing.
 
         Returns:
             bool: True, if processing is paused; false, if not or if the
@@ -111,7 +111,7 @@ class EventHandlerBase(ABC):
             return self._is_paused
 
     def resume(self) -> bool:
-        """Resumes keyboard processing.
+        """Resumes input processing.
 
         Returns:
             bool: True, if processing is paused; false, if not or if the

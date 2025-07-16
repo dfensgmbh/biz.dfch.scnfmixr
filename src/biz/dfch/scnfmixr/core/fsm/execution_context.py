@@ -25,7 +25,7 @@
 from dataclasses import dataclass, field
 from threading import Event
 
-from biz.dfch.asyn import ConcurrentQueueT
+from ...system import MessageQueue
 
 
 @dataclass(frozen=True)
@@ -41,7 +41,7 @@ class ExecutionContext:
             one) or None.
         event (str | None): The event that invoked the transition. Or None, if
             invoked on a State.
-        events (ConcurrentQueueT[str]): A queue for event signalling from inside
+        events (MessageQueue): A queue for event signalling from inside
             the state machine.
         stop_engine (Event): Settings this event stop the state
             machine after the current invocation has completed.
@@ -51,5 +51,5 @@ class ExecutionContext:
     error: str | None
     previous: str | None = None
     event: str | None = None
-    events: ConcurrentQueueT[str] = None
+    events: MessageQueue = None
     signal_stop: Event = field(default_factory=Event)

@@ -23,13 +23,15 @@
 """Module state_machine."""
 
 from __future__ import annotations
-import queue
 import threading
-import time
+from typing import cast
 
 from biz.dfch.logging import log
-from biz.dfch.asyn import ConcurrentQueueT
+from biz.dfch.asyn import ConcurrentDoubleSideQueueT
 
+from ..public.system import MessageBase
+from ..public.system.messages import SystemMessage
+from ..system import MessageQueue
 from ..ui import UserInteractionAudio
 from ..app import ApplicationContext
 from .fsm import ExecutionContext, Fsm
@@ -89,11 +91,13 @@ class StateMachine:
     """StateMachine of the application."""
 
     WAIT_INTERVAL_MS: int = 250
-    BLOCK_INTERVAL_MS: int = 250
+    _BLOCK_INTERVAL_MS: int = 5000
 
     _app_ctx: ApplicationContext
-    _queue: ConcurrentQueueT[str]
-    _do_cancel_worker: threading.Event
+    _signal_worker: threading.Event
+    _event_queue: ConcurrentDoubleSideQueueT[str]
+    _messsage_queue: MessageQueue
+    _do_cancel_worker: bool
     _thread: threading.Thread
     _ctx: ExecutionContext
     _fsm: Fsm
@@ -101,11 +105,14 @@ class StateMachine:
     def __init__(self):
 
         self._app_ctx = ApplicationContext.Factory.get()
-        self._queue: ConcurrentQueueT[str] = ConcurrentQueueT(str, True)
-        self._do_cancel_worker = threading.Event()
+        self._signal_worker = threading.Event()
+        self._event_queue = ConcurrentDoubleSideQueueT[str]()
+        self._messsage_queue = MessageQueue.Factory.get()
+        self._do_cancel_worker = False
         self._thread = threading.Thread(target=self._worker, daemon=True)
         self._ctx = None
         self._fsm = None
+        self._messsage_queue.register(self._on_message)
 
     def start(self) -> None:
         "Starts the state machine."
@@ -121,6 +128,40 @@ class StateMachine:
         """
         return self._fsm.is_started
 
+    def _on_message(self, message: MessageBase) -> None:
+        """Process: SystemMessage.InputEvent"""
+
+        if not isinstance(
+                message,
+                (SystemMessage.InputEvent, SystemMessage.Shutdown)):
+            return
+
+        if isinstance(message, SystemMessage.Shutdown):
+            self._do_cancel_worker = True
+            self._signal_worker.set()
+            return
+
+        event = cast(SystemMessage.InputEvent, message)
+        log.debug("Received message with input event: '%s' [%s]",
+                  event.value,
+                  event.name)
+
+        if isinstance(event, SystemMessage.InputEventClear):
+            self._event_queue.clear()
+            self._event_queue.enqueue_first(event.value)
+
+        elif isinstance(event, SystemMessage.InputEventFirst):
+            self._event_queue.enqueue_first(event.value)
+
+        elif isinstance(event, SystemMessage.InputEvent):
+            self._event_queue.enqueue(event.value)
+
+        else:
+            log.warning("Unsupported type: '%s'.", event.name)
+            return
+
+        self._signal_worker.set()
+
     def _worker(self) -> None:
         """The worker thread that dequeues and processes state machine events.
 
@@ -131,23 +172,35 @@ class StateMachine:
             None:
         """
 
-        log.debug("Starting worker ...")
+        log.debug("Initialising worker ...")
 
-        message_counter: int = 0
+        log.info("Initialising worker OK.")
+
         while True:
-            message_counter += 1
 
             try:
-                if self._do_cancel_worker.is_set():
 
-                    log.info("Exiting worker ...")
-                    break
+                log.debug("Waiting for event ...")
 
-                if 0 == message_counter:
-                    message_counter = 0
-                    log.debug("Trying to dequeue item ...")
+                result = False
 
-                event = self._queue.dequeue(self.BLOCK_INTERVAL_MS)
+                if self._event_queue.is_empty():
+
+                    result = self._signal_worker.wait(
+                        self._BLOCK_INTERVAL_MS / 1000)
+                    self._signal_worker.clear()
+
+                    if self._do_cancel_worker:
+
+                        log.debug("Stopping worker ...")
+                        break
+
+                    if not result:
+                        continue
+
+                event = self._event_queue.dequeue()
+                if event is None:
+                    continue
 
                 log.debug("Invocation of event '%s' ... [is_started=%s]",
                           event,
@@ -168,23 +221,14 @@ class StateMachine:
                             event,
                             self._fsm.is_started)
 
-                except Exception:
+                except Exception as ex:
                     log.error(
-                        "Invocation of event '%s' FAILED. [is_started=%s]",
+                        "Invocation of event '%s' FAILED. [is_started=%s] [%s]",
                         event,
-                        self._fsm.is_started)
+                        self._fsm.is_started,
+                        ex,
+                        exc_info=True)
                     raise
-
-            # Upon empty queue, just continue and try again.
-            except queue.Empty:
-                # log.debug(
-                #     "Queue empty. Sleeping [%sms] ...",
-                #     self.WAIT_INTERVAL_MS)
-                pass
-
-            # Upon timeout, just continue and try again.
-            except TimeoutError:
-                pass
 
             except Exception as ex:  # pylint: disable=W0718
 
@@ -193,10 +237,7 @@ class StateMachine:
                     ex,
                     exc_info=True)
 
-            finally:
-                time.sleep(self.WAIT_INTERVAL_MS/1000)
-
-        log.debug("Stopping worker.")
+        log.info("Stopping worker OK.")
 
     def initialise(self) -> None:
         """Initialises the state machine."""
@@ -411,7 +452,7 @@ class StateMachine:
                                         initialise_hi1))
         )
 
-        self._ctx = ExecutionContext(None, None, events=self._queue)
+        self._ctx = ExecutionContext(None, None, events=self._messsage_queue)
         # DFTODO - adjust to something dynamic.
         ui = UserInteractionAudio("system")
         self._fsm = Fsm(initialise_lcl, self._ctx, ui)
@@ -421,10 +462,3 @@ class StateMachine:
         #     log.debug(line)
 
         log.info("Initialising state machine OK.")
-
-    def invoke(self, event: str) -> None:
-        """Invoke an event on the state machine."""
-
-        assert event and isinstance(event, str) and 1 == len(event)
-
-        self._queue.enqueue(event)

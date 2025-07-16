@@ -26,6 +26,7 @@ from __future__ import annotations
 from enum import StrEnum
 
 from biz.dfch.logging import log
+from ...public.system.messages import SystemMessage
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
@@ -38,7 +39,7 @@ class InitialiseHi2(StateBase):
     Detects the input device (USB Elgato Streamdeck).
     """
 
-    class Events(StrEnum):
+    class Event(StrEnum):
         """Events for this state."""
 
         MENU = "0"  # Return to the next menu in the hierarchy.
@@ -66,10 +67,11 @@ class InitialiseHi2(StateBase):
 
         if not ctx.error:
             log.info("Enqueueing event: '%s' [%s].",
-                     InitialiseHi2.Events.DETECT_DEVICE.name,
-                     InitialiseHi2.Events.DETECT_DEVICE.value)
+                     InitialiseHi2.Event.DETECT_DEVICE.name,
+                     InitialiseHi2.Event.DETECT_DEVICE.value)
 
-            ctx.events.enqueue(InitialiseHi2.Events.DETECT_DEVICE)
+            msg = SystemMessage.InputEvent(InitialiseHi2.Event.DETECT_DEVICE)
+            ctx.events.publish_first(msg)
 
         raise NotImplementedError
 

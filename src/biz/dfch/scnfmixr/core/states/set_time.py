@@ -28,7 +28,7 @@ from enum import StrEnum
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
-from ...public.system import SystemTime
+from ...public.system.messages import SystemMessage
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
@@ -88,7 +88,8 @@ class SetTime(StateBase):
                  SetTime.Event.JUMP_NEXT.name,
                  SetTime.Event.JUMP_NEXT.value)
         ctx.events.clear()
-        ctx.events.enqueue(SetTime.Event.JUMP_NEXT)
+        msg = SystemMessage.InputEvent(SetTime.Event.JUMP_NEXT)
+        ctx.events.publish_first(msg)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

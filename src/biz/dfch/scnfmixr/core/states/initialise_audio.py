@@ -27,6 +27,7 @@ from enum import StrEnum
 import time
 
 from biz.dfch.logging import log
+from ...public.system.messages import SystemMessage
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
@@ -76,7 +77,8 @@ class InitialiseAudio(StateBase):
                      InitialiseAudio.Event.INIT_AUDIO.name,
                      InitialiseAudio.Event.INIT_AUDIO.value)
 
-            ctx.events.enqueue(InitialiseAudio.Event.INIT_AUDIO)
+            msg = SystemMessage.InputEvent(InitialiseAudio.Event.INIT_AUDIO)
+            ctx.events.publish_first(msg)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.
