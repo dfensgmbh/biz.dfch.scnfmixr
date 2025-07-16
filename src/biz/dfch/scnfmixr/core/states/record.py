@@ -25,7 +25,6 @@
 from __future__ import annotations
 from enum import StrEnum
 
-from biz.dfch.logging import log
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase

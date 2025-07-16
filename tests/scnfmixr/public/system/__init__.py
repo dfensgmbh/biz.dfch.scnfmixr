@@ -19,28 +19,3 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-"""Module test_template."""
-
-import unittest
-
-
-class TestTemplate(unittest.TestCase):
-    """Class testing template."""
-
-    def test_something(self):
-        """Testing something succeeds."""
-
-        sut = object()
-
-        self.assertIsNotNone(sut)
-
-        result = sut.__class__.__name__
-
-        self.assertTrue(result)
-        self.assertIsInstance(result, str)
-        self.assertTrue(result.strip())
-
-
-if __name__ == "__main__":
-    unittest.main()
