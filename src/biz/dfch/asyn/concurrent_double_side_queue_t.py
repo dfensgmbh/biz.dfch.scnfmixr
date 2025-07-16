@@ -28,14 +28,14 @@ from typing import Generic, TypeVar, Optional
 
 
 __all__ = [
-    "ConcurrentQueueT",
+    "ConcurrentDoubleSideQueueT",
 ]
 
 
 T = TypeVar("T")
 
 
-class ConcurrentQueueT(Generic[T]):
+class ConcurrentDoubleSideQueueT(Generic[T]):
     """Message queue facility."""
 
     _sync_root: Lock

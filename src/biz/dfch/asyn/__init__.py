@@ -24,10 +24,12 @@
 
 from .concurrent_queue import ConcurrentQueue
 from .concurrent_queue_t import ConcurrentQueueT
+from .concurrent_double_side_queue_t import ConcurrentDoubleSideQueueT
 from .process import Process
 
 __all__ = [
     "ConcurrentQueue",
     "ConcurrentQueueT",
+    "ConcurrentDoubleSideQueueT",
     "Process",
 ]

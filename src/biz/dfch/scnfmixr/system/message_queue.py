@@ -29,7 +29,7 @@ from typing import Optional, ClassVar, Callable
 from threading import Event, Lock, Thread
 
 from biz.dfch.logging import log
-from .concurrent_queue_t import ConcurrentQueueT
+from ...asyn import ConcurrentDoubleSideQueueT
 from ..public.system import MessageBase
 from ..public.system import MessagePriority
 
@@ -45,8 +45,8 @@ class MessageQueue():  # pylint: disable=R0902
     _WORKER_SIGNAL_WAIT_TIME_MS = 1000
     _EXCEPTION_TIMEOUT_MS = 1000
 
-    _queue_high: ConcurrentQueueT[MessageBase]
-    _queue_default: ConcurrentQueueT[MessageBase]
+    _queue_high: ConcurrentDoubleSideQueueT[MessageBase]
+    _queue_default: ConcurrentDoubleSideQueueT[MessageBase]
     _callbacks: list[Callable[[MessageBase], None]]
     _is_processing: bool
     _signal: Event
@@ -66,8 +66,8 @@ class MessageQueue():  # pylint: disable=R0902
         log.debug("Initialising ...")
 
         self._sync_root = Lock()
-        self._queue_high = ConcurrentQueueT[MessageBase]()
-        self._queue_default = ConcurrentQueueT[MessageBase]()
+        self._queue_high = ConcurrentDoubleSideQueueT[MessageBase]()
+        self._queue_default = ConcurrentDoubleSideQueueT[MessageBase]()
         self._callbacks = []
         self._is_processing = False
         self._signal = Event()
