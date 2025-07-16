@@ -28,6 +28,7 @@ from .system_time import SystemTime
 from .usb_port import UsbPort
 
 from .message_medium import Message
+from .message_base import MessageBase
 from .message_high import MessageHigh
 from .message_medium import MessageMedium
 from .message_low import MessageLow
@@ -36,9 +37,10 @@ from .message_priority import MessagePriority
 
 __all__ = [
     "Message",
+    "MessageBase",
     "MessageHigh",
     "MessageMedium",
-    "message_low",
+    "MessageLow",
     "MessagePriority",
     "SystemTime",
     "UsbPort",
