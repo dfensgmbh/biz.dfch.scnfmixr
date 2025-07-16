@@ -30,10 +30,7 @@ from .message_priority import MessagePriority
 
 
 __all__ = [
-    "Message",
-    "MessageHigh",
-    "MessageMedium",
-    "MessageLow",
+    "MessageBase",
 ]
 
 
@@ -42,7 +39,7 @@ class MessageBase(ABC):
     """A base class for messages.
 
     Attributes:
-        name (str): The message type name.
+        name (str): The full qualified type name.
         priority (MessagePriority): The message priority.
             Default: `MessagePriority.DEFAULT`.
     """
@@ -52,86 +49,18 @@ class MessageBase(ABC):
 
     def __init__(
             self,
-            name: str,
             priority: MessagePriority = MessagePriority.DEFAULT
     ) -> None:
         """Default ctor.
 
         Args:
-            name (str): The message type name.
             priority (MessagePriority): The message priority.
                 Default: `MessagePriority.DEFAULT`.
         """
 
-        assert name and name.strip()
-        assert priority and isinstance(property, MessagePriority)
+        assert priority and isinstance(priority, MessagePriority)
 
-        self.priority = priority
-        self.name = name
+        object.__setattr__(self, "priority", priority)
 
-
-@dataclass(frozen=True)
-class MessageHigh(MessageBase):
-    """A message with priority `MessagePriority.HIGH`.
-
-    Attributes:
-        name (str): The message type name.
-    """
-
-    def __init__(
-            self,
-            name: str,
-    ) -> None:
-        """Default ctor.
-
-        Args:
-            name (str): The message type name.
-        """
-
-        super().__init__(name, MessagePriority.HIGH)
-
-
-@dataclass(frozen=True)
-class MessageMedium(MessageBase):
-    """A message with priority `MessagePriority.MEDIUM`.
-
-    Attributes:
-        name (str): The message type name.
-    """
-
-    def __init__(
-            self,
-            name: str,
-    ) -> None:
-        """Default ctor.
-
-        Args:
-            name (str): The message type name.
-        """
-
-        super().__init__(name, MessagePriority.MEDIUM)
-
-
-# Alias for MessageMedium
-Message = MessageMedium
-
-
-@dataclass(frozen=True)
-class MessageLow(MessageBase):
-    """A message with priority `MessagePriority.LOW`.
-
-    Attributes:
-        name (str): The message type name.
-    """
-
-    def __init__(
-            self,
-            name: str,
-    ) -> None:
-        """Default ctor.
-
-        Args:
-            name (str): The message type name.
-        """
-
-        super().__init__(name, MessagePriority.LOW)
+        cls = type(self)
+        object.__setattr__(self, "name", f"{cls.__module__}.{cls.__qualname__}")

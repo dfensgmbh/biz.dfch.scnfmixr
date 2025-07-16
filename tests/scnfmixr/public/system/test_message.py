@@ -24,17 +24,34 @@
 
 from __future__ import annotations
 import unittest
-from biz.dfch.scnfmixr.public.system.message_base import Message
-from biz.dfch.scnfmixr.public.system.message_base import MessageHigh
-from biz.dfch.scnfmixr.public.system.message_base import MessageMedium
-from biz.dfch.scnfmixr.public.system.message_base import MessageLow
+
+from biz.dfch.scnfmixr.public.system import MessagePriority
+
+from biz.dfch.scnfmixr.public.system.message_medium import Message
+from biz.dfch.scnfmixr.public.system.message_high import MessageHigh
+from biz.dfch.scnfmixr.public.system.message_medium import MessageMedium
+from biz.dfch.scnfmixr.public.system.message_low import MessageLow
 
 
 class TestMessage(unittest.TestCase):
-    """Class testing template."""
+    """Class message types."""
 
-    class MyMessage(Message):
+    @staticmethod
+    def get_fqcn(_type: type) -> str:
+        """Returns the full qualified class name."""
+        return f"{type(_type).__module__}.{type(_type).__qualname__}"
+
+    class ArbitraryMessage(Message):
         """Priority Medium."""
+
+        description: str
+
+        def __init__(self, description: str):
+            super().__init__()
+
+            assert description and description.strip()
+
+            self.description = description
 
     class ArbitraryMessageHigh(MessageHigh):
         """Priority High."""
@@ -42,8 +59,7 @@ class TestMessage(unittest.TestCase):
         description: str
 
         def __init__(self, description: str):
-            super().__init__(
-                TestMessage.ArbitraryMessageHigh.__qualname__)
+            super().__init__()
 
             assert description and description.strip()
 
@@ -52,19 +68,90 @@ class TestMessage(unittest.TestCase):
     class ArbitraryMessageMedium(MessageMedium):
         """Priority Medium."""
 
+        description: str
+
+        def __init__(self, description: str):
+            super().__init__()
+
+            assert description and description.strip()
+
+            self.description = description
+
     class ArbitraryMessageLow(MessageLow):
         """Priority Low."""
 
-    def test_qualname(self):
-        """Testing qualname."""
+        description: str
 
-        sut = TestMessage.ArbitraryMessageHigh
+        def __init__(self, description: str):
+            super().__init__()
+
+            assert description and description.strip()
+
+            self.description = description
+
+    def test_message(self):
+        """Testing standard message."""
+
+        expected_priority = MessagePriority.DEFAULT
+        expected_description = "arbitrary-description"
+
+        sut = TestMessage.ArbitraryMessage(expected_description)
 
         self.assertIsNotNone(sut)
 
         result = sut.name
+        self.assertEqual(TestMessage.get_fqcn(sut), result)
 
-        self.assertEqual("", result)
+        self.assertEqual(expected_priority, sut.priority)
+        self.assertEqual(expected_description, sut.description)
+
+    def test_message_high(self):
+        """Testing high priority message."""
+
+        expected_priority = MessagePriority.HIGH
+        expected_description = "arbitrary-description"
+
+        sut = TestMessage.ArbitraryMessageHigh(expected_description)
+
+        self.assertIsNotNone(sut)
+
+        result = sut.name
+        self.assertEqual(TestMessage.get_fqcn(sut), result)
+
+        self.assertEqual(expected_priority, sut.priority)
+        self.assertEqual(expected_description, sut.description)
+
+    def test_message_medium(self):
+        """Testing medium priority message."""
+
+        expected_priority = MessagePriority.MEDIUM
+        expected_description = "arbitrary-description"
+
+        sut = TestMessage.ArbitraryMessageMedium(expected_description)
+
+        self.assertIsNotNone(sut)
+
+        result = sut.name
+        self.assertEqual(TestMessage.get_fqcn(sut), result)
+
+        self.assertEqual(expected_priority, sut.priority)
+        self.assertEqual(expected_description, sut.description)
+
+    def test_message_low(self):
+        """Testing high priority message."""
+
+        expected_priority = MessagePriority.LOW
+        expected_description = "arbitrary-description"
+
+        sut = TestMessage.ArbitraryMessageLow(expected_description)
+
+        self.assertIsNotNone(sut)
+
+        result = sut.name
+        self.assertEqual(TestMessage.get_fqcn(sut), result)
+
+        self.assertEqual(expected_priority, sut.priority)
+        self.assertEqual(expected_description, sut.description)
 
 
 if __name__ == "__main__":

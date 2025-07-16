@@ -20,26 +20,29 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package system."""
+"""Module message_base."""
 
-from .system_time import SystemTime
+from __future__ import annotations
 
-# DFTODO - what is this module doing here in public.system?
-from .usb_port import UsbPort
-
-from .message_medium import Message
-from .message_high import MessageHigh
-from .message_medium import MessageMedium
-from .message_low import MessageLow
+from .message_base import MessageBase
 from .message_priority import MessagePriority
 
 
 __all__ = [
     "Message",
-    "MessageHigh",
     "MessageMedium",
-    "message_low",
-    "MessagePriority",
-    "SystemTime",
-    "UsbPort",
 ]
+
+
+class MessageMedium(MessageBase):  # pylint: disable=R0903
+    """A message with priority `MessagePriority.MEDIUM`.
+
+    Attributes:
+    """
+
+    def __init__(self) -> None:
+        super().__init__(MessagePriority.MEDIUM)
+
+
+# Alias for MessageMedium
+Message = MessageMedium
