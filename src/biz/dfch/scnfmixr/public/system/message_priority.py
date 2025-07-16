@@ -20,17 +20,32 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package system."""
+"""Module message_priority."""
 
-from .system_time import SystemTime
-from .usb_port import UsbPort
-from .message_base import MessageBase
-from .message_priority import MessagePriority
+from enum import IntEnum
 
 
 __all__ = [
-    "MessageBase",
     "MessagePriority",
-    "SystemTime",
-    "UsbPort",
 ]
+
+
+class MessagePriority(IntEnum):
+    """Defines the different priorities for queue items."""
+
+    DEFAULT = 128
+
+    MEDIUM = DEFAULT
+    LEVEL_80 = MEDIUM
+
+    HIGHEST = 255
+    LEVEL_FF = HIGHEST
+
+    HIGH = 192
+    LEVEL_C0 = HIGH
+
+    LOW = 64
+    LEVEL_40 = LOW
+
+    LOWEST = 0
+    LEVEL_00 = LOWEST
