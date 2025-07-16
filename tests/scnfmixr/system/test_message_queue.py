@@ -33,13 +33,16 @@ from biz.dfch.scnfmixr.public.system import MessageMedium
 from biz.dfch.scnfmixr.public.system import MessageLow
 from biz.dfch.scnfmixr.public.system import MessagePriority
 
-from biz.dfch.scnfmixr.system.message_queue import MessageQueueT
+from biz.dfch.scnfmixr.system.message_queue import MessageQueue
 
 
 class TestMessageQueueT(unittest.TestCase):
     """Class testing template."""
 
-    class ArbitraryMessage(Message):
+    class ArbitraryMessage1(Message):
+        """Priority Medium."""
+
+    class ArbitraryMessage2(Message):
         """Priority Medium."""
 
     class ArbitraryMessageHigh(MessageHigh):
@@ -66,20 +69,20 @@ class TestMessageQueueT(unittest.TestCase):
         """Calling the ctor directly throws."""
 
         with self.assertRaises(AssertionError):
-            _ = MessageQueueT[MessageBase]()
+            _ = MessageQueue()
 
     def test_factory_returns_singleton(self):
         """Calling factory twice returns same instance."""
 
-        sut1 = MessageQueueT[MessageBase].Factory.get()
-        sut2 = MessageQueueT[MessageBase].Factory.get()
+        sut1 = MessageQueue.Factory.get()
+        sut2 = MessageQueue.Factory.get()
 
         self.assertEqual(sut1, sut2)
 
     def test_register_succeeds(self):
         """Registering action returns is_registered == true."""
 
-        sut = MessageQueueT[MessageBase].Factory.get()
+        sut = MessageQueue.Factory.get()
 
         action = self._on_event
 
@@ -98,7 +101,7 @@ class TestMessageQueueT(unittest.TestCase):
     def test_unregister_succeeds(self):
         """Unregistering action returns is_registered == true."""
 
-        sut = MessageQueueT[MessageBase].Factory.get()
+        sut = MessageQueue.Factory.get()
 
         action = self._on_event
 
@@ -156,11 +159,11 @@ class TestMessageQueueT(unittest.TestCase):
     def test_callback_succeeds(self) -> None:
         """Testing callback."""
 
-        message = TestMessageQueueT.ArbitraryMessage()
+        message = TestMessageQueueT.ArbitraryMessage1()
         handler = TestMessageQueueT.EventHandler()
 
-        sut: MessageQueueT[MessageBase]
-        sut = MessageQueueT[MessageBase].Factory.get()
+        sut: MessageQueue
+        sut = MessageQueue.Factory.get()
 
         sut.register(handler.on_any_event_single_message_add_to_list)
 
@@ -173,12 +176,12 @@ class TestMessageQueueT(unittest.TestCase):
     def test_prioritising_messages_succeeds(self) -> None:
         """HIGH priority messages are dispatched first."""
 
-        message_default = TestMessageQueueT.ArbitraryMessage()
+        message_default = TestMessageQueueT.ArbitraryMessage1()
         message_high = TestMessageQueueT.ArbitraryMessageHigh()
         handler = TestMessageQueueT.EventHandler()
 
-        sut: MessageQueueT[MessageBase]
-        sut = MessageQueueT[MessageBase].Factory.get()
+        sut: MessageQueue
+        sut = MessageQueue.Factory.get()
 
         sut.register(handler.on_any_event_two_messages_add_to_list)
 
@@ -189,6 +192,27 @@ class TestMessageQueueT(unittest.TestCase):
         self.assertEqual(2, len(handler.messages))
         self.assertEqual(MessagePriority.HIGH, handler.messages[0].priority)
         self.assertEqual(MessagePriority.DEFAULT, handler.messages[1].priority)
+
+    def test_enqueue_first_succeeds(self) -> None:
+        """Enqueue at top of queue succeeds."""
+
+        message1 = TestMessageQueueT.ArbitraryMessage1()
+        message2 = TestMessageQueueT.ArbitraryMessage2()
+        handler = TestMessageQueueT.EventHandler()
+
+        sut: MessageQueue
+        sut = MessageQueue.Factory.get()
+
+        sut.register(handler.on_any_event_two_messages_add_to_list)
+
+        sut.publish(message1)
+        sut.publish_first(message2)
+
+        handler.signal.wait(5)
+
+        self.assertEqual(2, len(handler.messages))
+        self.assertEqual(message2, handler.messages[0])
+        self.assertEqual(message1, handler.messages[1])
 
 
 if __name__ == "__main__":

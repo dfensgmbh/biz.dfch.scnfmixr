@@ -25,32 +25,28 @@
 from __future__ import annotations
 from collections.abc import Iterable
 from time import sleep
-from typing import Generic, TypeVar, Optional, ClassVar, Callable
+from typing import Optional, ClassVar, Callable
 from threading import Event, Lock, Thread
 
 from biz.dfch.logging import log
 from .concurrent_queue_t import ConcurrentQueueT
 from ..public.system import MessageBase
-# from ..public.system import MessageBase  # pylint: disable=W0611
 from ..public.system import MessagePriority
 
 
 __all__ = [
-    "MessageQueueT",
+    "MessageQueue",
 ]
 
 
-T = TypeVar("T", bound="MessageBase")
-
-
-class MessageQueueT(Generic[T]):  # pylint: disable=R0902
+class MessageQueue():  # pylint: disable=R0902
     """Generic message queue."""
 
     _WORKER_SIGNAL_WAIT_TIME_MS = 1000
     _EXCEPTION_TIMEOUT_MS = 1000
 
-    _queue_high: ConcurrentQueueT[T]
-    _queue_default: ConcurrentQueueT[T]
+    _queue_high: ConcurrentQueueT[MessageBase]
+    _queue_default: ConcurrentQueueT[MessageBase]
     _callbacks: list[Callable[[MessageBase], None]]
     _is_processing: bool
     _signal: Event
@@ -64,14 +60,14 @@ class MessageQueueT(Generic[T]):  # pylint: disable=R0902
             AssertionError: If called directly.
         """
 
-        if not MessageQueueT.Factory._sync_root.locked():
+        if not MessageQueue.Factory._sync_root.locked():
             raise AssertionError("Private ctor. Use Factory instead.")
 
         log.debug("Initialising ...")
 
         self._sync_root = Lock()
-        self._queue_high = ConcurrentQueueT[T]()
-        self._queue_default = ConcurrentQueueT[T]()
+        self._queue_high = ConcurrentQueueT[MessageBase]()
+        self._queue_default = ConcurrentQueueT[MessageBase]()
         self._callbacks = []
         self._is_processing = False
         self._signal = Event()
@@ -84,24 +80,24 @@ class MessageQueueT(Generic[T]):  # pylint: disable=R0902
     class Factory:  # pylint: disable=R0903
         """Factory class."""
 
-        __instance: ClassVar[Optional["MessageQueueT[T]"]] = None
+        __instance: ClassVar[Optional["MessageQueue[MessageBase]"]] = None
         _sync_root: ClassVar[Lock] = Lock()
 
         @staticmethod
-        def get() -> "MessageQueueT[T]":
+        def get() -> "MessageQueue[MessageBase]":
             """Creates or gets the instance of the message queue."""
 
-            if MessageQueueT.Factory.__instance is not None:
-                return MessageQueueT.Factory.__instance
+            if MessageQueue.Factory.__instance is not None:
+                return MessageQueue.Factory.__instance
 
-            with MessageQueueT.Factory._sync_root:
+            with MessageQueue.Factory._sync_root:
 
-                if MessageQueueT.Factory.__instance is not None:
-                    return MessageQueueT.Factory.__instance
+                if MessageQueue.Factory.__instance is not None:
+                    return MessageQueue.Factory.__instance
 
-                MessageQueueT.Factory.__instance = MessageQueueT()
+                MessageQueue.Factory.__instance = MessageQueue()
 
-            return MessageQueueT.Factory.__instance
+            return MessageQueue.Factory.__instance
 
     def _process_message(self, message: MessageBase) -> None:
         """Processes a single message."""
@@ -187,10 +183,15 @@ class MessageQueueT(Generic[T]):  # pylint: disable=R0902
                           exc_info=True)
                 sleep(self._EXCEPTION_TIMEOUT_MS / 1000)
 
-    def _publish(self, items: T | Iterable[T], at_first: bool) -> None:
+    def _publish(
+            self,
+            items: MessageBase | Iterable[MessageBase],
+            at_first: bool
+    ) -> None:
         """Internal: Publishes an item to the respective queue.
 
         Args:
+            item (Message | Iterable[MessageBase]): Message to publish.
             at_first (bool): True, if the messages should be enqueued at the
                 top of the queueu; false, otherwise (defaulT).
         """
@@ -214,15 +215,23 @@ class MessageQueueT(Generic[T]):  # pylint: disable=R0902
 
         self._signal.set()
 
-    def publish(self, items: T | Iterable[T]) -> None:
-        """Publishes an item to the respective queue."""
+    def publish(self, items: MessageBase | Iterable[MessageBase]) -> None:
+        """Publishes an item to the respective queue.
+
+        Args:
+            item (Message | Iterable[MessageBase]): Message to publish.
+        """
 
         assert items is not None and isinstance(items, (Iterable, MessageBase))
 
         self._publish(items, at_first=False)
 
-    def publish_first(self, items: T | Iterable[T]) -> None:
-        """Publishes an item to the top of the respective queue."""
+    def publish_first(self, items: MessageBase | Iterable[MessageBase]) -> None:
+        """Publishes an item to the top of the respective queue.
+
+        Args:
+            item (Message | Iterable[MessageBase]): Message to publish.
+        """
 
         assert items is not None and isinstance(items, (Iterable, MessageBase))
 
@@ -236,7 +245,7 @@ class MessageQueueT(Generic[T]):  # pylint: disable=R0902
             self._queue_default.clear()
 
     def _is_registered(
-        self, action: Callable[[T], None],
+        self, action: Callable[[MessageBase], None],
             use_lock: bool
     ) -> bool:
         """Internal: locked and unlocked access to callback."""
@@ -251,7 +260,7 @@ class MessageQueueT(Generic[T]):  # pylint: disable=R0902
         result = any(e for e in self._callbacks if e == action)
         return result
 
-    def is_registered(self, action: Callable[[T], None]) -> bool:
+    def is_registered(self, action: Callable[[MessageBase], None]) -> bool:
         """Determines, whether a callback is registered or not.
 
         Returns:
@@ -263,7 +272,7 @@ class MessageQueueT(Generic[T]):  # pylint: disable=R0902
 
         return result
 
-    def register(self, action: Callable[[T], None]) -> bool:
+    def register(self, action: Callable[[MessageBase], None]) -> bool:
         """Registers a callback on the message queue.
 
         Calling the method with the same action twice will only register the
@@ -285,7 +294,7 @@ class MessageQueueT(Generic[T]):  # pylint: disable=R0902
 
         return True
 
-    def unregister(self, action: Callable[[T], None]) -> bool:
+    def unregister(self, action: Callable[[MessageBase], None]) -> bool:
         """Unregisters a callback on the message queue
 
         Calling the method with the same action twice will return False.
