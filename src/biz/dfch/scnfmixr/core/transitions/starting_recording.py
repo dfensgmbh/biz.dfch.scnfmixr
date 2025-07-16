@@ -25,6 +25,7 @@
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
+from ...mixer.audio_mixer import AudioRecorder
 from ...public.storage import FileName
 from ...public.system import SystemTime
 from ..fsm import UiEventInfo
@@ -45,7 +46,7 @@ class StartingRecording(TransitionBase):
         super().__init__(
             event,
             info_enter=UiEventInfo(
-                TransitionEvent.STARTING_RECORDING_ENETR, False),
+                TransitionEvent.STARTING_RECORDING_ENTER, False),
             info_leave=UiEventInfo(
                 TransitionEvent.STARTING_RECORDING_LEAVE, False),
             target_state=target)
@@ -55,6 +56,8 @@ class StartingRecording(TransitionBase):
         app_ctx = ApplicationContext.Factory.get()
         base_name = app_ctx.date_time_name_input.get_name()
         now = SystemTime.Factory.get().now()
+
+        files: list[str] = []
 
         suffix = "MX01"
         for device, device_info in app_ctx.storage_configuration_map.items():
@@ -72,4 +75,13 @@ class StartingRecording(TransitionBase):
                       file.direxists,
                       file.exists)
 
-        return True
+            if file.direxists and not file.exists:
+                files.append(file)
+
+        if 0 == len(files):
+            return False
+
+        recorder = AudioRecorder.Factory.get()
+        result = recorder.start(files)
+
+        return result

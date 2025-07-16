@@ -43,6 +43,7 @@ from ..public.audio import AudioDevice
 
 __all__ = [
     "AudioMixer",
+    "AudioRecorder",
 ]
 
 
@@ -228,6 +229,213 @@ class AudioMixerState(Enum):
     STARTED = auto()
     STOPPING = auto()
     ERROR = auto()
+
+
+class AudioRecorder:
+    """The JACK audio recorder.
+
+    Attributes:
+    """
+
+    _sync_root: threading.Lock
+    _callbacks: list[Callable[[threading.Event], None]]
+    state: AudioRecorder.Event
+
+    items: list[str]
+
+    class Event(Enum):
+        """Notification events."""
+
+        ERROR = auto()
+        CONFIGURATION_CHANGING = auto()
+        CONFIGURATION_CHANGED = auto()
+        STARTING = auto()
+        STARTED = auto()
+        STOPPING = auto()
+        STOPPED = auto()
+        STATE_CHANGED = auto()
+        REQUESTING_STOP = auto()
+
+    class Factory:  # pylint: disable=R0903
+        """Factory class."""
+
+        __instance: ClassVar[AudioRecorder | None] = None
+        _sync_root: ClassVar[threading.Lock] = threading.Lock()
+
+        @staticmethod
+        def get() -> AudioRecorder:
+            """Gets the instance of the audio mixer."""
+
+            if AudioRecorder.Factory.__instance is not None:
+                return AudioRecorder.Factory.__instance
+
+            with AudioRecorder.Factory._sync_root:
+
+                if AudioRecorder.Factory.__instance is not None:
+                    return AudioRecorder.Factory.__instance
+
+                AudioRecorder.Factory.__instance = AudioRecorder()
+
+            return AudioRecorder.Factory.__instance
+
+    def _app_on_shutdown(self, event: AppNotification.Event):
+        """Process SHUTDOWN notification."""
+
+        if event is None or not isinstance(event, AppNotification.Event):
+            return
+
+        if AppNotification.Event.SHUTDOWN != event:
+            return
+
+        log.info("_app_on_shutdown: Stopping ...")
+
+        result = self.stop()
+
+        log.info("_app_on_shutdown: Stopping result: %s",
+                 result)
+
+    def __init__(self):
+
+        if not AudioRecorder.Factory._sync_root.locked():
+            raise RuntimeError("Private ctor. Use Factory instead.")
+
+        log.debug("Initialising ...")
+
+        # Set directly via private field, as class is not yet fully initialised.
+        self._sync_root = threading.Lock()
+        self._callbacks = []
+        self.state = AudioRecorder.Event.STOPPED
+        self.items = []
+
+        app_ctx = ApplicationContext.Factory.get()
+        app_ctx.notification.register(self._app_on_shutdown)
+
+        self.register(self._on_requesting_stop)
+
+        log.info("Initialising OK.")
+
+    def _on_requesting_stop(self, event: AudioRecorder.Event):
+
+        if event is None or not isinstance(event, AudioRecorder.Event):
+            return
+
+        if AudioRecorder.Event.REQUESTING_STOP != event:
+            return
+
+        log.info("_requesting_stop: Stopping ...")
+
+        result = self.stop()
+
+        log.info("_requesting_stop: Stopping result: %s",
+                 result)
+
+    def _set_state(self, value: AudioRecorder.Event) -> None:
+        """Private: Sets the private field _state of the audio mixer."""
+
+        self.state = value
+        self.signal(AudioRecorder.Event.STATE_CHANGED)
+
+        match value:
+            case AudioRecorder.Event.REQUESTING_STOP:
+                pass
+            case _:
+                self.signal(value)
+
+    def register(self, action: Callable[[Event], None]) -> None:
+        """Registers an action.
+
+        Args:
+            action (Callable[[Event], None]): The action to register.
+        Returns:
+            None:
+        """
+
+        assert action and callable(action)
+
+        log.debug("Registering action '%s' ...", action)
+
+        with self._sync_root:
+            self._callbacks.append(action)
+
+        log.info("Registering action '%s' COMPLETED.", action)
+
+    def signal(self, event: AudioRecorder.Event) -> None:
+        """Signals the specified event to all registered actions.
+
+        Args:
+            event (Event): The event to signal.
+
+        Returns:
+            None:
+        """
+
+        assert event is not None and isinstance(event, AudioRecorder.Event)
+
+        def dispatch(event: AudioRecorder.Event) -> None:
+            """Dispatcher for event notificiations."""
+
+            with self._sync_root:
+                actions = list(self._callbacks)
+
+            count = len(actions)
+            for index, action in enumerate(actions):
+
+                try:
+                    log.debug(
+                        ("Dispatching event '%s' to action '%s' .... "
+                         "[%s/%s]"),
+                        event, action,
+                        index+1, count)
+
+                    action(event)
+
+                    log.info(
+                        ("Dispatching event '%s' to action '%s' OK. "
+                         "[%s/%s]"),
+                        event, action,
+                        index+1, count)
+
+                except Exception:  # pylint: disable=W0718
+                    log.error(
+                        ("Dispatching event '%s' to action '%s' FAILED. "
+                         "[%s/%s]"),
+                        event, action,
+                        index+1, count,
+                        exc_info=True)
+
+        threading.Thread(target=dispatch, args=(event,), daemon=True).start()
+
+    def start(self, items: list[str]) -> bool:
+        """Starts a recording."""
+
+        assert items and isinstance(items, list) and 1 <= len(items) <= 2
+
+        if self.state != AudioRecorder.Event.STOPPED:
+            return False
+
+        self.items = items
+
+        self._set_state(AudioRecorder.Event.STARTING)
+        log.debug("Starting recording ... [%s]", self.items)
+
+        log.info("Starting recording OK. [%s]", self.items)
+        self._set_state(AudioRecorder.Event.STARTED)
+
+        return True
+
+    def stop(self) -> bool:
+        """Stops a recording."""
+
+        if self.state != AudioRecorder.Event.STARTED:
+            return False
+
+        self._set_state(AudioRecorder.Event.STOPPING)
+        log.debug("Stopping recording ... [%s]", self.items)
+
+        log.info("Stopping recording OK. [%s]", self.items)
+        self._set_state(AudioRecorder.Event.STOPPED)
+
+        return True
 
 
 class AudioMixer:

@@ -99,7 +99,7 @@ class TransitionEvent(StrEnum):
     INITIALISING_AUDIO_LEAVE = auto()
 
     # Menu: Record.
-    STARTING_RECORDING_ENETR = auto()
+    STARTING_RECORDING_ENTER = auto()
     STARTING_RECORDING_LEAVE = auto()
     SETTING_DATE_ENTER = auto()
     SETTING_DATE_LEAVE = auto()

@@ -259,6 +259,8 @@ class StateMachine:
                                               record_menu))
             .add_transition(ShowingStatus(OnRecord.Event.SHOW_STATUS,
                                           onrecord_menu))
+            .add_transition(StoppingSystem(OnRecord.Event.STOP_SYSTEM,
+                                           final_state))
         )
         (
             record_menu

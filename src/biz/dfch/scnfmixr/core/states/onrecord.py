@@ -25,7 +25,6 @@
 from __future__ import annotations
 from enum import StrEnum
 
-from biz.dfch.logging import log
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
@@ -43,6 +42,7 @@ class OnRecord(StateBase):
         SET_CUE = "2"
         TOGGLE_MUTE = "3"
         SHOW_STATUS = "5"
+        STOP_SYSTEM = "9"
 
     def __init__(self):
         """Default ctor."""

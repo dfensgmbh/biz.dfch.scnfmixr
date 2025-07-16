@@ -22,6 +22,11 @@
 
 """Module stopping_recording."""
 
+from threading import Event
+
+from biz.dfch.logging import log
+
+from ...mixer.audio_mixer import AudioRecorder
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
@@ -30,6 +35,8 @@ from ..transition_event import TransitionEvent
 
 class StoppingRecording(TransitionBase):
     """Stops a recording."""
+
+    _is_recording_stopped: Event
 
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""
@@ -45,5 +52,43 @@ class StoppingRecording(TransitionBase):
                 TransitionEvent.STOPPING_RECORDING_LEAVE, False),
             target_state=target)
 
+        self._is_recording_stopped = Event()
+
+    # def _on_stopped(self, event: AudioRecorder.Event):
+    #     pass
+
+        # if event is None or not isinstance(event, AudioRecorder.Event):
+        #     return
+
+        # if AudioRecorder.Event.STOPPED != event:
+        #     return
+
+        # log.debug("_on_stopped: Processing '%s' ...", event)
+        # self._is_recording_stopped.set()
+        # log.info("_on_stopped: Processing '%s' OK", event)
+
     def invoke(self, _):
-        return True
+
+        self._is_recording_stopped.clear()
+
+        recorder = AudioRecorder.Factory.get()
+        # recorder.register(self._on_stopped)
+
+        recorder.signal(AudioRecorder.Event.REQUESTING_STOP)
+
+        log.debug("Waiting for recording to stop ...")
+        self._is_recording_stopped.wait(10)
+
+        if AudioRecorder.Event.STOPPED == recorder.state:
+            self._is_recording_stopped.set()
+
+        result = False
+        if self._is_recording_stopped.is_set():
+            self._is_recording_stopped.clear()
+            log.info("Waiting for recording to stop OK.")
+            result = True
+        else:
+            result = False
+            log.error("Waiting for recording to stop FAILED.")
+
+        return result
