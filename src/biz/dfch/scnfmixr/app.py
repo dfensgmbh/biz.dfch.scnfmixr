@@ -27,6 +27,7 @@ from threading import Event
 from biz.dfch.i18n import LanguageCode
 from biz.dfch.logging import log
 from biz.dfch.version import Version
+from biz.dfch.diagnostics import SchedulingInfo
 
 from .application_context import ApplicationContext
 from .args import Arguments
@@ -45,11 +46,11 @@ from .public.system import MessageBase
 class App:  # pylint: disable=R0903
     """The application."""
 
-    _VERSION_REQUIRED_MAJOR = 2
-    _VERSION_REQUIRED_MINOR = 0
+    _VERSION_REQUIRED_MAJOR = 3
+    _VERSION_REQUIRED_MINOR = 11
 
     # Note: also adjust in pyproject.toml
-    _VERSION = "2.1.0"
+    _VERSION = "2.2.0"
     _PROG_NAME = "scnfmixr"
 
     _signal_stop: Event
@@ -59,6 +60,8 @@ class App:  # pylint: disable=R0903
         Version().ensure_minimum_version(
             self._VERSION_REQUIRED_MAJOR,
             self._VERSION_REQUIRED_MINOR)
+
+        log.info("SchedulingInfo: '%s'", SchedulingInfo())
 
         self._signal_stop = Event()
         self._signal_stop.clear()
