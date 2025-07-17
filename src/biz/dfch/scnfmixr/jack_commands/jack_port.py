@@ -169,7 +169,7 @@ class JackPort:
 
         return result
 
-    def connect_to(self, other: str, verify: bool = False) -> bool:
+    def connect_to(self, other: str) -> bool:
         """Connects this port to the specified other port.
 
         Args:
@@ -188,10 +188,6 @@ class JackPort:
         cmd.append(other)
 
         log.debug("Connecting '%s' to '%s' ...", self.name, other)
-
-        if not verify:
-            Process.communicate(cmd)
-            return True
 
         Process.communicate(cmd)
 
