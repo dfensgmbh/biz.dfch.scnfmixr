@@ -78,10 +78,7 @@ class DetectingHi1Worker(InterfaceDetectorBase):
                 candidate,
             ]
 
-            process = Process.start(
-                cmd, wait_on_completion=True, capture_stdout=True)
-
-            text = process.stdout
+            text, _ = Process.communicate(cmd)
 
             visitor = InputEventDeviceVisitor()
 
