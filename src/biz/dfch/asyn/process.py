@@ -29,6 +29,7 @@ import os
 import subprocess
 import threading
 import time
+import signal
 from typing import IO, Optional, Sequence, Tuple
 
 from biz.dfch.logging import log
@@ -182,6 +183,84 @@ class Process:
             log.error(message, exc_info=True)
             raise RuntimeError(message) from ex
 
+    @staticmethod
+    def communicate(
+        cmd: list[str],
+        stdin: list[str] | None = None,
+        cwd: str = None,
+        max_wait_time: int = 5,
+        encoding: str = None,
+        **kwargs
+    ):
+        """Sends text to a process and waits for return synchronously."""
+
+        assert cmd and isinstance(cmd, list)
+        assert stdin is None or isinstance(stdin, list)
+
+        _newline = '\n'
+        _space = ' '
+        _poll_wait_interval = 0.1
+        _sigterm_wait_time = 0.5
+
+        log.debug("Starting process '%s' ...", _space.join(cmd))
+
+        try:
+            process = subprocess.Popen(
+                args=cmd,
+                cwd=cwd,
+                encoding=encoding,
+                text=True,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                start_new_session=True,
+                **kwargs,
+            )
+
+            # Wait until process stops, or stop the process manually.
+            start = time.monotonic()
+            while process.poll() is None:
+
+                if time.monotonic() - start > max_wait_time:
+                    try:
+                        process.send_signal(signal.SIGTERM)
+                    except Exception:  # pylint: disable=W0718
+                        # Ingore exception.
+                        pass
+                    try:
+                        process.wait(_sigterm_wait_time)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
+
+                try:
+                    process.wait(_poll_wait_interval)
+                    break
+                except subprocess.TimeoutExpired:
+                    continue
+
+            if stdin:
+                _input = _newline.join(stdin) + _newline
+            else:
+                _input = None
+            result = process.communicate(_input)
+
+            if process.poll() is not None:
+                log.info("Starting process '%s' OK. [%s]", _space.join(
+                    cmd), process.returncode)
+            else:
+                log.error("Starting process '%s' FAILED. [%s]", _space.join(
+                    cmd), process.returncode, exc_info=True)
+
+            result = (result[0].splitlines(), result[1].splitlines())
+            return result
+
+        except Exception as ex:  # pylint: disable=W0718
+
+            log.error("Starting process '%s' FAILED. [%s]", _space.join(
+                cmd), ex, exc_info=True)
+
+        # log.info("Starting process '[%s]' OK.", process.pid)
+
     @classmethod
     def start(
         cls,
@@ -197,7 +276,13 @@ class Process:
 
         Args:
             cmd (list[str]): The process with its arguments to be started.
-            cmd (str, optional): The working directory of the process to be
+            capture_stdin (bool): True, if `stdin` should be captured; false,
+                otherwise (default).
+            capture_stdout (bool): True, if `stdout` should be captured; false,
+                otherwise (default).
+            capture_stderr (bool): True, if `stderr` should be captured; false,
+                otherwise (default).
+            cwd (str, optional): The working directory of the process to be
                 started. If no working directory is given, the current working
                 directory of the calling process is used.
             encoding (str, optional): The charset to be used for the process to
@@ -212,12 +297,14 @@ class Process:
         assert cmd is not None and 0 < len(cmd)
         args = [str(arg) for arg in cmd]
 
+        _space = ' '
+
         cwd = cwd or os.getcwd()
         assert os.path.exists(cwd)
 
         encoding = encoding or locale.getpreferredencoding(False)
 
-        log.debug("Trying to start process... [%s]", args)
+        log.debug("Trying to start process... [%s]", _space.join(args))
         # pylint: disable=consider-using-with
         result = subprocess.Popen(
             args=args,
@@ -282,9 +369,6 @@ class Process:
 
                 value = line.rstrip(os.linesep)
                 self._queue.enqueue((name, value))
-
-                # if stream.closed:
-                #     return
 
         except Exception as ex:  # pylint: disable=broad-exception-caught
             log.warning("Error reading from stream '%s' [%s]. %s",

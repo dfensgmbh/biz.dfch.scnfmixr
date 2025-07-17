@@ -72,12 +72,8 @@ class JackPort:
 
         log.debug("Enumerating ports '%s' ...", name)
 
-        process = Process.start(cmd, True, capture_stdout=True)
-        while process.is_running:
-            sleep(0.1)
-
-        text = list(process.stdout)
-        process.stop(force=True)
+        result_from_process = Process.communicate(cmd, max_wait_time=3)
+        text = result_from_process[0]
 
         visitor = JackConnection.PortVisitor()
         dic = {
@@ -194,16 +190,10 @@ class JackPort:
         log.debug("Connecting '%s' to '%s' ...", self.name, other)
 
         if not verify:
-            process = Process.start(cmd, wait_on_completion=False)
+            Process.communicate(cmd)
             return True
 
-        process = Process.start(cmd, wait_on_completion=True)
-        while process.is_running:
-            sleep(0.1)
-
-        # DFTODO Why do we try to stop the process,
-        # if it is not running any more?
-        process.stop(force=True)
+        Process.communicate(cmd)
 
         conns = self.get_connections()
         if conns is None or not isinstance(conns, list):

@@ -25,7 +25,6 @@
 from __future__ import annotations
 import os
 import time
-# from typing import overload, Union
 
 from biz.dfch.logging import log
 from biz.dfch.asyn import Process
@@ -91,8 +90,7 @@ class JackConnection:
         cmd.append(JackConnection._JACK_LSP_FULLNAME)
         cmd.append(name)
 
-        process = Process.start(cmd, True, capture_stdout=True)
-        text = list(process.stdout)
+        text, _ = Process.communicate(cmd, max_wait_time=0.25)
 
         visitor = JackConnection.PortVisitor()
         dic = {
@@ -106,11 +104,6 @@ class JackConnection:
         parser.parse(text)
 
         result = visitor.items
-
-        while process.is_running:
-            time.sleep(0.1)
-
-        process.stop(force=True)
 
         return result
 
@@ -135,8 +128,9 @@ class JackConnection:
         cmd.append(name)
         cmd.append("-c")
 
-        process = Process.start(cmd, True, capture_stdout=True)
-        text = list(process.stdout)
+        # process = Process.start(cmd, True, capture_stdout=True)
+        # text = list(process.stdout)
+        text, _ = Process.communicate(cmd)
 
         visitor = JackConnection.ConnectionVisitor()
         dic = {
@@ -152,10 +146,10 @@ class JackConnection:
 
         result = visitor.items
 
-        while process.is_running:
-            time.sleep(0.1)
+        # while process.is_running:
+        #     time.sleep(0.1)
 
-        process.stop(force=True)
+        # process.stop(force=True)
 
         return result
 

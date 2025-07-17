@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Conains platform specific tests."""
+"""Contains platform specific tests."""
 
 import unittest
 
@@ -210,3 +210,12 @@ class TestProcess(unittest.TestCase):
         # Process already stopped.
         result = sut.stop(max_wait_time=1, force=True)
         self.assertFalse(result)
+
+    def test_stdin_succeeds(self):
+        """Testing stdin succeeds."""
+
+        cmd = [
+            ""
+        ]
+
+        OSError().
