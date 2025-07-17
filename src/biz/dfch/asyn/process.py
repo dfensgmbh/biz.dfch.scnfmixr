@@ -189,9 +189,9 @@ class Process:
         stdin: list[str] | None = None,
         cwd: str = None,
         max_wait_time: int = 5,
-        encoding: str = None,
+        encoding: str = "utf-8",
         **kwargs
-    ):
+    ) -> tuple[list[str], list[str]]:
         """Sends text to a process and waits for return synchronously."""
 
         assert cmd and isinstance(cmd, list)
@@ -199,10 +199,14 @@ class Process:
 
         _newline = '\n'
         _space = ' '
-        _poll_wait_interval = 0.1
         _sigterm_wait_time = 0.5
 
         log.debug("Starting process '%s' ...", _space.join(cmd))
+
+        stdout1: str = ""
+        stdout2: str = ""
+        stderr1: str = ""
+        stderr2: str = ""
 
         try:
             process = subprocess.Popen(
@@ -217,32 +221,31 @@ class Process:
                 **kwargs,
             )
 
-            # Wait until process stops, or stop the process manually.
-            start = time.monotonic()
-            while process.poll() is None:
-
-                if time.monotonic() - start > max_wait_time:
-                    try:
-                        process.send_signal(signal.SIGTERM)
-                    except Exception:  # pylint: disable=W0718
-                        # Ingore exception.
-                        pass
-                    try:
-                        process.wait(_sigterm_wait_time)
-                    except subprocess.TimeoutExpired:
-                        process.kill()
-
-                try:
-                    process.wait(_poll_wait_interval)
-                    break
-                except subprocess.TimeoutExpired:
-                    continue
-
             if stdin:
                 _input = _newline.join(stdin) + _newline
+                log.debug("stdin: '%s'", _input)
             else:
                 _input = None
-            result = process.communicate(_input)
+
+            try:
+
+                stdout1, stderr1 = process.communicate(
+                    input=_input,
+                    timeout=max_wait_time)
+
+            except subprocess.TimeoutExpired:
+
+                try:
+                    process.send_signal(signal.SIGTERM)
+                except Exception:  # pylint: disable=W0718
+                    # Ingore exception.
+                    pass
+
+                try:
+                    process.wait(_sigterm_wait_time)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    stdout2, stderr2 = process.communicate()
 
             if process.poll() is not None:
                 log.info("Starting process '%s' OK. [%s]", _space.join(
@@ -251,7 +254,15 @@ class Process:
                 log.error("Starting process '%s' FAILED. [%s]", _space.join(
                     cmd), process.returncode, exc_info=True)
 
-            result = (result[0].splitlines(), result[1].splitlines())
+            result = ([], [])
+            if stdout1:
+                result[0].extend(stdout1.splitlines())
+            if stdout2:
+                result[0].extend(stdout2.splitlines())
+            if stderr1:
+                result[1].extend(stderr1.splitlines())
+            if stderr2:
+                result[1].extend(stderr2.splitlines())
             return result
 
         except Exception as ex:  # pylint: disable=W0718
@@ -259,7 +270,7 @@ class Process:
             log.error("Starting process '%s' FAILED. [%s]", _space.join(
                 cmd), ex, exc_info=True)
 
-        # log.info("Starting process '[%s]' OK.", process.pid)
+            return ([], [])
 
     @classmethod
     def start(

@@ -22,12 +22,16 @@
 
 """Module message_high."""
 
-from .message_base import MessageBase
+from .message_base import (
+    MessageBase,
+    ICommand,
+)
 from .message_priority import MessagePriority
 
 
 __all__ = [
     "MessageHigh",
+    "CommandHigh",
 ]
 
 
@@ -39,3 +43,7 @@ class MessageHigh(MessageBase):  # pylint: disable=R0903
 
     def __init__(self) -> None:
         super().__init__(MessagePriority.HIGH)
+
+
+class CommandHigh(MessageHigh, ICommand):  # pylint: disable=R0903
+    """A command message with priority `MessagePriority.HIGH`"""

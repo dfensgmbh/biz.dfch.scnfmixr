@@ -24,13 +24,17 @@
 
 from __future__ import annotations
 
-from .message_base import MessageBase
+from .message_base import (
+    MessageBase,
+    ICommand,
+)
 from .message_priority import MessagePriority
 
 
 __all__ = [
     "Message",
     "MessageMedium",
+    "CommandMedium",
 ]
 
 
@@ -46,3 +50,7 @@ class MessageMedium(MessageBase):  # pylint: disable=R0903
 
 # Alias for MessageMedium
 Message = MessageMedium
+
+
+class CommandMedium(MessageMedium, ICommand):  # pylint: disable=R0903
+    """A command message with priority `MessagePriority.MEDIUM`"""

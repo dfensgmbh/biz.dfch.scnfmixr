@@ -40,3 +40,5 @@ class RecordingParameters:
     file_format: FileFormat = FileFormat.DEFAULT
     format: Format = Format.DEFAULT
     sampling_rate: int = SampleRate.DEFAULT
+    skip_rc1: bool = False
+    skip_rc2: bool = False

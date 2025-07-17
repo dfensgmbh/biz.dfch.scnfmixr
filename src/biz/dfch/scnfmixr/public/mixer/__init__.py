@@ -35,6 +35,11 @@ from .output import Output
 from .file_input_or_output import FileInputOrOutput
 from .file_input import FileInput
 from .file_output import FileOutput
+from .mixer_message import (
+    MixerMessage,
+    IAudioMixerMessage,
+    IAudioRecorderMessage,
+)
 
 __all__ = [
     "Connection",
@@ -48,4 +53,7 @@ __all__ = [
     "AudioInputOrOutput",
     "AudioInput",
     "AudioOutput",
+    "MixerMessage",
+    "IAudioMixerMessage",
+    "IAudioRecorderMessage",
 ]

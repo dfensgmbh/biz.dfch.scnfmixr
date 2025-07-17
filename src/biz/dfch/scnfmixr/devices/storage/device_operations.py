@@ -22,6 +22,8 @@
 
 """Package device_operations."""
 
+import os
+
 from biz.dfch.asyn import Process
 from text import TextUtils
 from ...public.storage import StorageDeviceInfo
@@ -47,7 +49,12 @@ class DeviceOperations:
     _PROC_MOUNT_FULLNAME = "/proc/mounts"
 
     _MOUNT_FULLNAME = "/usr/bin/mount"
+    _MOUNT_OPTION_OWNER = "-o"
+    _MOUNT_OPTION_OWNER_VALUE = "uid=%s,gid=%s"
     _UMOUNT_FULLNAME = "/usr/bin/umount"
+
+    _uid: str
+    _gid: str
 
     _device_info: StorageDeviceInfo
 
@@ -61,6 +68,8 @@ class DeviceOperations:
         assert value and isinstance(value, StorageDeviceInfo)
 
         self._device_info = value
+        self._uid = os.getuid()
+        self._gid = os.getgid()
 
     @property
     def is_mounted(self) -> bool:
@@ -84,6 +93,8 @@ class DeviceOperations:
         cmd: list[str] = [
             self._SUDO_FULLNAME,
             self._MOUNT_FULLNAME,
+            self._MOUNT_OPTION_OWNER,
+            self._MOUNT_OPTION_OWNER_VALUE % (self._uid, self._gid),
             self._device_info.full_name,
             self._device_info.mount_point,
         ]

@@ -23,12 +23,16 @@
 """Contains platform specific tests."""
 
 import unittest
+import os
 
 from biz.dfch.asyn import Process
 
 
 class TestProcess(unittest.TestCase):
     """Testing Process class."""
+
+    _NT: str = "nt"
+    _POSIX: str = "posix"
 
     def test_start_with_invalid_program_throws(self):
         """Starting an non-existing command fails."""
@@ -40,10 +44,26 @@ class TestProcess(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             _ = Process.start(args, True)
 
-    def test_start_sync_succeeds(self):
+    def test_start_sync_windows_succeeds(self):
         """This test is **OS/platform specific**"""
 
+        if self._NT != os.name:
+            self.skipTest(f"This test needs to run on {self._NT}.")
+
         args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
+
+        sut = Process.start(args, wait_on_completion=True)
+
+        self.assertIsNotNone(sut)
+        self.assertFalse(sut.is_running)
+
+    def test_start_sync_linux_succeeds(self):
+        """This test is **OS/platform specific**"""
+
+        if self._POSIX != os.name:
+            self.skipTest(f"This test needs to run on {self._POSIX}.")
+
+        args = ["/usr/bin/ls"]
 
         sut = Process.start(args, wait_on_completion=True)
 
@@ -53,10 +73,13 @@ class TestProcess(unittest.TestCase):
     def test_start_async_succeeds(self):
         """This test is **OS/platform specific**"""
 
+        if self._NT != os.name:
+            self.skipTest(f"This test needs to run on {self._NT}.")
+
         args = [
             "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
             "-Command",
-            "Start-Sleep 1",
+            "Start-Sleep 3",
         ]
 
         sut = Process.start(args, wait_on_completion=False)
@@ -64,8 +87,35 @@ class TestProcess(unittest.TestCase):
         self.assertIsNotNone(sut)
         self.assertTrue(sut.is_running)
 
+        result = sut.stop()
+        self.assertFalse(sut.is_running)
+        self.assertTrue(result)
+
+    def test_start_async_linux_succeeds(self):
+        """This test is **OS/platform specific**"""
+
+        if self._POSIX != os.name:
+            self.skipTest(f"This test needs to run on {self._POSIX}.")
+
+        args = [
+            "/usr/bin/sleep",
+            "3",
+        ]
+
+        sut = Process.start(args, wait_on_completion=False)
+
+        self.assertIsNotNone(sut)
+        self.assertTrue(sut.is_running)
+
+        result = sut.stop()
+        self.assertFalse(sut.is_running)
+        self.assertTrue(result)
+
     def test_start_sync_with_exit_code_succeeds(self):
         """This test is **OS/platform specific**"""
+
+        if self._NT != os.name:
+            self.skipTest(f"This test needs to run on {self._NT}.")
 
         expected = 42
         args = [
@@ -85,6 +135,9 @@ class TestProcess(unittest.TestCase):
     def test_start_sync_with_reading_from_stdout_succeeds(self):
         """This test is **OS/platform specific**"""
 
+        if self._NT != os.name:
+            self.skipTest(f"This test needs to run on {self._NT}.")
+
         args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
 
         sut = Process.start(args, wait_on_completion=True, capture_stdout=True,
@@ -95,6 +148,9 @@ class TestProcess(unittest.TestCase):
 
     def test_reading_from_stdout_succeeds(self):
         """This test is **OS/platform specific**"""
+
+        if self._NT != os.name:
+            self.skipTest(f"This test needs to run on {self._NT}.")
 
         args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
 
@@ -112,6 +168,9 @@ class TestProcess(unittest.TestCase):
 
     def test_reading_from_stderr_succeeds(self):
         """This test is **OS/platform specific**"""
+
+        if self._NT != os.name:
+            self.skipTest(f"This test needs to run on {self._NT}.")
 
         args = [
             "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
@@ -134,6 +193,9 @@ class TestProcess(unittest.TestCase):
     def test_reading_from_stderr_without_capture_returns_empty(self):
         """This test is **OS/platform specific**"""
 
+        if self._NT != os.name:
+            self.skipTest(f"This test needs to run on {self._NT}.")
+
         args = [
             "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
             "-Command",
@@ -155,6 +217,9 @@ class TestProcess(unittest.TestCase):
     def test_reading_from_output_succeeds(self):
         """This test is **OS/platform specific**"""
 
+        if self._NT != os.name:
+            self.skipTest(f"This test needs to run on {self._NT}.")
+
         args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
 
         sut = Process.start(args, wait_on_completion=True, capture_stdout=True,
@@ -174,6 +239,9 @@ class TestProcess(unittest.TestCase):
     def test_reading_from_output_without_capture_succeeds(self):
         """This test is **OS/platform specific**"""
 
+        if self._NT != os.name:
+            self.skipTest(f"This test needs to run on {self._NT}.")
+
         args = ["C:\\Windows\\system32\\cmd.exe", "/c", "dir"]
 
         sut = Process.start(args, wait_on_completion=True, capture_stdout=False,
@@ -188,8 +256,11 @@ class TestProcess(unittest.TestCase):
         self.assertEqual(0, len(sut.stdout))
         self.assertEqual(0, len(sut.stderr))
 
-    def test_stop_succeeds(self):
+    def test_stop_windows_succeeds(self):
         """This test is **OS/platform specific**"""
+
+        if self._NT != os.name:
+            self.skipTest(f"This test needs to run on {self._NT}.")
 
         args = [
             "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
@@ -211,11 +282,60 @@ class TestProcess(unittest.TestCase):
         result = sut.stop(max_wait_time=1, force=True)
         self.assertFalse(result)
 
-    def test_stdin_succeeds(self):
-        """Testing stdin succeeds."""
+    def test_stop_linux_succeeds(self):
+        """This test is **OS/platform specific**"""
 
-        cmd = [
-            ""
+        if self._POSIX != os.name:
+            self.skipTest(f"This test needs to run on {self._POSIX}.")
+
+        args = [
+            "/usr/bin/sleep",
+            "15",
         ]
 
-        OSError().
+        sut = Process.start(args, wait_on_completion=False)
+
+        self.assertIsNotNone(sut)
+        self.assertTrue(sut.is_running)
+
+        result = sut.stop(max_wait_time=1, force=True)
+
+        self.assertTrue(result)
+        self.assertFalse(sut.is_running)
+
+        # Process already stopped.
+        result = sut.stop(max_wait_time=1, force=True)
+        self.assertFalse(result)
+
+    def test_stdin_with_input_succeeds(self):
+        """Testing stdin with input succeeds."""
+
+        if self._POSIX != os.name:
+            self.skipTest(f"This test needs to run on {self._POSIX}.")
+
+        cmd = [
+            "/usr/bin/jack_transport",
+        ]
+        stdin = [
+            "play",
+            "exit",
+        ]
+
+        stdout, _ = Process.communicate(cmd, stdin)
+
+        self.assertTrue("jack_transport>" in stdout[0])
+        self.assertEqual(2, len(stdout), stdout)
+
+    def test_stdin_without_input_succeeds(self):
+        """Testing stdin without input succeeds."""
+
+        if self._POSIX != os.name:
+            self.skipTest(f"This test needs to run on {self._POSIX}.")
+
+        cmd = [
+            "/usr/bin/jack_lsp",
+        ]
+
+        stdout, stderr = Process.communicate(cmd)
+
+        self.assertTrue("system:capture_1" in stdout[0])

@@ -25,6 +25,7 @@ from .alsa_to_jack import AlsaToJack
 from .jack_to_alsa import JackToAlsa
 from .jack_connection import JackConnection
 from .jack_port import JackPort
+from .jack_transport import JackTransport
 from .zita_bridge_alsa_to_jack import ZitaBridgeAlsaToJack
 from .zita_bridge_jack_to_alsa import ZitaBridgeJackToAlsa
 
@@ -33,6 +34,7 @@ __all__ = [
     "AlsaToJack",
     "JackConnection",
     "JackPort",
+    "JackTransport",
     "JackToAlsa",
     "ZitaBridgeAlsaToJack",
     "ZitaBridgeJackToAlsa",

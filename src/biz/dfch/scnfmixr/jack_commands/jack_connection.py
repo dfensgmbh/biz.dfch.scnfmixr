@@ -42,6 +42,8 @@ class JackConnection:
 
     _JACK_CONNECT_FULLNAME = "/bin/jack_connect"
     _JACK_LSP_FULLNAME = "/bin/jack_lsp"
+    _JACK_LSP_OPTION_CONNECTIONS = "-c"
+    _JACK_LSP_CLIENT_PORT_SEPARATOR = ':'
 
     class Factory:
         """Factory class for creating `JackConnection` instances."""
@@ -69,6 +71,37 @@ class JackConnection:
             except RuntimeError:
 
                 return None
+
+    # DFTODO - is this method inside the correct class?
+    @staticmethod
+    def has_client_name(name: str) -> bool:
+        """Determines whether a JACK client names exists."""
+
+        assert name and name.strip()
+
+        cmd: list[str] = [
+            JackConnection._JACK_LSP_FULLNAME
+        ]
+
+        text, _ = Process.communicate(cmd, max_wait_time=0.25)
+
+        return any(e for e in text if e.split(
+            JackConnection._JACK_LSP_CLIENT_PORT_SEPARATOR)[0] == name)
+
+    # DFTODO - is this method inside the correct class?
+    @staticmethod
+    def get_client_names() -> list[str]:
+        """Gets JACK client names."""
+
+        cmd: list[str] = [
+            JackConnection._JACK_LSP_FULLNAME
+        ]
+
+        text, _ = Process.communicate(cmd, max_wait_time=0.25)
+
+        return list({
+            e.split(JackConnection._JACK_LSP_CLIENT_PORT_SEPARATOR, 1)[0]
+            for e in text})
 
     @staticmethod
     def get_ports(name: str) -> list[str]:
@@ -126,10 +159,8 @@ class JackConnection:
         cmd: list[str] = []
         cmd.append(JackConnection._JACK_LSP_FULLNAME)
         cmd.append(name)
-        cmd.append("-c")
+        cmd.append(JackConnection._JACK_LSP_OPTION_CONNECTIONS)
 
-        # process = Process.start(cmd, True, capture_stdout=True)
-        # text = list(process.stdout)
         text, _ = Process.communicate(cmd)
 
         visitor = JackConnection.ConnectionVisitor()
@@ -145,11 +176,6 @@ class JackConnection:
         parser.parse(text, is_regex=False)
 
         result = visitor.items
-
-        # while process.is_running:
-        #     time.sleep(0.1)
-
-        # process.stop(force=True)
 
         return result
 

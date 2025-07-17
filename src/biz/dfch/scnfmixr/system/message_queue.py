@@ -42,7 +42,7 @@ __all__ = [
 class MessageQueue():  # pylint: disable=R0902
     """Generic message queue."""
 
-    _WORKER_SIGNAL_WAIT_TIME_MS = 1000
+    _WORKER_SIGNAL_WAIT_TIME_MS = 5000
     _EXCEPTION_TIMEOUT_MS = 1000
 
     _queue_high: ConcurrentDoubleSideQueueT[MessageBase]

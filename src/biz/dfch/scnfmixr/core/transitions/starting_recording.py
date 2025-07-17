@@ -22,10 +22,15 @@
 
 """Module starting_recording."""
 
+from threading import Event
+
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
-from ...mixer.audio_mixer import AudioRecorder
+from ...system import MessageQueue
+from ...mixer.audio_recorder import AudioRecorder
+from ...public.system import MessageBase
+from ...public.mixer import MixerMessage
 from ...public.storage import FileName
 from ...public.system import SystemTime
 from ..fsm import UiEventInfo
@@ -36,6 +41,8 @@ from ..transition_event import TransitionEvent
 
 class StartingRecording(TransitionBase):
     """Starts a recording."""
+
+    _signal_is_recording: Event
 
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""
@@ -51,11 +58,23 @@ class StartingRecording(TransitionBase):
                 TransitionEvent.STARTING_RECORDING_LEAVE, False),
             target_state=target)
 
+        self._signal_is_recording = Event()
+
+    def _on_message(self, message: MessageBase) -> None:
+        """Message handler."""
+
+        if not isinstance(message, MixerMessage.Recorder.StartedMessage):
+            return
+
+        self._signal_is_recording.set()
+
     def invoke(self, _):
 
         app_ctx = ApplicationContext.Factory.get()
         base_name = app_ctx.date_time_name_input.get_name()
         now = SystemTime.Factory.get().now()
+
+        AudioRecorder.Factory.get()
 
         files: list[str] = []
 
@@ -69,7 +88,7 @@ class StartingRecording(TransitionBase):
                 suffix=suffix
             )
 
-            log.debug("[%s] Filename '%s' [path: %s] [file %s]",
+            log.debug("[%s] Filename '%s' [path: %s] [file: %s]",
                       device.name,
                       file.fullname,
                       file.direxists,
@@ -79,9 +98,23 @@ class StartingRecording(TransitionBase):
                 files.append(file)
 
         if 0 == len(files):
+            log.error("No storage devices detected. Cannot record.")
             return False
 
-        recorder = AudioRecorder.Factory.get()
-        result = recorder.start(files)
+        message_queue = MessageQueue.Factory.get()
+        message_queue.register(self._on_message)
+        message_queue.publish(
+            MixerMessage.Recorder.RecordingStartCommand(files))
+
+        log.debug("Waiting for recording to start ...")
+
+        result = self._signal_is_recording.wait(10)
+        message_queue.unregister(self._on_message)
+        self._signal_is_recording.clear()
+
+        if result:
+            log.info("Waiting for recording to start OK.")
+        else:
+            log.error("Waiting for recording to start FAILED.")
 
         return result

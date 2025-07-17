@@ -35,6 +35,7 @@ __all__ = [
 class FileName:  # pylint: disable=R0903
     """Represents a file name."""
 
+    _EXTENSION_DOT = '.'
     _value: str
 
     def __init__(
@@ -55,8 +56,8 @@ class FileName:  # pylint: disable=R0903
 
         file_name = (
             f"{base_name}{separator}"
-            f"{dt.isoformat()[0:19].replace(':', '-')}{separator}"
-            f"{suffix}{separator}"
+            f"{dt.isoformat()[0:19].replace(':', '-')}"
+            f"{self._EXTENSION_DOT}"
             f"{extension}"
         )
 

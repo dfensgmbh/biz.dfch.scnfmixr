@@ -27,20 +27,36 @@ from .system_time import SystemTime
 # DFTODO - what is this module doing here in public.system?
 from .usb_port import UsbPort
 
-from .message_medium import Message
-from .message_base import MessageBase
-from .message_high import MessageHigh
-from .message_medium import MessageMedium
-from .message_low import MessageLow
+from .message_base import (
+    MessageBase,
+    ICommand,
+)
+from .message_high import (
+    MessageHigh,
+    CommandHigh
+)
+from .message_medium import (
+    Message,
+    MessageMedium,
+    CommandMedium
+)
+from .message_low import (
+    MessageLow,
+    CommandLow
+)
 from .message_priority import MessagePriority
 
 
 __all__ = [
-    "Message",
     "MessageBase",
+    "ICommand",
     "MessageHigh",
+    "CommandHigh",
+    "Message",
     "MessageMedium",
+    "CommandMedium",
     "MessageLow",
+    "CommandLow",
     "MessagePriority",
     "SystemTime",
     "UsbPort",

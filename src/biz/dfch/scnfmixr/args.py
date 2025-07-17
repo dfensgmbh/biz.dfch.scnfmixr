@@ -211,6 +211,16 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
             default="4-1.1",
             help="Specifies USB port for storage device 2."
         )
+        parser.add_argument(
+            "--skip-storage1",
+            action="store_true",
+            help="Disable storage device 1."
+        )
+        parser.add_argument(
+            "--skip-storage2",
+            action="store_true",
+            help="Disable storage device 2."
+        )
 
         # User interaction.
         parser.add_argument(

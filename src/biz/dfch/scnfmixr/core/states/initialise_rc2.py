@@ -26,6 +26,8 @@ from __future__ import annotations
 from enum import StrEnum
 
 from biz.dfch.logging import log
+from ...app import ApplicationContext
+from ...public.storage import StorageDevice
 from ...public.system.messages import SystemMessage
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
@@ -67,6 +69,13 @@ class InitialiseRc2(StateBase):
         """
 
         assert ctx and isinstance(ctx, ExecutionContext)
+
+        device = StorageDevice.RC2
+        if ApplicationContext.Factory.get().recording_parameters.skip_rc2:
+            log.info("Skipping device '%s' ...", device.name)
+            msg = SystemMessage.InputEvent(InitialiseRc2.Event.SKIP_DEVICE)
+            ctx.events.publish_first(msg)
+            return
 
         if not ctx.error:
             log.info("Enqueueing event: '%s' [%s].",

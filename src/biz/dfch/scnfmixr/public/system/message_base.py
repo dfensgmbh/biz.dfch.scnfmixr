@@ -31,7 +31,12 @@ from .message_priority import MessagePriority
 
 __all__ = [
     "MessageBase",
+    "ICommand",
 ]
+
+
+class ICommand:
+    """Base interface for all commands."""
 
 
 @dataclass(frozen=True)

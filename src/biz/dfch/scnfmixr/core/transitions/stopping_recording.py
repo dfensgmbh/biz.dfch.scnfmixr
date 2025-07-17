@@ -26,7 +26,11 @@ from threading import Event
 
 from biz.dfch.logging import log
 
-from ...mixer.audio_mixer import AudioRecorder
+from ...public.system import MessageBase
+from ...system import MessageQueue
+from ...public.mixer import (
+    MixerMessage,
+)
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
@@ -54,41 +58,32 @@ class StoppingRecording(TransitionBase):
 
         self._is_recording_stopped = Event()
 
-    # def _on_stopped(self, event: AudioRecorder.Event):
-    #     pass
+    def _on_message(self, message: MessageBase) -> None:
+        """Message handler."""
 
-        # if event is None or not isinstance(event, AudioRecorder.Event):
-        #     return
+        if not isinstance(message, MixerMessage.Recorder.StoppedMessage):
+            return
 
-        # if AudioRecorder.Event.STOPPED != event:
-        #     return
-
-        # log.debug("_on_stopped: Processing '%s' ...", event)
-        # self._is_recording_stopped.set()
-        # log.info("_on_stopped: Processing '%s' OK", event)
+        self._is_recording_stopped.set()
 
     def invoke(self, _):
 
         self._is_recording_stopped.clear()
 
-        recorder = AudioRecorder.Factory.get()
-        # recorder.register(self._on_stopped)
-
-        recorder.signal(AudioRecorder.Event.REQUESTING_STOP)
+        message_queue = MessageQueue.Factory.get()
+        message_queue.register(self._on_message)
+        message_queue.publish(
+            MixerMessage.Recorder.RecordingStopCommand())
 
         log.debug("Waiting for recording to stop ...")
-        self._is_recording_stopped.wait(10)
 
-        if AudioRecorder.Event.STOPPED == recorder.state:
-            self._is_recording_stopped.set()
+        result = self._is_recording_stopped.wait(10)
+        message_queue.unregister(self._on_message)
+        self._is_recording_stopped.clear()
 
-        result = False
-        if self._is_recording_stopped.is_set():
-            self._is_recording_stopped.clear()
+        if result:
             log.info("Waiting for recording to stop OK.")
-            result = True
         else:
-            result = False
             log.error("Waiting for recording to stop FAILED.")
 
         return result
