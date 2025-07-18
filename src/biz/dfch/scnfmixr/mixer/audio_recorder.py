@@ -154,7 +154,12 @@ class AudioRecorder:
         self.state = AudioRecorder.Event.STOPPED
         self.items = []
 
-        self._message_queue.register(self._on_message)
+        self._message_queue.register(
+            self._on_message,
+            lambda e: isinstance(
+                e, (MixerMessage.Recorder.RecordingStartCommand,
+                    MixerMessage.Recorder.RecordingStopCommand,
+                    SystemMessage)))
 
         log.info("Initialising OK.")
 

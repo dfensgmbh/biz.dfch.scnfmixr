@@ -53,7 +53,7 @@ class InitialiseHi1(StateBase):
             info_enter=UiEventInfo(
                 StateEvent.INITIALISE_HI1_ENTER, True),
             info_leave=UiEventInfo(
-                StateEvent.INITIALISE_HI1_LEAVE, True)
+                StateEvent.INITIALISE_HI1_LEAVE, False)
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

@@ -48,7 +48,7 @@ class FinalState(StateBase):
     def __init__(self):
 
         super().__init__(
-            info_enter=UiEventInfo(StateEvent.FINAL_STATE_ENTER, False),
+            info_enter=UiEventInfo(StateEvent.FINAL_STATE_ENTER, True),
             info_leave=UiEventInfo(StateEvent.FINAL_STATE_LEAVE, False)
         )
 

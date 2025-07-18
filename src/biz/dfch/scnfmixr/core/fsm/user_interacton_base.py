@@ -24,16 +24,30 @@
 
 from abc import ABC, abstractmethod
 
-from .ui_event_info import UiEventInfo
+from ...system import MessageQueue
+from ...public.system import MessageBase
+
+from ...public.ui.ui_event_info import UiEventInfo
 
 
 # pylint: disable=R0903
 class UserInteractionBase(ABC):
     """Base class for user interaction."""
 
-    @abstractmethod
-    def update(self, item: UiEventInfo) -> None:
-        """Updates the presentation layer."""
+    _message_queue: MessageQueue
 
-        assert item
-        assert isinstance(item, UiEventInfo)
+    def __init__(self):
+        super().__init__()
+
+        self._message_queue = MessageQueue.Factory.get()
+
+    @abstractmethod
+    def _on_message(self, message: MessageBase) -> None:
+        """Message handler."""
+
+    # @abstractmethod
+    # def update(self, item: UiEventInfo) -> None:
+    #     """Updates the presentation layer."""
+
+    #     assert item
+    #     assert isinstance(item, UiEventInfo)

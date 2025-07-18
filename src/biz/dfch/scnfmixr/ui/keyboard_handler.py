@@ -82,7 +82,10 @@ class KeyboardHandler(EventHandlerBase):
         self._device = device
         self._thread = Thread(target=self._worker, daemon=True)
 
-        MessageQueue.Factory.get().register(self._on_shutdown)
+        MessageQueue.Factory.get().register(
+            self._on_shutdown,
+            lambda msg: isinstance(msg, SystemMessage.Shutdown)
+        )
 
     def dispose(self):
         """Dispose method for stopping child process `evtest`."""

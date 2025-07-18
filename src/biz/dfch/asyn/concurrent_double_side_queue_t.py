@@ -48,7 +48,7 @@ class ConcurrentDoubleSideQueueT(Generic[T]):
         self._queue = deque()
 
     def enqueue(self, item: T) -> None:
-        """Enqeueus an item at the end of the queue."""
+        """Enqueues an item at the end of the queue."""
 
         assert item is not None
 

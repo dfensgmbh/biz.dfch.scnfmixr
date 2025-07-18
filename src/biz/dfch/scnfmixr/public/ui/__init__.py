@@ -24,8 +24,10 @@
 
 from __future__ import annotations
 
+from .ui_event_info import UiEventInfo
 from .ui_parameters import UiParameters
 
 __all__ = [
+    "UiEventInfo",
     "UiParameters",
 ]

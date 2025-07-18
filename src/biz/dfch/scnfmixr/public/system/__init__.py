@@ -30,19 +30,23 @@ from .usb_port import UsbPort
 from .message_base import (
     MessageBase,
     ICommand,
+    INotification
 )
 from .message_high import (
     MessageHigh,
-    CommandHigh
+    CommandHigh,
+    NotificationHigh,
 )
 from .message_medium import (
     Message,
     MessageMedium,
-    CommandMedium
+    CommandMedium,
+    NotificationMedium,
 )
 from .message_low import (
     MessageLow,
-    CommandLow
+    CommandLow,
+    NotificationLow,
 )
 from .message_priority import MessagePriority
 
@@ -50,13 +54,17 @@ from .message_priority import MessagePriority
 __all__ = [
     "MessageBase",
     "ICommand",
+    "INotification",
     "MessageHigh",
     "CommandHigh",
+    "NotificationHigh",
     "Message",
     "MessageMedium",
     "CommandMedium",
+    "NotificationMedium",
     "MessageLow",
     "CommandLow",
+    "NotificationLow",
     "MessagePriority",
     "SystemTime",
     "UsbPort",

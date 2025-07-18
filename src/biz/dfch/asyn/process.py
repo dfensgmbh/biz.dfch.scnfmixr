@@ -188,14 +188,32 @@ class Process:
         cmd: list[str],
         stdin: list[str] | None = None,
         cwd: str = None,
-        max_wait_time: int = 5,
+        max_wait_time: float = 5,
         encoding: str = "utf-8",
         **kwargs
     ) -> tuple[list[str], list[str]]:
-        """Sends text to a process and waits for return synchronously."""
+        """Sends text to a process and waits for return synchronously.
+
+        Args:
+            cmd (list[str]): The command to execute with its arguments.
+            stind (list[str] | None): The input to be sent to stdin of the
+                process as list of strings or `None` (default)). For every item
+                in `stdin` a single line of text is sent to the process
+                (terminated with a line feed).
+            max_wait_time (float): The maximum wait time in seconds to wait for
+                the process to stop. 
+                Note that, when the process does not stop within that timeout,
+                the process is stopped (which will take additional time).
+            encoding (str): The encding to be used ("utf-8" is default).
+
+        Returns:
+            (tuple[list[str], list[str]]): A 2-tuple that contains `stdout` and
+                `stderr` as a list of strings.
+        """
 
         assert cmd and isinstance(cmd, list)
         assert stdin is None or isinstance(stdin, list)
+        assert isinstance(max_wait_time, (int, float)) and 0 <= max_wait_time
 
         _newline = '\n'
         _space = ' '
@@ -203,13 +221,18 @@ class Process:
 
         log.debug("Starting process '%s' ...", _space.join(cmd))
 
+        # Regular output.
         stdout1: str = ""
-        stdout2: str = ""
         stderr1: str = ""
+        # Possible output after SIGINT.
+        stdout2: str = ""
         stderr2: str = ""
+        # Possible output after SIGKILL.
+        stdout3: str = ""
+        stderr3: str = ""
 
         try:
-            process = subprocess.Popen(
+            process = subprocess.Popen(  # pylint: disable=R1732
                 args=cmd,
                 cwd=cwd,
                 encoding=encoding,
@@ -223,7 +246,6 @@ class Process:
 
             if stdin:
                 _input = _newline.join(stdin) + _newline
-                log.debug("stdin: '%s'", _input)
             else:
                 _input = None
 
@@ -231,11 +253,15 @@ class Process:
 
                 stdout1, stderr1 = process.communicate(
                     input=_input,
-                    timeout=max_wait_time)
+                    timeout=max_wait_time if 0 < max_wait_time else None)
 
             except subprocess.TimeoutExpired:
 
                 try:
+                    log.warning(
+                        ("Process '%s' did not stop within timeout. "
+                         "Sending SIGTERM ..."),
+                        cmd[0])
                     process.send_signal(signal.SIGTERM)
                 except Exception:  # pylint: disable=W0718
                     # Ingore exception.
@@ -244,8 +270,22 @@ class Process:
                 try:
                     process.wait(_sigterm_wait_time)
                 except subprocess.TimeoutExpired:
-                    process.kill()
+                    log.warning(
+                        ("Process '%s' did not stop within timeout. "
+                         "Sending SIGINT ..."),
+                        cmd[0])
+                    process.send_signal(signal.SIGINT)
                     stdout2, stderr2 = process.communicate()
+
+                try:
+                    process.wait(_sigterm_wait_time)
+                except subprocess.TimeoutExpired:
+                    log.warning(
+                        ("Process '%s' did not stop within timeout. "
+                         "Sending SIGKILL ..."),
+                        cmd[0])
+                    process.kill()
+                    stdout3, stderr3 = process.communicate()
 
             if process.poll() is not None:
                 log.info("Starting process '%s' OK. [%s]", _space.join(
@@ -257,12 +297,16 @@ class Process:
             result = ([], [])
             if stdout1:
                 result[0].extend(stdout1.splitlines())
-            if stdout2:
-                result[0].extend(stdout2.splitlines())
             if stderr1:
                 result[1].extend(stderr1.splitlines())
+            if stdout2:
+                result[0].extend(stdout2.splitlines())
             if stderr2:
                 result[1].extend(stderr2.splitlines())
+            if stdout3:
+                result[0].extend(stdout3.splitlines())
+            if stderr3:
+                result[1].extend(stderr3.splitlines())
             return result
 
         except Exception as ex:  # pylint: disable=W0718

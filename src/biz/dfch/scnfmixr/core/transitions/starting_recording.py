@@ -43,6 +43,7 @@ class StartingRecording(TransitionBase):
     """Starts a recording."""
 
     _signal_is_recording: Event
+    _message_queue: MessageQueue
 
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""
@@ -59,6 +60,11 @@ class StartingRecording(TransitionBase):
             target_state=target)
 
         self._signal_is_recording = Event()
+
+        self._message_queue = MessageQueue.Factory.get()
+        self._message_queue.register(
+            self._on_message,
+            lambda e: isinstance(e, MixerMessage.Recorder.StartedMessage))
 
     def _on_message(self, message: MessageBase) -> None:
         """Message handler."""
@@ -101,15 +107,12 @@ class StartingRecording(TransitionBase):
             log.error("No storage devices detected. Cannot record.")
             return False
 
-        message_queue = MessageQueue.Factory.get()
-        message_queue.register(self._on_message)
-        message_queue.publish(
+        self._message_queue.publish(
             MixerMessage.Recorder.RecordingStartCommand(files))
 
         log.debug("Waiting for recording to start ...")
 
         result = self._signal_is_recording.wait(10)
-        message_queue.unregister(self._on_message)
         self._signal_is_recording.clear()
 
         if result:

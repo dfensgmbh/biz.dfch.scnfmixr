@@ -52,7 +52,7 @@ class InitialiseAudio(StateBase):
             info_enter=UiEventInfo(
                 StateEvent.INIT_AUDIO_ENTER, True),
             info_leave=UiEventInfo(
-                StateEvent.INIT_AUDIO_LEAVE, True)
+                StateEvent.INIT_AUDIO_LEAVE, False)
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

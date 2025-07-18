@@ -28,9 +28,9 @@ from threading import Event
 
 from biz.dfch.scnfmixr.public.system import Message
 from biz.dfch.scnfmixr.public.system import MessageBase
-from biz.dfch.scnfmixr.public.system import MessageHigh
-from biz.dfch.scnfmixr.public.system import MessageMedium
-from biz.dfch.scnfmixr.public.system import MessageLow
+from biz.dfch.scnfmixr.public.system import NotificationHigh
+from biz.dfch.scnfmixr.public.system import NotificationMedium
+from biz.dfch.scnfmixr.public.system import NotificationLow
 from biz.dfch.scnfmixr.public.system import MessagePriority
 
 from biz.dfch.scnfmixr.system.message_queue import MessageQueue
@@ -45,15 +45,15 @@ class TestMessageQueueT(unittest.TestCase):
     class ArbitraryMessage2(Message):
         """Priority Medium."""
 
-    class ArbitraryMessageHigh(MessageHigh):
+    class ArbitraryMessageHigh(NotificationHigh):
         """Priority High."""
 
         description: str
 
-    class ArbitraryMessageMedium(MessageMedium):
+    class ArbitraryMessageMedium(NotificationMedium):
         """Priority Medium."""
 
-    class ArbitraryMessageLow(MessageLow):
+    class ArbitraryMessageLow(NotificationLow):
         """Priority Low."""
 
     def _on_event(self, message: MessageBase):

@@ -35,8 +35,10 @@ from typing import (
 
 from biz.dfch.logging import log
 
-from ..app import ApplicationContext
-from ..notifications import AppNotification
+from ..system import MessageQueue
+from ..public.mixer import MixerMessage
+from ..public.system import MessageBase
+from ..public.system.messages import SystemMessage
 from ..public.mixer import (
     Connection,
     Input,
@@ -240,6 +242,7 @@ class AudioMixer:
     Attributes:
     """
 
+    _message_queue: MessageQueue
     _sync_root: threading.Lock
     _callbacks: list[Callable[[threading.Event], None]]
     _state: AudioMixerState
@@ -280,21 +283,17 @@ class AudioMixer:
 
             return AudioMixer.Factory.__instance
 
-    def app_on_shutdown(self, event: AppNotification.Event):
-        """Process SHUTDOWN notification."""
+    def _on_shutdown(self, message: MessageBase) -> None:
+        """Message handler."""
 
-        if event is None or not isinstance(event, AppNotification.Event):
-            return
-
-        if AppNotification.Event.SHUTDOWN != event:
+        if not isinstance(message, SystemMessage.Shutdown):
             return
 
         log.info("on_shutdown: Stopping ...")
 
         result = self.stop()
 
-        log.info("on_shutdown: Stopping result: %s",
-                 result)
+        log.info("on_shutdown: Stopping result: %s", result)
 
     def __init__(self):
 
@@ -306,13 +305,16 @@ class AudioMixer:
         self._sync_root = threading.Lock()
         self._callbacks = []
         self._cfg = None
-        app_ctx = ApplicationContext.Factory.get()
-        app_ctx.notification.register(self.app_on_shutdown)
 
         # Set private field directly, as not everything is initialised yet.
         self._state = AudioMixerState.STOPPED
 
         self._routing_matrix = RoutingMatrix.Factory.get()
+
+        self._message_queue = MessageQueue.Factory.get()
+        self._message_queue.register(
+            self._on_shutdown,
+            lambda e: isinstance(e, SystemMessage.Shutdown))
 
         log.info("Initialising OK.")
 
@@ -352,7 +354,7 @@ class AudioMixer:
             result = self.stop()
             assert result
 
-        self.signal(AudioMixer.Event.CONFIGURATION_CHANGING)
+        self._message_queue.publish(MixerMessage.Mixer.ConfigurationChanging())
 
         has_default_output_changed = self._cfg is None or (
             self._cfg.default_output != cfg.default_output
@@ -363,9 +365,11 @@ class AudioMixer:
         self._cfg = cfg
 
         if has_default_output_changed:
-            self.signal(AudioMixer.Event.DEFAULT_OUTPUT_CHANGED)
+            self._message_queue.publish(
+                MixerMessage.Mixer.DefaultOutputChanged(
+                    self._cfg.default_output))
 
-        self.signal(AudioMixer.Event.CONFIGURATION_CHANGED)
+        self._message_queue.publish(MixerMessage.Mixer.ConfigurationChanged())
 
         result = self.start()
 
@@ -395,17 +399,29 @@ class AudioMixer:
         """Private: Sets the private field _state of the audio mixer."""
 
         self._state = value
-        self.signal(AudioMixer.Event.STATE_CHANGED)
+        # self.signal(AudioMixer.Event.STATE_CHANGED)
 
         match value:
             case AudioMixerState.STARTED:
-                self.signal(AudioMixer.Event.STARTED)
+                # self.signal(AudioMixer.Event.STARTED)
+                self._message_queue.publish(
+                    MixerMessage.Mixer.Started(),
+                    MixerMessage.Mixer.StateChanged())
             case AudioMixerState.STARTING:
-                self.signal(AudioMixer.Event.STARTING)
+                # self.signal(AudioMixer.Event.STARTING)
+                self._message_queue.publish(
+                    MixerMessage.Mixer.Starting(),
+                    MixerMessage.Mixer.StateChanged())
             case AudioMixerState.STOPPING:
-                self.signal(AudioMixer.Event.STOPPING)
+                # self.signal(AudioMixer.Event.STOPPING)
+                self._message_queue.publish(
+                    MixerMessage.Mixer.Stopping(),
+                    MixerMessage.Mixer.StateChanged())
             case AudioMixerState.STOPPED:
-                self.signal(AudioMixer.Event.STOPPED)
+                # self.signal(AudioMixer.Event.STOPPED)
+                self._message_queue.publish(
+                    MixerMessage.Mixer.Stopped(),
+                    MixerMessage.Mixer.StateChanged())
 
     def start(self) -> bool:
         """Starts the audio mixer.
@@ -542,67 +558,3 @@ class AudioMixer:
         result = self.start()
 
         return result
-
-    def register(self, action: Callable[[Event], None]) -> None:
-        """Registers an action.
-
-        Args:
-            action (Callable[[Event], None]): The action to register.
-        Returns:
-            None:
-        """
-
-        assert action and callable(action)
-
-        log.debug("Registering action '%s' ...", action)
-
-        with self._sync_root:
-            self._callbacks.append(action)
-
-        log.info("Registering action '%s' COMPLETED.", action)
-
-    def signal(self, event: AudioMixer.Event) -> None:
-        """Signals the specified event to all registered actions.
-
-        Args:
-            event (Event): The event to signal.
-
-        Returns:
-            None:
-        """
-
-        assert event is not None and isinstance(event, AudioMixer.Event)
-
-        def dispatch(event: AudioMixer.Event) -> None:
-            """Dispatcher for event notificiations."""
-
-            with self._sync_root:
-                actions = list(self._callbacks)
-
-            count = len(actions)
-            for index, action in enumerate(actions):
-
-                try:
-                    log.debug(
-                        ("Dispatching event '%s' to action '%s' .... "
-                         "[%s/%s]"),
-                        event, action,
-                        index+1, count)
-
-                    action(event)
-
-                    log.info(
-                        ("Dispatching event '%s' to action '%s' OK. "
-                         "[%s/%s]"),
-                        event, action,
-                        index+1, count)
-
-                except Exception:  # pylint: disable=W0718
-                    log.error(
-                        ("Dispatching event '%s' to action '%s' FAILED. "
-                         "[%s/%s]"),
-                        event, action,
-                        index+1, count,
-                        exc_info=True)
-
-        threading.Thread(target=dispatch, args=(event,), daemon=True).start()

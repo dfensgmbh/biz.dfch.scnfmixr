@@ -26,7 +26,7 @@ from __future__ import annotations
 from abc import ABC
 
 from ..system import (
-    MessageMedium,
+    NotificationMedium,
     CommandMedium,
 )
 
@@ -51,25 +51,25 @@ class MixerMessage:
     class Recorder:
         """AudioRecorder messages."""
 
-        class StateErrorMessage(MessageMedium, IAudioRecorderMessage):
+        class StateErrorMessage(NotificationMedium, IAudioRecorderMessage):
             """State Error."""
 
-        class ConfigurationChanging(MessageMedium, IAudioRecorderMessage):
+        class ConfigurationChanging(NotificationMedium, IAudioRecorderMessage):
             """Configuration Changing."""
 
-        class ConfigurationChanged(MessageMedium, IAudioRecorderMessage):
+        class ConfigurationChanged(NotificationMedium, IAudioRecorderMessage):
             """Configuration Changed."""
 
-        class StartingMessage(MessageMedium, IAudioRecorderMessage):
+        class StartingMessage(NotificationMedium, IAudioRecorderMessage):
             """Status Starting."""
 
-        class StartedMessage(MessageMedium, IAudioRecorderMessage):
+        class StartedMessage(NotificationMedium, IAudioRecorderMessage):
             """Status Started."""
 
-        class StoppingMessage(MessageMedium, IAudioRecorderMessage):
+        class StoppingMessage(NotificationMedium, IAudioRecorderMessage):
             """Status Stopping."""
 
-        class StoppedMessage(MessageMedium, IAudioRecorderMessage):
+        class StoppedMessage(NotificationMedium, IAudioRecorderMessage):
             """Status Stopped."""
 
         class RecordingStopCommand(CommandMedium, IAudioRecorderMessage):
@@ -95,3 +95,40 @@ class MixerMessage:
 
     class Mixer:
         """AudioMixer messages."""
+
+        class DefaultOutputChanged(NotificationMedium, IAudioMixerMessage):
+            """DefaultOutputChanged
+
+            Args:
+                value (str): The name of the new default output.
+            """
+
+            value: str
+
+            def __init__(self, value: str):
+                super().__init__()
+
+                assert value and value.strip()
+
+                self.value = value
+
+        class StateChanged(NotificationMedium, IAudioMixerMessage):
+            """StateChanged"""
+
+        class ConfigurationChanging(NotificationMedium, IAudioMixerMessage):
+            """ConfigurationChanging"""
+
+        class ConfigurationChanged(NotificationMedium, IAudioMixerMessage):
+            """ConfigurationChanged"""
+
+        class Starting(NotificationMedium, IAudioMixerMessage):
+            """Starting"""
+
+        class Started(NotificationMedium, IAudioMixerMessage):
+            """Started"""
+
+        class Stopping(NotificationMedium, IAudioMixerMessage):
+            """Stopping"""
+
+        class Stopped(NotificationMedium, IAudioMixerMessage):
+            """Stopped"""

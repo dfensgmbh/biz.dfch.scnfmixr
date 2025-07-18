@@ -28,7 +28,6 @@ import threading
 
 from biz.dfch.logging import log
 
-from .user_interacton_base import UserInteractionBase
 from .execution_context import ExecutionContext
 from .state_base import StateBase
 from ...public.system.messages import SystemMessage
@@ -53,45 +52,50 @@ class Fsm:
         current_state (State): The current state of the state machine.
     """
 
-    _message_queue = MessageQueue.Factory.get()
+    _message_queue = MessageQueue
+    _initial_state: StateBase
+    _current_state: StateBase
+    _previous_state: StateBase
+    _is_in_transit: bool
+    _initial_context: ExecutionContext
+    _sync_root: threading.RLock
+    _sync_restart: threading.Lock
 
-    def __init__(self,
-                 initial_state: StateBase,
-                 ctx: ExecutionContext,
-                 ui: UserInteractionBase
-                 ) -> None:
+    def __init__(
+        self,
+        initial_state: StateBase,
+        ctx: ExecutionContext,
+    ) -> None:
         """Initialise a finite state machine.
 
         Args:
             initial_state (State): The initial state of the state machine.
             ctx (ExecutionContext): The initial execution context.
-            ui (UserInteractionBase): The output handler for user interaction.
 
         Returns:
             An instance of this class.
 
         Raises:
-            AssertionError: When `initial_state` is `None`.
+            AssertionError: If `initial_state` is `None`.
+            AssertionError: If `ctx` is `None`.
         """
 
         assert initial_state is not None
         assert isinstance(initial_state, StateBase)
         assert ctx is not None
         assert isinstance(ctx, ExecutionContext)
-        assert ui is not None
-        assert isinstance(ui, UserInteractionBase)
 
-        self._is_started: bool = False
-        self._initial_state: StateBase = initial_state
-        self._current_state: StateBase = self._initial_state
-        self._previous_state: StateBase | None = None
+        self._message_queue = MessageQueue.Factory.get()
+        self._is_started = False
+        self._initial_state = initial_state
+        self._current_state = self._initial_state
+        self._previous_state = None
         self._is_in_transit: bool = False
 
-        self._initial_context: ExecutionContext = ctx
-        self._ui: UserInteractionBase = ui
+        self._initial_context = ctx
 
-        self._sync_root: threading.RLock = threading.RLock()
-        self._sync_restart: threading.Lock = threading.Lock()
+        self._sync_root = threading.RLock()
+        self._sync_restart = threading.Lock()
 
     @property
     def is_started(self) -> bool:
@@ -382,7 +386,10 @@ class Fsm:
             self._is_in_transit = True
 
             if self._current_state.info_leave:
-                self._ui.update(self.current_state.info_leave)
+                # self._ui.update(self.current_state.info_leave)
+                self._message_queue.publish(
+                    SystemMessage.UiEventInfoStateLeaveMessage(
+                        self.current_state.info_leave))
 
             log.debug("Invoking 'on_leave' for '%s' ...",
                       type(self._current_state).__name__)
@@ -404,7 +411,10 @@ class Fsm:
                 return False
 
             if transition.info_enter:
-                self._ui.update(transition.info_enter)
+                # self._ui.update(transition.info_enter)
+                self._message_queue.publish(
+                    SystemMessage.UiEventInfoTransitionEnterMessage(
+                        transition.info_enter))
 
             log.debug("Invoking transition '%s' for '%s' ...",
                       type(transition).__name__,
@@ -426,7 +436,12 @@ class Fsm:
 
                 log.debug("Invoking 'on_enter' for '%s' ...",
                           type(self._current_state).__name__)
-                self._ui.update(self.current_state.info_enter)
+
+                # self._ui.update(self.current_state.info_enter)
+                self._message_queue.publish(
+                    SystemMessage.UiEventInfoStateEnterMessage(
+                        self.current_state.info_enter))
+
                 ctx = ExecutionContext(
                     source=type(self._current_state).__name__,
                     error=type(transition).__name__,
@@ -451,7 +466,10 @@ class Fsm:
                      type(self._current_state).__name__)
 
             if transition.info_leave:
-                self._ui.update(transition.info_leave)
+                # self._ui.update(transition.info_leave)
+                self._message_queue.publish(
+                    SystemMessage.UiEventInfoTransitionLeaveMessage(
+                        transition.info_leave))
 
             self._previous_state = self._current_state
             self._current_state = transition.target_state
@@ -468,7 +486,10 @@ class Fsm:
                 return True
 
             if self._current_state.info_enter:
-                self._ui.update(self._current_state.info_enter)
+                # self._ui.update(self._current_state.info_enter)
+                self._message_queue.publish(
+                    SystemMessage.UiEventInfoStateEnterMessage(
+                        self.current_state.info_enter))
 
             log.debug("Invoking 'on_enter' for '%s' ...",
                       type(self._current_state).__name__)

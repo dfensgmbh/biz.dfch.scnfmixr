@@ -58,7 +58,7 @@ class InitialiseRc1(StateBase):
             info_enter=UiEventInfo(
                 StateEvent.INITIALISE_RC1_ENTER, True),
             info_leave=UiEventInfo(
-                StateEvent.INITIALISE_RC1_LEAVE, True)
+                StateEvent.INITIALISE_RC1_LEAVE, False)
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

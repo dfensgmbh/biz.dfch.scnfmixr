@@ -26,7 +26,7 @@ from __future__ import annotations
 
 from biz.dfch.i18n import LanguageCode
 
-from .ui_event_info import UiEventInfo
+from ...public.ui.ui_event_info import UiEventInfo
 from .execution_context import ExecutionContext
 from .fsm import Fsm
 from .state_base import StateBase

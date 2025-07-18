@@ -22,6 +22,7 @@
 
 """Main app module."""
 
+import sys
 from threading import Event
 
 from biz.dfch.i18n import LanguageCode
@@ -74,6 +75,11 @@ class App:  # pylint: disable=R0903
         app_ctx = ApplicationContext.Factory.get()
 
         rec_params = app_ctx.recording_parameters
+
+        # DFTODO - maybe find something more dynamic here?
+        rec_params.skip_rc1 = "--skip-storage1" in sys.argv
+        rec_params.skip_rc2 = "--skip-storage2" in sys.argv
+
         rec_params.file_format = FileFormat(args.file_format)
         rec_params.sampling_rate = args.sampling_rate
         match args.bit_depth:
@@ -135,7 +141,10 @@ class App:  # pylint: disable=R0903
 
             # Start main message queue.
             mq = MessageQueue.Factory.get()
-            mq.register(self._on_message)
+            mq.register(
+                self._on_message,
+                lambda e: isinstance(
+                    e, SystemMessage.StateMachine.StateMachineStopped))
 
             cfg = AudioMixerConfiguration.get_default()
             AudioMixer.Factory.get().initialise(cfg)

@@ -68,8 +68,8 @@ class DeviceOperations:
         assert value and isinstance(value, StorageDeviceInfo)
 
         self._device_info = value
-        self._uid = os.getuid()
-        self._gid = os.getgid()
+        self._uid = os.getuid()  # pylint: disable=E1101
+        self._gid = os.getgid()  # pylint: disable=E1101
 
     @property
     def is_mounted(self) -> bool:

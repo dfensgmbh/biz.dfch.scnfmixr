@@ -93,6 +93,7 @@ class StateMachine:
     WAIT_INTERVAL_MS: int = 250
     _BLOCK_INTERVAL_MS: int = 5000
 
+    _ui: UserInteractionAudio
     _app_ctx: ApplicationContext
     _signal_worker: threading.Event
     _event_queue: ConcurrentDoubleSideQueueT[str]
@@ -104,6 +105,9 @@ class StateMachine:
 
     def __init__(self):
 
+        # DFTODO - adjust to something dynamic.
+        self._ui = UserInteractionAudio("system")
+
         self._app_ctx = ApplicationContext.Factory.get()
         self._signal_worker = threading.Event()
         self._event_queue = ConcurrentDoubleSideQueueT[str]()
@@ -112,7 +116,9 @@ class StateMachine:
         self._thread = threading.Thread(target=self._worker, daemon=True)
         self._ctx = None
         self._fsm = None
-        self._messsage_queue.register(self._on_message)
+        self._messsage_queue.register(self._on_message, lambda e: isinstance(
+            e,
+            (SystemMessage.InputEvent, SystemMessage.Shutdown)))
 
     def start(self) -> None:
         "Starts the state machine."
@@ -453,9 +459,8 @@ class StateMachine:
         )
 
         self._ctx = ExecutionContext(None, None, events=self._messsage_queue)
-        # DFTODO - adjust to something dynamic.
-        ui = UserInteractionAudio("system")
-        self._fsm = Fsm(initialise_lcl, self._ctx, ui)
+
+        self._fsm = Fsm(initialise_lcl, self._ctx)
         self._fsm.start()
 
         # for line in self._fsm.visualise():

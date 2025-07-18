@@ -25,6 +25,7 @@
 from biz.dfch.i18n import I18n
 
 from ..application_context import ApplicationContext
+from ..public.system.messages import SystemMessage
 from ..core.fsm import UserInteractionBase
 from ..core.fsm import UiEventInfo
 from .audio_player import AudioPlayer
@@ -38,28 +39,57 @@ class UserInteractionAudio(UserInteractionBase):
     """Audio UI output handling."""
 
     _AUDIO_FILE_EXTENSION = ".wav"
+
     _player: AudioPlayer
     _i18n: I18n
+    _app_ctx: ApplicationContext
 
     def __init__(self, jack_name: str):
+
+        super().__init__()
 
         assert jack_name and jack_name.strip()
 
         self._player = AudioPlayer(jack_name)
         self._i18n = I18n.Factory.get()
 
-    def update(self, item):
+        self._app_ctx = ApplicationContext.Factory.get()
 
-        assert item
-        assert isinstance(item, UiEventInfo)
+        self._message_queue.register(
+            self._on_message,
+            lambda e: isinstance(e, SystemMessage.UiEventInfoMessageBase))
 
-        app_ctx = ApplicationContext.Factory.get()
+    def _on_message(self, message):
+
+        assert isinstance(message, SystemMessage.UiEventInfoMessageBase)
 
         # DFTODO - adjust to something dynamic.
         path = self._i18n.get_resource_path(
-            (f"{item.name}"
+            (f"{message.value.name}"
              f"{self._AUDIO_FILE_EXTENSION}"),
-            app_ctx.ui_parameters.language)
+            self._app_ctx.ui_parameters.language)
 
-        self._player.clear(True)
-        self._player.enqueue((path, item.is_loop))
+        self._message_queue.publish(
+            SystemMessage.UiEventInfoAudioMessage(
+                type(message),
+                path,
+                message.value))
+
+        # self._player.clear(True)
+        # self._player.enqueue((path, message.value.is_loop))
+
+    # def update(self, item):
+
+    #     assert item
+    #     assert isinstance(item, UiEventInfo)
+
+    #     app_ctx = ApplicationContext.Factory.get()
+
+    #     # DFTODO - adjust to something dynamic.
+    #     path = self._i18n.get_resource_path(
+    #         (f"{item.name}"
+    #          f"{self._AUDIO_FILE_EXTENSION}"),
+    #         app_ctx.ui_parameters.language)
+
+    #     self._player.clear(True)
+    #     self._player.enqueue((path, item.is_loop))

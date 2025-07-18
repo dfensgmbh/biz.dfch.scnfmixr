@@ -25,6 +25,7 @@
 from .message_base import (
     MessageBase,
     ICommand,
+    INotification,
 )
 from .message_priority import MessagePriority
 
@@ -32,6 +33,7 @@ from .message_priority import MessagePriority
 __all__ = [
     "MessageLow",
     "CommandLow",
+    "NotificationLow",
 ]
 
 
@@ -47,3 +49,7 @@ class MessageLow(MessageBase):  # pylint: disable=R0903
 
 class CommandLow(MessageLow, ICommand):  # pylint: disable=R0903
     """A command message with priority `MessagePriority.LOW`"""
+
+
+class NotificationLow(MessageLow, INotification):  # pylint: disable=R0903
+    """A notification message with priority `MessagePriority.LOW`"""

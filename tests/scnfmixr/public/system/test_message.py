@@ -28,9 +28,9 @@ import unittest
 from biz.dfch.scnfmixr.public.system import MessagePriority
 
 from biz.dfch.scnfmixr.public.system.message_medium import Message
-from biz.dfch.scnfmixr.public.system.message_high import MessageHigh
-from biz.dfch.scnfmixr.public.system.message_medium import MessageMedium
-from biz.dfch.scnfmixr.public.system.message_low import MessageLow
+from biz.dfch.scnfmixr.public.system.message_high import NotificationHigh
+from biz.dfch.scnfmixr.public.system.message_medium import NotificationMedium
+from biz.dfch.scnfmixr.public.system.message_low import NotificationLow
 
 
 class TestMessage(unittest.TestCase):
@@ -53,7 +53,7 @@ class TestMessage(unittest.TestCase):
 
             self.description = description
 
-    class ArbitraryMessageHigh(MessageHigh):
+    class ArbitraryMessageHigh(NotificationHigh):
         """Priority High."""
 
         description: str
@@ -65,7 +65,7 @@ class TestMessage(unittest.TestCase):
 
             self.description = description
 
-    class ArbitraryMessageMedium(MessageMedium):
+    class ArbitraryMessageMedium(NotificationMedium):
         """Priority Medium."""
 
         description: str
@@ -77,7 +77,7 @@ class TestMessage(unittest.TestCase):
 
             self.description = description
 
-    class ArbitraryMessageLow(MessageLow):
+    class ArbitraryMessageLow(NotificationLow):
         """Priority Low."""
 
         description: str

@@ -32,15 +32,24 @@ from .message_priority import MessagePriority
 __all__ = [
     "MessageBase",
     "ICommand",
+    "INotification",
 ]
 
 
-class ICommand:
+class IMessage:
+    """Base interface for all messages."""
+
+
+class ICommand(IMessage):
     """Base interface for all commands."""
 
 
+class INotification(IMessage):
+    """Base interface for all notifications."""
+
+
 @dataclass(frozen=True)
-class MessageBase(ABC):
+class MessageBase(ABC, IMessage):
     """A base class for messages.
 
     Attributes:
@@ -67,5 +76,13 @@ class MessageBase(ABC):
 
         object.__setattr__(self, "priority", priority)
 
-        cls = type(self)
-        object.__setattr__(self, "name", f"{cls.__module__}.{cls.__qualname__}")
+        _type = type(self)
+        object.__setattr__(self, "name", MessageBase.get_fqcn(_type))
+
+    @staticmethod
+    def get_fqcn(_type: type) -> str:
+        """Returns the full qualified class name."""
+
+        assert _type
+
+        return f"{_type.__module__}.{_type.__qualname__}"

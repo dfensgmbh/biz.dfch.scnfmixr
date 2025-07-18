@@ -225,21 +225,14 @@ class DetectingRcWorker(InterfaceDetectorBase):
 
                 log.debug(
                     "Selecting device '%s' as candidate FAILED "
-                    "[%sr != %sa] [%sm != %sa]. "
+                    "[%sa != (%sr | %sm)]. "
                     "Skipping ...",
                     full_name,
+                    result.usb_id,
                     self._requested_usb_id,
-                    result.usb_id,
                     mapped_usb_id,
-                    result.usb_id,
                 )
                 continue
-
-            # Checking for vendor id.
-            # DFTODO: Read from CLI args.
-            vendor_ids: list[str] = [
-                "2009",
-            ]
 
             filename = os.path.join(
                 self._SYS_BUS_USB_DEVICES_PATH,
@@ -264,7 +257,7 @@ class DetectingRcWorker(InterfaceDetectorBase):
                     "Skipping ...",
                     full_name,
                     vendor_id,
-                    vendor_ids
+                    whitelist
                 )
                 continue
 

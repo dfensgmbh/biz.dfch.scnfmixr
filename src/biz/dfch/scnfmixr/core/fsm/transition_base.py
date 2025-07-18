@@ -29,7 +29,7 @@ from dataclasses import dataclass
 # type quoting it.
 from typing import TYPE_CHECKING
 
-from .ui_event_info import UiEventInfo
+from ...public.ui.ui_event_info import UiEventInfo
 from .execution_context import ExecutionContext
 
 if TYPE_CHECKING:

@@ -52,7 +52,7 @@ class SystemMenu(StateBase):
 
         super().__init__(
             info_enter=UiEventInfo(StateEvent.SYSTEM_MENU_ENTER, True),
-            info_leave=UiEventInfo(StateEvent.RECORD_LEAVE, True)
+            info_leave=UiEventInfo(StateEvent.RECORD_LEAVE, False)
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

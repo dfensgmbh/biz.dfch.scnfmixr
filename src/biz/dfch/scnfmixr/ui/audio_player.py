@@ -22,24 +22,42 @@
 
 """Module defining the audio player for output handling."""
 
-import queue
+from dataclasses import dataclass
+from enum import StrEnum
 import threading
 import time
 
 from biz.dfch.logging import log
-from biz.dfch.asyn import Process
+from biz.dfch.asyn import (
+    Process,
+    ConcurrentDoubleSideQueueT,
+)
 
-from ..mixer import AudioMixer
+from ..public.mixer import MixerMessage
+from ..public.system import MessageBase
+from ..public.system.messages import SystemMessage
+from ..system import MessageQueue
+
 
 __all__ = [
     "AudioPlayer",
 ]
 
 
+@dataclass(frozen=True)
+class AudioItem:
+    """Audio info."""
+    type: type
+    path: str
+    name: StrEnum
+    is_loop: bool
+
+
 class AudioPlayer:
     """Defines the audio player for output handling."""
 
-    WAIT_INTERVAL_MS: int = 250
+    _WAIT_INTERVAL_MS: int = 250
+    _LOG_INTERVAL_MS: int = 5000
 
     _ECASOuND_FULLNAME = "/usr/bin/ecasound"
     _ECASOuND_OUTPUT_NAME = "jack"
@@ -51,13 +69,14 @@ class AudioPlayer:
     _ECASOUND_OPTION_INPUT = "-i"
     _ECASOUND_OPTION_AUDIOLOOP = "audioloop"
     _ECASOUND_OPTION_OUTPUT = "-o"
-    _ECASOUND_OPTION_LOOP = "-tl"
     _ECASOUND_OPTION_TRANSPORT_NO = "notransport"
 
+    _message_queue: MessageQueue
     _process: Process
-    _do_cancel_worker: threading.Event
+    _do_cancel_worker: bool
     _do_cancel_item: bool
-    _queue: queue.Queue[tuple[str, bool]]
+    _queue: ConcurrentDoubleSideQueueT[AudioItem]
+    _signal_queue: threading.Event
     _jack_name: str
     _thread: threading.Thread
 
@@ -67,31 +86,68 @@ class AudioPlayer:
         assert jack_name and jack_name.strip()
 
         self._process = None
-        self._do_cancel_worker = threading.Event()
+        self._do_cancel_worker = False
         self._do_cancel_item = False
-        self._queue = queue.Queue()
+        self._queue = ConcurrentDoubleSideQueueT[AudioItem]()
+        self._signal_queue = threading.Event()
+        self._signal_queue.clear()
         self._jack_name = jack_name
 
         self._thread = threading.Thread(target=self._worker, daemon=True)
         self._thread.start()
 
-        AudioMixer.Factory.get().register(self.audio_mixer_on_notify)
+        self._message_queue = MessageQueue.Factory.get()
+        self._message_queue.register(
+            self.on_message,
+            lambda e: isinstance(
+                e,
+                (MixerMessage.Mixer.DefaultOutputChanged,
+                 SystemMessage.UiEventInfoAudioMessage,
+                 SystemMessage.Shutdown)))
 
-    def audio_mixer_on_notify(self, event: AudioMixer.Event) -> None:
-        """Handles notification DEFAULT_OUTPUT_CHANGED."""
+    def on_message(self, message: MessageBase) -> None:
+        """Message handler."""
 
-        if event is None or not isinstance(event, AudioMixer.Event):
+        log.debug("'%s' [%s]", message.name, type(message))
+
+        assert isinstance(message,
+                          (MixerMessage.Mixer.DefaultOutputChanged,
+                           SystemMessage.UiEventInfoAudioMessage,
+                           SystemMessage.Shutdown))
+
+        if isinstance(message, SystemMessage.UiEventInfoAudioMessage):
+
+            item = AudioItem(
+                type=message.type,
+                path=message.path,
+                name=message.value.name,
+                is_loop=message.value.is_loop,
+            )
+
+            if message.type is SystemMessage.UiEventInfoStateEnterMessage:
+                self._queue.clear()
+
+            log.debug(
+                "Trying to enqueue item '%s' [loop=%s]",
+                item.path,
+                item.is_loop)
+
+            self._queue.enqueue(item)
+            self._signal_queue.set()
+
             return
 
-        match event:
-            case AudioMixer.Event.DEFAULT_OUTPUT_CHANGED:
-                value = AudioMixer.Factory.get()._cfg.default_output
-                if value != self._jack_name:
-                    log.debug("Changing output value form '%s' to '%s'",
-                              value, self._jack_name)
-                self._jack_name = value
-            case _:
-                return
+        if isinstance(message, MixerMessage.Mixer.DefaultOutputChanged):
+            if message.value != self._jack_name:
+                log.debug("Changing output value form '%s' to '%s'.",
+                          message.value, self._jack_name)
+                self._jack_name = message.value
+            return
+
+        if isinstance(message, SystemMessage.Shutdown):
+            # For later: switch sound to ALSA output?
+            # MAybe even better: have AlsaMixer signal DefaultOutputChanged?
+            return
 
     def _worker(self):
         """The worker thread that plays and stops the audio files.
@@ -103,112 +159,151 @@ class AudioPlayer:
             None:
         """
 
-        log.info("Starting worker ...")
+        log.debug("Initialising worker ...")
 
-        dequeue_message_counter: int = 0
-        process_message_counter: int = 0
-        while True:
-            dequeue_message_counter += 1
+        current_item: AudioItem = None
+
+        log.info("Initialising worker OK.")
+
+        start_time = time.monotonic()
+        while not self._do_cancel_worker:
 
             try:
 
-                # First, handle process termination requests.
-                if self._do_cancel_item:
+                # Check if there is something to process ...
+                item = self._queue.peek()
 
-                    if self._process is not None and self._process.is_running:
+                # ... only then wait for the signal.
+                if item is None:
 
+                    # Waiting for signal ...
+                    result = self._signal_queue.wait(
+                        self._WAIT_INTERVAL_MS/1000)
+                    self._signal_queue.clear()
+                    # ... and exit if timeout.
+                    if not result:
+                        if time.monotonic() > (
+                                start_time + self._LOG_INTERVAL_MS/1000):
+                            log.debug("Worker keep alive. [%s]",
+                                      len(self._queue))
+                            start_time = time.monotonic()
+                        continue
+
+                    # We have to check here again, as the signal could have been
+                    # set, to indicate exit.
+                    if self._do_cancel_worker:
+                        break
+
+                    # ... otherwise check if there is soemthing to process.
+                    item = self._queue.peek()
+
+                    # This really should not happen.
+                    if item is None:
+
+                        log.warning("Empty queue after signal set. [%s]",
+                                    len(self._queue))
+                        continue
+
+                # If there is a running proces ...
+                if self._process is not None and self._process.is_running:
+
+                    # ... and that process is a loop ...
+                    assert current_item
+                    if current_item.is_loop:
+
+                        # .. stop the process.
                         pid = self._process.pid
+
                         log.debug(
                             "Cancelling currently playing item [%s] ...",
                             pid)
 
-                        self._process.stop(force=True)
+                        result = self._process.stop(force=True)
                         self._process = None
 
                         log.info(
-                            "Cancelling currently playing item [%s] OK.",
-                            pid)
+                            "Cancelling currently playing item [%s] OK. [%s]",
+                            pid,
+                            result)
 
-                    self._do_cancel_item = False
+                    # ... if not, wait for the process to stop playing.
+                    else:
 
-                # Then check, if the whole worker shall be stopped.
-                if self._do_cancel_worker.is_set():
+                        self._process._popen.wait()
+                        self._process = None
 
-                    log.info("Exiting worker ...")
-                    break
+                # No process at this point, so we can start playing next
+                # audio ...
+                assert self._process is None, self._process.pid
 
-                # Only then, skip if a process is still running.
-                if self._process is not None and self._process.is_running:
+                # Get the item to process ...
+                item = self._queue.dequeue()
+                if item is None:
+                    log.warning("Empty queue after peek. [%s]",
+                                len(self._queue))
+                    continue
 
-                    if 0 == process_message_counter % 25:
-                        process_message_counter += 1
+                # ... and set it as our current item.
+                current_item = item
 
-                        log.debug(
-                            "Process still running [%s] ...", self._process.pid)
+                # If current item is loop and there is another item in the
+                # queue, skip it and continue with next iteration.
+                if current_item.is_loop:
+                    if not self._queue.is_empty():
                         continue
 
-                # Otherwise, try to dequeue and play next item.
-                if 0 == dequeue_message_counter % 25:
-                    dequeue_message_counter = 0
-                    log.debug("Trying to dequeue item ...")
-
-                file, do_loop = self._queue.get(block=False)
-
-                log.info(
-                    "Trying to play '%s' [loop=%s] to '%s' ...",
-                    file,
-                    do_loop,
-                    self._jack_name)
-
-                cmd: list[str] = []
-                cmd.append(self._ECASOuND_FULLNAME)
-                cmd.append(self._ECASOUND_OPTION_QUIET)
-                cmd.append(
-                    f"{self._ECASOUND_OPTION_GLOBAL}"
-                    f"{self._ECASOUND_OPTION_SEP}"
-                    f"{self._ECASOuND_OUTPUT_NAME}"
-                    f"{self._ECASOUND_OPTION_DELIMITER}"
-                    f"{self._ECASOuND_PORT_NAME}"
-                    f"{self._ECASOUND_OPTION_DELIMITER}"
-                    f"{self._ECASOUND_OPTION_TRANSPORT_NO}"
-                )
-                cmd.append(self._ECASOUND_OPTION_INPUT)
-                if do_loop:
-                    cmd.append(
-                        f"{self._ECASOUND_OPTION_AUDIOLOOP}"
-                        f"{self._ECASOUND_OPTION_DELIMITER}"
-                        f"{file}"
-                    )
-                else:
-                    cmd.append(file)
-                cmd.append(self._ECASOUND_OPTION_OUTPUT)
-                cmd.append(
-                    f"{self._ECASOuND_OUTPUT_NAME}"
-                    f"{self._ECASOUND_OPTION_DELIMITER}"
-                    f"{self._jack_name}")
-                # if do_loop:
-                #     cmd.append(self._ECASOUND_OPTION_LOOP)
-                self._process = Process.start(cmd)
-                process_message_counter = 0
-
-            except queue.Empty:
-
-                # log.debug(
-                #     "Queue empty. Sleeping [%sms] ...",
-                #     self.WAIT_INTERVAL_MS)
-                pass
+                # Now play the audio item.
+                self._process = self._play(current_item)
 
             except Exception as ex:  # pylint: disable=W0718
 
-                log.error(
-                    "An exception occurred inside the worker thread: '%s'.",
-                    ex,
-                    exc_info=True)
-
-            finally:
-                time.sleep(self.WAIT_INTERVAL_MS/1000)
+                log.error("Exception occurred in worker. [%s]",
+                          ex, exc_info=True)
+                continue
 
         log.info("Worker stopped.")
+
+    def _play(self, item: AudioItem) -> Process:
+        """Plays an audio item."""
+
+        assert isinstance(item, AudioItem)
+
+        file = item.path
+
+        log.info(
+            "Trying to play '%s' [loop=%s] to '%s' ...",
+            file,
+            item.is_loop,
+            self._jack_name)
+
+        cmd: list[str] = []
+        cmd.append(self._ECASOuND_FULLNAME)
+        cmd.append(self._ECASOUND_OPTION_QUIET)
+        cmd.append(
+            f"{self._ECASOUND_OPTION_GLOBAL}"
+            f"{self._ECASOUND_OPTION_SEP}"
+            f"{self._ECASOuND_OUTPUT_NAME}"
+            f"{self._ECASOUND_OPTION_DELIMITER}"
+            f"{self._ECASOuND_PORT_NAME}"
+            f"{self._ECASOUND_OPTION_DELIMITER}"
+            f"{self._ECASOUND_OPTION_TRANSPORT_NO}"
+        )
+        cmd.append(self._ECASOUND_OPTION_INPUT)
+        if item.is_loop:
+            cmd.append(
+                f"{self._ECASOUND_OPTION_AUDIOLOOP}"
+                f"{self._ECASOUND_OPTION_DELIMITER}"
+                f"{file}"
+            )
+        else:
+            cmd.append(file)
+        cmd.append(self._ECASOUND_OPTION_OUTPUT)
+        cmd.append(
+            f"{self._ECASOuND_OUTPUT_NAME}"
+            f"{self._ECASOUND_OPTION_DELIMITER}"
+            f"{self._jack_name}")
+
+        return Process.start(cmd)
 
     def stop(self) -> None:
         """Clears the audio queue, stops the playing item (if any) and stops
@@ -226,7 +321,7 @@ class AudioPlayer:
 
         self.clear(True)
 
-        self._do_cancel_worker.set()
+        self._do_cancel_worker = True
         self._thread.join()
 
     def clear(self, do_stop_active_item: bool = False) -> None:
@@ -239,51 +334,26 @@ class AudioPlayer:
             None:
         """
 
-        log.info("Clearing queue ...")
+        log.debug("Clearing queue ...")
 
-        with self._queue.mutex:
-            self._queue.queue.clear()
-            self._queue.all_tasks_done.notify_all()
-            self._queue.unfinished_tasks = 0
+        _ = do_stop_active_item
+        self._queue.clear()
 
-        if not do_stop_active_item:
-            return
+        log.info("Clearing queue OK.")
 
-        self.next()
-
-    def next(self) -> None:
-        """Skips playing the active item and skips to the next item in the
-        queue, if there is one.
-
-        Attributes:
-            None:
-
-        Returns:
-            None:
-        """
-
-        log.info("Skipping to next item ...")
-
-        self._do_cancel_item = True
-
-    def enqueue(self, item: tuple[str, bool]) -> None:
+    def enqueue(self, item: AudioItem) -> None:
         """Enqueues an item in the audio queue.
 
         Attributes:
-            item (tuple[str, bool]): An item to enqueue into the audio player.
-                `str` contains a full path to an audio file; `bool` is true if
-                the audio shall be looped continously; false otherwise.
+            item (AudioItem): An item to enqueue into the audio player.
 
         Returns:
             None:
         """
 
-        assert item
-        assert isinstance(item, tuple) and \
-            len(item) == 2 and \
-            isinstance(item[0], str) and \
-            isinstance(item[1], bool)
+        assert isinstance(item, AudioItem)
 
-        log.debug("Trying to enqueue item '%s' [loop=%s]", item[0], item[1])
+        log.debug(
+            "Trying to enqueue item '%s' [loop=%s]", item.path, item.is_loop)
 
-        self._queue.put(item)
+        self._queue.enqueue(item)

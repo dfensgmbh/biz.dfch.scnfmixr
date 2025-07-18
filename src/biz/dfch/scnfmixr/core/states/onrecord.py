@@ -49,7 +49,7 @@ class OnRecord(StateBase):
 
         super().__init__(
             info_enter=UiEventInfo(StateEvent.ONRECORD_ENTER, True),
-            info_leave=UiEventInfo(StateEvent.ONRECORD_LEAVE, True)
+            info_leave=None
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

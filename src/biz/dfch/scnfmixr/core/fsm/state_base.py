@@ -26,7 +26,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Self
 
-from .ui_event_info import UiEventInfo
+from ...public.ui.ui_event_info import UiEventInfo
 from .execution_context import ExecutionContext
 from .transition_base import TransitionBase
 

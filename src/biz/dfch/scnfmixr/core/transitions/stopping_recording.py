@@ -41,6 +41,7 @@ class StoppingRecording(TransitionBase):
     """Stops a recording."""
 
     _is_recording_stopped: Event
+    _message_queue: MessageQueue
 
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""
@@ -58,6 +59,11 @@ class StoppingRecording(TransitionBase):
 
         self._is_recording_stopped = Event()
 
+        self._message_queue = MessageQueue.Factory.get()
+        self._message_queue.register(
+            self._on_message,
+            lambda e: isinstance(e, MixerMessage.Recorder.StoppedMessage))
+
     def _on_message(self, message: MessageBase) -> None:
         """Message handler."""
 
@@ -70,15 +76,12 @@ class StoppingRecording(TransitionBase):
 
         self._is_recording_stopped.clear()
 
-        message_queue = MessageQueue.Factory.get()
-        message_queue.register(self._on_message)
-        message_queue.publish(
+        self._message_queue.publish(
             MixerMessage.Recorder.RecordingStopCommand())
 
         log.debug("Waiting for recording to stop ...")
 
         result = self._is_recording_stopped.wait(10)
-        message_queue.unregister(self._on_message)
         self._is_recording_stopped.clear()
 
         if result:

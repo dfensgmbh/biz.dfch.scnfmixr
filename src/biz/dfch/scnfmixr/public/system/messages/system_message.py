@@ -24,13 +24,14 @@
 
 from __future__ import annotations
 
-from ..message_medium import MessageMedium
+from ..message_medium import NotificationMedium
+from ...ui import UiEventInfo
 
 
 class SystemMessage:
     """System messages."""
 
-    class Shutdown(MessageMedium):
+    class Shutdown(NotificationMedium):
         """System shutdown message.
 
         Attributes:
@@ -40,70 +41,70 @@ class SystemMessage:
     class StateMachine:
         """StateMachine status messages."""
 
-        class StateMachineStarting(MessageMedium):
+        class StateMachineStarting(NotificationMedium):
             """StateMachine is starting.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineStarted(MessageMedium):
+        class StateMachineStarted(NotificationMedium):
             """StateMachine is starting.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineStopping(MessageMedium):
+        class StateMachineStopping(NotificationMedium):
             """StateMachine is stopping.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineStopped(MessageMedium):
+        class StateMachineStopped(NotificationMedium):
             """StateMachine is stopped.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineError(MessageMedium):
+        class StateMachineError(NotificationMedium):
             """StateMachine is in an error state.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineStateEnter(MessageMedium):
+        class StateMachineStateEnter(NotificationMedium):
             """StateMachine enters a state.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineStateLeave(MessageMedium):
+        class StateMachineStateLeave(NotificationMedium):
             """StateMachine leaves a state.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineTransitionEnter(MessageMedium):
+        class StateMachineTransitionEnter(NotificationMedium):
             """StateMachine enters a transitition.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineTransitionLeave(MessageMedium):
+        class StateMachineTransitionLeave(NotificationMedium):
             """StateMachine leaves a transitition.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-    class InputEvent(MessageMedium):
+    class InputEvent(NotificationMedium):
         """Translated input event.
 
         Attributes:
@@ -130,3 +131,56 @@ class SystemMessage:
         Attributes:
             value (str): The translated input event.
         """
+
+    class UiEventInfoMessageBase(NotificationMedium):
+        """UiEventInfo"""
+
+        value: UiEventInfo
+
+        def __init__(self, value: UiEventInfo):
+            super().__init__()
+
+            assert value
+
+            self.value = value
+
+    class UiEventInfoStateMessage(UiEventInfoMessageBase):
+        """UiEventInfoStateMessage"""
+
+    class UiEventInfoStateEnterMessage(UiEventInfoStateMessage):
+        """UiEventInfoStateMessage"""
+
+    class UiEventInfoStateLeaveMessage(UiEventInfoStateMessage):
+        """UiEventInfoStateMessage"""
+
+    class UiEventInfoTransitionMessage(UiEventInfoMessageBase):
+        """UiEventInfoTransitionMessage"""
+
+    class UiEventInfoTransitionEnterMessage(UiEventInfoTransitionMessage):
+        """UiEventInfoTransitionMessage"""
+
+    class UiEventInfoTransitionLeaveMessage(UiEventInfoTransitionMessage):
+        """UiEventInfoTransitionMessage"""
+
+    class UiEventInfoAudioMessage(NotificationMedium):
+        """UiEventInfoAudioMessage"""
+
+        type: type
+        path: str
+        value: UiEventInfo
+
+        def __init__(
+                self,
+                _type: type,
+                path: str,
+                message: SystemMessage.UiEventInfoMessageBase,
+        ):
+            super().__init__()
+
+            assert _type
+            assert path and isinstance(path, str) and path.strip()
+            assert message
+
+            self.type = _type
+            self.path = path
+            self.value = message
