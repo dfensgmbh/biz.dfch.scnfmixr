@@ -30,7 +30,7 @@ import subprocess
 import threading
 import time
 import signal
-from typing import IO, Optional, Sequence, Tuple
+from typing import IO, Sequence, Tuple
 
 from biz.dfch.logging import log
 from col import CircularQueue
@@ -49,6 +49,9 @@ class Process:
     _STDOUT = "stdout"
     _STDERR = "stderr"
 
+    _stdout_thread: threading.Thread
+    _stderr_thread: threading.Thread
+
     def __init__(self, popen: subprocess.Popen, encoding: str) -> None:
         """Initialise a `Process` instance. Use `start` to initialise this
         class. Should not be called directly.
@@ -62,9 +65,12 @@ class Process:
         """
 
         assert popen is not None
-        self._popen = popen
-
         assert encoding is not None and "" != encoding.strip()
+
+        self._stdout_thread = None
+        self._stderr_thread = None
+
+        self._popen = popen
         self._encoding = encoding or locale.getpreferredencoding(False)
 
         self._queue = CircularQueue[Tuple[str, str]](self._MAX_QUEUE_SIZE)
@@ -116,7 +122,7 @@ class Process:
         Args:
             max_wait_time (int): Maximum number of seconds to wait for graceful
                 termination.
-            force (bool): If `True`, the process is forcibly stopped. `False`
+            force (bool): If `True`, the process is forcibly stopped; false
                 by default.
 
         Returns:
@@ -201,7 +207,7 @@ class Process:
                 in `stdin` a single line of text is sent to the process
                 (terminated with a line feed).
             max_wait_time (float): The maximum wait time in seconds to wait for
-                the process to stop. 
+                the process to stop.
                 Note that, when the process does not stop within that timeout,
                 the process is stopped (which will take additional time).
             encoding (str): The encding to be used ("utf-8" is default).
@@ -323,8 +329,8 @@ class Process:
         wait_on_completion: bool = False,
         capture_stdout: bool = False,
         capture_stderr: bool = False,
-        cwd: Optional[str] = None,
-        encoding: Optional[str] = None,
+        cwd: str | None = None,
+        encoding: str | None = None,
         **kwargs,
     ) -> Process:
         """Starts a specified process and optionally waits until its completion.
@@ -337,10 +343,10 @@ class Process:
                 otherwise (default).
             capture_stderr (bool): True, if `stderr` should be captured; false,
                 otherwise (default).
-            cwd (str, optional): The working directory of the process to be
+            cwd (str | None): The working directory of the process to be
                 started. If no working directory is given, the current working
                 directory of the calling process is used.
-            encoding (str, optional): The charset to be used for the process to
+            encoding (str | None): The charset to be used for the process to
                 be started. If no encoding is given,
                 the current encoding of the calling process is used.
 

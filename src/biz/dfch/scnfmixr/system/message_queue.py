@@ -23,14 +23,12 @@
 """Module message_queue."""
 
 from __future__ import annotations
-from concurrent.futures import ThreadPoolExecutor
 from collections.abc import Iterable
 from dataclasses import dataclass
 from time import sleep
 from typing import (
     ClassVar,
     Callable,
-    Optional,
 )
 from threading import Event, Lock, Thread
 
@@ -38,8 +36,6 @@ from biz.dfch.logging import log
 from ...asyn import ConcurrentDoubleSideQueueT
 from ..public.system import (
     MessageBase,
-    ICommand,
-    INotification,
 )
 from ..public.system import MessagePriority
 
@@ -103,7 +99,7 @@ class MessageQueue():  # pylint: disable=R0902
     class Factory:  # pylint: disable=R0903
         """Factory class."""
 
-        __instance: ClassVar[Optional["MessageQueue[MessageBase]"]] = None
+        __instance: ClassVar[MessageQueue[MessageBase] | None] = None
         _sync_root: ClassVar[Lock] = Lock()
 
         @staticmethod
@@ -187,55 +183,11 @@ class MessageQueue():  # pylint: disable=R0902
                 log.debug("No actions registered. Discarding messages.")
                 return
 
-            # for message in queue_high:
-            #     self._process_message(message, callback_item)
+            for message in queue_high:
+                self._process_message(message, callback_item)
 
-            # for message in queue_default:
-            #     self._process_message(message, callback_item)
-
-            with ThreadPoolExecutor(max_workers=1) as exc_cmd:
-                with ThreadPoolExecutor(max_workers=2) as exc_not:
-                    futures = []
-
-                    for message in queue_high:
-                        if isinstance(message, INotification):
-                            future = exc_not.submit(
-                                self._process_message,
-                                message,
-                                callback_item)
-                            futures.append(future)
-
-                    for message in queue_high:
-                        if isinstance(message, ICommand):
-                            future = exc_cmd.submit(
-                                self._process_message,
-                                message,
-                                callback_item)
-                            futures.append(future)
-
-                    for future in futures:
-                        future.result()
-                    futures.clear()
-
-                    for message in queue_default:
-                        if isinstance(message, INotification):
-                            future = exc_not.submit(
-                                self._process_message,
-                                message,
-                                callback_item)
-                            futures.append(future)
-
-                    for message in queue_default:
-                        if isinstance(message, ICommand):
-                            future = exc_cmd.submit(
-                                self._process_message,
-                                message,
-                                callback_item)
-                            futures.append(future)
-
-                    for future in futures:
-                        future.result()
-                    futures.clear()
+            for message in queue_default:
+                self._process_message(message, callback_item)
 
         except Exception as ex:  # pylint: disable=W0718
             log.error("_process_messages: An error occurred: '%s'.",
@@ -382,7 +334,7 @@ class MessageQueue():  # pylint: disable=R0902
     def register(
             self,
             action: Callable[[MessageBase], None],
-            predicate: Optional[Callable[[], bool]] = None
+            predicate: Callable[[], bool] | None = None
     ) -> bool:
         """Registers a callback on the message queue.
 
@@ -391,7 +343,7 @@ class MessageQueue():  # pylint: disable=R0902
 
         Args:
             action (Callable): The action to invoke.
-            predicate (Callable, Optional): The optional filter to determine if
+            predicate (Callable | None): The optional filter to determine if
                 an action should be invoked.
 
         Returns:

@@ -36,16 +36,22 @@ class CircularQueue(Generic[T]):
     """A circular thread-safe, non-blocking queue that supports a size limit."""
 
     def __init__(self, max_size: int = -1):
-        """Initialises an instance of `CircularQueue` and optionally limits its maximum size.
+        """Initialises an instance of `CircularQueue` and optionally limits its
+        maximum size.
+
         Args:
-            max_size (int): The size of items of the queue, or no size limit if set to `-1` (*default*).
+            max_size (int): The size of items of the queue, or no size limit if
+                set to `-1` (*default*).
+
         Returns:
+            None:
         """
 
         assert -1 <= max_size
 
         self._lock = Lock()
-        self._queue: Deque[T] = deque(maxlen=None if max_size == -1 else max_size)
+        self._queue: Deque[T] = deque(
+            maxlen=None if max_size == -1 else max_size)
 
     def __len__(self) -> int:
         """Returns the number of items in the queue.
@@ -59,20 +65,27 @@ class CircularQueue(Generic[T]):
 
     @property
     def has_items(self) -> bool:
-        """Returns `True` if the queue contains items. Returns `False` otherwise..
+        """Returns `True` if the queue contains items. Returns `False`
+        otherwise.
+
         Args:
+            None:
+
         Returns:
-            bool: `True` if the queue contains items. `False` otherwise.
+            bool: true if the queue contains items; false otherwise.
         """
 
         with self._lock:
             return bool(self._queue)
 
     def enqueue(self, item: T) -> int:
-        """Enqueue `item` as the newest element on the queue. If current queue length equals
-            `max_size` the oldest item is overwritten by this operation.
+        """Enqueue `item` as the newest element on the queue. If current queue
+        length equals max_size` the oldest item is overwritten by this
+        operation.
+
         Args:
             item (T): The `item` to enqueue. Must not be `None`.
+
         Returns:
             int: The length of the queue after enqueuing `item`.
         """

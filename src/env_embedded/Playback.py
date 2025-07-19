@@ -22,6 +22,7 @@
 
 from biz.dfch.asyn import Process
 
+
 __all__ = [
     "Playback",
 ]
@@ -45,7 +46,7 @@ class Playback:  # pylint: disable=R0903
                 `hw:CARD=ABC`, `hw:CARD=ABC,DEV=1`
             name (str): The full path and name to an audio file.
             wait_on_completion (bool): If `True`, waits until the audio has
-                finished playing. `False` otherwise (*default*).
+                finished playing; false otherwise (*default*).
         Returns:
             Returns an instance to this class.
         Raises:

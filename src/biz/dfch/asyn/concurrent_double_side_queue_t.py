@@ -24,7 +24,7 @@
 
 from collections import deque
 from threading import Lock
-from typing import Generic, TypeVar, Optional
+from typing import Generic, TypeVar
 
 
 __all__ = [
@@ -63,7 +63,7 @@ class ConcurrentDoubleSideQueueT(Generic[T]):
         with self._sync_root:
             self._queue.appendleft(item)
 
-    def dequeue(self) -> Optional[T]:
+    def dequeue(self) -> T | None:
         """Dequeues an item from the top of the queue."""
 
         with self._sync_root:
@@ -71,7 +71,7 @@ class ConcurrentDoubleSideQueueT(Generic[T]):
                 return None
             return self._queue.popleft()
 
-    def peek(self) -> Optional[T]:
+    def peek(self) -> T | None:
         """Returns the top items from dequeue without removing it from the
         queue."""
 
