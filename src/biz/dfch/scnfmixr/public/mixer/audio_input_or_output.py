@@ -52,6 +52,3 @@ class AudioInputOrOutput(InputOrOutput):
     @property
     def is_started(self) -> bool:
         return self._alsa_jack_base.is_started
-
-    def invoke(self):
-        return super().invoke()

@@ -253,7 +253,7 @@ class DetectingRcWorker(InterfaceDetectorBase):
 
             if not is_match:
                 log.debug(
-                    "Selecting device '%s' as candidate FAILED [%s not in %a]. "
+                    "Selecting device '%s' as candidate FAILED [%s not in %s]. "
                     "Skipping ...",
                     full_name,
                     vendor_id,

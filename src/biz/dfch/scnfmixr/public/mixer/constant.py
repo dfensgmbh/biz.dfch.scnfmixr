@@ -28,6 +28,8 @@ from enum import StrEnum
 class Constant(StrEnum):
     """Mixer port constants."""
 
+    JACK_ALSA_PREFIX = "Alsa"
+    JACK_SEPARATOR = ":"
     JACK_INFIX = "-"
     JACK_INPUT = "I"
     JACK_OUTPUT = "O"

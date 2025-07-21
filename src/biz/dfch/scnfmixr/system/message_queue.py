@@ -55,7 +55,7 @@ class ActionDescriptor:
     """
 
     action: Callable[[MessageBase], None]
-    predicate: Callable[[MessageBase], bool] = None
+    predicate: Callable[[MessageBase], bool] | None = None
 
 
 class MessageQueue():  # pylint: disable=R0902
@@ -64,6 +64,7 @@ class MessageQueue():  # pylint: disable=R0902
     _WORKER_SIGNAL_WAIT_TIME_MS = 5000
     _EXCEPTION_TIMEOUT_MS = 1000
 
+    _sync_root: Lock
     _queue_high: ConcurrentDoubleSideQueueT[MessageBase]
     _queue_default: ConcurrentDoubleSideQueueT[MessageBase]
     _callbacks: list[ActionDescriptor]

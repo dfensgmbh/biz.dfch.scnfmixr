@@ -39,7 +39,7 @@ class Constant(StrEnum):
             card_id: str | int,
             interface_id: str | int = 0
     ) -> str:
-        """Gets the raw ALSA device name"""
+        """Gets the raw ALSA device name."""
 
         assert (
             isinstance(card_id, str) and card_id.isdigit() or

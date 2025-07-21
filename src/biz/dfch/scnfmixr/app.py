@@ -28,7 +28,7 @@ from threading import Event
 from biz.dfch.i18n import LanguageCode
 from biz.dfch.logging import log
 from biz.dfch.version import Version
-from biz.dfch.diagnostics import SchedulingInfo
+# from biz.dfch.diagnostics import SchedulingInfo
 
 from .application_context import ApplicationContext
 from .args import Arguments
@@ -62,7 +62,7 @@ class App:  # pylint: disable=R0903
             self._VERSION_REQUIRED_MAJOR,
             self._VERSION_REQUIRED_MINOR)
 
-        log.info("SchedulingInfo: '%s'", SchedulingInfo())
+        # log.info("SchedulingInfo: '%s'", SchedulingInfo())
 
         self._signal_stop = Event()
         self._signal_stop.clear()

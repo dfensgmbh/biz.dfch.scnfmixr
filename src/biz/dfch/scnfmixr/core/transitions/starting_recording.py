@@ -84,7 +84,7 @@ class StartingRecording(TransitionBase):
 
         files: list[str] = []
 
-        suffix = "MX01"
+        suffix = "MX03"
         for device, device_info in app_ctx.storage_configuration_map.items():
 
             file = FileName(

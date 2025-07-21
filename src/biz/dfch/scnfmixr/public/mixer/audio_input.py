@@ -41,8 +41,7 @@ __all__ = [
 ]
 
 
-# pylint: disable=R0903
-class AudioInput(AudioInputOrOutput, Input):
+class AudioInput(AudioInputOrOutput, Input):  # pylint: disable=R0903
     """Represents an audio input."""
 
     def __init__(self, name: str, cfg: AlsaInterfaceInfo):

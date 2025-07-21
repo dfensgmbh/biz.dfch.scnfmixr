@@ -55,8 +55,11 @@ class FileName:  # pylint: disable=R0903
         assert dt and isinstance(dt, datetime)
 
         file_name = (
-            f"{base_name}{separator}"
-            f"{dt.isoformat()[0:19].replace(':', '-')}"
+            f"{base_name}"
+            f"{separator}"
+            f"{dt.strftime('%Y-%m-%d---%H-%M-%S')}"
+            f"{separator}"
+            f"{suffix}"
             f"{self._EXTENSION_DOT}"
             f"{extension}"
         )
