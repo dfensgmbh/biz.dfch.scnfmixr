@@ -19,26 +19,3 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-
-from dataclasses import dataclass
-
-__all__ = ["MultiLineTextParserContext"]
-
-
-@dataclass
-class MultiLineTextParserContext:
-    """Provides context for the `MultiLineTextParser`.
-    Attributes:
-        line (int): Line number in the source text.
-        level (int): Hierarchical level of current line (start at 0).
-        levelPrevious (int): Hierarchical level of previous line.
-        keyword (str): The current keyword being parsed.
-        text (str): Associated text including the keyword.
-    """
-
-    line: int = 0
-    level: int = 0
-    level_previous: int = 0
-    keyword: str = None
-    text: str = None

@@ -1,6 +1,6 @@
 # MIT License
 
-# Copyright (c) 2024, 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,46 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Module jack_client."""
 
-from dataclasses import dataclass
+from __future__ import annotations
+from collections import defaultdict
+from dataclasses import dataclass, field
 
-__all__ = ["MultiLineTextParserContext"]
+from biz.dfch.scnfmixr.jack_commands.jack_port import JackPort
 
 
-@dataclass
-class MultiLineTextParserContext:
-    """Provides context for the `MultiLineTextParser`.
-    Attributes:
-        line (int): Line number in the source text.
-        level (int): Hierarchical level of current line (start at 0).
-        levelPrevious (int): Hierarchical level of previous line.
-        keyword (str): The current keyword being parsed.
-        text (str): Associated text including the keyword.
-    """
+__all__ = [
+    "JackPort"
+]
 
-    line: int = 0
-    level: int = 0
-    level_previous: int = 0
-    keyword: str = None
-    text: str = None
+
+@dataclass(frozen=True)
+class JackClient:
+    """Represents a JACK client."""
+
+    name: str
+    ports: frozenset[JackPort] = field(default_factory=frozenset)
+
+    @staticmethod
+    def get() -> set[JackClient]:
+        """Retrieves all currently existing JACK clients.
+
+        Return:
+            set[JackClient]: A set of JACK clients.
+        """
+
+        dic: dict[str, set[JackPort]] = defaultdict(set)
+        result: set[JackClient] = set()
+
+        ports = JackPort.get_ports()
+        for port in ports:
+            name, _ = port.name.split(":", 1)
+
+            dic[name].add(port)
+
+        for name, ports in dic.items():
+            client = JackClient(name, frozenset(ports))
+            result.add(client)
+
+        return result

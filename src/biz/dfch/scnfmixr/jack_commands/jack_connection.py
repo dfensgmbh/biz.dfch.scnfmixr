@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module for handling JACK commands."""
+"""Module jack_connection."""
 
 from __future__ import annotations
 import os
@@ -41,8 +41,10 @@ class JackConnection:
     """Create a JACK connection between a `source` and a `sink`."""
 
     _JACK_CONNECT_FULLNAME = "/bin/jack_connect"
+    _JACK_DISCONNECT_FULLNAME = "/usr/bin/jack_disconnect"
     _JACK_LSP_FULLNAME = "/bin/jack_lsp"
     _JACK_LSP_OPTION_CONNECTIONS = "-c"
+    _JACK_LSP_OPTION_PORTS = "-p"
     _JACK_LSP_CLIENT_PORT_SEPARATOR = ':'
 
     class Factory:
@@ -179,6 +181,59 @@ class JackConnection:
 
         return result
 
+    @staticmethod
+    def get_connections2() -> dict[str, list[str]]:
+        """Gets connnections."""
+
+        cmd: list[str] = [
+            JackConnection._JACK_LSP_FULLNAME,
+            JackConnection._JACK_LSP_OPTION_CONNECTIONS,
+        ]
+
+        text, _ = Process.communicate(cmd)
+
+        visitor = JackConnection.ConnectionVisitor2()
+
+        parser = MultiLineTextParser(
+            indent=" ",
+            length=3,
+            dic={},
+            default=visitor.process_default)
+        parser.parse(text, is_regex=False)
+
+        return visitor.result
+
+    @staticmethod
+    def get_connections3() -> dict[tuple[str, bool], list[str]]:
+        """Gets connnections with source and sink information.
+        
+        Returns:
+            dict (tuple[str, bool], list[str])
+        """
+
+        cmd: list[str] = [
+            JackConnection._JACK_LSP_FULLNAME,
+            JackConnection._JACK_LSP_OPTION_CONNECTIONS,
+            JackConnection._JACK_LSP_OPTION_PORTS,
+        ]
+
+        text, _ = Process.communicate(cmd)
+
+        visitor = JackConnection.ConnectionVisitor3()
+
+        dic = {
+            "properties: input,": visitor.process_properties_input,
+            "properties: output,": visitor.process_properties_output,
+        }
+        parser = MultiLineTextParser(
+            indent=" ",
+            length=1,
+            dic=dic,
+            default=visitor.process_default)
+        parser.parse(text, is_regex=False)
+
+        return visitor.result
+
     def __init__(self, source: str, sink: str) -> None:
         """Initialise an instance of this class.
 
@@ -217,6 +272,44 @@ class JackConnection:
         log.error(os.sep.join(stderr))
 
         raise RuntimeError(message)
+
+    def disconnect(self) -> bool:
+        """Disconnect a JACK connection."""
+
+        cmd: list[str] = [
+            self._JACK_DISCONNECT_FULLNAME,
+            self._source,
+            self._sink,
+        ]
+
+        # msg = "cannot connect client, already connected?"
+        msg = "cannot disconnect client, already disconnected?"
+
+        _, text = Process.communicate(cmd, max_wait_time=0.25)
+
+        return msg not in text
+
+    def is_connected(self) -> bool:
+        """Determines whether a connection exists of not."""
+        return JackConnection.check_connection(self._source, self._sink)
+
+    @staticmethod
+    def check_connection(source: str, sink: str) -> bool:
+        """Determines whether a connection exists of not."""
+
+        assert isinstance(source, str) and source.strip()
+        assert isinstance(sink, str) and sink.strip()
+
+        cmd: list[str] = [
+            JackConnection._JACK_LSP_FULLNAME,
+            JackConnection._JACK_LSP_OPTION_CONNECTIONS,
+        ]
+
+        text, _ = Process.communicate(cmd, max_wait_time=0.25)
+
+        return list({
+            e.split(JackConnection._JACK_LSP_CLIENT_PORT_SEPARATOR, 1)[0]
+            for e in text})
 
     class ConnectionVisitor:
         """A visitor for parsing `jack_lsp` connection output."""
@@ -298,3 +391,94 @@ class JackConnection:
 
             self.items.append(ctx.text)
             return True
+
+    class ConnectionVisitor2:
+        """A visitor for parsing `jack_lsp` connection output."""
+
+        current_key: str
+        result: dict[str, list[str]]
+
+        def __init__(self):
+            """Returns an instance of this object."""
+
+            self.current_key = ""
+            self.result = {}
+
+        def process_default(self, ctx: MultiLineTextParserContext) -> bool:
+            """Process any line."""
+
+            assert ctx
+            assert ctx.level in [0, 1], ctx.level
+
+            if 0 == ctx.level:
+                if ctx.text not in self.result:
+                    self.result[ctx.text] = []
+                    self.current_key = ctx.text
+
+                return True
+
+            if 1 == ctx.level:
+                self.result[self.current_key].append(ctx.text)
+
+                return True
+
+    class ConnectionVisitor3:
+        """A visitor for parsing `jack_lsp` connection output."""
+
+        current_key: str
+        is_sink: bool
+        connections: list[str]
+        result: dict[str, list[str]]
+
+        def __init__(self):
+            """Returns an instance of this object."""
+
+            self.current_key = ""
+            self.is_sink = False
+            self.connections = []
+            self.result = {}
+
+        def process_properties_input(
+                self,
+                _: MultiLineTextParserContext) -> bool:
+            """Process input."""
+
+            # 'input' is sink, which is an "output", contraire ...
+            self.is_sink = True
+            key = (self.current_key, self.is_sink)
+            self.result[key] = []
+            self.result[key].extend(self.connections)
+
+            return True
+
+        def process_properties_output(
+                self,
+                _: MultiLineTextParserContext) -> bool:
+            """Process output."""
+
+            # 'output' is source, which is an "input", contraire ...
+            self.is_sink = False
+            key = (self.current_key, self.is_sink)
+            self.result[key] = []
+            self.result[key].extend(self.connections)
+
+            return True
+
+        def process_default(self, ctx: MultiLineTextParserContext) -> bool:
+            """Process any line."""
+
+            assert ctx
+            assert ctx.level in range(0, 9), ctx.level
+
+            if 0 == ctx.level:
+                if ctx.text not in self.result:
+                    self.connections = []
+                    self.current_key = ctx.text
+                    self.is_sink = False
+
+                return True
+
+            if 3 == ctx.level:
+                self.connections.append(ctx.text)
+
+                return True

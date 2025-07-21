@@ -23,9 +23,13 @@
 """Module for representing JACK ports."""
 
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import (
+    dataclass
+)
 from time import sleep
-from typing import overload
+from typing import (
+    overload,
+)
 
 from biz.dfch.logging import log
 from biz.dfch.asyn import Process
@@ -33,6 +37,11 @@ from biz.dfch.asyn import Process
 from text import MultiLineTextParser
 
 from .jack_connection import JackConnection
+
+
+__all__ = [
+    "JackPort"
+]
 
 
 @dataclass(frozen=True)
