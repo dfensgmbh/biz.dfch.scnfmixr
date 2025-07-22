@@ -33,7 +33,7 @@ from biz.dfch.asyn import (
     ConcurrentDoubleSideQueueT,
 )
 
-from ..public.mixer import MixerMessage
+from ..public.messages import AudioMixer as msgt
 from ..public.system import MessageBase
 from ..public.system.messages import SystemMessage
 from ..system import MessageQueue
@@ -57,7 +57,7 @@ class AudioPlayer:
     """Defines the audio player for output handling."""
 
     _WAIT_INTERVAL_MS: int = 250
-    _LOG_INTERVAL_MS: int = 5000
+    _KEEP_ALIVE_INTERVAL_MS: int = 10 * 1000
 
     _ECASOuND_FULLNAME = "/usr/bin/ecasound"
     _ECASOuND_OUTPUT_NAME = "jack"
@@ -101,7 +101,7 @@ class AudioPlayer:
             self.on_message,
             lambda e: isinstance(
                 e,
-                (MixerMessage.Mixer.DefaultOutputChanged,
+                (msgt.DefaultOutputChangedNotification,
                  SystemMessage.UiEventInfoAudioMessage,
                  SystemMessage.Shutdown)))
 
@@ -111,7 +111,7 @@ class AudioPlayer:
         log.debug("'%s' [%s]", message.name, type(message))
 
         assert isinstance(message,
-                          (MixerMessage.Mixer.DefaultOutputChanged,
+                          (msgt.DefaultOutputChangedNotification,
                            SystemMessage.UiEventInfoAudioMessage,
                            SystemMessage.Shutdown))
 
@@ -137,7 +137,7 @@ class AudioPlayer:
 
             return
 
-        if isinstance(message, MixerMessage.Mixer.DefaultOutputChanged):
+        if isinstance(message, msgt.DefaultOutputChangedNotification):
             if message.value != self._jack_name:
                 log.debug("Changing output value form '%s' to '%s'.",
                           message.value, self._jack_name)
@@ -146,7 +146,9 @@ class AudioPlayer:
 
         if isinstance(message, SystemMessage.Shutdown):
             # For later: switch sound to ALSA output?
-            # MAybe even better: have AlsaMixer signal DefaultOutputChanged?
+            # Maybe even better: have AlsaMixer signal
+            # DefaultOutputChangedNotification?
+            self._do_cancel_worker = True
             return
 
     def _worker(self):
@@ -182,11 +184,12 @@ class AudioPlayer:
                     self._signal_queue.clear()
                     # ... and exit if timeout.
                     if not result:
-                        if time.monotonic() > (
-                                start_time + self._LOG_INTERVAL_MS/1000):
+                        now = time.monotonic()
+                        if now > (
+                                start_time + self._KEEP_ALIVE_INTERVAL_MS/1000):
                             log.debug("Worker keep alive. [%s]",
                                       len(self._queue))
-                            start_time = time.monotonic()
+                            start_time = now
                         continue
 
                     # We have to check here again, as the signal could have been
@@ -259,6 +262,15 @@ class AudioPlayer:
 
                 log.error("Exception occurred in worker. [%s]",
                           ex, exc_info=True)
+
+                try:
+                    # Clean up any "left over" process info.
+                    if (self._process and
+                            self._process._popen.poll is not None):
+                        self._process = None
+                except:  # pylint: disable=W0702  # noqa: E722
+                    pass
+
                 continue
 
         log.info("Worker stopped.")

@@ -24,9 +24,7 @@
 
 from biz.dfch.logging import log
 
-from ...public.mixer import (
-    MixerMessage,
-)
+from ...public.messages import AudioRecorder as msgt
 from ...system import FuncExecutor
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
@@ -38,7 +36,6 @@ class StoppingRecording(TransitionBase):
     """Stops a recording."""
 
     def __init__(self, event: str, target: StateBase):
-        """Default ctor."""
 
         assert event and event.strip()
         assert target
@@ -57,10 +54,10 @@ class StoppingRecording(TransitionBase):
 
         with FuncExecutor(
             lambda _: True,
-            lambda e: isinstance(e, MixerMessage.Recorder.StoppedNotification)
+            lambda e: isinstance(e, msgt.StoppedNotification)
         ) as sync:
             result = sync.invoke(
-                MixerMessage.Recorder.RecordingStopCommand(),
+                msgt.RecordingStopCommand(),
                 10)
 
         if result:

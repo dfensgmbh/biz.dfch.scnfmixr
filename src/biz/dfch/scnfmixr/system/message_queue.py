@@ -57,6 +57,23 @@ class ActionDescriptor:
     action: Callable[[MessageBase], None]
     predicate: Callable[[MessageBase], bool] | None = None
 
+    def get_key(self, action) -> str:
+        """Gets the full qualified name of the action."""
+
+        code = getattr(action, '__code__', None)
+        if code:
+            result = (
+                f"{action.__module__}."
+                f"{action.__qualname__}@{code.co_filename}:"
+                f"{code.co_firstlineno}"
+            )
+        else:
+            result = (
+                f"{action.__module__}."
+                f"{action.__qualname__}@{id(action)}"
+            )
+        return result
+
 
 class MessageQueue():  # pylint: disable=R0902
     """Generic message queue."""
@@ -179,6 +196,7 @@ class MessageQueue():  # pylint: disable=R0902
                 queue_default = list(self._queue_default)
                 self._queue_default.clear()
                 callback_item = list(self._callbacks)
+                callback_item.reverse()
 
             if 0 == len(callback_item):
                 log.debug("No actions registered. Discarding messages.")
@@ -394,7 +412,7 @@ class MessageQueue():  # pylint: disable=R0902
 
             for i, item in enumerate(self._callbacks):
 
-                if item.action is not action:
+                if item.get_key(item.action) != item.get_key(action):
                     continue
 
                 del self._callbacks[i]

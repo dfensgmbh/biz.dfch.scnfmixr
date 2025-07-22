@@ -39,11 +39,9 @@ from ..jack_commands import (
     JackConnection,
     JackTransport,
 )
-from ..public.mixer import (
-    IAudioRecorderMessage,
-    MixerMessage
-)
 from ..public.system import MessageBase
+from ..public.messages import IAudioRecorderMessage
+from ..public.messages import AudioRecorder as msgt
 from ..public.system.messages import SystemMessage
 from ..system import MessageQueue
 
@@ -120,23 +118,29 @@ class AudioRecorder:
 
             return
 
-        if isinstance(message, MixerMessage.Recorder.RecordingStartCommand):
+        if isinstance(message, msgt.RecordingStartCommand):
 
             log.debug("RecordingStartCommand")
 
-            cmd = cast(MixerMessage.Recorder.RecordingStartCommand, message)
+            cmd = cast(msgt.RecordingStartCommand, message)
             items = cmd.items
             assert items and isinstance(items, list) and 1 <= len(items) <= 2
 
-            self.start(items)
+            def _worker_start():
+                self.start(items)
+
+            threading.Thread(target=_worker_start, daemon=True).start()
 
             return
 
-        if isinstance(message, MixerMessage.Recorder.RecordingStopCommand):
+        if isinstance(message, msgt.RecordingStopCommand):
 
             log.debug("RecordingStopCommand")
 
-            self.stop()
+            def _worker_stop():
+                self.stop()
+
+            threading.Thread(target=_worker_stop, daemon=True).start()
 
             return
 
@@ -157,8 +161,8 @@ class AudioRecorder:
         self._message_queue.register(
             self._on_message,
             lambda e: isinstance(
-                e, (MixerMessage.Recorder.RecordingStartCommand,
-                    MixerMessage.Recorder.RecordingStopCommand,
+                e, (msgt.RecordingStartCommand,
+                    msgt.RecordingStopCommand,
                     SystemMessage)))
 
         log.info("Initialising OK.")
@@ -172,25 +176,25 @@ class AudioRecorder:
         match value:
             case AudioRecorder.Event.STARTING:
                 self._message_queue.publish(
-                    MixerMessage.Recorder.StartingMessage())
+                    msgt.StartingNotification())
             case AudioRecorder.Event.STARTED:
                 self._message_queue.publish(
-                    MixerMessage.Recorder.StartedMessage())
+                    msgt.StartedNotification())
             case AudioRecorder.Event.STOPPING:
                 self._message_queue.publish(
-                    MixerMessage.Recorder.StoppingMessage())
+                    msgt.StoppingNotification())
             case AudioRecorder.Event.STOPPED:
                 self._message_queue.publish(
-                    MixerMessage.Recorder.StoppedMessage())
+                    msgt.StoppedNotification())
             case AudioRecorder.Event.CONFIGURATION_CHANGING:
                 self._message_queue.publish(
-                    MixerMessage.Recorder.ConfigurationChanging())
+                    msgt.ConfigurationChangingNotification())
             case AudioRecorder.Event.CONFIGURATION_CHANGED:
                 self._message_queue.publish(
-                    MixerMessage.Recorder.ConfigurationChanged())
+                    msgt.ConfigurationChangedNotification())
             case AudioRecorder.Event.ERROR:
                 self._message_queue.publish(
-                    MixerMessage.Recorder.StateErrorMessage())
+                    msgt.StateErrorMessage())
 
     def start(self, items: list[str]) -> bool:
         """Starts a recording."""
@@ -219,13 +223,11 @@ class AudioRecorder:
                 "24",
                 "-c",
                 "2",
-                # "-jt",
-                # "-p",
                 # "EX2-O:*",
                 "-p",
-                "EX2-O:playback_1",
+                "MixBus:MX3-O_1",
                 "-p",
-                "EX2-O:playback_2",
+                "MixBus:MX3-O_2",
                 item
             ]
             self._processes.append(Process.start(cmd, wait_on_completion=False))

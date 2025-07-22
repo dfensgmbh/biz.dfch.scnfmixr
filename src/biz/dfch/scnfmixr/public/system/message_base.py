@@ -58,8 +58,10 @@ class MessageBase(ABC, IMessage):
             Default: `MessagePriority.DEFAULT`.
     """
 
+    id: str
     name: str
     priority: MessagePriority
+    children: list[MessageBase]
 
     def __init__(
             self,
@@ -73,11 +75,14 @@ class MessageBase(ABC, IMessage):
         """
 
         assert priority and isinstance(priority, MessagePriority)
-
         object.__setattr__(self, "priority", priority)
 
         _type = type(self)
         object.__setattr__(self, "name", MessageBase.get_fqcn(_type))
+
+        object.__setattr__(self, "id", str(id(self)))
+
+        object.__setattr__(self, "children", [])
 
     @staticmethod
     def get_fqcn(_type: type) -> str:

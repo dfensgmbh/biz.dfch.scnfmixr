@@ -34,9 +34,14 @@ from typing import (
 )
 
 from biz.dfch.logging import log
+from biz.dfch.scnfmixr.mixer.mix_bus import Mixbus
 
+from ..jack_commands import (
+    JackClient,
+    JackPort,
+)
 from ..system import MessageQueue
-from ..public.mixer import MixerMessage
+from ..public.messages import AudioMixer as msgt
 from ..public.system import MessageBase
 from ..public.system.messages import SystemMessage
 from ..public.mixer import (
@@ -248,6 +253,7 @@ class AudioMixer:
     _state: AudioMixerState
     _routing_matrix: RoutingMatrix
     _cfg: AudioMixerConfiguration
+    _mix_bus: Mixbus
 
     class Event(Enum):
         """Notification events."""
@@ -316,6 +322,8 @@ class AudioMixer:
             self._on_shutdown,
             lambda e: isinstance(e, SystemMessage.Shutdown))
 
+        self._mix_bus = Mixbus()
+
         log.info("Initialising OK.")
 
     @overload
@@ -354,7 +362,7 @@ class AudioMixer:
             result = self.stop()
             assert result
 
-        self._message_queue.publish(MixerMessage.Mixer.ConfigurationChanging())
+        self._message_queue.publish(msgt.ConfigurationChangingNotification())
 
         has_default_output_changed = self._cfg is None or (
             self._cfg.default_output != cfg.default_output
@@ -366,10 +374,10 @@ class AudioMixer:
 
         if has_default_output_changed:
             self._message_queue.publish(
-                MixerMessage.Mixer.DefaultOutputChanged(
+                msgt.DefaultOutputChangedNotification(
                     self._cfg.default_output))
 
-        self._message_queue.publish(MixerMessage.Mixer.ConfigurationChanged())
+        self._message_queue.publish(msgt.ConfigurationChangedNotification())
 
         result = self.start()
 
@@ -405,23 +413,23 @@ class AudioMixer:
             case AudioMixerState.STARTED:
                 # self.signal(AudioMixer.Event.STARTED)
                 self._message_queue.publish(
-                    MixerMessage.Mixer.Started(),
-                    MixerMessage.Mixer.StateChanged())
+                    msgt.StartedNotification(),
+                    msgt.StateChangedNotification())
             case AudioMixerState.STARTING:
                 # self.signal(AudioMixer.Event.STARTING)
                 self._message_queue.publish(
-                    MixerMessage.Mixer.Starting(),
-                    MixerMessage.Mixer.StateChanged())
+                    msgt.StartingNotification(),
+                    msgt.StateChangedNotification())
             case AudioMixerState.STOPPING:
                 # self.signal(AudioMixer.Event.STOPPING)
                 self._message_queue.publish(
-                    MixerMessage.Mixer.Stopping(),
-                    MixerMessage.Mixer.StateChanged())
+                    msgt.StoppingNotification(),
+                    msgt.StateChangedNotification())
             case AudioMixerState.STOPPED:
                 # self.signal(AudioMixer.Event.STOPPED)
                 self._message_queue.publish(
-                    MixerMessage.Mixer.Stopped(),
-                    MixerMessage.Mixer.StateChanged())
+                    msgt.StoppedNotification(),
+                    msgt.StateChangedNotification())
 
     def start(self) -> bool:
         """Starts the audio mixer.
@@ -493,6 +501,57 @@ class AudioMixer:
             log.info("Connecting '%s' [%s] to '%s' [%s] OK.",
                      conn.this, conn.idx_this, conn.other, conn.idx_other)
 
+        if "system" != self._cfg.default_output:
+            self._mix_bus.start()
+
+        clients = JackClient.get()
+
+        # Connect from physical source/capture to bus.
+        clt = next(
+            (e for e in clients if e.name == Connection.source(
+                AudioDevice.LCL.name)), None)
+        if isinstance(clt, JackClient):
+            log.debug("Connecting ports for '%s' ...", clt.name)
+            JackPort(f"{clt.name}:capture_1").connect_to("MixBus:LCL-I-DRY-I_1")
+            JackPort(f"{clt.name}:capture_1").connect_to("MixBus:LCL-I-DRY-I_2")
+        clt = next(
+            (e for e in clients if e.name == Connection.source(
+                AudioDevice.EX1.name)), None)
+        if isinstance(clt, JackClient):
+            log.debug("Connecting ports for '%s' ...", clt.name)
+            JackPort(f"{clt.name}:capture_1").connect_to("MixBus:EX1-I-DRY-I_1")
+            JackPort(f"{clt.name}:capture_1").connect_to("MixBus:EX1-I-DRY-I_2")
+        clt = next(
+            (e for e in clients if e.name == Connection.source(
+                AudioDevice.EX2.name)), None)
+        if isinstance(clt, JackClient):
+            log.debug("Connecting ports for '%s' ...", clt.name)
+            JackPort(f"{clt.name}:capture_1").connect_to("MixBus:EX2-I-DRY-I_1")
+            JackPort(f"{clt.name}:capture_1").connect_to("MixBus:EX2-I-DRY-I_2")
+
+        # Connect bus to physical sink/playback.
+        clt = next(
+            (e for e in clients if e.name == Connection.sink(
+                AudioDevice.LCL.name)), None)
+        if isinstance(clt, JackClient):
+            log.debug("Connecting ports for '%s' ...", clt.name)
+            JackPort("MixBus:MX0-O_1").connect_to(f"{clt.name}:playback_1")
+            JackPort("MixBus:MX0-O_2").connect_to(f"{clt.name}:playback_2")
+        clt = next(
+            (e for e in clients if e.name == Connection.sink(
+                AudioDevice.EX1.name)), None)
+        if isinstance(clt, JackClient):
+            log.debug("Connecting ports for '%s' ...", clt.name)
+            JackPort("MixBus:MX1-O_1").connect_to(f"{clt.name}:playback_1")
+            JackPort("MixBus:MX1-O_2").connect_to(f"{clt.name}:playback_2")
+        clt = next(
+            (e for e in clients if e.name == Connection.sink(
+                AudioDevice.EX2.name)), None)
+        if isinstance(clt, JackClient):
+            log.debug("Connecting ports for '%s' ...", clt.name)
+            JackPort("MixBus:MX2-O_1").connect_to(f"{clt.name}:playback_1")
+            JackPort("MixBus:MX2-O_2").connect_to(f"{clt.name}:playback_2")
+
         self._set_state(AudioMixerState.STARTED)
         result = True
 
@@ -535,6 +594,8 @@ class AudioMixer:
 
                 self._set_state(AudioMixerState.ERROR)
                 return False
+
+        self._mix_bus.stop()
 
         self._set_state(AudioMixerState.STOPPED)
         result = True

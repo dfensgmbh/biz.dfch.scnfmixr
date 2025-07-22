@@ -27,7 +27,7 @@ from biz.dfch.logging import log
 from ...app import ApplicationContext
 from ...system import FuncExecutor
 from ...mixer.audio_recorder import AudioRecorder
-from ...public.mixer import MixerMessage
+from ...public.messages import AudioRecorder as msgt
 from ...public.storage import FileName
 from ...public.system import SystemTime
 from ..fsm import UiEventInfo
@@ -40,7 +40,6 @@ class StartingRecording(TransitionBase):
     """Starts a recording."""
 
     def __init__(self, event: str, target: StateBase):
-        """Default ctor."""
 
         assert event and event.strip()
         assert target
@@ -90,10 +89,10 @@ class StartingRecording(TransitionBase):
 
         with FuncExecutor(
             lambda _: True,
-            lambda e: isinstance(e, MixerMessage.Recorder.StartedNotification)
+            lambda e: isinstance(e, msgt.StartedNotification)
         ) as sync:
             result = sync.invoke(
-                MixerMessage.Recorder.RecordingStartCommand(files))
+                msgt.RecordingStartCommand(files))
 
         if result:
             log.info("Waiting for recording to start OK.")
