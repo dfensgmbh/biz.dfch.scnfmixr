@@ -20,54 +20,45 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package system."""
+"""Module action_executor."""
 
-from .system_time import SystemTime
-
-# DFTODO - what is this module doing here in public.system?
-from .usb_port import UsbPort
-
-from .message_base import (
-    IMessage,
-    MessageBase,
-    ICommand,
-    INotification
-)
-from .message_high import (
-    MessageHigh,
-    CommandHigh,
-    NotificationHigh,
-)
-from .message_medium import (
-    Message,
-    MessageMedium,
-    CommandMedium,
-    NotificationMedium,
-)
-from .message_low import (
-    MessageLow,
-    CommandLow,
-    NotificationLow,
-)
-from .message_priority import MessagePriority
+from ..public.system.message_base import IMessage
+from .func_executor import FuncExecutor
 
 
-__all__ = [
-    "IMessage",
-    "MessageBase",
-    "ICommand",
-    "INotification",
-    "MessageHigh",
-    "CommandHigh",
-    "NotificationHigh",
-    "Message",
-    "MessageMedium",
-    "CommandMedium",
-    "NotificationMedium",
-    "MessageLow",
-    "CommandLow",
-    "NotificationLow",
-    "MessagePriority",
-    "SystemTime",
-    "UsbPort",
-]
+class ActionExecutor(FuncExecutor[None]):
+    """Publishes a message, waits for a return message and executes a specified
+    action."""
+
+    def invoke(
+            self,
+            message: IMessage,
+            max_wait_time: float = 5,
+    ) -> None:
+
+        assert 0 < max_wait_time
+        assert isinstance(message, IMessage)
+
+        self._result = None
+        self._signal.clear()
+
+        self._mq.publish(message)
+
+        self._signal.wait(max_wait_time)
+
+        self.get_result()
+
+    def wait(
+            self,
+            max_wait_time: float = 5,
+    ) -> None:
+        """Waits for a message."""
+
+        assert 0 < max_wait_time
+
+        self._result = None
+        self._signal.clear()
+
+        self._signal.wait(max_wait_time)
+
+        self.get_result()
