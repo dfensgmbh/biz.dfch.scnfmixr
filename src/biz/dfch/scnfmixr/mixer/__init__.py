@@ -25,10 +25,12 @@
 from .audio_mixer import AudioMixer
 from .audio_mixer import AudioMixerState
 from .audio_mixer import AudioMixerConfiguration
+from .signal_path import SignalPathManager
 
 
 __all__ = [
     "AudioMixer",
     "AudioMixerState",
     "AudioMixerConfiguration",
+    "SignalPathManager",
 ]

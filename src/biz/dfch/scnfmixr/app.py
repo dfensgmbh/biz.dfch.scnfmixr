@@ -119,6 +119,7 @@ class App:  # pylint: disable=R0903
         usb_ids = args.allowed_usb_ids
         if usb_ids:
             for usb_id in usb_ids:
+                # Format of usb_id: 'abcd:1234'.
                 segments = usb_id.split(':')
                 assert 1 <= len(segments) <= 2
                 match len(segments):

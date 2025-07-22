@@ -196,7 +196,6 @@ class MessageQueue():  # pylint: disable=R0902
                 queue_default = list(self._queue_default)
                 self._queue_default.clear()
                 callback_item = list(self._callbacks)
-                callback_item.reverse()
 
             if 0 == len(callback_item):
                 log.debug("No actions registered. Discarding messages.")
@@ -410,7 +409,9 @@ class MessageQueue():  # pylint: disable=R0902
 
         with self._sync_root:
 
-            for i, item in enumerate(self._callbacks):
+            # for i, item in enumerate(self._callbacks):
+            for i in reversed(range(len(self._callbacks))):
+                item = self._callbacks[i]
 
                 if item.get_key(item.action) != item.get_key(action):
                     continue

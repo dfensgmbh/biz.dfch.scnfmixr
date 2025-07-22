@@ -45,7 +45,7 @@ class ConnectionInfo():
 
     _SEPARATOR = ':'
 
-    _dic: dict[tuple[str, bool], list[str]]
+    _values: dict[tuple[str, bool], list[str]]
 
     IDX_CLIENT = 0
     IDX_PORT = 1
@@ -53,10 +53,11 @@ class ConnectionInfo():
     IDX_NAME = 0
     IDX_TYPE = 1
 
-    def __init__(self, value: dict[str, list[str]]):
+    def __init__(self, values: dict[tuple[str, bool], list[str]]):
 
-        assert isinstance(value, dict)
-        for entry, others in value.items():
+        assert isinstance(values, dict)
+
+        for entry, others in values.items():
             assert isinstance(entry, tuple) and 2 == len(entry)
             assert isinstance(entry[self.IDX_SOURCE], str)
             assert self._SEPARATOR in entry[self.IDX_SOURCE]
@@ -65,7 +66,7 @@ class ConnectionInfo():
             for other in others:
                 assert isinstance(other, str)
 
-        self._dic = value
+        self._values = self.clone(values)
 
     @staticmethod
     def to_entry(client: str, port: str) -> str:
@@ -117,7 +118,7 @@ class ConnectionInfo():
 
         result: set[tuple[str, str]] = set()
 
-        for entry_type, others in self._dic.items():
+        for entry_type, others in self._values.items():
             entry, is_sink = entry_type
             for other in others:
                 if is_sink:
@@ -142,7 +143,7 @@ class ConnectionInfo():
 
         result: dict[str, list[str]] = {}
 
-        for entry_type, others in self._dic.items():
+        for entry_type, others in self._values.items():
             entry, is_sink = entry_type
             client, _ = ConnectionInfo.from_entry(entry)
 
@@ -156,6 +157,18 @@ class ConnectionInfo():
                     result[client].append((entry, other))
 
         return [(k, v) for k, v in result.items() if 0 < len(v)]
+
+    @property
+    def sources(self) -> list[str]:
+        """Returns sources."""
+        return [e[self.IDX_NAME]
+                for e in self._values.keys() if not e[self.IDX_TYPE]]
+
+    @property
+    def sinks(self) -> list[str]:
+        """Returns sinks."""
+        return [e[self.IDX_NAME]
+                for e in self._values.keys() if e[self.IDX_TYPE]]
 
     def is_client(self, value: str) -> bool:
         """Determines wheter the specified client name (**`system`**) exists.
@@ -172,7 +185,7 @@ class ConnectionInfo():
         return any(
             ConnectionInfo.from_entry(
                 e[self.IDX_NAME])[self.IDX_CLIENT] == value
-            for e in self._dic)
+            for e in self._values)
 
     def is_entry(self, value: str) -> bool:
         """Determines wheter the specified entry name (**`system:capture_1`**)
@@ -187,7 +200,7 @@ class ConnectionInfo():
 
         assert isinstance(value, str) and value.strip()
 
-        return any(e[self.IDX_NAME] == value for e in self._dic.keys())
+        return any(e[self.IDX_NAME] == value for e in self._values.keys())
 
     def is_source(self, value: str) -> bool:
         """Determines wheter the specified entry name (**`system:capture_1`**)
@@ -204,7 +217,7 @@ class ConnectionInfo():
 
         return any(e[self.IDX_NAME] == value
                    and not e[self.IDX_TYPE]
-                   for e in self._dic.keys())
+                   for e in self._values.keys())
 
     def is_sink(self, value: str) -> bool:
         """Determines wheter the specified entry name (**`system:capture_1`**)
@@ -221,19 +234,7 @@ class ConnectionInfo():
 
         return any(e[self.IDX_NAME] == value
                    and e[self.IDX_TYPE]
-                   for e in self._dic.keys())
-
-    @property
-    def sources(self) -> list[str]:
-        """Returns sources."""
-        return [e[self.IDX_NAME]
-                for e in self._dic.keys() if not e[self.IDX_TYPE]]
-
-    @property
-    def sinks(self) -> list[str]:
-        """Returns sinks."""
-        return [e[self.IDX_NAME]
-                for e in self._dic.keys() if e[self.IDX_TYPE]]
+                   for e in self._values.keys())
 
     def has_connections(self, client: str) -> bool:
         """Determines whether the specified client name (**`system`**) has
@@ -287,9 +288,9 @@ class ConnectionInfo():
             return False
 
         # Check either key combination, or default.
-        others = self._dic.get((entry, False),
-                               self._dic.get((entry, True),
-                                             None))
+        others = self._values.get((entry, False),
+                                  self._values.get((entry, True),
+                                                   None))
         return bool(others)
 
     def is_connected_to(self, entry: str, other: str) -> bool:
@@ -311,9 +312,9 @@ class ConnectionInfo():
             return False
 
         # Check either key combination, or default.
-        others = self._dic.get((entry, False),
-                               self._dic.get((entry, True),
-                                             None))
+        others = self._values.get((entry, False),
+                                  self._values.get((entry, True),
+                                                   None))
         return other in others
 
     def get_ports(self, client: str) -> list[str]:
@@ -330,7 +331,7 @@ class ConnectionInfo():
             return []
 
         result = [ConnectionInfo.from_entry(e[self.IDX_NAME])[self.IDX_PORT]
-                  for e in self._dic.keys()
+                  for e in self._values.keys()
                   if ConnectionInfo.from_entry(
                       e[self.IDX_NAME])[self.IDX_CLIENT] == client]
         return result
@@ -349,7 +350,7 @@ class ConnectionInfo():
             return []
 
         result = [e[self.IDX_NAME]
-                  for e in self._dic.keys()
+                  for e in self._values.keys()
                   if ConnectionInfo.from_entry(
                       e[self.IDX_NAME])[self.IDX_CLIENT] == client]
         return result
@@ -376,7 +377,7 @@ class ConnectionInfo():
 
         result: dict[str, list[str]] = {}
 
-        for entry_type, others in self._dic.items():
+        for entry_type, others in self._values.items():
             entry, is_sink = entry_type
             client, _ = ConnectionInfo.from_entry(entry)
 
@@ -391,9 +392,23 @@ class ConnectionInfo():
                     result[client].append((entry, other))
         return result
 
+    def clone(
+            self,
+            values: dict[tuple[str, bool], list[str]]
+    ) -> dict[tuple[str, bool], list[str]]:
+        """Deep clone and sort the connection info."""
+
+        result: dict[tuple[str, bool], list[str]] = {}
+
+        for entry, others in values.items():
+            sorted_others = sorted(others)
+            result[entry] = sorted_others
+
+        return dict(sorted(result.items()))
+
     def __str__(self) -> str:
         return "\n".join(
             f"{key[0]} ({'source' if not key[1] else 'sink'}): "
             f"{', '.join(values)}"
-            for key, values in self._dic.items()
+            for key, values in self._values.items()
         )

@@ -20,16 +20,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package system."""
+"""Module Module."""
 
-from .message_queue import MessageQueue
-from .func_executor import FuncExecutor
-from .action_executor import ActionExecutor
-from .signal_handler import SignalHandler
+from __future__ import annotations
+
+from ..system import (
+    NotificationMedium,
+)
+from ...public.mixer import ConnectionInfo
 
 __all__ = [
-    "MessageQueue",
-    "FuncExecutor",
-    "ActionExecutor",
-    "SignalHandler",
+    "Topology",
 ]
+
+
+class Topology:
+    """Topology related messages."""
+
+    class ChangedNotification(NotificationMedium):
+        """Notifies about a change in topology."""
+
+        value: ConnectionInfo
+
+        def __init__(self, value: ConnectionInfo):
+            super().__init__()
+
+            assert isinstance(value, ConnectionInfo)
+
+            self.value = value.clone()
