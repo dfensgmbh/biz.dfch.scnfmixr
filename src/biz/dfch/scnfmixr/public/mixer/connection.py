@@ -61,3 +61,25 @@ class Connection:
             return value
 
         return f"{value}{output_suffix}"
+
+    @staticmethod
+    def jack_client_name_source_prefix(value: str) -> str:
+        """Returns 'Alsa:<value>-I'."""
+
+        result = (f"{Constant.JACK_ALSA_PREFIX}"
+                  f"{Constant.JACK_SEPARATOR}"
+                  f"{value}"
+                  f"{Constant.JACK_INFIX}"
+                  f"{Constant.JACK_INPUT}")
+        return result
+
+    @staticmethod
+    def jack_client_name_sink_prefix(value: str) -> str:
+        """Returns 'Alsa:<value>-I'."""
+
+        result = (f"{Constant.JACK_ALSA_PREFIX}"
+                  f"{Constant.JACK_SEPARATOR}"
+                  f"{value}"
+                  f"{Constant.JACK_INFIX}"
+                  f"{Constant.JACK_OUTPUT}")
+        return result
