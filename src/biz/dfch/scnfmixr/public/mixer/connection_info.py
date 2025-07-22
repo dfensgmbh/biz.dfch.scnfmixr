@@ -22,8 +22,6 @@
 
 """Module connection_info."""
 
-from __future__ import annotations
-
 
 __all__ = [
     "ConnectionInfo",
@@ -34,9 +32,9 @@ class ConnectionInfo():
     """Information about JACK clients and conections.
 
     Each key holds an entry in the form `client:port` with port `text_number`.
-    Optionally, the `client` segment can have additional ':'.
+    Optionally, the `client` segment can have additional '`:`'.
 
-    * `system:capture_1` (never '0')
+    * `system:capture_1` (starting at  '`1`')
     * `system:playback_1`
     * `arbi-tra_ry:text_42`
     * `prefix:infix:port_1`
@@ -392,3 +390,10 @@ class ConnectionInfo():
                 else:
                     result[client].append((entry, other))
         return result
+
+    def __str__(self) -> str:
+        return "\n".join(
+            f"{key[0]} ({'source' if not key[1] else 'sink'}): "
+            f"{', '.join(values)}"
+            for key, values in self._dic.items()
+        )
