@@ -23,7 +23,6 @@
 """Main app module."""
 
 import sys
-from threading import Event
 
 from biz.dfch.i18n import LanguageCode
 from biz.dfch.logging import log
@@ -35,13 +34,13 @@ from .args import Arguments
 from .core import StateMachine
 from .mixer import AudioMixer
 from .mixer import AudioMixerConfiguration
-from .system import MessageQueue
+from .mixer import SignalPathManager
+from .system import SignalHandler, FuncExecutor
 from .public.input import InputDevice
 from .public.audio import AudioDevice, Format, FileFormat
 from .public.storage.storage_device import StorageDevice
 from .public.system import SystemTime
 from .public.system.messages import SystemMessage
-from .public.system import MessageBase
 
 
 class App:  # pylint: disable=R0903
@@ -54,7 +53,7 @@ class App:  # pylint: disable=R0903
     _VERSION = "2.2.0"
     _PROG_NAME = "scnfmixr"
 
-    _signal_stop: Event
+    _signal_handler: SignalHandler
 
     def __init__(self):
 
@@ -136,31 +135,22 @@ class App:  # pylint: disable=R0903
         log.info("Rec opt: '%s'.", app_ctx.recording_parameters)
         log.info("App ctx: '%s'.", app_ctx)
 
+        SignalPathManager.Factory.get()
+
         if args.service:
             log.info("Arg 'service' detected.")
-
-            # Start main message queue.
-            mq = MessageQueue.Factory.get()
-            mq.register(
-                self._on_message,
-                lambda e: isinstance(
-                    e, SystemMessage.StateMachine.StateMachineStopped))
 
             cfg = AudioMixerConfiguration.get_default()
             AudioMixer.Factory.get().initialise(cfg)
 
-            fsm = StateMachine()
-            fsm.start()
+            StateMachine().start()
 
-            self._signal_stop.wait()
+            with FuncExecutor(
+                lambda _: True,
+                lambda e: isinstance(
+                    e,
+                    SystemMessage.StateMachine.StateMachineStopped)
+            ) as sync:
+                sync.wait(2**31)
 
             log.debug("Signalling application shutdown OK.")
-
-    def _on_message(self, message: MessageBase) -> None:
-        if not isinstance(
-                message,
-                SystemMessage.StateMachine.StateMachineStopped):
-            return
-
-        log.debug("Signalling application shutdown ...")
-        self._signal_stop.set()
