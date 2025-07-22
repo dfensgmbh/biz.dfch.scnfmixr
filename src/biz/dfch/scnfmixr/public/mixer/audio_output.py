@@ -64,3 +64,7 @@ class AudioOutput(AudioInputOrOutput, Output):
 
     def connect_to(self, other) -> bool:
         ...
+
+    def invoke(self):
+        raise NotImplementedError
+

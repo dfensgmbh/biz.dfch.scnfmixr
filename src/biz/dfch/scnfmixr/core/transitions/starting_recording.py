@@ -22,14 +22,11 @@
 
 """Module starting_recording."""
 
-from threading import Event
-
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
-from ...system import MessageQueue
+from ...system import FuncExecutor
 from ...mixer.audio_recorder import AudioRecorder
-from ...public.system import MessageBase
 from ...public.mixer import MixerMessage
 from ...public.storage import FileName
 from ...public.system import SystemTime
@@ -41,9 +38,6 @@ from ..transition_event import TransitionEvent
 
 class StartingRecording(TransitionBase):
     """Starts a recording."""
-
-    _signal_is_recording: Event
-    _message_queue: MessageQueue
 
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""
@@ -58,21 +52,6 @@ class StartingRecording(TransitionBase):
             info_leave=UiEventInfo(
                 TransitionEvent.STARTING_RECORDING_LEAVE, False),
             target_state=target)
-
-        self._signal_is_recording = Event()
-
-        self._message_queue = MessageQueue.Factory.get()
-        self._message_queue.register(
-            self._on_message,
-            lambda e: isinstance(e, MixerMessage.Recorder.StartedMessage))
-
-    def _on_message(self, message: MessageBase) -> None:
-        """Message handler."""
-
-        if not isinstance(message, MixerMessage.Recorder.StartedMessage):
-            return
-
-        self._signal_is_recording.set()
 
     def invoke(self, _):
 
@@ -107,13 +86,14 @@ class StartingRecording(TransitionBase):
             log.error("No storage devices detected. Cannot record.")
             return False
 
-        self._message_queue.publish(
-            MixerMessage.Recorder.RecordingStartCommand(files))
-
         log.debug("Waiting for recording to start ...")
 
-        result = self._signal_is_recording.wait(10)
-        self._signal_is_recording.clear()
+        with FuncExecutor(
+            lambda _: True,
+            lambda e: isinstance(e, MixerMessage.Recorder.StartedNotification)
+        ) as sync:
+            result = sync.invoke(
+                MixerMessage.Recorder.RecordingStartCommand(files))
 
         if result:
             log.info("Waiting for recording to start OK.")

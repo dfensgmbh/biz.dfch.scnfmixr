@@ -27,6 +27,7 @@ from abc import ABC
 
 from ..system import (
     NotificationMedium,
+    NotificationHigh,
     CommandMedium,
 )
 
@@ -54,22 +55,28 @@ class MixerMessage:
         class StateErrorMessage(NotificationMedium, IAudioRecorderMessage):
             """State Error."""
 
-        class ConfigurationChanging(NotificationMedium, IAudioRecorderMessage):
+        class ConfigurationChangingNotification(
+                NotificationMedium, IAudioRecorderMessage):
             """Configuration Changing."""
 
-        class ConfigurationChanged(NotificationMedium, IAudioRecorderMessage):
+        class RecordingCrashedNotification(
+                NotificationHigh, IAudioRecorderMessage):
+            """RecordingCrashed."""
+
+        class ConfigurationChangedNotification(
+                NotificationMedium, IAudioRecorderMessage):
             """Configuration Changed."""
 
-        class StartingMessage(NotificationMedium, IAudioRecorderMessage):
+        class StartingNotification(NotificationMedium, IAudioRecorderMessage):
             """Status Starting."""
 
-        class StartedMessage(NotificationMedium, IAudioRecorderMessage):
+        class StartedNotification(NotificationMedium, IAudioRecorderMessage):
             """Status Started."""
 
-        class StoppingMessage(NotificationMedium, IAudioRecorderMessage):
+        class StoppingNotification(NotificationMedium, IAudioRecorderMessage):
             """Status Stopping."""
 
-        class StoppedMessage(NotificationMedium, IAudioRecorderMessage):
+        class StoppedNotification(NotificationMedium, IAudioRecorderMessage):
             """Status Stopped."""
 
         class RecordingStopCommand(CommandMedium, IAudioRecorderMessage):

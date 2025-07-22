@@ -281,3 +281,6 @@ class AudioInput(AudioInputOrOutput, Input):  # pylint: disable=R0903
                  source.name, sink.name)
 
         return True
+
+    def invoke(self):
+        raise NotImplementedError

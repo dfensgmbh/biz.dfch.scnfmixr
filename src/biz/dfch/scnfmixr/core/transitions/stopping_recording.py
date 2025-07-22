@@ -22,15 +22,12 @@
 
 """Module stopping_recording."""
 
-from threading import Event
-
 from biz.dfch.logging import log
 
-from ...public.system import MessageBase
-from ...system import MessageQueue
 from ...public.mixer import (
     MixerMessage,
 )
+from ...system import FuncExecutor
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
@@ -39,9 +36,6 @@ from ..transition_event import TransitionEvent
 
 class StoppingRecording(TransitionBase):
     """Stops a recording."""
-
-    _is_recording_stopped: Event
-    _message_queue: MessageQueue
 
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""
@@ -57,32 +51,17 @@ class StoppingRecording(TransitionBase):
                 TransitionEvent.STOPPING_RECORDING_LEAVE, False),
             target_state=target)
 
-        self._is_recording_stopped = Event()
-
-        self._message_queue = MessageQueue.Factory.get()
-        self._message_queue.register(
-            self._on_message,
-            lambda e: isinstance(e, MixerMessage.Recorder.StoppedMessage))
-
-    def _on_message(self, message: MessageBase) -> None:
-        """Message handler."""
-
-        if not isinstance(message, MixerMessage.Recorder.StoppedMessage):
-            return
-
-        self._is_recording_stopped.set()
-
     def invoke(self, _):
-
-        self._is_recording_stopped.clear()
-
-        self._message_queue.publish(
-            MixerMessage.Recorder.RecordingStopCommand())
 
         log.debug("Waiting for recording to stop ...")
 
-        result = self._is_recording_stopped.wait(10)
-        self._is_recording_stopped.clear()
+        with FuncExecutor(
+            lambda _: True,
+            lambda e: isinstance(e, MixerMessage.Recorder.StoppedNotification)
+        ) as sync:
+            result = sync.invoke(
+                MixerMessage.Recorder.RecordingStopCommand(),
+                10)
 
         if result:
             log.info("Waiting for recording to stop OK.")
