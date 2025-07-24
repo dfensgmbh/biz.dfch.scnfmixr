@@ -51,7 +51,7 @@ class AlsaInterfaceInfo:
 
     def __post_init__(self):
 
-        assert 0 < self.card_id
+        assert 0 <= self.card_id
         assert 0 <= self.interface_id
         assert self.format in Format
         assert 1 <= self.channel_count

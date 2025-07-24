@@ -65,9 +65,9 @@ class MessageBase(ABC, IMessage):
 
     def __init__(
             self,
-            priority: MessagePriority = MessagePriority.DEFAULT
+            priority: MessagePriority = MessagePriority.DEFAULT,
     ) -> None:
-        """Default ctor.
+        """Creates an instance of the object.
 
         Args:
             priority (MessagePriority): The message priority.

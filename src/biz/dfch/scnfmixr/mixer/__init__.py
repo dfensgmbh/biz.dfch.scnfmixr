@@ -25,12 +25,16 @@
 from .audio_mixer import AudioMixer
 from .audio_mixer import AudioMixerState
 from .audio_mixer import AudioMixerConfiguration
-from .signal_path import SignalPathManager
+from .signal_path_manager import SignalPathManager
+from .acquirable_manager_mixin import AcquirableManagerMixin
+from .path_creator import PathCreator
 
 
 __all__ = [
+    "AcquirableManagerMixin",
     "AudioMixer",
     "AudioMixerState",
     "AudioMixerConfiguration",
-    "SignalPathManager",
+    "PathCreator",
+    "signal_path_manager",
 ]

@@ -234,6 +234,7 @@ Alsa:EX2-O:playback_2
         properties: input,physical,terminal,
 """.splitlines()
 
-        result: tuple[list[str], list[str]] = (text, [])
+        # result: tuple[list[str], list[str]] = (text, [])
+        result = (text, [])
 
         return result

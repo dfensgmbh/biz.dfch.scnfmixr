@@ -34,7 +34,7 @@ from .args import Arguments
 from .core import StateMachine
 from .mixer import AudioMixer
 from .mixer import AudioMixerConfiguration
-from .mixer import SignalPathManager
+from .mixer.signal_path_manager import SignalPathManager
 from .system import SignalHandler, FuncExecutor
 from .public.input import InputDevice
 from .public.audio import AudioDevice, Format, FileFormat
@@ -63,8 +63,7 @@ class App:  # pylint: disable=R0903
 
         # log.info("SchedulingInfo: '%s'", SchedulingInfo())
 
-        self._signal_stop = Event()
-        self._signal_stop.clear()
+        # self._signal_handler = SignalHandler()
 
     def invoke(self) -> None:
         """Main entry point for this class."""

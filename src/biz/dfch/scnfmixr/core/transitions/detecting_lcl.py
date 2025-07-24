@@ -22,12 +22,16 @@
 
 """Module detecting_lcl."""
 
+import time
+
 from biz.dfch.logging import log
 
 from ...application_context import ApplicationContext
 from ...audio import AudioDeviceInfo
+from ...alsa_usb import AlsaStreamInfoParser
 from ...audio import UsbAudioDeviceNotDetectedError
 from ...mixer import AudioMixer
+from ...mixer.jack_alsa_device import JackAlsaDevice
 from ...mixer import AudioMixerConfiguration
 from ...public.audio import AudioDevice
 from ...public.mixer import AudioInput, AudioOutput
@@ -70,6 +74,17 @@ class DetectingLcl(TransitionBase):
             audio_output = AudioOutput(device.name, device_info.sink)
             app_ctx.xputs.add(audio_input)
             app_ctx.xputs.add(audio_output)
+
+            parser = AlsaStreamInfoParser(device_info.asound_info.card_id)
+            device = JackAlsaDevice(  # pylint: disable=E0110
+                AudioDevice.LCL.name,
+                device_info.asound_info.card_id,
+                device_id=0,
+                parser=parser
+            )
+            device.acquire()
+            time.sleep(2)
+            device.release()
 
             log.debug("Detecting '%s' on '%s' OK.", device, value)
 

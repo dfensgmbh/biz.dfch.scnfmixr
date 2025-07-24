@@ -26,11 +26,12 @@ from __future__ import annotations
 import weakref
 
 from biz.dfch.logging import log
+from .signal_path_manager import SignalPathManager
+from ..public.mixer.isignal_path import ISignalPath
+from ..public.mixer.iconnectable_sink_point import IConnectableSinkPoint
+from ..public.mixer.iconnectable_source_point import IConnectableSourcePoint
 
 from ..public.mixer.signal_point import (
-    IConnectableSourcePoint,
-    IConnectableSinkPoint,
-    ISignalPath,
     ITerminalSourceOrSinkPoint,
     ITerminalSourcePoint,
     ITerminalSinkPoint,
@@ -46,7 +47,7 @@ from ..public.audio import (
 )
 from ..public.mixer import Connection
 
-from .signal_path import SignalPath, SignalPathManager
+from .signal_path import SignalPath
 
 
 __all__ = [

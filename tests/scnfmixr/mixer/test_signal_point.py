@@ -25,7 +25,7 @@
 import unittest
 from unittest.mock import patch
 
-import biz.dfch.scnfmixr.public.mixer.signal_point as pt
+import biz.dfch.scnfmixr.public.mixer.iconnectable_sink_point as pt
 
 from biz.dfch.scnfmixr.mixer.signal_point import (
     BestAlsaJackAudioDevice,
@@ -105,7 +105,7 @@ class TestBestAlsaJackAudioDevice(unittest.TestCase):
         self.assertEqual(1, len(sut.sources))
         self.assertEqual(2, len(sut.sinks))
 
-    class MySinkPoint(pt.ISinkPoint):
+    class MySinkPoint(pt.IConnectableSinkPoint):
         """Arbitrary sink point."""
 
         @property
@@ -113,6 +113,12 @@ class TestBestAlsaJackAudioDevice(unittest.TestCase):
             raise NotImplementedError
 
         def connect_to(self, other):
+            raise NotImplementedError
+
+        def acquire(self):
+            raise NotImplementedError
+
+        def release(self):
             raise NotImplementedError
 
     @patch("biz.dfch.scnfmixr.mixer.alsa_jack_audio_point.AlsaToJack",

@@ -20,37 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module signal_path."""
+"""Module alsa_device."""
 
-from __future__ import annotations
-
-from biz.dfch.scnfmixr.mixer.signal_path_manager import SignalPathManager
-from ..public.mixer import (
-    ISignalPath,
-    IConnectableSinkPoint,
-    IConnectableSourcePoint,
-)
+import biz.dfch.scnfmixr.public.mixer.signal_point as pt
 
 
-class SignalPath(ISignalPath):
-    """Represents a signal path between two connectable points."""
-
-    _mgr: SignalPathManager
-    _conn: SignalPathManager.Connection
-
-    def __init__(self, source, sink, mgr: SignalPathManager):
-        super().__init__(source, sink)
-
-        assert isinstance(source, IConnectableSourcePoint)
-        assert isinstance(sink, IConnectableSinkPoint)
-        assert isinstance(mgr, SignalPathManager)
-
-        self._mgr = mgr
-        self._conn = SignalPathManager.Connection(source, sink)
-
-    @property
-    def is_active(self):
-        return self._mgr.is_active(self._conn)
-
-    def remove(self):
-        raise NotImplementedError
+class AlsaDevice(pt.ITerminalDevice):
+    """Represents an ALSA audio device."""

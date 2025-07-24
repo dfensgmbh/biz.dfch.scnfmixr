@@ -28,12 +28,18 @@ from typing import cast
 from biz.dfch.logging import log
 
 import biz.dfch.scnfmixr.public.mixer.signal_point as pt
+import biz.dfch.scnfmixr.public.mixer.iconnectable_point_or_set
+import biz.dfch.scnfmixr.public.mixer.iconnectable_point
+import biz.dfch.scnfmixr.public.mixer.iconnectable_sink
+import biz.dfch.scnfmixr.public.mixer.iconnectable_set
+import biz.dfch.scnfmixr.public.mixer.isignal_path
 
-from ..jack_commands import JackConnection
+from ..jack_commands import AlsaToJack, JackToAlsa
 
 from ..alsa_usb import (
     AlsaStreamInfoParser,
 )
+from ..public.mixer import ConnectionInfo
 from ..public.audio import (
     AlsaInterfaceInfo,
     Format,
@@ -130,28 +136,30 @@ class BestAlsaJackAudioDevice(pt.ITerminalDevice):  # pylint: disable=R0901
 
     def connect_to(
             self,
-            other: pt.IConnectablePointOrSet
-    ) -> set[pt.ISignalPath]:
+            other: biz.dfch.scnfmixr.public.mixer.iconnectable_point_or_set.IConnectablePointOrSet
+    ) -> set[biz.dfch.scnfmixr.public.mixer.isignal_path.ISignalPath]:
 
-        assert isinstance(other, pt.IConnectablePointOrSet)
+        assert isinstance(
+            other, biz.dfch.scnfmixr.public.mixer.iconnectable_point_or_set.IConnectablePointOrSet)
 
-        result: list[pt.ISignalPath] = []
+        result: list[biz.dfch.scnfmixr.public.mixer.isignal_path.ISignalPath] = []
 
         # Is other source or sink?
-        if isinstance(other, pt.IConnectableSink):
+        if isinstance(other, biz.dfch.scnfmixr.public.mixer.iconnectable_sink.IConnectableSink):
             these = self.sources
         else:
             these = self.sinks
 
         # Case A: other is point
         # Connect _all_ items to the point.
-        if isinstance(other, pt.IConnectablePoint):
+        if isinstance(other, biz.dfch.scnfmixr.public.mixer.iconnectable_point.IConnectablePoint):
             for this in these:
                 result.append(this.connect_to(other))
             return result
 
         # Case B: other is set.
-        others = cast(pt.IConnectableSet, other)
+        others = cast(
+            biz.dfch.scnfmixr.public.mixer.iconnectable_set.IConnectableSet, other)
 
         # Case B1: source.channel_count == sink.channel_count
         # Connect all source channels to sink channels, 1 : 1
@@ -185,3 +193,9 @@ class BestAlsaJackAudioDevice(pt.ITerminalDevice):  # pylint: disable=R0901
     @property
     def points(self) -> list[pt.ITerminalSourceOrSinkPoint]:
         return self._items
+
+    def acquire(self):
+        raise NotImplementedError
+
+    def release(self):
+        raise NotImplementedError

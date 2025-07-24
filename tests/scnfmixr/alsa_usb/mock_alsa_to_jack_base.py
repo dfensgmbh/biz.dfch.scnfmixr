@@ -22,6 +22,7 @@
 
 """Tests for signal_point."""
 
+from biz.dfch.logging import log
 from biz.dfch.scnfmixr.jack_commands import JackPort
 
 
@@ -41,6 +42,11 @@ class MockAlsaJackBase:
 
     def stop(self):
         """stop"""
+        log.debug("Stopping '%s' [device=%s] [%s, %s] ...",
+                  self.name,
+                  self.device,
+                  self.channels,
+                  self.rate)
 
     def get_ports(self) -> list[JackPort]:
         """get_ports"""
@@ -69,25 +75,41 @@ class MockJackToAlsa(MockAlsaJackBase):
     """MockJackToAlsa."""
 
     def get_ports(self) -> list[JackPort]:
-        return [JackPort(
+        result = [JackPort(
             e.replace(f"{self.name}:", f"{self.name}:playback_"))
             for e in super().get_port_names()]
 
+        log.debug("get_ports '%s': [%s]", self.name, result)
+
+        return result
+
     def get_port_names(self) -> list[str]:
-        return [
+        result = [
             e.replace(f"{self.name}:", f"{self.name}:playback_")
             for e in super().get_port_names()]
+
+        log.debug("get_port_names '%s': [%s]", self.name, result)
+
+        return result
 
 
 class MockAlsaToJack(MockAlsaJackBase):
     """MockAlsaToJack."""
 
     def get_ports(self) -> list[JackPort]:
-        return [JackPort(
+        result = [JackPort(
             e.replace(f"{self.name}:", f"{self.name}:capture_"))
             for e in super().get_port_names()]
 
+        log.debug("get_ports '%s': [%s]", self.name, result)
+
+        return result
+
     def get_port_names(self) -> list[str]:
-        return [
+        result = [
             e.replace(f"{self.name}:", f"{self.name}:capture_")
             for e in super().get_port_names()]
+
+        log.debug("get_port_names '%s': [%s]", self.name, result)
+
+        return result

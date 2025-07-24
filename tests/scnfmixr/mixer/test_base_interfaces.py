@@ -24,10 +24,22 @@
 
 import unittest
 
-import biz.dfch.scnfmixr.public.mixer.signal_point as pt
+import biz.dfch.scnfmixr.public.mixer as pt
 
 
-class AConnectablePoint(pt.IConnectablePoint):
+class AnAcquirableMixin(pt.IAcquirable):
+    """AnAcquirable"""
+
+    def acquire(self):
+        """acquire"""
+        raise NotImplementedError
+
+    def release(self):
+        """release"""
+        raise NotImplementedError
+
+
+class AConnectablePoint(AnAcquirableMixin, pt.IConnectablePoint):
     """MyConnectablePoint"""
 
     def __init__(self):
@@ -49,7 +61,7 @@ class AConnectablePoint(pt.IConnectablePoint):
         raise NotImplementedError
 
 
-class AConnectableSet(pt.IConnectableSet):
+class AConnectableSet(AnAcquirableMixin, pt.IConnectableSet):
     """MyConnectableSet"""
 
     def __init__(self):
@@ -71,7 +83,7 @@ class AConnectableSet(pt.IConnectableSet):
         raise NotImplementedError
 
 
-class AConnectableSource(pt.IConnectableSource):
+class AConnectableSource(AnAcquirableMixin, pt.IConnectableSource):
     """AConnectableSource"""
 
     def __init__(self):
@@ -88,8 +100,12 @@ class AConnectableSource(pt.IConnectableSource):
     def connect_to(self, other):
         raise NotImplementedError
 
+    @property
+    def is_sink(self):
+        return False
 
-class AConnectableSink(pt.IConnectableSink):
+
+class AConnectableSink(AnAcquirableMixin, pt.IConnectableSink):
     """AConnectableSource"""
 
     def __init__(self):
@@ -106,8 +122,12 @@ class AConnectableSink(pt.IConnectableSink):
     def connect_to(self, other):
         raise NotImplementedError
 
+    @property
+    def is_source(self):
+        return False
 
-class AConnectableSourcePoint(pt.IConnectableSourcePoint):
+
+class AConnectableSourcePoint(AnAcquirableMixin, pt.IConnectableSourcePoint):
     """AConnectableSourcePoint"""
 
     def __init__(self):
@@ -120,8 +140,12 @@ class AConnectableSourcePoint(pt.IConnectableSourcePoint):
     def connect_to(self, other):
         raise NotImplementedError
 
+    @property
+    def is_sink(self):
+        return False
 
-class AConnectableSinkPoint(pt.IConnectableSinkPoint):
+
+class AConnectableSinkPoint(AnAcquirableMixin, pt.IConnectableSinkPoint):
     """AConnectableSinkPoint"""
 
     def __init__(self):
@@ -134,8 +158,12 @@ class AConnectableSinkPoint(pt.IConnectableSinkPoint):
     def connect_to(self, other):
         raise NotImplementedError
 
+    @property
+    def is_source(self):
+        return False
 
-class AConnectableSourceSet(pt.IConnectableSourceSet):
+
+class AConnectableSourceSet(AnAcquirableMixin, pt.IConnectableSourceSet):
     """AConnectableSourceSet"""
 
     def __init__(self):
@@ -148,8 +176,12 @@ class AConnectableSourceSet(pt.IConnectableSourceSet):
     def connect_to(self, other):
         raise NotImplementedError
 
+    @property
+    def is_sink(self):
+        return False
 
-class AConnectableSinkSet(pt.IConnectableSinkSet):
+
+class AConnectableSinkSet(AnAcquirableMixin, pt.IConnectableSinkSet):
     """AConnectableSinkSet"""
 
     def __init__(self):
@@ -161,6 +193,10 @@ class AConnectableSinkSet(pt.IConnectableSinkSet):
 
     def connect_to(self, other):
         raise NotImplementedError
+
+    @property
+    def is_source(self):
+        return False
 
 
 class TestConnectablePoint(unittest.TestCase):
