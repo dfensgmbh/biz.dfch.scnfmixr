@@ -140,7 +140,7 @@ class AudioPlayer:
         if isinstance(message, msgt.DefaultOutputChangedNotification):
             if message.value != self._jack_name:
                 log.debug("Changing output value form '%s' to '%s'.",
-                          message.value, self._jack_name)
+                          self._jack_name, message.value)
                 self._jack_name = message.value
             return
 
