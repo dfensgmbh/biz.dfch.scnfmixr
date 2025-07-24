@@ -37,7 +37,45 @@ from .file_input import FileInput
 from .file_output import FileOutput
 from .connection_info import ConnectionInfo
 
+from .iacquirable import IAcquirable
+
+from .connection_policy import ConnectionPolicy
+from .connection_policy_exception import ConnectionPolicyException
+
+from .iconnectable_point_or_set import IConnectablePointOrSet
+from .iconnectable_point import IConnectablePoint
+from .iconnectable_set import IConnectableSet
+
+from .iconnectable_source import IConnectableSource
+from .iconnectable_source_point import IConnectableSourcePoint
+from .iconnectable_source_set import IConnectableSourceSet
+
+from .iconnectable_sink import IConnectableSink
+from .iconnectable_sink_point import IConnectableSinkPoint
+from .iconnectable_sink_set import IConnectableSinkSet
+from .isignal_path import ISignalPath
+
+from .path_state import PathState
+from .path_state_flag import PathStateFlag
+
 __all__ = [
+    "IAcquirable",
+    "ConnectionPolicy",
+    "ConnectionPolicyException",
+    "IConnectablePointOrSet",
+    "IConnectablePoint",
+    "IConnectableSet",
+    "IConnectableSource",
+    "IConnectableSourcePoint",
+    "IConnectableSourceSet",
+    "IConnectableSink",
+    "IConnectableSinkPoint",
+    "IConnectableSinkSet",
+    "ISignalPath",
+
+    "PathState",
+    "PathStateFlag",
+
     "Connection",
     "ConnectionInfo",
     "Constant",

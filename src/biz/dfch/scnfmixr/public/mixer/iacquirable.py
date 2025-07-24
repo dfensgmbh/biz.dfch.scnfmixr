@@ -20,18 +20,28 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package constant."""
+"""Module iacquirable."""
 
-from enum import StrEnum
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from typing import Self
 
 
-class Constant(StrEnum):
-    """Mixer port constants."""
+class IAcquirable(ABC):
+    """Lifecycle management interface."""
 
-    JACK_ALSA_PREFIX = "Alsa"
-    JACK_SEPARATOR = ":"
-    JACK_INFIX = "-"
-    JACK_INPUT = "I"
-    JACK_OUTPUT = "O"
-    JACK_SOURCE_PORT_INFIX_BASE = "capture_"
-    JACK_SINK_PORT_INFIX_BASE = "playback_"
+    def __enter__(self) -> Self:
+        """ResourceManager: Acquires a resource."""
+        return self.acquire()
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        """ResourceManager: Releases a resource."""
+        self.release()
+
+    @abstractmethod
+    def acquire(self) -> Self:
+        """Acquires a resource."""
+
+    @abstractmethod
+    def release(self) -> None:
+        """Releases a resource."""

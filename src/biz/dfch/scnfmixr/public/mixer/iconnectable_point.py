@@ -20,18 +20,37 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package constant."""
+"""Module iconnectable_point."""
 
-from enum import StrEnum
+from __future__ import annotations
+from abc import abstractmethod
+from typing import TYPE_CHECKING
+
+from .iconnectable_point_or_set import IConnectablePointOrSet
+
+if TYPE_CHECKING:
+    from .isignal_path import ISignalPath
 
 
-class Constant(StrEnum):
-    """Mixer port constants."""
+class IConnectablePoint(IConnectablePointOrSet):
+    """Represents a connectable signal point."""
 
-    JACK_ALSA_PREFIX = "Alsa"
-    JACK_SEPARATOR = ":"
-    JACK_INFIX = "-"
-    JACK_INPUT = "I"
-    JACK_OUTPUT = "O"
-    JACK_SOURCE_PORT_INFIX_BASE = "capture_"
-    JACK_SINK_PORT_INFIX_BASE = "playback_"
+    @property
+    def is_point(self) -> bool:
+        return True
+
+    @property
+    def is_set(self) -> bool:
+        return False
+
+    @property
+    @abstractmethod
+    def is_active(self) -> bool:
+        """Determines whether the signal point is active."""
+
+    def connect(self, other: IConnectablePoint) -> "ISignalPath":
+        """Connects this point to the other."""
+
+        assert isinstance(other, IConnectablePoint)
+
+        return self.connect_to(other)[0]

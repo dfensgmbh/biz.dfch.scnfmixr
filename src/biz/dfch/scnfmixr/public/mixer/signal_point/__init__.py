@@ -23,29 +23,23 @@
 """Package signal_point."""
 
 from __future__ import annotations
-from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from abc import abstractmethod
 
+from biz.dfch.scnfmixr.public.mixer import IConnectablePoint
+from biz.dfch.scnfmixr.public.mixer import IConnectableSourcePoint
+from biz.dfch.scnfmixr.public.mixer import IConnectableSinkPoint
+from biz.dfch.scnfmixr.public.mixer import IConnectableSet
+from biz.dfch.scnfmixr.public.mixer import IConnectableSourceSet
+from biz.dfch.scnfmixr.public.mixer import IConnectableSinkSet
 
 __all__ = [
-    "ISignalPath",
-    "IConnectablePointOrSet",
-    "IConnectablePoint",
-    "IConnectableSourcePoint",
-    "IConnectableSinkPoint",
-    "IConnectableSet",
-    "IConnectableSourceSet",
-    "IConnectableSinkSet",
-    "ISourceOrSinkPoint",
-    "ISourcePoint",
-    "ISinkPoint",
     "ITerminalSourceOrSinkPoint",
     "ITerminalSourcePoint",
     "ITerminalSinkPoint",
-    "ISourceOrSinkDevice",
-    "ISourceDevice",
-    "ISinkDevice",
-    "IDevice",
+    "IConnectableSourceOrSinkDevice",
+    "IConnectableSourceDevice",
+    "IConnectableSinkDevice",
+    "IConnectableDevice",
     "ITerminalSourceOrSinkDevice",
     "ITerminalSourceDevice",
     "ITerminalSinkDevice",
@@ -60,208 +54,12 @@ __all__ = [
 ]
 
 
-@dataclass(frozen=True)
-class ISignalPath(ABC):
-    """Represents a signal path from a source signal point to sink signal
-    point.
-
-    Attributes:
-        name (str): The name of the signal path.
-        source (IConnectableSourcePoint): One side of the signal path.
-        sink (IConnectableSinkPoint): The other side of the signal path.
-    """
-
-    name: str
-    source: IConnectableSourcePoint
-    sink: IConnectableSinkPoint
-
-    def __init__(
-            self,
-            source: IConnectableSourcePoint,
-            sink: IConnectableSinkPoint
-    ):
-        """Creates a connection between a connectable source and sink point."""
-
-        super().__init__()
-
-        # assert isinstance(source, IConnectableSourcePoint)
-        # assert isinstance(sink, IConnectableSinkPoint)
-        assert source.is_point
-        assert sink.is_sink
-
-        object.__setattr__(self, "name", f"'{source.name}' +-- '{sink.name}'")
-        object.__setattr__(self, "source", source)
-        object.__setattr__(self, "sink", sink)
-
-    def __str__(self):
-        return self.name
-
-    def __repr__(self):
-        return self.__str__()
-
-    @property
-    @abstractmethod
-    def is_active(self) -> bool:
-        """Determines whether the signal path is active."""
-
-    @abstractmethod
-    def remove(self) -> bool:
-        """Removes the signal path."""
-
-
-class IConnectablePointOrSet(ABC):
-    """Represents a connectable signal point or signal set."""
-
-    name: str
-
-    def __init__(self, name: str):
-        super().__init__()
-
-        assert isinstance(name, str) and name.strip()
-
-        self.name = name
-
-    @property
-    @abstractmethod
-    def is_source(self) -> bool:
-        """Determines whether the object is a source or not."""
-
-    @property
-    @abstractmethod
-    def is_sink(self) -> bool:
-        """Determines whether the object is a sink or not."""
-
-    @property
-    @abstractmethod
-    def is_point(self) -> bool:
-        """Determines whether the object is a point or not."""
-
-    @property
-    @abstractmethod
-    def is_set(self) -> bool:
-        """Determines whether the object is a set or not."""
-
-    @abstractmethod
-    def connect_to(self, other: IConnectablePointOrSet) -> set[ISignalPath]:
-        """Connect this point set to the other."""
-
-        assert isinstance(other, IConnectablePointOrSet)
-
-    def __str__(self):
-        return self.name
-
-    def __repr__(self):
-        return self.__str__()
-
-
-class IConnectablePoint(IConnectablePointOrSet):
-    """Represents a connectable signal point."""
-
-    @property
-    def is_point(self) -> bool:
-        return True
-
-    @property
-    def is_set(self) -> bool:
-        return False
-
-    @property
-    @abstractmethod
-    def is_active(self) -> bool:
-        """Determines whether the signal point is active."""
-
-    def connect(self, other: IConnectablePoint) -> ISignalPath:
-        """Connects this point to the other."""
-
-        assert isinstance(other, IConnectablePoint)
-
-        return self.connect_to(other)[0]
-
-
-class IConnectableSource(IConnectablePointOrSet):
-    """IConnectableSourcePointOrSet"""
-
-    @property
-    def is_source(self) -> bool:
-        return True
-
-    @property
-    def is_sink(self) -> bool:
-        return False
-
-
-class IConnectableSink(IConnectablePointOrSet):
-    """IConnectableSinkPointOrSet"""
-
-    @property
-    def is_source(self) -> bool:
-        return False
-
-    @property
-    def is_sink(self) -> bool:
-        return True
-
-
-class IConnectableSourcePoint(IConnectablePoint, IConnectableSource):
-    """Represents a source point connectable to a sink point."""
-
-
-class IConnectableSinkPoint(IConnectablePoint, IConnectableSink):
-    """Represents a sink point connectable to a source point."""
-
-
-class IConnectableSet(IConnectablePointOrSet):
-    """Represents a connectable signal point set."""
-
-    _items: list[IConnectablePoint]
-
-    def __init__(self, name: str):
-        super().__init__(name)
-
-        self._items = []
-
-    @property
-    def is_point(self) -> bool:
-        return False
-
-    @property
-    def is_set(self) -> bool:
-        return True
-
-    @property
-    @abstractmethod
-    def points(self) -> list[IConnectablePoint]:
-        """The associated signal points with this device."""
-
-        return self._items
-
-
-class IConnectableSourceSet(IConnectableSet, IConnectableSource):
-    """Represents a source signal point set connectable to a sink point set."""
-
-
-class IConnectableSinkSet(IConnectableSet, IConnectableSink):
-    """Represents a sink signal point set connectable to a source point set."""
-
-
-class ISourceOrSinkPoint(IConnectablePoint):
-    """Represents a signal point."""
-
-
-class ISourcePoint(IConnectableSourcePoint):
-    """Represents a signal generating point."""
-
-
-class ISinkPoint(IConnectableSinkPoint):
-    """Represents a signal receiving point."""
-
-
-class ITerminalSourceOrSinkPoint(ISourceOrSinkPoint):
+class ITerminalSourceOrSinkPoint(IConnectablePoint):
     """Represents a signal generating point from a device entering the system
     or a signal receiving point to a device leaving the system."""
 
 
-class ITerminalSourcePoint(ISourcePoint, ITerminalSourceOrSinkPoint):
+class ITerminalSourcePoint(IConnectableSourcePoint, ITerminalSourceOrSinkPoint):
     """Represents a signal generating point from a device entering the
     system.
 
@@ -270,7 +68,7 @@ class ITerminalSourcePoint(ISourcePoint, ITerminalSourceOrSinkPoint):
     """
 
 
-class ITerminalSinkPoint(ISinkPoint, ITerminalSourceOrSinkPoint):
+class ITerminalSinkPoint(IConnectableSinkPoint, ITerminalSourceOrSinkPoint):
     """Represents a signal receiving point to a device leaving the system.
 
     This is typically an audio output such as a *loudspeaker* or an *audio
@@ -278,65 +76,43 @@ class ITerminalSinkPoint(ISinkPoint, ITerminalSourceOrSinkPoint):
     """
 
 
-class ISourceOrSinkDevice(IConnectableSet):
+class IConnectableSourceOrSinkDevice(IConnectableSet):
     """Represents a device with connectable source and sink point sets."""
 
-    _items: list[IConnectablePoint]
 
-    def __init__(self, name: str):
-        super().__init__(name)
-
-        self._items = []
-
-    @property
-    @abstractmethod
-    def points(self) -> list[IConnectablePoint]:
-        """The associated signal points with this device."""
-
-        return self._items
-
-
-class ISourceDevice(IConnectableSourceSet, ISourceOrSinkDevice):
+class IConnectableSourceDevice(
+        IConnectableSourceSet,
+        IConnectableSourceOrSinkDevice):
     """Represents a device with a source point set connectable to a sink signal
     point set."""
 
     @property
-    def points(self) -> list[ISourcePoint]:
+    def sources(self) -> list[IConnectableSourcePoint]:
         """The associated signal source points with this device."""
 
-        return [e for e in self._items if isinstance(e, ISourcePoint)]
+        return [e for e in self._items
+                if isinstance(e, IConnectableSourcePoint)]
 
 
-class ISinkDevice(IConnectableSinkSet, ISourceOrSinkDevice):
+class IConnectableSinkDevice(
+        IConnectableSinkSet,
+        IConnectableSourceOrSinkDevice):
     """Represents a device with a sink signal point set connectable to a source
     signal point set."""
 
     @property
-    def points(self) -> list[ISinkPoint]:
+    def sinks(self) -> list[IConnectableSinkPoint]:
         """The associated sink signal points with this device."""
 
-        return [e for e in self._items if isinstance(e, ISinkPoint)]
+        return [e for e in self._items
+                if isinstance(e, IConnectableSinkPoint)]
 
 
-class IDevice(ISourceDevice, ISinkDevice):
+class IConnectableDevice(IConnectableSourceDevice, IConnectableSinkDevice):
     """Represents a device consisting of sources and sinks."""
 
-    @property
-    @abstractmethod
-    def sources(self) -> list[ISourcePoint]:
-        """The associated signal source points with this device."""
 
-        return [e for e in self._items if isinstance(e, ISourcePoint)]
-
-    @property
-    @abstractmethod
-    def sinks(self) -> list[ISinkPoint]:
-        """The associated sink signal points with this device."""
-
-        return [e for e in self._items if isinstance(e, ISinkPoint)]
-
-
-class ITerminalSourceOrSinkDevice(ISourceOrSinkDevice):
+class ITerminalSourceOrSinkDevice(IConnectableSourceOrSinkDevice):
     """Represents a device consisting of one or more terminal source or sink
     signal points."""
 
@@ -349,33 +125,22 @@ class ITerminalSourceOrSinkDevice(ISourceOrSinkDevice):
             e, ITerminalSourceOrSinkPoint)]
 
 
-class ITerminalSourceDevice(ISourceDevice, ITerminalSourceOrSinkDevice):
+class ITerminalSourceDevice(
+        IConnectableSourceDevice,
+        ITerminalSourceOrSinkDevice):
     """Represents a device consisting of one or more terminal source signal
     points."""
 
-    @property
-    @abstractmethod
-    def points(self) -> list[ITerminalSourcePoint]:
-        """The associated signal source points with this device."""
 
-        return [e for e in self._items if isinstance(
-            e, ITerminalSourcePoint)]
-
-
-class ITerminalSinkDevice(ISinkDevice, ITerminalSourceOrSinkDevice):
+class ITerminalSinkDevice(IConnectableSinkDevice, ITerminalSourceOrSinkDevice):
     """Represents a device consisting of one or more terminal sink signal
     points."""
 
-    @property
-    @abstractmethod
-    def points(self) -> list[ITerminalSinkPoint]:
-        """The associated signal sink points with this device."""
 
-        return [e for e in self._items if isinstance(
-            e, ITerminalSinkPoint)]
-
-
-class ITerminalDevice(ITerminalSourceDevice, ITerminalSinkDevice, IDevice):
+class ITerminalDevice(
+        ITerminalSourceDevice,
+        ITerminalSinkDevice,
+        IConnectableDevice):
     """Represents a device consisting of one or more terminal source and sink
     points."""
 
@@ -383,16 +148,16 @@ class ITerminalDevice(ITerminalSourceDevice, ITerminalSinkDevice, IDevice):
     def sources(self) -> list[ITerminalSourcePoint]:
         """The associated signal source points with this device."""
 
-        return [e for e in self._items if isinstance(e, ITerminalSourcePoint)]
+        return [e for e in self._items.keys() if isinstance(e, ITerminalSourcePoint)]
 
     @property
     def sinks(self) -> list[ITerminalSinkPoint]:
         """The associated signal sink points with this device."""
 
-        return [e for e in self._items if isinstance(e, ITerminalSinkPoint)]
+        return [e for e in self._items.keys() if isinstance(e, ITerminalSinkPoint)]
 
 
-class IChannel(ISinkDevice):
+class IChannel(IConnectableSinkDevice):
     """Represents an audio device with a channel strip entering the system."""
 
     @property
@@ -445,25 +210,25 @@ class IStereoChannel(IChannel):
         return self.points[1]
 
 
-class IBusSourceOrSinkPoint(ISourceOrSinkPoint):
+class IBusSourceOrSinkPoint(IConnectablePoint):
     """Represents a signal point entering or leaving a bus."""
 
 
-class IBusSourcePoint(ISourcePoint):
+class IBusSourcePoint(IConnectableSourcePoint):
     """Represents signal point leaving a bus.
 
     This is the bus output.
     """
 
 
-class IBusSinkPoint(ISinkPoint):
+class IBusSinkPoint(IConnectableSinkPoint):
     """Represents signal point entering a bus.
 
     This is the bus input.
     """
 
 
-class IBusDevice(IDevice):
+class IBusDevice(IConnectableDevice):
     """Represents a mix bus.
 
     A mix bus represents an internaö signal path with a channel strip.

@@ -47,4 +47,94 @@ class Topology:
 
             assert isinstance(value, ConnectionInfo)
 
-            self.value = value.clone()
+            self.value = ConnectionInfo(value.clone())
+
+    class TopologyValueNotificationBase(NotificationMedium):
+        """Base notification with a value property."""
+
+        value: str
+
+        def __init__(self, value: str):
+            super().__init__()
+
+            assert isinstance(value, str) and value.strip()
+
+            self.value = value
+
+    class DeviceAddingNotification(TopologyValueNotificationBase):
+        """Notification when a new device is being added."""
+
+    class DeviceAddedNotification(TopologyValueNotificationBase):
+        """Notification when a new device is added."""
+
+    class DeviceRemovingNotification(TopologyValueNotificationBase):
+        """Notification when an existing device is being removed."""
+
+    class DeviceRemovedNotification(TopologyValueNotificationBase):
+        """Notification when an existing device is removed."""
+
+    class DeviceErrorNotification(TopologyValueNotificationBase):
+        """Notification when an device error occurred."""
+
+    class PointAddingNotification(TopologyValueNotificationBase):
+        """Notification when a new point is being added."""
+
+    class PointAddedNotification(TopologyValueNotificationBase):
+        """Notification when a new point is added."""
+
+    class PointLostNotification(TopologyValueNotificationBase):
+        """Notification when a point was lost."""
+
+    class PointFoundNotification(TopologyValueNotificationBase):
+        """Notification when a point was found."""
+
+    class PointRemovingNotification(TopologyValueNotificationBase):
+        """Notification when an existing point is being removed."""
+
+    class PointRemovedNotification(TopologyValueNotificationBase):
+        """Notification when an existing point is removed."""
+
+    class PointErrorNotification(TopologyValueNotificationBase):
+        """Notification when an point error occurred."""
+
+    class PathErrorNotification(TopologyValueNotificationBase):
+        """Notification when a new path is being added."""
+
+    class PathDefiningNotification(TopologyValueNotificationBase):
+        """Notification when a new path is being defined."""
+
+    class PathDefedNotification(TopologyValueNotificationBase):
+        """Notification when a new path is defined."""
+
+    class PathConnectingNotification(TopologyValueNotificationBase):
+        """Notification when a new path is waiting to be connected."""
+
+    class PathConnectedNotification(TopologyValueNotificationBase):
+        """Notification when a new path is connected."""
+
+    class PathDisconnectingNotification(TopologyValueNotificationBase):
+        """Notification when an existing path is being disconnected."""
+
+    class PathDisconnectedNotification(TopologyValueNotificationBase):
+        """Notification when an existing path is disconnected."""
+
+    class PathLostNotification(TopologyValueNotificationBase):
+        """Notification when an existing path is lost."""
+
+    class PathFoundNotification(TopologyValueNotificationBase):
+        """Notification when a lost path is found."""
+
+    class PathManagerErrorNotification(TopologyValueNotificationBase):
+        """Notification when the path manager is in an error state."""
+
+    class PathManagerStartingNotification(TopologyValueNotificationBase):
+        """Notification when the path manager is starting."""
+
+    class PathManagerStartedNotification(TopologyValueNotificationBase):
+        """Notification when the pth manager is started."""
+
+    class PathManagerStoppingNotification(TopologyValueNotificationBase):
+        """Notification when the path manager is stopping."""
+
+    class PathManagerStoppedNotification(TopologyValueNotificationBase):
+        """Notification when the path manager is stopped."""

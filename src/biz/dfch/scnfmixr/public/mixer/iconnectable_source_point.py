@@ -20,18 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package constant."""
+"""Module iconnectable_source_point."""
 
-from enum import StrEnum
+from __future__ import annotations
+from .iconnectable_source import IConnectableSource
+from .iconnectable_point import IConnectablePoint
 
 
-class Constant(StrEnum):
-    """Mixer port constants."""
-
-    JACK_ALSA_PREFIX = "Alsa"
-    JACK_SEPARATOR = ":"
-    JACK_INFIX = "-"
-    JACK_INPUT = "I"
-    JACK_OUTPUT = "O"
-    JACK_SOURCE_PORT_INFIX_BASE = "capture_"
-    JACK_SINK_PORT_INFIX_BASE = "playback_"
+class IConnectableSourcePoint(IConnectablePoint, IConnectableSource):
+    """Represents a source point connectable to a sink point."""

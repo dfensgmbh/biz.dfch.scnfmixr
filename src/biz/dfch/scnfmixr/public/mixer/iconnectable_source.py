@@ -20,18 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package constant."""
+"""Module iconnectable_source."""
 
-from enum import StrEnum
+from __future__ import annotations
+from .iconnectable_point_or_set import IConnectablePointOrSet
 
 
-class Constant(StrEnum):
-    """Mixer port constants."""
+class IConnectableSource(IConnectablePointOrSet):
+    """IConnectableSource"""
 
-    JACK_ALSA_PREFIX = "Alsa"
-    JACK_SEPARATOR = ":"
-    JACK_INFIX = "-"
-    JACK_INPUT = "I"
-    JACK_OUTPUT = "O"
-    JACK_SOURCE_PORT_INFIX_BASE = "capture_"
-    JACK_SINK_PORT_INFIX_BASE = "playback_"
+    @property
+    def is_source(self) -> bool:
+        return isinstance(self, IConnectableSource)

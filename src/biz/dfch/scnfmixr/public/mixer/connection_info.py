@@ -66,7 +66,8 @@ class ConnectionInfo():
             for other in others:
                 assert isinstance(other, str)
 
-        self._values = self.clone(values)
+        self._values = values
+        self._values = self.clone()
 
     @staticmethod
     def to_entry(client: str, port: str) -> str:
@@ -164,11 +165,33 @@ class ConnectionInfo():
         return [e[self.IDX_NAME]
                 for e in self._values.keys() if not e[self.IDX_TYPE]]
 
+    def get_sources(self, value: str) -> list[str]:
+        """Returns sources of specified client (eg. **`system`**)."""
+
+        assert isinstance(value, str) and value.strip()
+
+        return [e[self.IDX_NAME]
+                for e in self._values.keys()
+                if not e[self.IDX_TYPE]
+                and ConnectionInfo.from_entry(
+                    e[self.IDX_CLIENT])[self.IDX_CLIENT] == value]
+
     @property
     def sinks(self) -> list[str]:
         """Returns sinks."""
         return [e[self.IDX_NAME]
                 for e in self._values.keys() if e[self.IDX_TYPE]]
+
+    def get_sinks(self, value: str) -> list[str]:
+        """Returns sinks of specified client (eg. **`system`**)."""
+
+        assert isinstance(value, str) and value.strip()
+
+        return [e[self.IDX_NAME]
+                for e in self._values.keys()
+                if e[self.IDX_TYPE]
+                and ConnectionInfo.from_entry(
+                    e[self.IDX_CLIENT])[self.IDX_CLIENT] == value]
 
     def is_client(self, value: str) -> bool:
         """Determines wheter the specified client name (**`system`**) exists.
@@ -258,9 +281,7 @@ class ConnectionInfo():
 
         Returns:
             list (tuple[str, str]): A list of tuples containing both ends of
-                the connection. First item is associated with client. Depending
-                on `port_only`, first item will only contain port names instead
-                of full names.
+                the connection. First item is associated with client.
         """
 
         assert isinstance(client, str) and client.strip()
@@ -392,15 +413,12 @@ class ConnectionInfo():
                     result[client].append((entry, other))
         return result
 
-    def clone(
-            self,
-            values: dict[tuple[str, bool], list[str]]
-    ) -> dict[tuple[str, bool], list[str]]:
+    def clone(self) -> dict[tuple[str, bool], list[str]]:
         """Deep clone and sort the connection info."""
 
         result: dict[tuple[str, bool], list[str]] = {}
 
-        for entry, others in values.items():
+        for entry, others in self._values.items():
             sorted_others = sorted(others)
             result[entry] = sorted_others
 

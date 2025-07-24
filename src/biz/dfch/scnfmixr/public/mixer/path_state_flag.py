@@ -20,18 +20,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package constant."""
+"""Module path_state_flag."""
 
-from enum import StrEnum
+from enum import IntFlag
 
 
-class Constant(StrEnum):
-    """Mixer port constants."""
+class PathStateFlag(IntFlag):
+    """The states of a path."""
+    INITIAL = 0x01
+    OK = 0x02
+    STALE = 0x04
+    REMOVED = 0x08
+    ACQUIRED = 0x80
 
-    JACK_ALSA_PREFIX = "Alsa"
-    JACK_SEPARATOR = ":"
-    JACK_INFIX = "-"
-    JACK_INPUT = "I"
-    JACK_OUTPUT = "O"
-    JACK_SOURCE_PORT_INFIX_BASE = "capture_"
-    JACK_SINK_PORT_INFIX_BASE = "playback_"
+    RELEASED_INITIAL = INITIAL
+    RELEASED_OK = OK
+    RELEASED_STALE = STALE
+    RELEASED_REMOVED = REMOVED
+    ACQUIRED_INITIAL = ACQUIRED | INITIAL
+    ACQUIRED_OK = ACQUIRED | OK
+    ACQUIRED_STALE = ACQUIRED | STALE
+    ACQUIRED_REMOVE = ACQUIRED | REMOVED
