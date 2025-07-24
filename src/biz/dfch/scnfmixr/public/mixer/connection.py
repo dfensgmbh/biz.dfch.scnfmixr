@@ -63,23 +63,102 @@ class Connection:
         return f"{value}{output_suffix}"
 
     @staticmethod
-    def jack_client_name_source_prefix(value: str) -> str:
-        """Returns 'Alsa:<value>-I'."""
+    def jack_client_name_from_basename(value: str) -> str:
+        """Returns **`Alsa:<value>`**."""
 
-        result = (f"{Constant.JACK_ALSA_PREFIX}"
-                  f"{Constant.JACK_SEPARATOR}"
-                  f"{value}"
-                  f"{Constant.JACK_INFIX}"
-                  f"{Constant.JACK_INPUT}")
+        result = (
+            f"{Constant.JACK_ALSA_PREFIX}"
+            f"{Constant.JACK_SEPARATOR}"
+            f"{value}"
+        )
+        return result
+
+    @staticmethod
+    def jack_client_name_source_prefix(value: str) -> str:
+        """Returns **`Alsa:<value>-I`**."""
+
+        result = (
+            f"{Connection.jack_client_name_from_basename(value)}"
+            f"{Constant.JACK_INFIX}"
+            f"{Constant.JACK_INPUT}"
+        )
         return result
 
     @staticmethod
     def jack_client_name_sink_prefix(value: str) -> str:
-        """Returns 'Alsa:<value>-I'."""
+        """Returns **`Alsa:<value>-O`**."""
 
-        result = (f"{Constant.JACK_ALSA_PREFIX}"
-                  f"{Constant.JACK_SEPARATOR}"
-                  f"{value}"
-                  f"{Constant.JACK_INFIX}"
-                  f"{Constant.JACK_OUTPUT}")
+        result = (
+            f"{Connection.jack_client_name_from_basename(value)}"
+            f"{Constant.JACK_INFIX}"
+            f"{Constant.JACK_OUTPUT}"
+        )
+        return result
+
+    @staticmethod
+    def get_jack_source_port_names(count: int, client: str = "") -> list[str]:
+        """Returns a list of JACK source port or entry names.
+
+        Index starts at `1`, eg. `capture_1`.
+
+        Args:
+            count (int): The number of port or entry names to return.
+            client (str): The client name to create the entry from. If empty,
+                only the port name with be created.
+
+        Retunrs:
+            list (str): The list with port or entry names.
+        """
+
+        assert isinstance(count, int) and 0 < count
+
+        result: list[str] = []
+
+        for i in range(count):
+            idx = i + 1
+
+            if client is not None and client.strip():
+                result.append(
+                    f"{client}"
+                    f"{Constant.JACK_SEPARATOR}"
+                    f"{Constant.JACK_SOURCE_PORT_INFIX_BASE}"
+                    f"{idx}")
+            else:
+                result.append(
+                    f"{Constant.JACK_SOURCE_PORT_INFIX_BASE}"
+                    f"{idx}")
+
+        return result
+
+    @staticmethod
+    def get_jack_sink_port_names(count: int, client: str = "") -> list[str]:
+        """Returns a list of JACK sink port or entry names.
+
+        Index starts at `1`, eg. `playback_1`.
+
+        Args:
+            count (int): The number of port or entry names to return.
+            client (str): The client name to create the entry from. If empty,
+                only the port name with be created.
+
+        Retunrs:
+            list (str): The list with port or entry names.
+        """
+
+        result: list[str] = []
+
+        for i in range(count):
+            idx = i + 1
+
+            if client is not None and client.strip():
+                result.append(
+                    f"{client}"
+                    f"{Constant.JACK_SEPARATOR}"
+                    f"{Constant.JACK_SINK_PORT_INFIX_BASE}"
+                    f"{idx}")
+            else:
+                result.append(
+                    f"{Constant.JACK_SINK_PORT_INFIX_BASE}"
+                    f"{idx}")
+
         return result
