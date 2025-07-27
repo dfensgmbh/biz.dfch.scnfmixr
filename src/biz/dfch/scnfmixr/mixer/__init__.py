@@ -25,10 +25,9 @@
 from .audio_mixer import AudioMixer
 from .audio_mixer import AudioMixerState
 from .audio_mixer import AudioMixerConfiguration
-from .signal_path_manager import SignalPathManager
 from .acquirable_manager_mixin import AcquirableManagerMixin
 from .path_creator import PathCreator
-
+from .jack_signal_point_path_manager import JackSignalPointPathManager
 
 __all__ = [
     "AcquirableManagerMixin",
@@ -36,5 +35,5 @@ __all__ = [
     "AudioMixerState",
     "AudioMixerConfiguration",
     "PathCreator",
-    "signal_path_manager",
+    "JackSignalPointPathManager",
 ]

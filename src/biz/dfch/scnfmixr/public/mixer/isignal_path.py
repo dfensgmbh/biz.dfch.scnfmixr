@@ -43,6 +43,9 @@ class ISignalPath(IAcquirable, ABC):
         sink (IConnectableSinkPoint): The other side of the signal path.
     """
 
+    _CONNECTION_SEPARATOR = '+'
+    _NAME_DELIMITER = "'"
+
     name: str
     source: IConnectableSourcePoint
     sink: IConnectableSinkPoint
@@ -61,9 +64,40 @@ class ISignalPath(IAcquirable, ABC):
         assert source.is_point
         assert sink.is_sink
 
-        object.__setattr__(self, "name", f"'{source.name}' +-- '{sink.name}'")
+        object.__setattr__(self, "name",
+                           ISignalPath.get_connection_name(
+                               source.name, sink.name))
         object.__setattr__(self, "source", source)
         object.__setattr__(self, "sink", sink)
+
+    @staticmethod
+    def get_connection_name(source: str, sink: str) -> str:
+        """Create a connection name from a source and a sink name."""
+
+        assert isinstance(source, str) and source.strip()
+        assert isinstance(sink, str) and sink.strip()
+
+        return (
+            # f"{ISignalPath._NAME_DELIMITER}"
+            f"{source}"
+            # f"{ISignalPath._NAME_DELIMITER}"
+            f"{ISignalPath._CONNECTION_SEPARATOR}"
+            # f"{ISignalPath._NAME_DELIMITER}"
+            f"{sink}"
+            # f"{ISignalPath._NAME_DELIMITER}"
+        )
+
+    @staticmethod
+    def split_connection_name(value: str) -> tuple[str, str]:
+        """Splits a connection name into source and sink name."""
+
+        assert isinstance(value, str) and value.strip()
+
+        quoted_names = value.strip(ISignalPath._CONNECTION_SEPARATOR)
+        source = quoted_names[0].strip(ISignalPath._NAME_DELIMITER)
+        sink = quoted_names[1].strip(ISignalPath._NAME_DELIMITER)
+
+        return (source, sink)
 
     def __str__(self):
         return self.name

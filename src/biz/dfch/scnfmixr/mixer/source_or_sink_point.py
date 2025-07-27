@@ -20,40 +20,54 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module iacquirable."""
+"""Module signal_point."""
 
-from __future__ import annotations
-from abc import ABC, abstractmethod
-from typing import Self
+from ..public.mixer import IConnectablePoint, ConnectionInfo, State
+from .acquirable_point_mixin import AcquirablePointMixin
 
 
-class IAcquirable(ABC):
-    """Lifecycle management interface."""
+__all__ = [
+    "SourceOrSinkPoint",
+]
+
+
+class SourceOrSinkPoint(IConnectablePoint, AcquirablePointMixin):
+    """Represents a source or sink point."""
+
+    _info: ConnectionInfo
+
+    def __init__(self, name: str, info: ConnectionInfo):
+        super().__init__(name)
+
+        assert isinstance(name, str) and name.strip()
+        assert isinstance(info, ConnectionInfo)
+
+        self._info = info
 
     @property
-    @abstractmethod
+    def is_active(self):
+        return self.state.has_flag(State.Flag.OK)
+
+    def do_acquire(self):
+        self.state.set_flag(State.Flag.INITIAL)
+        self.state.is_acquired = True
+
+        return self
+
+    def do_release(self):
+        self.state.set_flag(State.Flag.REMOVED)
+        self.state.is_acquired = False
+
+    def _on_message(self, _):
+        return
+
+    @property
     def is_acquired(self) -> bool:
-        """Determines whether the underlying resource is currently acquired, or
-        not."""
+        return self.state.is_acquired
 
     @is_acquired.setter
-    @abstractmethod
-    def is_acquired(self, value) -> bool:
-        """Sets the state whether the underlying resource is currently
-        acquired, or not."""
+    def is_acquired(self, value: bool) -> None:
 
-    def __enter__(self) -> Self:
-        """ResourceManager: Acquires a resource."""
-        return self.acquire()
+        assert isinstance(value, bool)
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        """ResourceManager: Releases a resource."""
-        self.release()
-
-    @abstractmethod
-    def acquire(self) -> Self:
-        """Acquires a resource."""
-
-    @abstractmethod
-    def release(self) -> None:
-        """Releases a resource."""
+        self.state.is_acquired = True

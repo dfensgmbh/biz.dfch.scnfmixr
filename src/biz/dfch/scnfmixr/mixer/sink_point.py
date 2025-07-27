@@ -20,40 +20,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module iacquirable."""
+"""Module sink_point."""
 
-from __future__ import annotations
-from abc import ABC, abstractmethod
-from typing import Self
+from ..public.mixer import (
+    IConnectableSinkPoint,
+)
+from .source_or_sink_point import SourceOrSinkPoint
 
 
-class IAcquirable(ABC):
-    """Lifecycle management interface."""
+__all__ = [
+    "SinkPoint",
+]
+
+
+class SinkPoint(
+    SourceOrSinkPoint,
+    IConnectableSinkPoint,
+):
+    """Represents a sink point."""
 
     @property
-    @abstractmethod
-    def is_acquired(self) -> bool:
-        """Determines whether the underlying resource is currently acquired, or
-        not."""
-
-    @is_acquired.setter
-    @abstractmethod
-    def is_acquired(self, value) -> bool:
-        """Sets the state whether the underlying resource is currently
-        acquired, or not."""
-
-    def __enter__(self) -> Self:
-        """ResourceManager: Acquires a resource."""
-        return self.acquire()
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        """ResourceManager: Releases a resource."""
-        self.release()
-
-    @abstractmethod
-    def acquire(self) -> Self:
-        """Acquires a resource."""
-
-    @abstractmethod
-    def release(self) -> None:
-        """Releases a resource."""
+    def is_source(self):
+        return False

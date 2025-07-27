@@ -24,6 +24,7 @@
 
 from __future__ import annotations
 from abc import abstractmethod
+from collections.abc import Iterator
 
 from biz.dfch.scnfmixr.public.mixer import IConnectablePoint
 from biz.dfch.scnfmixr.public.mixer import IConnectableSourcePoint
@@ -31,9 +32,12 @@ from biz.dfch.scnfmixr.public.mixer import IConnectableSinkPoint
 from biz.dfch.scnfmixr.public.mixer import IConnectableSet
 from biz.dfch.scnfmixr.public.mixer import IConnectableSourceSet
 from biz.dfch.scnfmixr.public.mixer import IConnectableSinkSet
+from biz.dfch.scnfmixr.public.mixer import ConnectionPolicy
+from biz.dfch.scnfmixr.public.mixer.iterminal_source_or_sink_point import ITerminalSourceOrSinkPoint
+from biz.dfch.scnfmixr.public.mixer.iterminal_source_point import ITerminalSourcePoint
+from biz.dfch.scnfmixr.public.mixer.iterminal_sink_point import ITerminalSinkPoint
 
 __all__ = [
-    "ITerminalSourceOrSinkPoint",
     "ITerminalSourcePoint",
     "ITerminalSinkPoint",
     "IConnectableSourceOrSinkDevice",
@@ -51,33 +55,64 @@ __all__ = [
     "IBusSourcePoint",
     "IBusSinkPoint",
     "IBusDevice",
+    "ConnectionPolicy",
 ]
-
-
-class ITerminalSourceOrSinkPoint(IConnectablePoint):
-    """Represents a signal generating point from a device entering the system
-    or a signal receiving point to a device leaving the system."""
-
-
-class ITerminalSourcePoint(IConnectableSourcePoint, ITerminalSourceOrSinkPoint):
-    """Represents a signal generating point from a device entering the
-    system.
-
-    This is typically an audio source or audio input such as a *microphone* or
-    an *audio interface*.
-    """
-
-
-class ITerminalSinkPoint(IConnectableSinkPoint, ITerminalSourceOrSinkPoint):
-    """Represents a signal receiving point to a device leaving the system.
-
-    This is typically an audio output such as a *loudspeaker* or an *audio
-    interface*.
-    """
 
 
 class IConnectableSourceOrSinkDevice(IConnectableSet):
     """Represents a device with connectable source and sink point sets."""
+
+
+class SourceSetView(IConnectableSourceSet):
+    """A view to an IConnectableSourceSet."""
+
+    _items: dict[IConnectablePoint, None]
+    _device: IConnectableSourceDevice
+
+    def __init__(
+        self,
+        items: list[IConnectablePoint],
+        device: IConnectableSourceDevice
+    ) -> None:
+
+        super().__init__(type(self).__name__)
+
+        assert isinstance(items, list)
+        assert isinstance(device, IConnectableSourceDevice)
+
+        self._items = dict.fromkeys(items, None)
+        self._device = device
+
+    def __iter__(self) -> Iterator[IConnectablePoint]:
+        return iter(list(self._items.keys()))
+
+    def __getitem__(self, index: int) -> IConnectablePoint:
+        return list(self._items.keys())[index]
+
+    def acquire(self):
+        return self._device.acquire()
+
+    def release(self):
+        self._device.release()
+
+    @property
+    def is_source(self):
+        return self._device.is_source
+
+    @property
+    def is_sink(self):
+        return self._device.is_sink
+
+    def connect_to(self, other, policy=ConnectionPolicy.DEFAULT):
+        return self._device.connect_to(other, policy)
+
+    @property
+    def is_acquired(self):
+        return self._device.is_acquired
+
+    @is_acquired.setter
+    def is_acquired(self, value):
+        self._device.is_acquired = value
 
 
 class IConnectableSourceDevice(
@@ -93,6 +128,61 @@ class IConnectableSourceDevice(
         return [e for e in self._items
                 if isinstance(e, IConnectableSourcePoint)]
 
+    @property
+    def as_source_set(self) -> IConnectableSourceSet:
+        """The associated signal points as an IConnectableSourceSet."""
+
+        return SourceSetView(self.sources, self)
+
+
+class SinkSetView(IConnectableSinkSet):
+    """A view to an IConnectableSinkSet."""
+
+    def __init__(
+        self,
+        items: list[IConnectablePoint],
+        device: IConnectableSourceDevice
+    ) -> None:
+
+        super().__init__(type(self).__name__)
+
+        assert isinstance(items, list)
+        assert isinstance(device, IConnectableSourceDevice)
+
+        self._items = dict.fromkeys(items, None)
+        self._device = device
+
+    def __iter__(self) -> Iterator[IConnectablePoint]:
+        return iter(list(self._items.keys()))
+
+    def __getitem__(self, index: int) -> IConnectablePoint:
+        return list(self._items.keys())[index]
+
+    def acquire(self):
+        return self._device.acquire()
+
+    def release(self):
+        return self._device.release()
+
+    @property
+    def is_source(self):
+        return self._device.is_source
+
+    @property
+    def is_sink(self):
+        return self._device.is_sink
+
+    def connect_to(self, other, policy=ConnectionPolicy.DEFAULT):
+        return self._device.connect_to(other, policy)
+
+    @property
+    def is_acquired(self):
+        return self._device.is_acquired
+
+    @is_acquired.setter
+    def is_acquired(self, value):
+        self._device.is_acquired = value
+
 
 class IConnectableSinkDevice(
         IConnectableSinkSet,
@@ -106,6 +196,12 @@ class IConnectableSinkDevice(
 
         return [e for e in self._items
                 if isinstance(e, IConnectableSinkPoint)]
+
+    @property
+    def as_sink_set(self) -> IConnectableSinkSet:
+        """The associated signal points as an IConnectableSinkSet."""
+
+        return SinkSetView(self.sinks, self)
 
 
 class IConnectableDevice(IConnectableSourceDevice, IConnectableSinkDevice):
@@ -148,13 +244,15 @@ class ITerminalDevice(
     def sources(self) -> list[ITerminalSourcePoint]:
         """The associated signal source points with this device."""
 
-        return [e for e in self._items.keys() if isinstance(e, ITerminalSourcePoint)]
+        return [e for e in self._items.keys()  # pylint: disable=C0201
+                if isinstance(e, ITerminalSourcePoint)]
 
     @property
     def sinks(self) -> list[ITerminalSinkPoint]:
         """The associated signal sink points with this device."""
 
-        return [e for e in self._items.keys() if isinstance(e, ITerminalSinkPoint)]
+        return [e for e in self._items.keys()  # pylint: disable=C0201
+                if isinstance(e, ITerminalSinkPoint)]
 
 
 class IChannel(IConnectableSinkDevice):

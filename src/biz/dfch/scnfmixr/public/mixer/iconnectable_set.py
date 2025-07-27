@@ -23,11 +23,8 @@
 """Module iconnectable_sink_point."""
 
 from __future__ import annotations
-from abc import abstractmethod
 from collections.abc import Iterator
 from threading import Lock
-
-from biz.dfch.scnfmixr.system.message_queue import ActionDescriptor
 
 from .iconnectable_point_or_set import IConnectablePointOrSet
 from .iconnectable_point import IConnectablePoint
@@ -56,7 +53,7 @@ class IConnectableSet(IConnectablePointOrSet):
     @property
     def points(self) -> list[IConnectablePoint]:
         """The associated signal points with this device."""
-        return self._items.keys()
+        return list(self._items.keys())
 
     def add(self, item: IConnectablePoint) -> None:
         """Adds an item to the set."""

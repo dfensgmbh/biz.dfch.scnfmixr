@@ -20,40 +20,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module iacquirable."""
+"""Module jack_alsa_source_point."""
 
-from __future__ import annotations
-from abc import ABC, abstractmethod
-from typing import Self
+from ..public.mixer import (
+    ITerminalSourcePoint,
+    ConnectionPolicy,
+)
+from .source_point import SourcePoint
 
 
-class IAcquirable(ABC):
-    """Lifecycle management interface."""
+__all__ = [
+    "JackAlsaSourcePoint",
+]
 
-    @property
-    @abstractmethod
-    def is_acquired(self) -> bool:
-        """Determines whether the underlying resource is currently acquired, or
-        not."""
 
-    @is_acquired.setter
-    @abstractmethod
-    def is_acquired(self, value) -> bool:
-        """Sets the state whether the underlying resource is currently
-        acquired, or not."""
+class JackAlsaSourcePoint(
+        SourcePoint,
+        ITerminalSourcePoint,
+):
+    """Represents a JACK ALSA terminal source point."""
 
-    def __enter__(self) -> Self:
-        """ResourceManager: Acquires a resource."""
-        return self.acquire()
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        """ResourceManager: Releases a resource."""
-        self.release()
-
-    @abstractmethod
-    def acquire(self) -> Self:
-        """Acquires a resource."""
-
-    @abstractmethod
-    def release(self) -> None:
-        """Releases a resource."""
+    def connect_to(self, other, policy=ConnectionPolicy.DEFAULT):
+        raise NotImplementedError

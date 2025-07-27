@@ -34,7 +34,7 @@ from .args import Arguments
 from .core import StateMachine
 from .mixer import AudioMixer
 from .mixer import AudioMixerConfiguration
-from .mixer.signal_path_manager import SignalPathManager
+from .mixer.jack_signal_path_manager import JackSignalPathManager
 from .system import SignalHandler, FuncExecutor
 from .public.input import InputDevice
 from .public.audio import AudioDevice, Format, FileFormat
@@ -135,7 +135,7 @@ class App:  # pylint: disable=R0903
         log.info("Rec opt: '%s'.", app_ctx.recording_parameters)
         log.info("App ctx: '%s'.", app_ctx)
 
-        SignalPathManager.Factory.get()
+        JackSignalPathManager.Factory.get().acquire()
 
         if args.service:
             log.info("Arg 'service' detected.")

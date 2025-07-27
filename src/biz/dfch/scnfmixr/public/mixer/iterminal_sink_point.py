@@ -20,40 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module iacquirable."""
+"""Module iterminal_sink_point."""
 
-from __future__ import annotations
-from abc import ABC, abstractmethod
-from typing import Self
+from .iconnectable_sink_point import IConnectableSinkPoint
+from .iterminal_source_or_sink_point import ITerminalSourceOrSinkPoint
 
 
-class IAcquirable(ABC):
-    """Lifecycle management interface."""
+class ITerminalSinkPoint(IConnectableSinkPoint, ITerminalSourceOrSinkPoint):
+    """Represents a signal receiving point to a device leaving the system.
 
-    @property
-    @abstractmethod
-    def is_acquired(self) -> bool:
-        """Determines whether the underlying resource is currently acquired, or
-        not."""
-
-    @is_acquired.setter
-    @abstractmethod
-    def is_acquired(self, value) -> bool:
-        """Sets the state whether the underlying resource is currently
-        acquired, or not."""
-
-    def __enter__(self) -> Self:
-        """ResourceManager: Acquires a resource."""
-        return self.acquire()
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        """ResourceManager: Releases a resource."""
-        self.release()
-
-    @abstractmethod
-    def acquire(self) -> Self:
-        """Acquires a resource."""
-
-    @abstractmethod
-    def release(self) -> None:
-        """Releases a resource."""
+    This is typically an audio output such as a *loudspeaker* or an *audio
+    interface*.
+    """

@@ -24,7 +24,6 @@
 
 from __future__ import annotations
 import os
-import time
 
 from biz.dfch.logging import log
 from biz.dfch.asyn import Process
@@ -261,7 +260,6 @@ class JackConnection:
         if 0 == len(stderr):
 
             self._is_active = True
-            time.sleep(1)
 
             log.info("Connecting '%s' to '%s' completed.", source, sink)
 
@@ -428,7 +426,7 @@ class JackConnection:
         current_key: str
         is_sink: bool
         connections: list[str]
-        result: dict[str, list[str]]
+        result: dict[tuple[str, bool], list[str]]
 
         def __init__(self):
             """Returns an instance of this object."""

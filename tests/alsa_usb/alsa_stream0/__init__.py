@@ -35,6 +35,7 @@ from .icybox_ib_ac527 import INFO as IcyBoxAc527
 from .sabrent import INFO as Sabrent
 from .ugreen_a2 import INFO as UgreenA2
 from .antlion_audio import INFO as Antlion
+from .roland_sp404mkii import INFO as RolandSP404MKII
 
 __all__ = [
     "EposExpand30T",
@@ -52,4 +53,5 @@ __all__ = [
     "Sabrent",
     "UgreenA2",
     "Antlion",
+    "RolandSP404MKII",
 ]

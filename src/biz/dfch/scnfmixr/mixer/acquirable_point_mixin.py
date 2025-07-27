@@ -20,25 +20,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module acquirable_manager_mixin."""
+"""Module acquirable_point_mixin."""
 
 from abc import ABC, abstractmethod
 from typing import Self
 
 from biz.dfch.logging import log
-from biz.dfch.scnfmixr.public.messages import (
-    MessageBase,
-    SystemMessage,
-    Topology
-)
+from biz.dfch.scnfmixr.public.messages import MessageBase, Topology
 from biz.dfch.scnfmixr.public.mixer import IAcquirable
 from biz.dfch.scnfmixr.system import MessageQueue
 
 
-class AcquirableManagerMixin(IAcquirable, ABC):
-    """AcquirableManagerMixin"""
+class AcquirablePointMixin(IAcquirable, ABC):
+    """AcquirablePointMixin
 
-    _is_acquired: bool
+    Implements a resource manager with message queue notification.
+    """
+
+    _resource_name: str
     _mq: MessageQueue
 
     def __init__(self):
@@ -47,69 +46,79 @@ class AcquirableManagerMixin(IAcquirable, ABC):
         self._mq = MessageQueue.Factory.get()
 
     def acquire(self) -> Self:
-
-        if self._is_acquired:
+        if self.is_acquired:
             return self
 
         try:
-            log.debug("Signal manager starting ...")
+            name = getattr(self, "name", "<?>")
 
-            self._mq.register(
-                self._on_message,
-                lambda e: isinstance(
-                    e,
-                    # (SystemMessage.Shutdown, Topology.ChangedNotification)))
-                    (SystemMessage.Shutdown)))
+            log.debug("Acquiring resource point '%s' ...", name)
+
+            # self._mq.register(
+            #     self._on_message,
+            #     lambda e: isinstance(e, Topology.ChangedNotification))
 
             self._mq.publish(
-                Topology.SignalManagerStartingNotification(str(type(self))))
+                Topology.PointAddingNotification(name))
 
             result = self.do_acquire()
 
             self._mq.publish(
-                Topology.SignalManagerStartedNotification(str(type(self))))
+                Topology.PointAddedNotification(name))
 
-            self._is_acquired = True
+            self.is_acquired = True
 
-            log.info("Signal manager starting OK.")
+            log.info("Acquiring resource point '%s' OK.", name)
 
             return result
 
         except Exception as ex:  # pylint: disable=W0718
 
             self._mq.publish(
-                Topology.SignalManagerErrorNotification(str(type(self))))
-            log.error("Signal manager starting FAILED. [%s]", ex, exc_info=True)
+                Topology.PointErrorNotification(name))
+            log.error(
+                "Acquiring resource point '%s' FAILED. [%s]",
+                name, ex, exc_info=True)
 
     def release(self) -> None:
 
-        if not self._is_acquired:
+        if not self.is_acquired:
             return
 
+        name = getattr(self, "name", "<?>")
+
         try:
-            log.debug("Signal manager stopping ...")
+            log.debug("Releasing resource point '%s' ...", name)
 
             self._mq.publish(
-                Topology.SignalManagerStoppingNotification(str(type(self))))
+                Topology.PointRemovingNotification(name))
 
             self.do_release()
 
-            self._mq.unregister(self._on_message)
+            self.is_acquired = False
 
             self._mq.publish(
-                Topology.SignalManagerStoppedNotification(str(type(self))))
+                Topology.PointRemovedNotification(name))
 
-            log.info("Signal manager stopping OK.")
+            # self._mq.unregister(self._on_message)
+
+            log.info("Releasing resource point '%s' OK.", name)
 
         except Exception as ex:  # pylint: disable=W0718
 
             self._mq.publish(
-                Topology.SignalManagerErrorNotification(str(type(self))))
-            log.error("Signal manager stopping FAILED. [%s]", ex, exc_info=True)
+                Topology.PointErrorNotification(name))
+            log.error(
+                "Releasing resource point '%s' FAILED. [%s]",
+                name, ex, exc_info=True)
 
     @abstractmethod
     def do_acquire(self) -> Self:
         """Actual acquisition implementation."""
+
+        name = getattr(self, "name", "<?>")
+        log.critical(
+            "do_acquire: You should NEVER see this message [%s].", name)
 
         raise NotImplementedError
 
@@ -117,10 +126,24 @@ class AcquirableManagerMixin(IAcquirable, ABC):
     def do_release(self):
         """Actual release implementation."""
 
+        name = getattr(self, "name", "<?>")
+        log.critical(
+            "do_release: You should NEVER see this message [%s].", name)
+
         raise NotImplementedError
 
     @abstractmethod
     def _on_message(self, message: MessageBase):
         """Message handler."""
 
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def is_acquired(self):
+        raise NotImplementedError
+
+    @is_acquired.setter
+    @abstractmethod
+    def is_acquired(self, value):
         raise NotImplementedError

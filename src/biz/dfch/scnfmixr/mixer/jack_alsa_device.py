@@ -23,17 +23,14 @@
 """Module signal_point."""
 
 from __future__ import annotations
-from abc import ABC, abstractmethod
-from enum import Enum
-from typing import cast, Self
 from threading import Lock
+from typing import cast
 
 from biz.dfch.logging import log
+from biz.dfch.asyn import Retry, ThreadPool
 
-
-import biz.dfch.scnfmixr.public.mixer.signal_point as pt
-from ..public.mixer import Connection
-from ..public.mixer import IAcquirable
+from ..public.mixer import Connection, ConnectionInfo, ConnectionPolicy
+from ..public.mixer.signal_point import IConnectableDevice
 
 from ..system import MessageQueue
 from ..public.messages import MessageBase, Topology
@@ -43,7 +40,6 @@ from ..alsa_usb import (
     AlsaStreamInfoParser,
 )
 
-from ..public.mixer import ConnectionInfo
 from ..public.audio import (
     AlsaInterfaceInfo,
     Format,
@@ -51,182 +47,48 @@ from ..public.audio import (
     Constant,
 )
 
+from .acquirable_device_mixin import AcquirableDeviceMixin
+from .alsa_device import AlsaDevice
+from .jack_signal_point_path_manager import JackSignalPointPathManager
+
 
 __all__ = [
     "JackAlsaDevice",
 ]
 
 
-class AlsaDevice(pt.ITerminalDevice):
-    """Represents an ALSA audio device."""
+class JackMixDevice(IConnectableDevice, AcquirableDeviceMixin):
+    """Represents a JACK ecasound mix device."""
 
-
-class AcquirableDeviceMixin(IAcquirable, ABC):
-    """JackAlsaDeviceAcquirableMixin"""
-
-    _is_acquired: bool
+    _sync_root: Lock
     _mq: MessageQueue
-
-    def __init__(self):
-        super().__init__()
-
-        self._is_acquired = False
-        self._mq = MessageQueue.Factory.get()
-
-    def acquire(self) -> Self:
-        if self._is_acquired:
-            return self
-
-        try:
-            log.debug("Acquiring resource ...")
-
-            self._mq.register(
-                self._on_message,
-                lambda e: isinstance(e, Topology.ChangedNotification))
-
-            result = self._do_acquire()
-
-            self._is_acquired = True
-
-            log.info("Acquiring resource OK.")
-
-            return result
-
-        except Exception as ex:  # pylint: disable=W0718
-
-            self._mq.publish(Topology.DeviceErrorNotification(self.name))
-            log.error("Acquiring resource FAILED. [%s]", ex, exc_info=True)
-
-    def release(self) -> None:
-
-        if not self._is_acquired:
-            return
-
-        try:
-            log.debug("Releasing resource ...")
-
-            self._do_release()
-
-            self._mq.unregister(self._on_message)
-
-            log.info("Releasing resource OK.")
-
-        except Exception as ex:  # pylint: disable=W0718
-
-            self._mq.publish(Topology.DeviceErrorNotification(self.name))
-            log.error("Releasing resource FAILED. [%s]", ex, exc_info=True)
-
-    @abstractmethod
-    def _do_acquire(self) -> Self:
-        """Actual acquisition implementation."""
-
-        raise NotImplementedError
-
-    @abstractmethod
-    def _do_release(self):
-        """Actual release implementation."""
-
-        raise NotImplementedError
-
-    @abstractmethod
-    def _on_message(self, message: MessageBase):
-        """Message handler."""
-
-        raise NotImplementedError
-
-
-class PointState(Enum):
-    """The states of a point."""
-    INITIAL = 0
-    OK = 1
-    STALE = 2
-    REMOVED = 3
-
-
-class SourceOrSinkPoint(pt.IConnectablePoint, AcquirableDeviceMixin):
-    """Represents a source or sink point."""
-
-    _state: PointState
+    _mgr: JackSignalPointPathManager
     _info: ConnectionInfo
 
-    def __init__(self, name: str, info: ConnectionInfo):
-        super().__init__(name)
+    def do_acquire(self):
+        raise NotImplementedError
 
-        assert isinstance(name, str) and name.strip()
-        assert isinstance(info, ConnectionInfo)
-
-        self._state = PointState.INITIAL
-        self._info = info
-
-    @property
-    def is_active(self):
-        return self._state == PointState.OK
-
-    def _do_acquire(self):
-        # Nothing to do here.
-        return self
-
-    def _do_release(self):
-        self._state = PointState.REMOVED
+    def do_release(self):
+        raise NotImplementedError
 
     def _on_message(self, message):
-        return
-
-
-class SourcePoint(
-    SourceOrSinkPoint,
-    pt.IConnectableSourcePoint,
-    AcquirableDeviceMixin
-):
-    """Represents a source point."""
-
-    @property
-    def is_sink(self):
-        return False
-
-    def connect_to(self, other):
         raise NotImplementedError
 
-
-class SinkPoint(
-    SourceOrSinkPoint,
-    pt.IConnectableSinkPoint,
-    AcquirableDeviceMixin
-):
-    """Represents a sink point."""
-
-    @property
-    def is_source(self):
-        return False
-
-    def connect_to(self, other):
+    def connect_to(self, other, policy=ConnectionPolicy.DEFAULT):
         raise NotImplementedError
-
-
-class TerminalSourcePoint(
-        SourcePoint,
-        pt.ITerminalSourcePoint,
-        AcquirableDeviceMixin):
-    """Represents a terminal source point."""
-
-
-class TerminalSinkPoint(
-        SinkPoint,
-        pt.ITerminalSinkPoint,
-        AcquirableDeviceMixin):
-    """Represents a terminal sink point."""
 
 
 class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
     """Represents a JACK ALSA audio device."""
 
-    _mq: MessageQueue
     _sync_root: Lock
+    _mq: MessageQueue
+    _mgr: JackSignalPointPathManager
     _info: ConnectionInfo
     _source_bridge: AlsaToJack | None
-    _source_client: str | None
+    _source_client_name: str | None
     _sink_bridge: JackToAlsa | None
-    _sink_client: str | None
+    _sink_client_name: str | None
 
     _logical_name: str
     _card_id: int
@@ -263,11 +125,13 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
         self._sync_root = Lock()
         self._mq = MessageQueue.Factory.get()
 
+        self._mgr = JackSignalPointPathManager.Factory.get()
+
         self._info = ConnectionInfo({})
         self._source_bridge = None
         self._sink_bridge = None
-        self._source_client = None
-        self._sink_client = None
+        self._source_client_name = None
+        self._sink_client_name = None
 
         self._logical_name = name
         self._card_id = card_id
@@ -307,123 +171,126 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
     def _on_message(self, message: MessageBase) -> None:
         """Message handler."""
 
-        assert isinstance(message, MessageBase)
+        name = cast(Topology.PointLostNotification, message).value
 
-        if not isinstance(message, Topology.ChangedNotification):
+        if not any(name == e.name for e in self.points):
             return
 
-        if not isinstance(message.value, ConnectionInfo):
-            return
+        point = next(e for e in self.points if e.name == name)
 
-        self._info = message.value
+        if not point.is_sink:
+            log.warning("Lost source point notified: '%s'.", name)
+            tp = ThreadPool.Factory.get()
+            rt = Retry(initial_wait_time_ms=500, max_attempts=10)
+            tp.invoke(rt.invoke, self._recreate_source_bridge, name)
+        else:
+            log.warning("Lost sink point notified: '%s'.", name)
+            tp = ThreadPool.Factory.get()
+            rt = Retry(initial_wait_time_ms=500, max_attempts=10)
+            tp.invoke(rt.invoke, self._recreate_sink_bridge, name)
 
-        items = self._info.get_sources(self._source_client)
-        log.debug("Device '%s'. Sources: [%s]", self._source_client, items)
+        return False
 
-        self._update_points_state(items, self.sources)
+    def _recreate_source_bridge(self, name: str) -> bool:
+        """Recreates the ALSA JACK source bridge."""
 
-        items = self._info.get_sinks(self._sink_client)
-        log.debug("Device '%s'. Sinks: [%s]", self._sink_client, items)
+        assert isinstance(name, str) and name.strip()
 
-        self._update_points_state(items, self.sinks)
+        point = next((e for e in self.sources if e.name == name), None)
+        assert point is not None, name
 
-    def _update_points_state(
-            self,
-            items: list[str],
-            points: list[SourceOrSinkPoint]):
-        """Updates point status."""
+        if point.state.has_flag(point.state.Flag.OK):
+            return True
 
-        for point_ in points:
+        self._source_bridge = AlsaToJack(
+            self._source_client_name,
+            self._device_name,
+            self._best_source_interface.channel_count,
+            self._best_source_interface.sample_rate.value)
 
-            point = cast(SourceOrSinkPoint, point_)
-            match point._state:
-                case PointState.INITIAL:
-                    if point.name in items:
-                        point._state = PointState.OK
-                        self._mq.publish(
-                            Topology.PointAddedNotification(point.name))
-                        log.debug("Point '%s' is [%s]",
-                                  point.name, point._state.name)
-                        continue
-                case PointState.OK:
-                    if point.name not in items:
-                        point._state = PointState.STALE
-                        self._mq.publish(
-                            Topology.PointLostNotification(point.name))
-                        log.debug("Point '%s' is [%s]",
-                                  point.name, point._state.name)
-                        continue
-                case PointState.STALE:
-                    if point.name in items:
-                        point._state = PointState.OK
-                        self._mq.publish(
-                            Topology.PointFoundNotification(point.name))
-                        log.debug("Point '%s' is [%s]",
-                                  point.name, point._state.name)
-                        continue
-                case _:
-                    log.warning("Point '%s' is [%s]",
-                                point.name, point._state.name)
-                    continue
+        return False
 
-    def _do_acquire(self):
+    def _recreate_sink_bridge(self, name: str) -> bool:
+        """Recreates the ALSA JACK sink bridge."""
 
-        self._mq.publish(Topology.DeviceAddingNotification(self.name))
+        assert isinstance(name, str) and name.strip()
 
-        self._source_client = Connection.jack_client_name_source_prefix(
+        point = next((e for e in self.sinks if e.name == name), None)
+        assert point is not None, name
+
+        if point.state.has_flag(point.state.Flag.OK):
+            return True
+
+        self._sink_bridge = JackToAlsa(
+            self._sink_client_name,
+            self._device_name,
+            self._best_sink_interface.channel_count,
+            self._best_sink_interface.sample_rate.value)
+
+        return False
+
+    def do_acquire(self):
+
+        self._source_client_name = Connection.jack_client_name_source_prefix(
             self._logical_name)
         self._source_bridge = AlsaToJack(
-            self._source_client,
+            self._source_client_name,
             self._device_name,
             self._best_source_interface.channel_count,
             self._best_source_interface.sample_rate.value)
 
         items = Connection.get_jack_source_port_names(
-            self._best_source_interface.channel_count, self._source_client)
+            self._best_source_interface.channel_count, self._source_client_name)
         for item in items:
 
             log.debug("Creating source point '%s' ...", item)
-            self._mq.publish(Topology.PointAddingNotification(item))
-            point = TerminalSourcePoint(item, self._info)  # pylint: disable=E0110  # noqa: E501
+            point = self._mgr.get_source_point(
+                item, self._info)
             self.add(point)
             point.acquire()
             log.debug(("Creating source point '%s' OK. "
                        "Need topology notification to reflect changes."), item)
 
-        self._sink_client = Connection.jack_client_name_sink_prefix(
+        self._sink_client_name = Connection.jack_client_name_sink_prefix(
             self._logical_name)
         self._sink_bridge = JackToAlsa(
-            self._sink_client,
+            self._sink_client_name,
             self._device_name,
             self._best_sink_interface.channel_count,
             self._best_sink_interface.sample_rate.value)
 
         items = Connection.get_jack_sink_port_names(
-            self._best_sink_interface.channel_count, self._sink_client)
+            self._best_sink_interface.channel_count, self._sink_client_name)
         for item in items:
 
             log.debug("Creating sink point '%s' ...", item)
-            self._mq.publish(Topology.PointAddingNotification(item))
-            point = TerminalSinkPoint(item, self._info)  # pylint: disable=E0110  # noqa: E501
+            point = self._mgr.get_sink_point(
+                item, self._info)
             self.add(point)
             point.acquire()
             log.debug(("Creating sink point '%s' OK. "
                        "Need topology notification to reflect changes."), item)
 
-        self._mq.publish(Topology.DeviceAddedNotification(self.name))
-
-    def _do_release(self):
-
-        self._mq.publish(Topology.DeviceRemovingNotification(self.name))
+    def do_release(self):
 
         for point in self.sources:
             log.debug(
-                "Removing source point '%s' on device '%s' ...",
+                "Releasing source point '%s' on device '%s' ...",
                 point.name,
                 self.name)
-            self._mq.publish(Topology.PointRemovingNotification(point.name))
 
             point.release()
+
+            for _, value in self._mgr.path_information.items():
+                _, path = value
+                if (
+                    path.source.name != point.name
+                    and path.sink.name != point.name
+                ):
+                    continue
+
+                path.release()
+                break
 
         self._source_bridge.stop()
         self._source_bridge = None
@@ -435,17 +302,26 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
                 "Removing source point '%s' on device '%s' OK.",
                 point.name,
                 self.name)
-            self._mq.publish(Topology.PointRemovedNotification(point.name))
             del self.sources[i]
 
         for point in self.sinks:
             log.debug(
-                "Removing sink point '%s' on device '%s' ...",
+                "Releasing sink point '%s' on device '%s' ...",
                 point.name,
                 self.name)
-            self._mq.publish(Topology.PointRemovingNotification(point.name))
 
             point.release()
+
+            for _, value in self._mgr.path_information.items():
+                _, path = value
+                if (
+                    path.source.name != point.name
+                    and path.sink.name != point.name
+                ):
+                    continue
+
+                path.release()
+                break
 
         self._sink_bridge.stop()
         self._sink_bridge = None
@@ -457,14 +333,18 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
                 "Removing sink point '%s' on device '%s' OK.",
                 point.name,
                 self.name)
-            self._mq.publish(Topology.PointRemovedNotification(point.name))
             del self.sinks[i]
-
-        self._mq.publish(Topology.DeviceRemovedNotification(self.name))
-
-    def connect_to(self, other):
-        raise NotImplementedError
 
     @property
     def points(self):
         return self._items.keys()
+
+    def connect_to(self, other, policy=ConnectionPolicy.DEFAULT):
+
+        result = self._mgr.get_signal_paths(
+            self.as_source_set, other, policy)
+
+        for _, path in result:
+            path.acquire()
+
+        return result

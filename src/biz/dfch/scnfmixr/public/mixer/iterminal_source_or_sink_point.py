@@ -20,24 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module path_state_flag."""
+"""Module iterminal_source_or_sink_point."""
 
-from enum import IntFlag
+from .iconnectable_point import IConnectablePoint
 
 
-class PathStateFlag(IntFlag):
-    """The states of a path."""
-    INITIAL = 0x01
-    OK = 0x02
-    STALE = 0x04
-    REMOVED = 0x08
-    ACQUIRED = 0x80
-
-    RELEASED_INITIAL = INITIAL
-    RELEASED_OK = OK
-    RELEASED_STALE = STALE
-    RELEASED_REMOVED = REMOVED
-    ACQUIRED_INITIAL = ACQUIRED | INITIAL
-    ACQUIRED_OK = ACQUIRED | OK
-    ACQUIRED_STALE = ACQUIRED | STALE
-    ACQUIRED_REMOVE = ACQUIRED | REMOVED
+class ITerminalSourceOrSinkPoint(IConnectablePoint):
+    """Represents a signal generating point from a device entering the system
+    or a signal receiving point to a device leaving the system."""

@@ -25,13 +25,14 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
+from biz.dfch.scnfmixr.public.mixer.iterminal_source_point import ITerminalSourcePoint
+from biz.dfch.scnfmixr.public.mixer.iterminal_sink_point import ITerminalSinkPoint
 from text import MultiLineTextParser
 from biz.dfch.logging import log
 from biz.dfch.scnfmixr.mixer.jack_alsa_device import JackAlsaDevice
 
 from biz.dfch.scnfmixr.jack_commands import JackConnection
 
-from biz.dfch.scnfmixr.system import MessageQueue
 from biz.dfch.scnfmixr.public.mixer import (
     IConnectablePoint,
     IConnectableSourcePoint,
@@ -39,9 +40,7 @@ from biz.dfch.scnfmixr.public.mixer import (
 )
 
 from biz.dfch.scnfmixr.public.mixer.signal_point import (
-    IConnectableDevice,
-    ITerminalSourcePoint,
-    ITerminalSinkPoint
+    IConnectableDevice
 )
 from biz.dfch.scnfmixr.public.mixer.signal_point import ITerminalDevice
 from biz.dfch.scnfmixr.public.mixer.connection_info import ConnectionInfo
@@ -75,7 +74,7 @@ class MockConnectionInfo:
         parser = MultiLineTextParser(
             indent=" ",
             length=1,
-            dic=dic,
+            dic=dic,  # type: ignore[arg-type]
             default=visitor.process_default)
         parser.parse(text, is_regex=False)
 
@@ -106,6 +105,14 @@ class AConnectablePoint(IConnectablePoint):
     def is_active(self):
         raise NotImplementedError
 
+    @property
+    def is_acquired(self):
+        raise NotImplementedError
+
+    @is_acquired.setter
+    def is_acquired(self, value):
+        raise NotImplementedError
+
 
 class ATerminalSourcePoint(ITerminalSourcePoint, IConnectableSourcePoint):
     """AConnectableSourcePoint"""
@@ -127,6 +134,14 @@ class ATerminalSourcePoint(ITerminalSourcePoint, IConnectableSourcePoint):
     def is_active(self):
         raise NotImplementedError
 
+    @property
+    def is_acquired(self):
+        raise NotImplementedError
+
+    @is_acquired.setter
+    def is_acquired(self, value):
+        raise NotImplementedError
+
 
 class ATerminalSinkPoint(ITerminalSinkPoint, IConnectableSinkPoint):
     """AConnectableSinkPoint"""
@@ -146,6 +161,14 @@ class ATerminalSinkPoint(ITerminalSinkPoint, IConnectableSinkPoint):
 
     @property
     def is_active(self):
+        raise NotImplementedError
+
+    @property
+    def is_acquired(self):
+        raise NotImplementedError
+
+    @is_acquired.setter
+    def is_acquired(self, value):
         raise NotImplementedError
 
 
@@ -278,9 +301,12 @@ class TestJackAlsaDevice(unittest.TestCase):
         sut.acquire()
         self.assertEqual(5, len(mock), mock)
         self.assertEqual(("DeviceAddingNotification", device_name), mock[0])
-        self.assertEqual(("PointAddingNotification", f"{device_name}-I:capture_1"), mock[1])
-        self.assertEqual(("PointAddingNotification", f"{device_name}-O:playback_1"), mock[2])
-        self.assertEqual(("PointAddingNotification", f"{device_name}-O:playback_2"), mock[3])
+        self.assertEqual(
+            ("PointAddingNotification", f"{device_name}-I:capture_1"), mock[1])
+        self.assertEqual(
+            ("PointAddingNotification", f"{device_name}-O:playback_1"), mock[2])
+        self.assertEqual(
+            ("PointAddingNotification", f"{device_name}-O:playback_2"), mock[3])
         self.assertEqual(("DeviceAddedNotification", device_name), mock[4])
 
         mock.clear()
@@ -288,13 +314,16 @@ class TestJackAlsaDevice(unittest.TestCase):
         info = ConnectionInfo(values3)
         msg = Topology.ChangedNotification(info)
 
-        # Simulating queue notifications.
+        # Simulating queue notifications. Direct access ok.
         sut._on_message(msg)  # pylint: disable=W0212
 
         self.assertEqual(3, len(mock), mock)
-        self.assertEqual(("PointAddedNotification", f"{device_name}-I:capture_1"), mock[0])
-        self.assertEqual(("PointAddedNotification", f"{device_name}-O:playback_1"), mock[1])
-        self.assertEqual(("PointAddedNotification", f"{device_name}-O:playback_2"), mock[2])
+        self.assertEqual(
+            ("PointAddedNotification", f"{device_name}-I:capture_1"), mock[0])
+        self.assertEqual(
+            ("PointAddedNotification", f"{device_name}-O:playback_1"), mock[1])
+        self.assertEqual(
+            ("PointAddedNotification", f"{device_name}-O:playback_2"), mock[2])
 
         mock.clear()
         sut.release()
@@ -302,12 +331,24 @@ class TestJackAlsaDevice(unittest.TestCase):
 
         self.assertEqual(("DeviceRemovingNotification", device_name), mock[0])
 
-        self.assertEqual(("PointRemovingNotification", f"{device_name}-I:capture_1"), mock[1])
-        self.assertEqual(("PointRemovedNotification", f"{device_name}-I:capture_1"), mock[2])
-        self.assertEqual(("PointRemovingNotification", f"{device_name}-O:playback_1"), mock[3])
-        self.assertEqual(("PointRemovingNotification", f"{device_name}-O:playback_2"), mock[4])
-        self.assertEqual(("PointRemovedNotification", f"{device_name}-O:playback_2"), mock[5])
-        self.assertEqual(("PointRemovedNotification", f"{device_name}-O:playback_1"), mock[6])
+        self.assertEqual(
+            ("PointRemovingNotification",
+             f"{device_name}-I:capture_1"), mock[1])
+        self.assertEqual(
+            ("PointRemovedNotification",
+             f"{device_name}-I:capture_1"), mock[2])
+        self.assertEqual(
+            ("PointRemovingNotification",
+             f"{device_name}-O:playback_1"), mock[3])
+        self.assertEqual(
+            ("PointRemovingNotification",
+             f"{device_name}-O:playback_2"), mock[4])
+        self.assertEqual(
+            ("PointRemovedNotification",
+             f"{device_name}-O:playback_2"), mock[5])
+        self.assertEqual(
+            ("PointRemovedNotification",
+             f"{device_name}-O:playback_1"), mock[6])
 
         self.assertEqual(("DeviceRemovedNotification", device_name), mock[7])
 

@@ -61,6 +61,9 @@ class Topology:
 
             self.value = value
 
+    class DeviceErrorNotification(TopologyValueNotificationBase):
+        """Notification when an device error occurred."""
+
     class DeviceAddingNotification(TopologyValueNotificationBase):
         """Notification when a new device is being added."""
 
@@ -73,8 +76,8 @@ class Topology:
     class DeviceRemovedNotification(TopologyValueNotificationBase):
         """Notification when an existing device is removed."""
 
-    class DeviceErrorNotification(TopologyValueNotificationBase):
-        """Notification when an device error occurred."""
+    class PointErrorNotification(TopologyValueNotificationBase):
+        """Notification when an point error occurred."""
 
     class PointAddingNotification(TopologyValueNotificationBase):
         """Notification when a new point is being added."""
@@ -94,16 +97,27 @@ class Topology:
     class PointRemovedNotification(TopologyValueNotificationBase):
         """Notification when an existing point is removed."""
 
-    class PointErrorNotification(TopologyValueNotificationBase):
-        """Notification when an point error occurred."""
+    # Point: new lifecycle definitions.
+    # Defining - > Defined - > Activated ->
+    # possibly: Lost/Found
+    # Deactivated - > Undefining - > Undefined
+    class PointActivatedNotification(TopologyValueNotificationBase):
+        """Notification when a new point has been activated."""
 
+    class PointDeactivatedNotification(TopologyValueNotificationBase):
+        """Notification when an existing point has been deactivated."""
+
+    class PointZombieNotification(TopologyValueNotificationBase):
+        """Notification when a removed point is stil found."""
+
+    # Path: lifecycle definitions.
     class PathErrorNotification(TopologyValueNotificationBase):
         """Notification when a new path is being added."""
 
     class PathDefiningNotification(TopologyValueNotificationBase):
         """Notification when a new path is being defined."""
 
-    class PathDefedNotification(TopologyValueNotificationBase):
+    class PathDefinedNotification(TopologyValueNotificationBase):
         """Notification when a new path is defined."""
 
     class PathConnectingNotification(TopologyValueNotificationBase):
@@ -111,6 +125,12 @@ class Topology:
 
     class PathConnectedNotification(TopologyValueNotificationBase):
         """Notification when a new path is connected."""
+
+    class PathUndefiningNotification(TopologyValueNotificationBase):
+        """Notification when a path is being undefined."""
+
+    class PathUndefinedNotification(TopologyValueNotificationBase):
+        """Notification when a path is undefined."""
 
     class PathDisconnectingNotification(TopologyValueNotificationBase):
         """Notification when an existing path is being disconnected."""
@@ -124,17 +144,20 @@ class Topology:
     class PathFoundNotification(TopologyValueNotificationBase):
         """Notification when a lost path is found."""
 
-    class PathManagerErrorNotification(TopologyValueNotificationBase):
-        """Notification when the path manager is in an error state."""
+    class PathZombieNotification(TopologyValueNotificationBase):
+        """Notification when a removed path is stil found."""
 
-    class PathManagerStartingNotification(TopologyValueNotificationBase):
-        """Notification when the path manager is starting."""
+    class SignalManagerErrorNotification(TopologyValueNotificationBase):
+        """Notification when the point and path manager is in an error state."""
 
-    class PathManagerStartedNotification(TopologyValueNotificationBase):
-        """Notification when the pth manager is started."""
+    class SignalManagerStartingNotification(TopologyValueNotificationBase):
+        """Notification when the point and path manager is starting."""
 
-    class PathManagerStoppingNotification(TopologyValueNotificationBase):
-        """Notification when the path manager is stopping."""
+    class SignalManagerStartedNotification(TopologyValueNotificationBase):
+        """Notification when the point and path manager is started."""
 
-    class PathManagerStoppedNotification(TopologyValueNotificationBase):
-        """Notification when the path manager is stopped."""
+    class SignalManagerStoppingNotification(TopologyValueNotificationBase):
+        """Notification when the point and path manager is stopping."""
+
+    class SignalManagerStoppedNotification(TopologyValueNotificationBase):
+        """Notification when the point and path manager is stopped."""

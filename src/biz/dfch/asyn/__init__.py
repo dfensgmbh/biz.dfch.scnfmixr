@@ -26,10 +26,14 @@ from .concurrent_queue import ConcurrentQueue
 from .concurrent_queue_t import ConcurrentQueueT
 from .concurrent_double_side_queue_t import ConcurrentDoubleSideQueueT
 from .process import Process
+from .retry import Retry
+from .thread_pool import ThreadPool
 
 __all__ = [
     "ConcurrentQueue",
     "ConcurrentQueueT",
     "ConcurrentDoubleSideQueueT",
     "Process",
+    "Retry",
+    "ThreadPool",
 ]

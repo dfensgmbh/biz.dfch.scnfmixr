@@ -55,8 +55,11 @@ from .iconnectable_sink_point import IConnectableSinkPoint
 from .iconnectable_sink_set import IConnectableSinkSet
 from .isignal_path import ISignalPath
 
-from .path_state import PathState
-from .path_state_flag import PathStateFlag
+from .iterminal_source_or_sink_point import ITerminalSourceOrSinkPoint
+from .iterminal_source_point import ITerminalSourcePoint
+from .iterminal_sink_point import ITerminalSinkPoint
+
+from .state import State
 
 __all__ = [
     "IAcquirable",
@@ -73,8 +76,11 @@ __all__ = [
     "IConnectableSinkSet",
     "ISignalPath",
 
-    "PathState",
-    "PathStateFlag",
+    "ITerminalSourceOrSinkPoint",
+    "ITerminalSourcePoint",
+    "ITerminalSinkPoint",
+
+    "State",
 
     "Connection",
     "ConnectionInfo",

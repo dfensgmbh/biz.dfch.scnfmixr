@@ -33,6 +33,7 @@ import biz.dfch.scnfmixr.public.mixer.iconnectable_point
 import biz.dfch.scnfmixr.public.mixer.iconnectable_sink
 import biz.dfch.scnfmixr.public.mixer.iconnectable_set
 import biz.dfch.scnfmixr.public.mixer.isignal_path
+import biz.dfch.scnfmixr.public.mixer.iterminal_source_or_sink_point
 
 from ..jack_commands import AlsaToJack, JackToAlsa
 
@@ -191,7 +192,7 @@ class BestAlsaJackAudioDevice(pt.ITerminalDevice):  # pylint: disable=R0901
         return result
 
     @property
-    def points(self) -> list[pt.ITerminalSourceOrSinkPoint]:
+    def points(self) -> list[biz.dfch.scnfmixr.public.mixer.iterminal_source_or_sink_point.ITerminalSourceOrSinkPoint]:
         return self._items
 
     def acquire(self):

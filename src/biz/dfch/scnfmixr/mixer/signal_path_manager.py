@@ -83,7 +83,7 @@ class SignalPathManager:
     _items: list[SignalPathManager.ConnectionInfo]
     _is_processing_paused: bool
     _mq: MessageQueue
-    _signal_stop: Event
+    _worker_signal_stop: Event
     _worker_thread: Thread
 
     def __init__(self):
@@ -110,7 +110,7 @@ class SignalPathManager:
                 AudioMixer.StartedNotification,
                 SystemMessage.Shutdown)))
 
-        self._signal_stop = Event()
+        self._worker_signal_stop = Event()
         self._worker_thread = Thread(target=self._worker, daemon=True)
         self._worker_thread.start()
 
@@ -120,7 +120,7 @@ class SignalPathManager:
         """Message handler."""
 
         if isinstance(message, SystemMessage.Shutdown):
-            self._signal_stop.set()
+            self._worker_signal_stop.set()
             return
 
         if isinstance(message, AudioMixer.StoppedNotification):
@@ -129,13 +129,17 @@ class SignalPathManager:
         if isinstance(message, AudioMixer.StartedNotification):
             self._is_processing_paused = False
 
-    class SuppressDebugMultiLineTextParser(logging.Filter):
-        """Supress DEBUG level logging of module MultiLineTextParser."""
+    class SuppressNoisyDebug(logging.Filter):
+        """Supress DEBUG level logging of module MultiLineTextParser
+        and process."""
 
         def filter(self, record) -> bool:
 
             if (record.levelno == logging.DEBUG
-                    and record.module == "MultiLineTextParser"):
+                    and record.module in ("MultiLineTextParser")):
+                return False
+            if (record.levelno in (logging.DEBUG, logging.INFO)
+                    and record.module in ("process")):
                 return False
             return True
 
@@ -146,13 +150,13 @@ class SignalPathManager:
 
         previous: dict[tuple[str, bool], list[str]] = {}
         start = time.monotonic()
-        log_filter = SignalPathManager.SuppressDebugMultiLineTextParser()
+        log_filter = SignalPathManager.SuppressNoisyDebug()
 
         log.info("_worker: Initialising OK.")
 
         log.debug("_worker: Processing ...")
 
-        while not self._signal_stop.wait(self._WAIT_INTERVAL_S):
+        while not self._worker_signal_stop.wait(self._WAIT_INTERVAL_S):
 
             try:
 

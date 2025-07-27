@@ -32,11 +32,11 @@ from biz.dfch.scnfmixr.public.mixer import (
     IConnectableSource,
     IConnectableSourcePoint,
     IConnectableSourceSet,
-    PathState,
+    State,
     ConnectionPolicy,
     ConnectionPolicyException,
 )
-from .signal_path_lazy import SignalPathLazy
+from .jack_signal_path import JackSignalPath
 
 
 class PathCreator:
@@ -72,10 +72,11 @@ class PathCreator:
     _IDX_LEFT = _IDX_MONO
     _IDX_RIGHT = 1
 
-    _items: dict[str, tuple[PathState, ISignalPath]]
+    _items: dict[str, tuple[State, ISignalPath]]
 
     def __init__(self,
-                 items: dict[str, tuple[PathState, ISignalPath]]
+                 items: dict[str,
+                             tuple[State, ISignalPath]]
                  ) -> None:
         """
         Args:
@@ -93,15 +94,15 @@ class PathCreator:
             self,
             source: IConnectableSourcePoint,
             sink: IConnectableSinkPoint
-    ) -> tuple[PathState, ISignalPath]:
+    ) -> tuple[State, ISignalPath]:
 
         assert isinstance(source, IConnectableSource)
         assert isinstance(sink, IConnectableSink)
 
-        result: tuple[PathState, ISignalPath]
+        result: tuple[State, ISignalPath]
 
-        state = PathState()
-        path = SignalPathLazy(source, sink, state)
+        state = State()
+        path = JackSignalPath(source, sink, state)
         key = path.name
 
         if key in self._items:
@@ -115,7 +116,7 @@ class PathCreator:
             self,
             source: IConnectableSource,
             sink: IConnectableSink,
-    ) -> list[tuple[PathState, ISignalPath]]:
+    ) -> list[tuple[State, ISignalPath]]:
         """ConnectionPolicy.MONO"""
 
         assert isinstance(source, IConnectableSource)
@@ -190,7 +191,7 @@ class PathCreator:
             self,
             source: IConnectableSource,
             sink: IConnectableSink,
-    ) -> list[tuple[PathState, ISignalPath]]:
+    ) -> list[tuple[State, ISignalPath]]:
         """ConnectionPolicy.DUAL"""
 
         assert isinstance(source, IConnectableSource)
@@ -231,16 +232,22 @@ class PathCreator:
 
         if source.is_set and sink.is_set:
             source_set = cast(IConnectableSourceSet, source)
-            if self._COUNT_DUAL > len(source_set.points):
-                raise ConnectionPolicyException(
-                    ConnectionPolicy.DUAL,
-                    source,
-                    sink
-                )
-            source_point_l = cast(IConnectableSourcePoint,
-                                  source_set[self._IDX_LEFT])
-            source_point_r = cast(IConnectableSourcePoint,
-                                  source_set[self._IDX_RIGHT])
+            if self._COUNT_MONO == len(source_set.points):
+                source_point_l = cast(IConnectableSourcePoint,
+                                      source_set[self._IDX_LEFT])
+                source_point_r = cast(IConnectableSourcePoint,
+                                      source_set[self._IDX_LEFT])
+            else:
+                if self._COUNT_DUAL > len(source_set.points):
+                    raise ConnectionPolicyException(
+                        ConnectionPolicy.DUAL,
+                        source,
+                        sink
+                    )
+                source_point_l = cast(IConnectableSourcePoint,
+                                      source_set[self._IDX_LEFT])
+                source_point_r = cast(IConnectableSourcePoint,
+                                      source_set[self._IDX_RIGHT])
 
             sink_set = cast(IConnectableSinkSet, sink)
             if self._COUNT_DUAL > len(sink_set.points):
@@ -269,7 +276,7 @@ class PathCreator:
             self,
             source: IConnectableSource,
             sink: IConnectableSink,
-    ) -> list[tuple[PathState, ISignalPath]]:
+    ) -> list[tuple[State, ISignalPath]]:
         """ConnectionPolicy.LINE"""
 
         assert isinstance(source, IConnectableSource)
@@ -336,7 +343,7 @@ class PathCreator:
                 )
 
             count = len(source_set.points)
-            result: list[tuple[PathState, ISignalPath]] = []
+            result: list[tuple[State, ISignalPath]] = []
             for i in range(count):
                 source_point = source_set.points[i]
                 sink_point = sink_set.points[i]
@@ -354,7 +361,7 @@ class PathCreator:
             self,
             source: IConnectableSource,
             sink: IConnectableSink,
-    ) -> list[tuple[PathState, ISignalPath]]:
+    ) -> list[tuple[State, ISignalPath]]:
         """ConnectionPolicy.BCAST"""
 
         assert isinstance(source, IConnectableSource)
@@ -382,7 +389,7 @@ class PathCreator:
                 sink
             )
 
-        result: list[tuple[PathState, ISignalPath]] = []
+        result: list[tuple[State, ISignalPath]] = []
         for sink_point in sink_set.points:
             result.append(self._get_single_path(source_point, sink_point))
 
@@ -392,7 +399,7 @@ class PathCreator:
             self,
             source: IConnectableSource,
             sink: IConnectableSink,
-    ) -> list[tuple[PathState, ISignalPath]]:
+    ) -> list[tuple[State, ISignalPath]]:
         """ConnectionPolicy.MERGE"""
 
         assert isinstance(source, IConnectableSource)
@@ -423,7 +430,7 @@ class PathCreator:
                 sink
             )
 
-        result: list[tuple[PathState, ISignalPath]] = []
+        result: list[tuple[State, ISignalPath]] = []
         for source_point in source_set:
             result.append(self._get_single_path(source_point, sink_point))
 
@@ -433,7 +440,7 @@ class PathCreator:
             self,
             source: IConnectableSource,
             sink: IConnectableSink,
-    ) -> list[tuple[PathState, ISignalPath]]:
+    ) -> list[tuple[State, ISignalPath]]:
         """ConnectionPolicy.TRUNC"""
 
         assert isinstance(source, IConnectableSource)
@@ -499,7 +506,7 @@ class PathCreator:
                 )
 
             count = min(len(source_set.points), len(sink_set.points))
-            result: list[tuple[PathState, ISignalPath]] = []
+            result: list[tuple[State, ISignalPath]] = []
             for i in range(count):
                 source_point = source_set.points[i]
                 sink_point = sink_set.points[i]
@@ -517,7 +524,7 @@ class PathCreator:
             self,
             source: IConnectableSource,
             sink: IConnectableSink,
-    ) -> list[tuple[PathState, ISignalPath]]:
+    ) -> list[tuple[State, ISignalPath]]:
         """ConnectionPolicy.DEFAULT"""
 
         assert isinstance(source, IConnectableSource)

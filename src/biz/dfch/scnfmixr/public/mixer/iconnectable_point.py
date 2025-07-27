@@ -27,13 +27,30 @@ from abc import abstractmethod
 from typing import TYPE_CHECKING
 
 from .iconnectable_point_or_set import IConnectablePointOrSet
+from .state import State
 
+# DFTODO - can we remove this? currently, the only forward ref is a type hint,
+# which can be (and is) quoted.
 if TYPE_CHECKING:
     from .isignal_path import ISignalPath
 
 
 class IConnectablePoint(IConnectablePointOrSet):
     """Represents a connectable signal point."""
+
+    _state: State
+
+    def __init__(self, name: str):
+        super().__init__(name)
+
+        assert isinstance(name, str) and name.strip()
+
+        self._state = State()
+
+    @property
+    def state(self) -> State:
+        """Returns the state of the point."""
+        return self._state
 
     @property
     def is_point(self) -> bool:
@@ -53,4 +70,5 @@ class IConnectablePoint(IConnectablePointOrSet):
 
         assert isinstance(other, IConnectablePoint)
 
-        return self.connect_to(other)[0]
+        # return self.connect_to(other)[0]
+        return next(self.connect_to(other), [])

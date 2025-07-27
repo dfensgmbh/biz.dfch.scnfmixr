@@ -247,7 +247,7 @@ class AudioMixer:
     Attributes:
     """
 
-    _message_queue: MessageQueue
+    _mq: MessageQueue
     _sync_root: threading.Lock
     _callbacks: list[Callable[[threading.Event], None]]
     _state: AudioMixerState
@@ -317,8 +317,8 @@ class AudioMixer:
 
         self._routing_matrix = RoutingMatrix.Factory.get()
 
-        self._message_queue = MessageQueue.Factory.get()
-        self._message_queue.register(
+        self._mq = MessageQueue.Factory.get()
+        self._mq.register(
             self._on_shutdown,
             lambda e: isinstance(e, SystemMessage.Shutdown))
 
@@ -362,7 +362,7 @@ class AudioMixer:
             result = self.stop()
             assert result
 
-        self._message_queue.publish(msgt.ConfigurationChangingNotification())
+        self._mq.publish(msgt.ConfigurationChangingNotification())
 
         has_default_output_changed = self._cfg is None or (
             self._cfg.default_output != cfg.default_output
@@ -373,11 +373,11 @@ class AudioMixer:
         self._cfg = cfg
 
         if has_default_output_changed:
-            self._message_queue.publish(
+            self._mq.publish(
                 msgt.DefaultOutputChangedNotification(
                     self._cfg.default_output))
 
-        self._message_queue.publish(msgt.ConfigurationChangedNotification())
+        self._mq.publish(msgt.ConfigurationChangedNotification())
 
         result = self.start()
 
@@ -412,22 +412,22 @@ class AudioMixer:
         match value:
             case AudioMixerState.STARTED:
                 # self.signal(AudioMixer.Event.STARTED)
-                self._message_queue.publish(
+                self._mq.publish(
                     msgt.StartedNotification(),
                     msgt.StateChangedNotification())
             case AudioMixerState.STARTING:
                 # self.signal(AudioMixer.Event.STARTING)
-                self._message_queue.publish(
+                self._mq.publish(
                     msgt.StartingNotification(),
                     msgt.StateChangedNotification())
             case AudioMixerState.STOPPING:
                 # self.signal(AudioMixer.Event.STOPPING)
-                self._message_queue.publish(
+                self._mq.publish(
                     msgt.StoppingNotification(),
                     msgt.StateChangedNotification())
             case AudioMixerState.STOPPED:
                 # self.signal(AudioMixer.Event.STOPPED)
-                self._message_queue.publish(
+                self._mq.publish(
                     msgt.StoppedNotification(),
                     msgt.StateChangedNotification())
 
