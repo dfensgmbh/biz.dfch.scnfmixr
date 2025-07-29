@@ -38,7 +38,10 @@ class Connection:
 
     @staticmethod
     def source(value: str) -> str:
-        """Gets the source name of the specified value."""
+        """Gets the source name of the specified value.
+
+        `value` -- > `value`**`-I`**.
+        """
 
         assert value and value.strip()
 
@@ -51,7 +54,10 @@ class Connection:
 
     @staticmethod
     def sink(value: str) -> str:
-        """Gets the sink name of the specified value."""
+        """Gets the sink name of the specified value.
+
+        `value` -- > `value`**`-O`**.
+        """
 
         assert value and value.strip()
 
@@ -63,33 +69,67 @@ class Connection:
         return f"{value}{output_suffix}"
 
     @staticmethod
-    def jack_client_name_from_basename(value: str) -> str:
+    def jack_alsa_client_from_base(value: str) -> str:
         """Returns **`Alsa:<value>`**."""
+        return Connection.jack_client_from_base(
+            Constant.JACK_ALSA_PREFIX, value)
+
+    @staticmethod
+    def jack_mixbus_client_from_base(value: str) -> str:
+        """Returns **`Mixbus:<value>`**."""
+        return Connection.jack_client_from_base(
+            Constant.JACK_MIXBUS_PREFIX, value)
+
+    @staticmethod
+    def jack_client_from_base(prefix: str, value: str) -> str:
+        """Returns **`<prefix>:<value>`**."""
 
         result = (
-            f"{Constant.JACK_ALSA_PREFIX}"
+            f"{prefix}"
             f"{Constant.JACK_SEPARATOR}"
             f"{value}"
         )
         return result
 
     @staticmethod
-    def jack_client_name_source_prefix(value: str) -> str:
+    def jack_alsa_client_source_prefix(value: str) -> str:
         """Returns **`Alsa:<value>-I`**."""
 
         result = (
-            f"{Connection.jack_client_name_from_basename(value)}"
+            f"{Connection.jack_alsa_client_from_base(value)}"
             f"{Constant.JACK_INFIX}"
             f"{Constant.JACK_INPUT}"
         )
         return result
 
     @staticmethod
-    def jack_client_name_sink_prefix(value: str) -> str:
+    def jack_mixbus_client_source_prefix(value: str) -> str:
+        """Returns **`Mixbus:<value>-I`**."""
+
+        result = (
+            f"{Connection.jack_mixbus_client_from_base(value)}"
+            f"{Constant.JACK_INFIX}"
+            f"{Constant.JACK_INPUT}"
+        )
+        return result
+
+    @staticmethod
+    def jack_alsa_client_sink_prefix(value: str) -> str:
         """Returns **`Alsa:<value>-O`**."""
 
         result = (
-            f"{Connection.jack_client_name_from_basename(value)}"
+            f"{Connection.jack_alsa_client_from_base(value)}"
+            f"{Constant.JACK_INFIX}"
+            f"{Constant.JACK_OUTPUT}"
+        )
+        return result
+
+    @staticmethod
+    def jack_mixbus_client_sink_prefix(value: str) -> str:
+        """Returns **`Mixbus:<value>-O`**."""
+
+        result = (
+            f"{Connection.jack_mixbus_client_from_base(value)}"
             f"{Constant.JACK_INFIX}"
             f"{Constant.JACK_OUTPUT}"
         )
@@ -162,3 +202,19 @@ class Connection:
                     f"{idx}")
 
         return result
+
+    @staticmethod
+    def get_jack_source_port_prefix() -> str:
+        """Returns the source port prefix.
+
+        **`capture`**
+        """
+        return Constant.JACK_SOURCE_PORT_INFIX_BASE.strip('_')
+
+    @staticmethod
+    def get_jack_sink_port_prefix() -> str:
+        """Returns the sink port prefix.
+
+        **`playback`**
+        """
+        return Constant.JACK_SINK_PORT_INFIX_BASE.strip('_')

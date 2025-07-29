@@ -59,7 +59,7 @@ class AudioPlayer:
     _WAIT_INTERVAL_MS: int = 250
     _KEEP_ALIVE_INTERVAL_MS: int = 10 * 1000
 
-    _ECASOuND_FULLNAME = "/usr/bin/ecasound"
+    _ECASOUND_FULLNAME = "/usr/bin/ecasound"
     _ECASOuND_OUTPUT_NAME = "jack"
     _ECASOuND_PORT_NAME = "AudioPlayer"
     _ECASOUND_OPTION_SEP = ":"
@@ -167,7 +167,7 @@ class AudioPlayer:
 
         log.info("Initialising worker OK.")
 
-        start_time = time.monotonic()
+        start = time.monotonic()
         while not self._do_cancel_worker:
 
             try:
@@ -182,14 +182,16 @@ class AudioPlayer:
                     result = self._signal_queue.wait(
                         self._WAIT_INTERVAL_MS/1000)
                     self._signal_queue.clear()
-                    # ... and exit if timeout.
+                    # ... and continue if timeout.
                     if not result:
                         now = time.monotonic()
                         if now > (
-                                start_time + self._KEEP_ALIVE_INTERVAL_MS/1000):
-                            log.debug("Worker keep alive. [%s]",
-                                      len(self._queue))
-                            start_time = now
+                                start + self._KEEP_ALIVE_INTERVAL_MS/1000):
+
+                            delta = now - start
+                            log.debug("Worker keep alive. [%s] [%sms]",
+                                      len(self._queue), int(delta*1000))
+                            start = now
                         continue
 
                     # We have to check here again, as the signal could have been
@@ -289,7 +291,7 @@ class AudioPlayer:
             self._jack_name)
 
         cmd: list[str] = []
-        cmd.append(self._ECASOuND_FULLNAME)
+        cmd.append(self._ECASOUND_FULLNAME)
         cmd.append(self._ECASOUND_OPTION_QUIET)
         cmd.append(
             f"{self._ECASOUND_OPTION_GLOBAL}"

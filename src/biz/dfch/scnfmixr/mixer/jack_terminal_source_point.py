@@ -24,21 +24,17 @@
 
 from ..public.mixer import (
     ITerminalSourcePoint,
-    ConnectionPolicy,
 )
-from .source_point import SourcePoint
+from .jack_source_point import JackSourcePoint
 
 
 __all__ = [
-    "JackAlsaSourcePoint",
+    "JackTerminalSourcePoint",
 ]
 
 
-class JackAlsaSourcePoint(
-        SourcePoint,
+class JackTerminalSourcePoint(
+        JackSourcePoint,
         ITerminalSourcePoint,
 ):
     """Represents a JACK ALSA terminal source point."""
-
-    def connect_to(self, other, policy=ConnectionPolicy.DEFAULT):
-        raise NotImplementedError

@@ -24,9 +24,9 @@
 
 from ...app import ApplicationContext
 from ...mixer import AudioMixer
-from ...mixer import AudioMixerConfiguration
-from ...public.mixer import Connection
-from ...public.audio import AudioDevice
+# from ...mixer import AudioMixerConfiguration
+# from ...public.mixer import Connection, ConnectionPolicy, MixbusDevice
+# from ...public.audio import AudioDevice
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
@@ -62,32 +62,48 @@ class InitialisingAudio(TransitionBase):
         mixer = AudioMixer.Factory.get()
         assert mixer
 
-        cfg = AudioMixerConfiguration().get_default()
-        cfg.default_output = Connection.sink(AudioDevice.LCL.name)
+        # mixbus = mixer.mixbus
 
-        for obj in self._app_ctx.xputs:
-            cfg.add_xput(obj)
+        # lcl_i = mixbus.get_device(MixbusDevice.MX3)
+        # ex1_i = mixbus.get_device(MixbusDevice.MX4)
+        # ex2_i = mixbus.get_device(MixbusDevice.MX5)
+        # lcl_o = mixbus.get_device(AudioDevice.LCL)
+        # ex1_o = mixbus.get_device(AudioDevice.EX1)
+        # ex2_o = mixbus.get_device(AudioDevice.EX2)
 
-        cfg.add_connection(Connection(
-            this=Connection.source(AudioDevice.LCL.name),
-            other=Connection.sink(AudioDevice.EX1.name),
-        )).add_connection(Connection(
-            this=Connection.source(AudioDevice.LCL.name),
-            other=Connection.sink(AudioDevice.EX2.name),
-        )).add_connection(Connection(
-            this=Connection.source(AudioDevice.EX1.name),
-            other=Connection.sink(AudioDevice.LCL.name),
-        )).add_connection(Connection(
-            this=Connection.source(AudioDevice.EX1.name),
-            other=Connection.sink(AudioDevice.EX2.name),
-        )).add_connection(Connection(
-            this=Connection.source(AudioDevice.EX2.name),
-            other=Connection.sink(AudioDevice.LCL.name),
-        )).add_connection(Connection(
-            this=Connection.source(AudioDevice.EX2.name),
-            other=Connection.sink(AudioDevice.EX1.name),
-        ))
+        # lcl_i.connect_to(ex1_o.as_sink_set)
+        # lcl_i.connect_to(ex2_o.as_sink_set)
+        # ex1_i.connect_to(lcl_o.as_sink_set)
+        # ex1_i.connect_to(ex2_o.as_sink_set)
+        # ex2_i.connect_to(lcl_o.as_sink_set)
+        # ex2_i.connect_to(ex1_o.as_sink_set)
 
-        mixer.initialise(cfg)
+        # cfg = AudioMixerConfiguration().get_default()
+        # cfg.default_output = Connection.sink(AudioDevice.LCL.name)
+
+        # for obj in self._app_ctx.xputs:
+        #     cfg.add_xput(obj)
+
+        # cfg.add_connection(Connection(
+        #     this=Connection.source(AudioDevice.LCL.name),
+        #     other=Connection.sink(AudioDevice.EX1.name),
+        # )).add_connection(Connection(
+        #     this=Connection.source(AudioDevice.LCL.name),
+        #     other=Connection.sink(AudioDevice.EX2.name),
+        # )).add_connection(Connection(
+        #     this=Connection.source(AudioDevice.EX1.name),
+        #     other=Connection.sink(AudioDevice.LCL.name),
+        # )).add_connection(Connection(
+        #     this=Connection.source(AudioDevice.EX1.name),
+        #     other=Connection.sink(AudioDevice.EX2.name),
+        # )).add_connection(Connection(
+        #     this=Connection.source(AudioDevice.EX2.name),
+        #     other=Connection.sink(AudioDevice.LCL.name),
+        # )).add_connection(Connection(
+        #     this=Connection.source(AudioDevice.EX2.name),
+        #     other=Connection.sink(AudioDevice.EX1.name),
+        # ))
+
+        # mixer.initialise(cfg)
 
         return True

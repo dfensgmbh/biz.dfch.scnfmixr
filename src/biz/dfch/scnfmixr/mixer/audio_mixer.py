@@ -326,6 +326,11 @@ class AudioMixer:
 
         log.info("Initialising OK.")
 
+    @property
+    def mixbus(self) -> Mixbus:
+        """Returns the mixbus instance."""
+        return self._mix_bus
+
     @overload
     def initialise(self) -> bool:
         ...
@@ -407,26 +412,21 @@ class AudioMixer:
         """Private: Sets the private field _state of the audio mixer."""
 
         self._state = value
-        # self.signal(AudioMixer.Event.STATE_CHANGED)
 
         match value:
             case AudioMixerState.STARTED:
-                # self.signal(AudioMixer.Event.STARTED)
                 self._mq.publish(
                     msgt.StartedNotification(),
                     msgt.StateChangedNotification())
             case AudioMixerState.STARTING:
-                # self.signal(AudioMixer.Event.STARTING)
                 self._mq.publish(
                     msgt.StartingNotification(),
                     msgt.StateChangedNotification())
             case AudioMixerState.STOPPING:
-                # self.signal(AudioMixer.Event.STOPPING)
                 self._mq.publish(
                     msgt.StoppingNotification(),
                     msgt.StateChangedNotification())
             case AudioMixerState.STOPPED:
-                # self.signal(AudioMixer.Event.STOPPED)
                 self._mq.publish(
                     msgt.StoppedNotification(),
                     msgt.StateChangedNotification())
@@ -501,56 +501,57 @@ class AudioMixer:
             log.info("Connecting '%s' [%s] to '%s' [%s] OK.",
                      conn.this, conn.idx_this, conn.other, conn.idx_other)
 
-        if "system" != self._cfg.default_output:
+        DEFAULT_OUTPUT = "system"
+        if DEFAULT_OUTPUT != self._cfg.default_output:
             self._mix_bus.start()
 
         clients = JackClient.get()
 
-        # Connect from physical source/capture to bus.
-        clt = next(
-            (e for e in clients if e.name == Connection.source(
-                AudioDevice.LCL.name)), None)
-        if isinstance(clt, JackClient):
-            log.debug("Connecting ports for '%s' ...", clt.name)
-            JackPort(f"{clt.name}:capture_1").connect_to("MixBus:LCL-I-DRY-I_1")
-            JackPort(f"{clt.name}:capture_1").connect_to("MixBus:LCL-I-DRY-I_2")
-        clt = next(
-            (e for e in clients if e.name == Connection.source(
-                AudioDevice.EX1.name)), None)
-        if isinstance(clt, JackClient):
-            log.debug("Connecting ports for '%s' ...", clt.name)
-            JackPort(f"{clt.name}:capture_1").connect_to("MixBus:EX1-I-DRY-I_1")
-            JackPort(f"{clt.name}:capture_1").connect_to("MixBus:EX1-I-DRY-I_2")
-        clt = next(
-            (e for e in clients if e.name == Connection.source(
-                AudioDevice.EX2.name)), None)
-        if isinstance(clt, JackClient):
-            log.debug("Connecting ports for '%s' ...", clt.name)
-            JackPort(f"{clt.name}:capture_1").connect_to("MixBus:EX2-I-DRY-I_1")
-            JackPort(f"{clt.name}:capture_1").connect_to("MixBus:EX2-I-DRY-I_2")
+        # # Connect from physical source/capture to bus.
+        # clt = next(
+        #     (e for e in clients if e.name == Connection.source(
+        #         AudioDevice.LCL.name)), None)
+        # if isinstance(clt, JackClient):
+        #     log.debug("Connecting ports for '%s' ...", clt.name)
+        #     JackPort(f"{clt.name}:capture_1").connect_to("MixBus:LCL-I-DRY-I_1")
+        #     JackPort(f"{clt.name}:capture_1").connect_to("MixBus:LCL-I-DRY-I_2")
+        # clt = next(
+        #     (e for e in clients if e.name == Connection.source(
+        #         AudioDevice.EX1.name)), None)
+        # if isinstance(clt, JackClient):
+        #     log.debug("Connecting ports for '%s' ...", clt.name)
+        #     JackPort(f"{clt.name}:capture_1").connect_to("MixBus:EX1-I-DRY-I_1")
+        #     JackPort(f"{clt.name}:capture_1").connect_to("MixBus:EX1-I-DRY-I_2")
+        # clt = next(
+        #     (e for e in clients if e.name == Connection.source(
+        #         AudioDevice.EX2.name)), None)
+        # if isinstance(clt, JackClient):
+        #     log.debug("Connecting ports for '%s' ...", clt.name)
+        #     JackPort(f"{clt.name}:capture_1").connect_to("MixBus:EX2-I-DRY-I_1")
+        #     JackPort(f"{clt.name}:capture_1").connect_to("MixBus:EX2-I-DRY-I_2")
 
-        # Connect bus to physical sink/playback.
-        clt = next(
-            (e for e in clients if e.name == Connection.sink(
-                AudioDevice.LCL.name)), None)
-        if isinstance(clt, JackClient):
-            log.debug("Connecting ports for '%s' ...", clt.name)
-            JackPort("MixBus:MX0-O_1").connect_to(f"{clt.name}:playback_1")
-            JackPort("MixBus:MX0-O_2").connect_to(f"{clt.name}:playback_2")
-        clt = next(
-            (e for e in clients if e.name == Connection.sink(
-                AudioDevice.EX1.name)), None)
-        if isinstance(clt, JackClient):
-            log.debug("Connecting ports for '%s' ...", clt.name)
-            JackPort("MixBus:MX1-O_1").connect_to(f"{clt.name}:playback_1")
-            JackPort("MixBus:MX1-O_2").connect_to(f"{clt.name}:playback_2")
-        clt = next(
-            (e for e in clients if e.name == Connection.sink(
-                AudioDevice.EX2.name)), None)
-        if isinstance(clt, JackClient):
-            log.debug("Connecting ports for '%s' ...", clt.name)
-            JackPort("MixBus:MX2-O_1").connect_to(f"{clt.name}:playback_1")
-            JackPort("MixBus:MX2-O_2").connect_to(f"{clt.name}:playback_2")
+        # # Connect bus to physical sink/playback.
+        # clt = next(
+        #     (e for e in clients if e.name == Connection.sink(
+        #         AudioDevice.LCL.name)), None)
+        # if isinstance(clt, JackClient):
+        #     log.debug("Connecting ports for '%s' ...", clt.name)
+        #     JackPort("MixBus:MX0-O_1").connect_to(f"{clt.name}:playback_1")
+        #     JackPort("MixBus:MX0-O_2").connect_to(f"{clt.name}:playback_2")
+        # clt = next(
+        #     (e for e in clients if e.name == Connection.sink(
+        #         AudioDevice.EX1.name)), None)
+        # if isinstance(clt, JackClient):
+        #     log.debug("Connecting ports for '%s' ...", clt.name)
+        #     JackPort("MixBus:MX1-O_1").connect_to(f"{clt.name}:playback_1")
+        #     JackPort("MixBus:MX1-O_2").connect_to(f"{clt.name}:playback_2")
+        # clt = next(
+        #     (e for e in clients if e.name == Connection.sink(
+        #         AudioDevice.EX2.name)), None)
+        # if isinstance(clt, JackClient):
+        #     log.debug("Connecting ports for '%s' ...", clt.name)
+        #     JackPort("MixBus:MX2-O_1").connect_to(f"{clt.name}:playback_1")
+        #     JackPort("MixBus:MX2-O_2").connect_to(f"{clt.name}:playback_2")
 
         self._set_state(AudioMixerState.STARTED)
         result = True

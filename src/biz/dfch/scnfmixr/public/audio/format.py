@@ -34,6 +34,7 @@ class Format(StrEnum):
     S24_LE = "S24_LE"
     S24_3LE = "S24_3LE"
     S32_LE = "S32_LE"
+    F32_LE = "F32_LE"
     FLOAT_LE = "FLOAT_LE"
     DEFAULT = S24_3LE
 
@@ -45,7 +46,7 @@ class Format(StrEnum):
                 return BitDepth.B16
             case Format.S24_LE | Format.S24_3LE:
                 return BitDepth.B24
-            case Format.S32_LE:
+            case Format.S32_LE | Format.F32_LE | Format.FLOAT_LE:
                 return BitDepth.B32
             case _:
                 raise LookupError

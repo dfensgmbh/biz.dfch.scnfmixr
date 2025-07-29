@@ -1,5 +1,3 @@
-# MIT License
-
 # Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,31 +18,34 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package mixer."""
+"""Module iterminal_device."""
 
-from .audio_mixer import AudioMixer
-from .audio_mixer import AudioMixerState
-from .audio_mixer import AudioMixerConfiguration
-from .acquirable_manager_mixin import AcquirableManagerMixin
-from .path_creator import PathCreator
-from .jack_signal_manager import JackSignalManager
-from .device_factory import DeviceFactory
-from .jack_source_point import JackSourcePoint
-from .jack_sink_point import JackSinkPoint
-from .jack_terminal_source_point import JackTerminalSourcePoint
-from .jack_terminal_sink_point import JackTerminalSinkPoint
+from __future__ import annotations
+
+from .iterminal_source_point import ITerminalSourcePoint
+from .iterminal_sink_point import ITerminalSinkPoint
+from .iconnectable_device import IConnectableDevice
+from .iterminal_sink_device import ITerminalSinkDevice
+from .iterminal_source_device import ITerminalSourceDevice
 
 
-__all__ = [
-    "AcquirableManagerMixin",
-    "AudioMixer",
-    "AudioMixerState",
-    "AudioMixerConfiguration",
-    "DeviceFactory",
-    "JackSignalManager",
-    "PathCreator",
-    "JackSourcePoint",
-    "JackSinkPoint",
-    "JackTerminalSourcePoint",
-    "JackTerminalSinkPoint",
-]
+class ITerminalDevice(
+        ITerminalSourceDevice,
+        ITerminalSinkDevice,
+        IConnectableDevice):
+    """Represents a device consisting of one or more terminal source and sink
+    points."""
+
+    @property
+    def sources(self) -> list[ITerminalSourcePoint]:
+        """The associated signal source points with this device."""
+
+        return [e for e in self._items.keys()  # pylint: disable=C0201
+                if isinstance(e, ITerminalSourcePoint)]
+
+    @property
+    def sinks(self) -> list[ITerminalSinkPoint]:
+        """The associated signal sink points with this device."""
+
+        return [e for e in self._items.keys()  # pylint: disable=C0201
+                if isinstance(e, ITerminalSinkPoint)]

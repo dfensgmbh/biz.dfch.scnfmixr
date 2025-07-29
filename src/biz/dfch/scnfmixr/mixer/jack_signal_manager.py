@@ -46,11 +46,13 @@ from biz.dfch.scnfmixr.public.mixer import (
 
 from .acquirable_manager_mixin import AcquirableManagerMixin
 from .path_creator import PathCreator
-from .jack_alsa_source_point import JackAlsaSourcePoint
-from .jack_alsa_sink_point import JackAlsaSinkPoint
+from .jack_source_point import JackSourcePoint
+from .jack_sink_point import JackSinkPoint
+from .jack_terminal_source_point import JackTerminalSourcePoint
+from .jack_terminal_sink_point import JackTerminalSinkPoint
 
 
-class JackSignalPointPathManager(AcquirableManagerMixin):
+class JackSignalManager(AcquirableManagerMixin):
     """A manager for JACK connections."""
 
     PolicyFunction = Callable[
@@ -58,8 +60,8 @@ class JackSignalPointPathManager(AcquirableManagerMixin):
         list[tuple[State, ISignalPath]]
     ]
 
-    _WAIT_INTERVAL_S: int = 1
-    _KEEP_ALIVE_INTERVAL_S = 10
+    _WAIT_INTERVAL_S: float = 0.650
+    _KEEP_ALIVE_INTERVAL_S: float = 10.0
 
     _thread_pool: ThreadPool
 
@@ -77,7 +79,7 @@ class JackSignalPointPathManager(AcquirableManagerMixin):
     def __init__(self):
         """Private ctor. Use Factory to create an instance of this object."""
 
-        if not JackSignalPointPathManager.Factory._sync_root.locked():
+        if not JackSignalManager.Factory._sync_root.locked():
             raise RuntimeError("Private ctor. Use Factory instead.")
 
         super().__init__()
@@ -88,7 +90,7 @@ class JackSignalPointPathManager(AcquirableManagerMixin):
         self._sync_root = Lock()
         self._signal = Event()
         self._signal_shutdown = Event()
-        self._info = {}
+        self._info = ConnectionInfo({})
         self._paths = {}
         self._points = {}
 
@@ -114,9 +116,8 @@ class JackSignalPointPathManager(AcquirableManagerMixin):
 
         log.debug("_worker: Initialising ...")
 
-        previous: dict[tuple[str, bool], list[str]] = {}
         start = time.monotonic()
-        log_filter = JackSignalPointPathManager.SuppressNoisyDebug()
+        log_filter = JackSignalManager.SuppressNoisyDebug()
 
         log.info("_worker: Initialising OK.")
 
@@ -136,21 +137,22 @@ class JackSignalPointPathManager(AcquirableManagerMixin):
                 result = JackConnection.get_connections3()
                 log.removeFilter(log_filter)
 
-                if previous == result:
+                if 0 == len(result.keys()):
+                    log.warning("JackConnection returned 0 keys. [%s]", result)
                     continue
 
-                previous = result
-                self._info = result
+                current = ConnectionInfo(result)
+                if current == self._info:
+                    continue
 
-                connection_info = ConnectionInfo(result)
-                assert connection_info
+                self._info = current
 
                 self._mq.publish(
-                    Topology.ChangedNotification(connection_info))
-                log.debug("Topology changed: %s", connection_info)
+                    Topology.ChangedNotification(self._info))
+                log.debug("Topology changed: %s", self._info)
 
-                self._update_point_state(connection_info)
-                self._update_path_state(connection_info)
+                self._update_point_state(self._info)
+                self._update_path_state(self._info)
 
             except Exception as ex:  # pylint: disable=W0718
 
@@ -289,7 +291,7 @@ class JackSignalPointPathManager(AcquirableManagerMixin):
         creator = PathCreator(self._paths)
         policy_map: dict[
             ConnectionPolicy,
-            JackSignalPointPathManager.PolicyFunction
+            JackSignalManager.PolicyFunction
         ] = {
             ConnectionPolicy.MONO: creator.process_mono,
             ConnectionPolicy.DUAL: creator.process_dual,
@@ -326,11 +328,11 @@ class JackSignalPointPathManager(AcquirableManagerMixin):
 
         return result
 
-    def get_source_point(
+    def get_jack_source_point(
             self,
             name: str,
             info: ConnectionInfo
-    ) -> JackAlsaSinkPoint:
+    ) -> JackSourcePoint:
         """Creates or gets the source point with the specified name."""
 
         assert isinstance(name, str) and name.strip()
@@ -343,17 +345,40 @@ class JackSignalPointPathManager(AcquirableManagerMixin):
 
             # Really weird, pylint complains about instantiated abstract class.
             # But the class can be instantiated at runtime.
-            result = JackAlsaSourcePoint(name, info)  # pylint: disable=E0110
+            result = JackSourcePoint(name, info)  # pylint: disable=E0110  # noqa: E501
 
             self._points[name] = (result.state, result)
 
             return result
 
-    def get_sink_point(
+    def get_jack_terminal_source_point(
             self,
             name: str,
             info: ConnectionInfo
-    ) -> JackAlsaSinkPoint:
+    ) -> JackTerminalSourcePoint:
+        """Creates or gets the source point with the specified name."""
+
+        assert isinstance(name, str) and name.strip()
+        assert isinstance(info, ConnectionInfo)
+
+        with self._sync_root:
+
+            if name in self._points:
+                return self._points[name]
+
+            # Really weird, pylint complains about instantiated abstract class.
+            # But the class can be instantiated at runtime.
+            result = JackTerminalSourcePoint(name, info)  # pylint: disable=E0110  # noqa: E501
+
+            self._points[name] = (result.state, result)
+
+            return result
+
+    def get_jack_sink_point(
+            self,
+            name: str,
+            info: ConnectionInfo
+    ) -> JackSinkPoint:
         """Creates or gets the sink point with the specified name."""
 
         assert isinstance(name, str) and name.strip()
@@ -366,7 +391,30 @@ class JackSignalPointPathManager(AcquirableManagerMixin):
 
             # Really weird, pylint complains about instantiated abstract class.
             # But the class can be instantiated at runtime.
-            result = JackAlsaSinkPoint(name, info)  # pylint: disable=E0110
+            result = JackSinkPoint(name, info)  # pylint: disable=E0110
+
+            self._points[name] = (result.state, result)
+
+            return result
+
+    def get_jack_terminal_sink_point(
+            self,
+            name: str,
+            info: ConnectionInfo
+    ) -> JackTerminalSinkPoint:
+        """Creates or gets the sink point with the specified name."""
+
+        assert isinstance(name, str) and name.strip()
+        assert isinstance(info, ConnectionInfo)
+
+        with self._sync_root:
+
+            if name in self._points:
+                return self._points[name]
+
+            # Really weird, pylint complains about instantiated abstract class.
+            # But the class can be instantiated at runtime.
+            result = JackTerminalSinkPoint(name, info)  # pylint: disable=E0110
 
             self._points[name] = (result.state, result)
 
@@ -375,26 +423,26 @@ class JackSignalPointPathManager(AcquirableManagerMixin):
     class Factory:  # pylint: disable=R0903
         """Factory class."""
 
-        __instance: ClassVar[JackSignalPointPathManager | None] = None
+        __instance: ClassVar[JackSignalManager | None] = None
         _sync_root: ClassVar[threading.Lock] = threading.Lock()
 
         @staticmethod
-        def get() -> JackSignalPointPathManager:
+        def get() -> JackSignalManager:
             """Gets the singleton."""
 
-            if JackSignalPointPathManager.Factory.__instance is not None:
-                return JackSignalPointPathManager.Factory.__instance
+            if JackSignalManager.Factory.__instance is not None:
+                return JackSignalManager.Factory.__instance
 
-            with JackSignalPointPathManager.Factory._sync_root:
+            with JackSignalManager.Factory._sync_root:
 
-                if JackSignalPointPathManager.Factory.__instance is not None:
-                    return JackSignalPointPathManager.Factory.__instance
+                if JackSignalManager.Factory.__instance is not None:
+                    return JackSignalManager.Factory.__instance
 
-                JackSignalPointPathManager.Factory.__instance = (
-                    JackSignalPointPathManager()
+                JackSignalManager.Factory.__instance = (
+                    JackSignalManager()
                 )
 
-            return JackSignalPointPathManager.Factory.__instance
+            return JackSignalManager.Factory.__instance
 
     def do_acquire(self):
 

@@ -111,7 +111,8 @@ class AlsaJackAudioPointManager():
             log.debug("Trying to acquire resource for '%s' ...", self._basename)
 
             self._alsa_to_jack_source = AlsaToJack(
-                name=Connection.jack_client_name_source_prefix(self._basename),
+                name=Connection.jack_alsa_client_source_prefix(
+                    self._basename),
                 device=Constant.get_raw_device_name(
                     self._source.card_id, self._source.interface_id
                 ),
@@ -119,7 +120,8 @@ class AlsaJackAudioPointManager():
                 rate=self._source.sample_rate.value)
 
             self._jack_to_alsa_sink = JackToAlsa(
-                name=Connection.jack_client_name_sink_prefix(self._basename),
+                name=Connection.jack_alsa_client_sink_prefix(
+                    self._basename),
                 device=Constant.get_raw_device_name(
                     self._sink.card_id, self._sink.interface_id
                 ),

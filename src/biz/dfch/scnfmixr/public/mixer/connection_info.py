@@ -28,7 +28,7 @@ __all__ = [
 ]
 
 
-class ConnectionInfo():
+class ConnectionInfo:
     """Information about JACK clients and conections.
 
     Each key holds an entry in the form `client:port` with port `text_number`.
@@ -430,3 +430,14 @@ class ConnectionInfo():
             f"{', '.join(values)}"
             for key, values in self._values.items()
         )
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ConnectionInfo):
+            raise NotImplementedError(f"other '{type(other)}'")
+        return self._values == other._values
+
+    def __ne__(self, other: object) -> bool:
+        return not self.__eq__(other)

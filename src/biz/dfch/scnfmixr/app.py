@@ -34,7 +34,8 @@ from .args import Arguments
 from .core import StateMachine
 from .mixer import AudioMixer
 from .mixer import AudioMixerConfiguration
-from .mixer.jack_signal_path_manager import JackSignalPathManager
+from .mixer import JackSignalManager
+from .mixer import DeviceFactory
 from .system import SignalHandler, FuncExecutor
 from .public.input import InputDevice
 from .public.audio import AudioDevice, Format, FileFormat
@@ -87,7 +88,7 @@ class App:  # pylint: disable=R0903
                 rec_params.format = Format.S24_3LE
             case 32:
                 rec_params.format = Format.S32_LE
-            case _:
+            case points:
                 rec_params.format = Format.S24_3LE
 
         app_ctx.audio_device_map = {
@@ -135,13 +136,38 @@ class App:  # pylint: disable=R0903
         log.info("Rec opt: '%s'.", app_ctx.recording_parameters)
         log.info("App ctx: '%s'.", app_ctx)
 
-        JackSignalPathManager.Factory.get().acquire()
-
         if args.service:
             log.info("Arg 'service' detected.")
 
             cfg = AudioMixerConfiguration.get_default()
-            AudioMixer.Factory.get().initialise(cfg)
+            mixer = AudioMixer.Factory.get()
+            mixer.initialise(cfg)
+
+            JackSignalManager.Factory.get().acquire()
+
+            mix_devices = DeviceFactory.create_mixbus_group()
+            for mx in mix_devices:
+                mx.acquire()
+                mixer.mixbus.add_device(mx)
+
+            log.warning("Device names [%s]", [
+                      e.name for e in mixer.mixbus.devices])
+            log.debug("Device source points [%s]", [
+                      e.name for e in mixer.mixbus.sources])
+            log.debug("Device sink points [%s]", [
+                      e.name for e in mixer.mixbus.sinks])
+
+            _dr0_sources = next(e.as_source_set().points
+                                for e in mixer.mixbus.devices
+                                if "DR0" in e.name)
+            for point in _dr0_sources:
+                log.debug("Point '%s'.", point.name)
+
+            points = [e
+                      for e in mixer.mixbus.get_device(
+                          "Mixbus:MX0").as_sink_set().points if e.name]
+            for point in points:
+                log.debug("Point '%s'", point)
 
             StateMachine().start()
 

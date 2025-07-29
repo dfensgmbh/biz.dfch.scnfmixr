@@ -68,7 +68,7 @@ class JackSignalPath(ISignalPath, IAcquirable):
         self._sink = sink
         self._state = state
 
-    def _connect(self) -> bool:
+    def _connect_path(self) -> bool:
         """Tries to connect a path."""
 
         if not self._state.is_acquired:
@@ -89,12 +89,12 @@ class JackSignalPath(ISignalPath, IAcquirable):
 
         JackConnection.Factory().create(self._source.name, self._sink.name)
 
-        log.info("Trying to connect path from '%s' to '%s' DISPATCHED.",
+        log.info("Trying to connect path from '%s' to '%s' INVOKED.",
                  self._source.name, self._sink.name)
 
         return False
 
-    def _reconnect(self) -> bool:
+    def _reconnect_path(self) -> bool:
         """Tries to reconnect a path."""
 
         if not self._state.is_acquired:
@@ -122,7 +122,7 @@ class JackSignalPath(ISignalPath, IAcquirable):
         ):
             log.warning(
                 ("Skipped '%s'. Trying to reconnect, "
-                 "but snk '%s' not acquired."),
+                 "but sink '%s' not acquired."),
                 self.name,
                 self._sink.name)
             return True
@@ -134,12 +134,16 @@ class JackSignalPath(ISignalPath, IAcquirable):
                 self._state)
             return True
 
-        log.warning("Trying to reconnect path from '%s' to '%s' ...",
-                    self._source.name, self._sink.name)
+        log.warning("Trying to reconnect path from '%s' [%s] to '%s' [%s] ...",
+                    self._source.name,
+                    self._source.is_acquired,
+                    self._sink.name,
+                    self._sink.is_acquired
+                    )
 
         JackConnection.Factory().create(self._source.name, self._sink.name)
 
-        log.info("Trying to reconnect path from '%s' to '%s' DISPATCHED.",
+        log.info("Trying to reconnect path from '%s' to '%s' INVOKED.",
                  self._source.name, self._sink.name)
 
         return False
@@ -147,7 +151,9 @@ class JackSignalPath(ISignalPath, IAcquirable):
     def _on_message(self, _: MessageBase):
         """Message handler."""
 
-        self._thread_pool.invoke(Retry().invoke, self._reconnect)
+        self._thread_pool.invoke(
+            Retry(base_wait_time_interval_ms=500,
+                  description=self.name).invoke, self._reconnect_path)
 
     def acquire(self):
         if self._state.is_acquired:
@@ -163,7 +169,11 @@ class JackSignalPath(ISignalPath, IAcquirable):
         if not self._source.is_acquired or not self._sink.is_acquired:
             return self
 
-        self._thread_pool.invoke(Retry().invoke, self._connect)
+        self._thread_pool.invoke(
+            Retry(first_wait_time_ms=500,
+                  base_wait_time_interval_ms=250,
+                  spin_attempts=25,
+                  description=self.name).invoke, self._connect_path)
 
         self._mq.register(
             self._on_message, lambda e: isinstance(

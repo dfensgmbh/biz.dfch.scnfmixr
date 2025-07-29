@@ -24,6 +24,8 @@
 
 from typing import cast
 
+from biz.dfch.logging import log
+
 from biz.dfch.scnfmixr.public.mixer import (
     ISignalPath,
     IConnectableSink,
@@ -96,8 +98,8 @@ class PathCreator:
             sink: IConnectableSinkPoint
     ) -> tuple[State, ISignalPath]:
 
-        assert isinstance(source, IConnectableSource)
-        assert isinstance(sink, IConnectableSink)
+        assert isinstance(source, IConnectableSource), source.name
+        assert isinstance(sink, IConnectableSink), sink.name
 
         result: tuple[State, ISignalPath]
 
@@ -196,6 +198,12 @@ class PathCreator:
 
         assert isinstance(source, IConnectableSource)
         assert isinstance(sink, IConnectableSink)
+
+        log.debug("process_dual: source '%s' [%s]; sink '%s' [%s]",
+                  source.name,
+                  type(source),
+                  sink.name,
+                  type(sink))
 
         if not isinstance(source, IConnectableSourceSet):
             raise ConnectionPolicyException(

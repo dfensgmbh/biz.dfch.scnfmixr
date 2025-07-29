@@ -22,6 +22,8 @@
 
 """Module signal_point."""
 
+from __future__ import annotations
+
 from ..public.mixer import IConnectablePoint, ConnectionInfo, State
 from .acquirable_point_mixin import AcquirablePointMixin
 
@@ -71,3 +73,19 @@ class SourceOrSinkPoint(IConnectablePoint, AcquirablePointMixin):
         assert isinstance(value, bool)
 
         self.state.is_acquired = True
+
+    @property
+    def is_source(self):
+
+        from ..public.mixer import IConnectableSource \
+            # pylint: disable=C0415
+
+        return isinstance(self, IConnectableSource)
+
+    @property
+    def is_sink(self):
+
+        from ..public.mixer import IConnectableSink \
+            # pylint: disable=C0415
+
+        return isinstance(self, IConnectableSink)

@@ -20,31 +20,32 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package mixer."""
+"""Module iconnectable_source_device."""
 
-from .audio_mixer import AudioMixer
-from .audio_mixer import AudioMixerState
-from .audio_mixer import AudioMixerConfiguration
-from .acquirable_manager_mixin import AcquirableManagerMixin
-from .path_creator import PathCreator
-from .jack_signal_manager import JackSignalManager
-from .device_factory import DeviceFactory
-from .jack_source_point import JackSourcePoint
-from .jack_sink_point import JackSinkPoint
-from .jack_terminal_source_point import JackTerminalSourcePoint
-from .jack_terminal_sink_point import JackTerminalSinkPoint
+from __future__ import annotations
+
+from .iconnectable_source_or_sink_device import IConnectableSourceOrSinkDevice
+from .iconnectable_source_point import IConnectableSourcePoint
+from .iconnectable_source_set import IConnectableSourceSet
+from .iconnectable_source import IConnectableSource
 
 
-__all__ = [
-    "AcquirableManagerMixin",
-    "AudioMixer",
-    "AudioMixerState",
-    "AudioMixerConfiguration",
-    "DeviceFactory",
-    "JackSignalManager",
-    "PathCreator",
-    "JackSourcePoint",
-    "JackSinkPoint",
-    "JackTerminalSourcePoint",
-    "JackTerminalSinkPoint",
-]
+class IConnectableSourceDevice(
+        IConnectableSourceSet,
+        IConnectableSourceOrSinkDevice):
+    """Represents a device with a source point set connectable to a sink signal
+    point set."""
+
+    @property
+    def sources(self) -> list[IConnectableSourcePoint]:
+        """The associated signal source points with this device."""
+
+        return [e for e in self._items
+                if isinstance(e, IConnectableSourcePoint)]
+
+    def as_source_set(self) -> IConnectableSourceSet:
+        """The associated signal points as an IConnectableSourceSet."""
+
+        from .source_set_view import SourceSetView  # pylint: disable=C0415
+
+        return SourceSetView(self.sources, self)

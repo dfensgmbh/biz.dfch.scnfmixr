@@ -20,31 +20,53 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package mixer."""
+"""Module jack_sink_point."""
 
-from .audio_mixer import AudioMixer
-from .audio_mixer import AudioMixerState
-from .audio_mixer import AudioMixerConfiguration
-from .acquirable_manager_mixin import AcquirableManagerMixin
-from .path_creator import PathCreator
-from .jack_signal_manager import JackSignalManager
-from .device_factory import DeviceFactory
-from .jack_source_point import JackSourcePoint
-from .jack_sink_point import JackSinkPoint
-from .jack_terminal_source_point import JackTerminalSourcePoint
-from .jack_terminal_sink_point import JackTerminalSinkPoint
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+from ..public.mixer import (
+    ConnectionPolicy,
+    IConnectableSource,
+)
+from .sink_point import SinkPoint
+
+if TYPE_CHECKING:
+    from .jack_signal_manager import JackSignalManager
 
 
 __all__ = [
-    "AcquirableManagerMixin",
-    "AudioMixer",
-    "AudioMixerState",
-    "AudioMixerConfiguration",
-    "DeviceFactory",
-    "JackSignalManager",
-    "PathCreator",
-    "JackSourcePoint",
     "JackSinkPoint",
-    "JackTerminalSourcePoint",
-    "JackTerminalSinkPoint",
 ]
+
+
+class JackSinkPoint(
+        SinkPoint,
+):
+    """Represents a JACK ALSA sink point."""
+
+    _mgr: JackSignalManager
+
+    def __init__(self, name, info):
+        super().__init__(name, info)
+
+        from .jack_signal_manager import JackSignalManager\
+            # pylint: disable=C0415
+
+        self._mgr = JackSignalManager.Factory.get()
+
+    def connect_to(self, other, policy=ConnectionPolicy.DEFAULT):
+
+        assert isinstance(other, IConnectableSource)
+        if ConnectionPolicy.DEFAULT == policy:
+            policy = ConnectionPolicy.MONO
+
+        result = self._mgr.get_signal_paths(
+            self, other, policy)
+
+        assert isinstance(result, list) and 1 == len(result)
+
+        _, path = result[0]
+        path.acquire()
+
+        return result

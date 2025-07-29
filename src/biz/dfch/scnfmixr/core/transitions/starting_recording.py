@@ -30,6 +30,7 @@ from ...mixer.audio_recorder import AudioRecorder
 from ...public.messages import AudioRecorder as msgt
 from ...public.storage import FileName
 from ...public.system import SystemTime
+from ...public.mixer import MixbusDevice
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
@@ -62,7 +63,8 @@ class StartingRecording(TransitionBase):
 
         files: list[str] = []
 
-        suffix = "MX03"
+        jack_device = MixbusDevice.MX0
+        suffix = jack_device.name
         for device, device_info in app_ctx.storage_configuration_map.items():
 
             file = FileName(
@@ -92,7 +94,7 @@ class StartingRecording(TransitionBase):
             lambda e: isinstance(e, msgt.StartedNotification)
         ) as sync:
             result = sync.invoke(
-                msgt.RecordingStartCommand(files))
+                msgt.RecordingStartCommand(files, jack_device.value))
 
         if result:
             log.info("Waiting for recording to start OK.")

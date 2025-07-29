@@ -20,25 +20,52 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module jack_alsa_source_point."""
+"""Module jack_source_point."""
+
+from __future__ import annotations
+from typing import TYPE_CHECKING
 
 from ..public.mixer import (
-    ITerminalSinkPoint,
     ConnectionPolicy,
+    IConnectableSink,
 )
-from .sink_point import SinkPoint
+from .source_point import SourcePoint
+if TYPE_CHECKING:
+    from .jack_signal_manager import JackSignalManager
 
 
 __all__ = [
-    "JackAlsaSinkPoint",
+    "JackSourcePoint",
 ]
 
 
-class JackAlsaSinkPoint(
-        SinkPoint,
-        ITerminalSinkPoint,
+class JackSourcePoint(
+        SourcePoint,
 ):
-    """Represents a JACK ALSA terminal sink point."""
+    """Represents a JACK ALSA source point."""
+
+    _mgr: "JackSignalManager"
+
+    def __init__(self, name, info):
+        super().__init__(name, info)
+
+        from .jack_signal_manager import JackSignalManager\
+            # pylint: disable=C0415
+
+        self._mgr = JackSignalManager.Factory.get()
 
     def connect_to(self, other, policy=ConnectionPolicy.DEFAULT):
-        raise NotImplementedError
+
+        assert isinstance(other, IConnectableSink)
+        if ConnectionPolicy.DEFAULT == policy:
+            policy = ConnectionPolicy.MONO
+
+        result = self._mgr.get_signal_paths(
+            self, other, policy)
+
+        assert isinstance(result, list) and 1 == len(result), result
+
+        _, path = result[0]
+        path.acquire()
+
+        return result

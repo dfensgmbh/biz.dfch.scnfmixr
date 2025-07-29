@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module signal_point."""
+"""Module jack_alsa_device."""
 
 from __future__ import annotations
 from threading import Lock
@@ -30,7 +30,6 @@ from biz.dfch.logging import log
 from biz.dfch.asyn import Retry, ThreadPool
 
 from ..public.mixer import Connection, ConnectionInfo, ConnectionPolicy
-from ..public.mixer.signal_point import IConnectableDevice
 
 from ..system import MessageQueue
 from ..public.messages import MessageBase, Topology
@@ -49,7 +48,7 @@ from ..public.audio import (
 
 from .acquirable_device_mixin import AcquirableDeviceMixin
 from .alsa_device import AlsaDevice
-from .jack_signal_point_path_manager import JackSignalPointPathManager
+from .jack_signal_manager import JackSignalManager
 
 
 __all__ = [
@@ -57,33 +56,12 @@ __all__ = [
 ]
 
 
-class JackMixDevice(IConnectableDevice, AcquirableDeviceMixin):
-    """Represents a JACK ecasound mix device."""
-
-    _sync_root: Lock
-    _mq: MessageQueue
-    _mgr: JackSignalPointPathManager
-    _info: ConnectionInfo
-
-    def do_acquire(self):
-        raise NotImplementedError
-
-    def do_release(self):
-        raise NotImplementedError
-
-    def _on_message(self, message):
-        raise NotImplementedError
-
-    def connect_to(self, other, policy=ConnectionPolicy.DEFAULT):
-        raise NotImplementedError
-
-
 class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
     """Represents a JACK ALSA audio device."""
 
     _sync_root: Lock
     _mq: MessageQueue
-    _mgr: JackSignalPointPathManager
+    _mgr: JackSignalManager
     _info: ConnectionInfo
     _source_bridge: AlsaToJack | None
     _source_client_name: str | None
@@ -115,7 +93,7 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
             parser (AlsaStramInfoParser): An instance to the stream info parser
                 of the ALSA  card and device.
         """
-        super().__init__(Connection.jack_client_name_from_basename(name))
+        super().__init__(Connection.jack_alsa_client_from_base(name))
 
         assert isinstance(name, str) and name.strip()
         assert 0 <= card_id
@@ -125,7 +103,7 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
         self._sync_root = Lock()
         self._mq = MessageQueue.Factory.get()
 
-        self._mgr = JackSignalPointPathManager.Factory.get()
+        self._mgr = JackSignalManager.Factory.get()
 
         self._info = ConnectionInfo({})
         self._source_bridge = None
@@ -178,15 +156,14 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
 
         point = next(e for e in self.points if e.name == name)
 
+        tp = ThreadPool.Factory.get()
+        rt = Retry(spin_attempts=25,
+                   description=name)
         if not point.is_sink:
             log.warning("Lost source point notified: '%s'.", name)
-            tp = ThreadPool.Factory.get()
-            rt = Retry(initial_wait_time_ms=500, max_attempts=10)
             tp.invoke(rt.invoke, self._recreate_source_bridge, name)
         else:
             log.warning("Lost sink point notified: '%s'.", name)
-            tp = ThreadPool.Factory.get()
-            rt = Retry(initial_wait_time_ms=500, max_attempts=10)
             tp.invoke(rt.invoke, self._recreate_sink_bridge, name)
 
         return False
@@ -231,7 +208,7 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
 
     def do_acquire(self):
 
-        self._source_client_name = Connection.jack_client_name_source_prefix(
+        self._source_client_name = Connection.jack_alsa_client_source_prefix(  # noqa: E501
             self._logical_name)
         self._source_bridge = AlsaToJack(
             self._source_client_name,
@@ -244,14 +221,14 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
         for item in items:
 
             log.debug("Creating source point '%s' ...", item)
-            point = self._mgr.get_source_point(
+            point = self._mgr.get_jack_terminal_source_point(
                 item, self._info)
             self.add(point)
             point.acquire()
             log.debug(("Creating source point '%s' OK. "
                        "Need topology notification to reflect changes."), item)
 
-        self._sink_client_name = Connection.jack_client_name_sink_prefix(
+        self._sink_client_name = Connection.jack_alsa_client_sink_prefix(
             self._logical_name)
         self._sink_bridge = JackToAlsa(
             self._sink_client_name,
@@ -264,7 +241,7 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
         for item in items:
 
             log.debug("Creating sink point '%s' ...", item)
-            point = self._mgr.get_sink_point(
+            point = self._mgr.get_jack_terminal_sink_point(
                 item, self._info)
             self.add(point)
             point.acquire()
@@ -342,7 +319,7 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
     def connect_to(self, other, policy=ConnectionPolicy.DEFAULT):
 
         result = self._mgr.get_signal_paths(
-            self.as_source_set, other, policy)
+            self.as_source_set(), other, policy)
 
         for _, path in result:
             path.acquire()

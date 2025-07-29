@@ -261,7 +261,7 @@ class JackConnection:
 
             self._is_active = True
 
-            log.info("Connecting '%s' to '%s' completed.", source, sink)
+            log.info("Connecting '%s' to '%s' INVOKED.", source, sink)
 
             return
 

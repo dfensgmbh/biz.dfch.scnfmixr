@@ -26,9 +26,14 @@ from biz.dfch.logging import log
 
 from ...application_context import ApplicationContext
 from ...audio import AudioDeviceInfo
+from ...alsa_usb import AlsaStreamInfoParser
 from ...audio import UsbAudioDeviceNotDetectedError
+from ...mixer import AudioMixer
 from ...public.audio import AudioDevice
 from ...public.mixer import AudioInput, AudioOutput
+from ...public.mixer import ConnectionPolicy
+from ...public.mixer import MixbusDevice
+from ...mixer import DeviceFactory
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
@@ -68,6 +73,22 @@ class DetectingEx1(TransitionBase):
             audio_output = AudioOutput(device.name, device_info.sink)
             app_ctx.xputs.add(audio_input)
             app_ctx.xputs.add(audio_output)
+
+            parser = AlsaStreamInfoParser(device_info.asound_info.card_id)
+            jack_device = DeviceFactory.create_jack_alsa(
+                device.name,
+                device_info.asound_info.card_id,
+                device_id=0,
+                parser=parser
+            )
+            jack_device.acquire()
+            mixbus = AudioMixer.Factory.get().mixbus
+            channel = mixbus.get_device(MixbusDevice.DR1)
+            jack_device.connect_to(channel.as_sink_set(), ConnectionPolicy.DUAL)
+            bus = mixbus.get_device(MixbusDevice.MX4)
+            bus.connect_to(jack_device.as_sink_set(), ConnectionPolicy.DUAL)
+
+            log.debug("Detecting '%s' on '%s' OK.", device, value)
 
             return True
 

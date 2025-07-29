@@ -30,43 +30,57 @@ import threading
 from biz.dfch.logging import log
 
 
-class ThreadPool:
+class ThreadPool:  # pylint: disable=R0903
     """Implements a simple thread pool."""
+
+    MAX_WORKERS: int = 4
 
     _executor: ThreadPoolExecutor
 
-    def __init__(self, max_workers: int = 4):
+    def __init__(self, max_workers: int):
 
         if not ThreadPool.Factory._sync_root.locked():
             raise RuntimeError("Private ctor. Use Factory instead.")
 
-        assert 1 < max_workers <= 4
+        assert isinstance(
+            max_workers, int) and ThreadPool.MAX_WORKERS >= max_workers
 
         self._executor = ThreadPoolExecutor(max_workers=max_workers)
 
     class Factory:  # pylint: disable=R0903
         """Factory class."""
 
+        DEFAULT_WORKERS: int = 2
+
+        DEFAULT_NAME = "default"
+
+        __thread_pools: ClassVar[dict[str, ThreadPool]] = {}
+
         __instance: ClassVar[ThreadPool | None] = None
         _sync_root: ClassVar[threading.Lock] = threading.Lock()
 
         @staticmethod
-        def get() -> ThreadPool:
-            """Creates or gets signal path instances."""
+        def get(
+            name: str = DEFAULT_NAME,
+            max_workers: int = DEFAULT_WORKERS
+        ) -> ThreadPool:
+            """Creates or gets a named thread pool instance."""
 
-            if ThreadPool.Factory.__instance is not None:
-                return ThreadPool.Factory.__instance
+            assert isinstance(name, str) and name.strip()
+            assert isinstance(
+                max_workers, int) and ThreadPool.MAX_WORKERS >= max_workers
 
             with ThreadPool.Factory._sync_root:
 
-                if ThreadPool.Factory.__instance is not None:
-                    return ThreadPool.Factory.__instance
+                result = ThreadPool.Factory.__thread_pools.get(name, None)
+                if result is not None:
+                    return result
 
-                ThreadPool.Factory.__instance = (
-                    ThreadPool()
-                )
+                result = ThreadPool(max_workers=max_workers)
 
-            return ThreadPool.Factory.__instance
+                ThreadPool.Factory.__thread_pools[name] = result
+
+                return result
 
     @staticmethod
     def _action_invoker(func: Callable, *args: Any, **kwargs: Any) -> None:

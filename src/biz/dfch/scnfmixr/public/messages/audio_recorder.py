@@ -79,13 +79,16 @@ class AudioRecorder:
         """Start recording."""
 
         items: list[str]
+        jack_device: str
 
-        def __init__(self, items: list[str]):
+        def __init__(self, items: list[str], jack_device: str):
             super().__init__()
 
             assert items and isinstance(items, list)
+            assert isinstance(jack_device, str) and jack_device.strip()
 
             self.items = items
+            self.jack_device = jack_device
 
     class RecordingPauseCommand(CommandMedium, IAudioRecorderMessage):
         """Pause recording."""

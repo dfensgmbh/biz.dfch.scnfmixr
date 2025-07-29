@@ -29,6 +29,7 @@ class Constant(StrEnum):
     """Mixer port constants."""
 
     JACK_ALSA_PREFIX = "Alsa"
+    JACK_MIXBUS_PREFIX = "Mixbus"
     JACK_SEPARATOR = ":"
     JACK_INFIX = "-"
     JACK_INPUT = "I"

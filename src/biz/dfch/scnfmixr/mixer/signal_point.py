@@ -27,7 +27,7 @@ from typing import cast
 
 from biz.dfch.logging import log
 
-import biz.dfch.scnfmixr.public.mixer.signal_point as pt
+import biz.dfch.scnfmixr.public.mixer.iterminal_device as pt
 import biz.dfch.scnfmixr.public.mixer.iconnectable_point_or_set
 import biz.dfch.scnfmixr.public.mixer.iconnectable_point
 import biz.dfch.scnfmixr.public.mixer.iconnectable_sink

@@ -39,10 +39,10 @@ from biz.dfch.scnfmixr.public.mixer import (
     IConnectableSinkPoint,
 )
 
-from biz.dfch.scnfmixr.public.mixer.signal_point import (
+from biz.dfch.scnfmixr.public.mixer.iconnectable_device import (
     IConnectableDevice
 )
-from biz.dfch.scnfmixr.public.mixer.signal_point import ITerminalDevice
+from biz.dfch.scnfmixr.public.mixer.iterminal_device import ITerminalDevice
 from biz.dfch.scnfmixr.public.mixer.connection_info import ConnectionInfo
 
 from biz.dfch.scnfmixr.public.messages import Topology

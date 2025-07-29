@@ -25,7 +25,7 @@
 from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass
-from time import sleep
+import time
 from typing import (
     ClassVar,
     Callable,
@@ -221,11 +221,18 @@ class MessageQueue():  # pylint: disable=R0902
 
         signal_wait_time_s = self._WORKER_SIGNAL_WAIT_TIME_MS / 1000
 
+        start = time.monotonic()
+
         log.info("_worker: Initialising OK.")
 
         while not self._worker_do_stop:
             try:
-                log.debug("_worker: Waiting ...")
+                now = time.monotonic()
+                if now > start + signal_wait_time_s:
+                    delta = now - start
+                    start = now
+                    log.debug("_worker: Waiting [%sms].", int(delta*1000))
+
                 result = self._signal.wait(signal_wait_time_s)
                 self._signal.clear()
                 if not result:
@@ -241,7 +248,7 @@ class MessageQueue():  # pylint: disable=R0902
                           ex,
                           self._EXCEPTION_TIMEOUT_MS,
                           exc_info=True)
-                sleep(self._EXCEPTION_TIMEOUT_MS / 1000)
+                time.sleep(self._EXCEPTION_TIMEOUT_MS / 1000)
 
     def _publish(
             self,

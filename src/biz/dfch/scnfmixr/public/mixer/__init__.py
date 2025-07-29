@@ -55,11 +55,26 @@ from .iconnectable_sink_point import IConnectableSinkPoint
 from .iconnectable_sink_set import IConnectableSinkSet
 from .isignal_path import ISignalPath
 
+from .iterminal_source_or_sink_device import ITerminalSourceOrSinkDevice
+from .iterminal_source_device import ITerminalSourceDevice
+from .iterminal_sink_device import ITerminalSinkDevice
+from .iterminal_device import ITerminalDevice
+
 from .iterminal_source_or_sink_point import ITerminalSourceOrSinkPoint
 from .iterminal_source_point import ITerminalSourcePoint
 from .iterminal_sink_point import ITerminalSinkPoint
 
 from .state import State
+
+from .iconnectable_source_or_sink_device import IConnectableSourceOrSinkDevice
+from .iconnectable_source_device import IConnectableSourceDevice
+from .iconnectable_sink_device import IConnectableSinkDevice
+from .iconnectable_device import IConnectableDevice
+
+from .source_set_view import SourceSetView
+from .sink_set_view import SinkSetView
+from .mixbus_device import MixbusDevice, IsoChannel
+
 
 __all__ = [
     "IAcquirable",
@@ -76,6 +91,17 @@ __all__ = [
     "IConnectableSinkSet",
     "ISignalPath",
 
+    "IConnectableSourceOrSinkDevice",
+    "IConnectableSourceDevice",
+    "IConnectableSinkDevice",
+    "IConnectableDevice",
+    "SourceSetView",
+    "SinkSetView",
+
+    "ITerminalSourceOrSinkDevice",
+    "ITerminalSourceDevice",
+    "ITerminalSinkDevice",
+    "ITerminalDevice",
     "ITerminalSourceOrSinkPoint",
     "ITerminalSourcePoint",
     "ITerminalSinkPoint",
@@ -94,4 +120,7 @@ __all__ = [
     "AudioInputOrOutput",
     "AudioInput",
     "AudioOutput",
+
+    "MixbusDevice",
+    "IsoChannel",
 ]

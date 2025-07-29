@@ -42,6 +42,7 @@ from ..jack_commands import (
 from ..public.system import MessageBase
 from ..public.messages import IAudioRecorderMessage
 from ..public.messages import AudioRecorder as msgt
+from ..mixer import AudioMixer
 from ..public.system.messages import SystemMessage
 from ..system import MessageQueue
 
@@ -124,10 +125,12 @@ class AudioRecorder:
 
             cmd = cast(msgt.RecordingStartCommand, message)
             items = cmd.items
+            jack_device = cmd.jack_device
             assert items and isinstance(items, list) and 1 <= len(items) <= 2
+            assert isinstance(jack_device, str) and jack_device.strip()
 
             def _worker_start():
-                self.start(items)
+                self.start(items, jack_device)
 
             threading.Thread(target=_worker_start, daemon=True).start()
 
@@ -196,18 +199,25 @@ class AudioRecorder:
                 self._message_queue.publish(
                     msgt.StateErrorMessage())
 
-    def start(self, items: list[str]) -> bool:
+    def start(self, items: list[str], jack_device_name: str) -> bool:
         """Starts a recording."""
 
         assert items and isinstance(items, list) and 1 <= len(items) <= 2
+        assert isinstance(jack_device_name, str) and jack_device_name.strip()
 
         if self.state != AudioRecorder.Event.STOPPED:
             return False
 
+        mixbus = AudioMixer.Factory.get().mixbus
+        jack_device = mixbus.get_device(jack_device_name)
+        port_names = [e.name for e in jack_device.sources]
+        log.debug("Setting up capture from these '%s' ports [%s] ...",
+                  len(port_names), port_names)
+
         self.items = items
 
         self._set_state(AudioRecorder.Event.STARTING)
-        log.debug("Starting recording ... [%s]", self.items)
+        log.debug("Starting recording ... [%s]", list(self.items))
 
         self._processes.clear()
         for item in items:
@@ -222,14 +232,21 @@ class AudioRecorder:
                 "-b",
                 "24",
                 "-c",
-                "2",
+                # "2",
                 # "EX2-O:*",
-                "-p",
-                "MixBus:MX3-O_1",
-                "-p",
-                "MixBus:MX3-O_2",
-                item
+                # "-p",
+                # "MixBus:*",
+                # "-p",
+                # "MixBus:MX0:capture_1",
+                # "-p",
+                # "MixBus:MX0:capture_2",
+                # item
             ]
+            cmd.append(len(port_names))
+            for port_name in port_names:
+                cmd.append("-p")
+                cmd.append(port_name)
+            cmd.append(item)
             self._processes.append(Process.start(cmd, wait_on_completion=False))
 
         while not JackConnection.has_client_name("jack_capture"):
@@ -237,7 +254,7 @@ class AudioRecorder:
 
         JackTransport().start()
 
-        log.info("Starting recording OK. [%s]", self.items)
+        log.info("Starting recording OK. [%s]", [e for e in self.items])
         self._set_state(AudioRecorder.Event.STARTED)
 
         return True

@@ -22,7 +22,7 @@
 
 """Module alsa_device."""
 
-import biz.dfch.scnfmixr.public.mixer.signal_point as pt
+import biz.dfch.scnfmixr.public.mixer.iterminal_device as pt
 
 
 class AlsaDevice(pt.ITerminalDevice):

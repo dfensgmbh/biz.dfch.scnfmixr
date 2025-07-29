@@ -70,11 +70,11 @@ class FinalState(StateBase):
 
         log.debug("Signalling stop event ...")
         app_ctx.notification.signal_shutdown()
-        log.info("Signalling stop event COMPLETED.")
+        log.info("Signalling stop event INVOKED.")
 
-        log.debug("Stopping state machine.")
+        log.debug("Signalling stop state machine ...")
         ctx.signal_stop.set()
-        log.info("Stopping state machine RETURNED.")
+        log.info("Signalling stop state machine INVOKED.")
 
         log.info("Application context: '%s'.", app_ctx)
 
