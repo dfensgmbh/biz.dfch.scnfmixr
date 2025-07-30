@@ -123,3 +123,23 @@ class TransitionEvent(StrEnum):
     # Menu: Date, Time, Name
     PROCESSING_DIGIT_ENTER = auto()
     PROCESSING_DIGIT_LEAVE = auto()
+
+    # Menu: Playback
+    SELECTING_PAUSE_ENTER = auto()
+    SELECTING_PAUSE_LEAVE = auto()
+    JUMPING_CLIP_END_ENTER = auto()
+    JUMPING_CLIP_END_LEAVE = auto()
+    JUMPING_CLIP_START_ENTER = auto()
+    JUMPING_CLIP_START_LEAVE = auto()
+    JUMPING_CLIP_NEXT_ENTER = auto()
+    JUMPING_CLIP_NEXT_LEAVE = auto()
+    JUMPING_CLIP_PREVIOUS_ENTER = auto()
+    JUMPING_CLIP_PREVIOUS_LEAVE = auto()
+    JUMPING_CUE_NEXT_ENTER = auto()
+    JUMPING_CUE_NEXT_LEAVE = auto()
+    JUMPING_CUE_PREVIOUS_ENTER = auto()
+    JUMPING_CUE_PREVIOUS_LEAVE = auto()
+    SEEKING_NEXT_ENTER = auto()
+    SEEKING_NEXT_LEAVE = auto()
+    SEEKING_PREVIOUS_ENTER = auto()
+    SEEKING_PREVIOUS_LEAVE = auto()

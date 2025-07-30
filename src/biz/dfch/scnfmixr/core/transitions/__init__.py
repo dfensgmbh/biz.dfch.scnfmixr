@@ -71,6 +71,17 @@ from .setting_cuepoint import SettingCuePoint
 from .toggling_mute import TogglingMute
 from .showing_status import ShowingStatus
 
+from .selecting_pause import SelectingPause
+from .jumping_clip_start import JumpingClipStart
+from .jumping_clip_end import JumpingClipEnd
+from .jumping_clip_previous import JumpingClipPrevious
+from .jumping_clip_next import JumpingClipNext
+from .jumping_cue_previous import JumpingCuePrevious
+from .jumping_cue_next import JumpingCueNext
+from .seeking_previous import SeekingPrevious
+from .seeking_next import SeekingNext
+
+
 __all__ = [
     "ReturningTrue",
     "ReturningFalse",
@@ -119,4 +130,14 @@ __all__ = [
     "ShowingStatus",
 
     "ProcessingDigit",
+
+    "SelectingPause",
+    "JumpingClipStart",
+    "JumpingClipEnd",
+    "JumpingClipPrevious",
+    "JumpingClipNext",
+    "JumpingCuePrevious",
+    "JumpingCueNext",
+    "SeekingPrevious",
+    "SeekingNext",
 ]

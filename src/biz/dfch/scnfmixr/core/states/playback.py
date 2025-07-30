@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module system_menu."""
+"""Module playback."""
 
 from __future__ import annotations
 from enum import StrEnum
@@ -31,29 +31,27 @@ from ..fsm import StateBase
 from ..state_event import StateEvent
 
 
-class SystemMenu(StateBase):
-    """Implements State1 of the application."""
+class Playback(StateBase):
+    """Implements the playback menu."""
 
     class Event(StrEnum):
         """Events for this state."""
 
-        MENU = "0"
-        SELECT_RECORD = "1"
-        PLAYBACK = "2"
-        SELECT_LANGUAGE = "3"
-        SET_DATE = "4"
-        SET_TIME = "5"
-        SET_NAME = "6"
-        DETECT_STORAGE = "7"
-        DISCONNECT_STORAGE = "8"
-        STOP_SYSTEM = "9"
+        PAUSE_RESUME = "0"
+        JUMP_CLIP_END = "1"
+        JUMP_CUE_PREVIOUS = "2"
+        JUMP_CLIP_PREVIOUS = "3"
+        SEEK_PREVIOUS = "4"
+        MENU = "5"
+        SEEK_NEXT = "6"
+        JUMP_CLIP_START = "7"
+        JUMP_CUE_NEXT = "8"
+        JUMP_CLIP_NEXT = "9"
 
     def __init__(self):
-        """Default ctor."""
-
         super().__init__(
-            info_enter=UiEventInfo(StateEvent.SYSTEM_MENU_ENTER, True),
-            info_leave=UiEventInfo(StateEvent.RECORD_LEAVE, False)
+            info_enter=UiEventInfo(StateEvent.PLAYBACK_ENTER, True),
+            info_leave=UiEventInfo(StateEvent.PLAYBACK_LEAVE, True),
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

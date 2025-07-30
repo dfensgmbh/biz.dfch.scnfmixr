@@ -68,5 +68,8 @@ class StateEvent(StrEnum):
     ONRECORD_ENTER = auto()
     ONRECORD_LEAVE = auto()
 
+    PLAYBACK_ENTER = auto()
+    PLAYBACK_LEAVE = auto()
+
     FINAL_STATE_ENTER = auto()
     FINAL_STATE_LEAVE = auto()

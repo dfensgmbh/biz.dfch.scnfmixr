@@ -20,64 +20,38 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module states."""
+"""Module jumping_clip_start."""
 
-from __future__ import annotations
+import time
 
-from .system_menu import SystemMenu
-from .initialise_lcl import InitialiseLcl
-from .initialise_hi1 import InitialiseHi1
-from .initialise_hi2 import InitialiseHi2
-from .initialise_hi3 import InitialiseHi3
-from .select_language import SelectLanguage
-from .initialise_ex1 import InitialiseEx1
-from .initialise_ex2 import InitialiseEx2
-from .initialise_rc1 import InitialiseRc1
-from .initialise_rc2 import InitialiseRc2
-
-from .set_date import SetDate
-from .set_time import SetTime
-from .set_name import SetName
-
-from .initialise_audio import InitialiseAudio
-
-from .record import Record
-from .onrecord import OnRecord
-
-from .playback import Playback
-
-from .final_state import FinalState
-
+from ..fsm import TransitionBase
+from ..fsm import StateBase
+from ..fsm import UiEventInfo
+from ..transition_event import TransitionEvent
 
 __all__ = [
-    "SystemMenu",
-
-    "InitialiseLcl",
-
-    "InitialiseHi1",
-    # Currently not used.
-    "InitialiseHi2",
-    # Currently not used.
-    "InitialiseHi3",
-
-    "SelectLanguage",
-
-    "InitialiseEx1",
-    "InitialiseEx2",
-
-    "InitialiseRc1",
-    "InitialiseRc2",
-
-    "SetDate",
-    "SetTime",
-    "SetName",
-
-    "InitialiseAudio",
-
-    "Record",
-    "OnRecord",
-
-    "Playback",
-
-    "FinalState",
+    "JumpingClipStart",
 ]
+
+
+class JumpingClipStart(TransitionBase):  # pylint: disable=R0903
+    """Go to start of clip."""
+
+    def __init__(self, event: str, target: StateBase):
+
+        assert isinstance(event, str) and event.strip()
+        assert isinstance(target, StateBase)
+
+        super().__init__(
+            event,
+            info_enter=UiEventInfo(
+                TransitionEvent.JUMPING_CLIP_START_ENTER, False),
+            info_leave=UiEventInfo(
+                TransitionEvent.JUMPING_CLIP_START_LEAVE, False),
+            target_state=target)
+
+    def invoke(self, _):
+
+        time.sleep(1)
+
+        return True
