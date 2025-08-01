@@ -22,6 +22,10 @@
 
 """Module setting_cuepoint."""
 
+import time
+
+from ...system import MessageQueue
+from ...public.messages.audio_recorder import AudioRecorder
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
@@ -30,6 +34,8 @@ from ..transition_event import TransitionEvent
 
 class SettingCuePoint(TransitionBase):
     """Sets a cue point during a recording."""
+
+    _mq: MessageQueue
 
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""
@@ -45,5 +51,12 @@ class SettingCuePoint(TransitionBase):
                 TransitionEvent.SETTING_CUEPOINT_LEAVE, False),
             target_state=target)
 
+        self._mq = MessageQueue.Factory.get()
+
     def invoke(self, _):
+
+        self._mq.publish(
+            AudioRecorder.RecordingCuePointCommand(
+                time.monotonic()))
+
         return True

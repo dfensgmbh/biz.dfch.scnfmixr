@@ -98,6 +98,7 @@ from .transitions import (
     JumpingClipNext,
     JumpingCuePrevious,
     JumpingCueNext,
+    LeavingPlayback,
 )
 
 
@@ -532,7 +533,7 @@ class StateMachine:
             current
             .add_transition(DetectingEx2(
                 current.Event.DETECT_DEVICE,
-                
+
                 menu[State.INIT_RC1]))
             .add_transition(SkippingEx2(
                 current.Event.SKIP_DEVICE,
@@ -593,7 +594,7 @@ class StateMachine:
         current = menu[State.PLAYBACK]
         (
             current
-            .add_transition(ReturningTrue(
+            .add_transition(LeavingPlayback(
                 current.Event.MENU,
                 menu[State.SYSTEM]))
             .add_transition(SelectingPause(

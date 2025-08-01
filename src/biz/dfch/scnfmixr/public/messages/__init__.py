@@ -32,6 +32,7 @@ from ..system.messages import SystemMessage
 from ..system.message_base import MessageBase, IMessage, INotification, ICommand
 from .audio_mixer import AudioMixer, IAudioMixerMessage
 from .audio_recorder import AudioRecorder, IAudioRecorderMessage
+from .audio_playback import AudioPlayback, IAudioPlaybackMessage
 from .topology import Topology
 
 
@@ -50,4 +51,7 @@ __all__ = [
 
     "AudioRecorder",
     "IAudioRecorderMessage",
+
+    "AudioPlayback",
+    "IAudioPlaybackMessage",
 ]

@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module jumping_cue_next."""
+"""Module leaving_playback."""
 
 from ...public.messages.audio_playback import AudioPlayback
 from ..fsm import TransitionBase
@@ -30,12 +30,12 @@ from ..fsm import ExecutionContext
 from ..transition_event import TransitionEvent
 
 __all__ = [
-    "JumpingCueNext",
+    "LeavingPlayback",
 ]
 
 
-class JumpingCueNext(TransitionBase):  # pylint: disable=R0903
-    """Go to next cue point marker."""
+class LeavingPlayback(TransitionBase):  # pylint: disable=R0903
+    """Leaves the playback player."""
 
     def __init__(self, event: str, target: StateBase):
 
@@ -45,15 +45,15 @@ class JumpingCueNext(TransitionBase):  # pylint: disable=R0903
         super().__init__(
             event,
             info_enter=UiEventInfo(
-                TransitionEvent.JUMPING_CUE_NEXT_ENTER, False),
+                TransitionEvent.LEAVING_PLAYBACK_ENTER, False),
             info_leave=UiEventInfo(
-                TransitionEvent.JUMPING_CUE_NEXT_LEAVE, False),
+                TransitionEvent.LEAVING_PLAYBACK_LEAVE, False),
             target_state=target)
 
     def invoke(self, ctx: ExecutionContext):
 
         assert isinstance(ctx, ExecutionContext)
 
-        ctx.events.publish(AudioPlayback.CuePointNextCommand())
+        ctx.events.publish(AudioPlayback.PlaybackStopCommand())
 
         return True

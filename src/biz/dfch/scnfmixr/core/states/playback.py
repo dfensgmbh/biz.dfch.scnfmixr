@@ -25,6 +25,9 @@
 from __future__ import annotations
 from enum import StrEnum
 
+from ...system import MessageQueue
+from ...public.messages.audio_playback import AudioPlayback
+
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
@@ -62,6 +65,11 @@ class Playback(StateBase):
         """
 
         assert ctx and isinstance(ctx, ExecutionContext)
+
+        if type(self).__name__ != ctx.previous:
+            return
+
+        MessageQueue.Factory.get().publish(AudioPlayback.PlaybackStartCommand())
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

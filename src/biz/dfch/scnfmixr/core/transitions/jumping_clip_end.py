@@ -22,11 +22,11 @@
 
 """Module jumping_clip_end."""
 
-import time
-
+from ...public.messages.audio_playback import AudioPlayback
 from ..fsm import TransitionBase
 from ..fsm import StateBase
 from ..fsm import UiEventInfo
+from ..fsm import ExecutionContext
 from ..transition_event import TransitionEvent
 
 __all__ = [
@@ -50,8 +50,10 @@ class JumpingClipEnd(TransitionBase):  # pylint: disable=R0903
                 TransitionEvent.JUMPING_CLIP_END_LEAVE, False),
             target_state=target)
 
-    def invoke(self, _):
+    def invoke(self, ctx: ExecutionContext):
 
-        time.sleep(1)
+        assert isinstance(ctx, ExecutionContext)
+
+        ctx.events.publish(AudioPlayback.ClipEndCommand())
 
         return True

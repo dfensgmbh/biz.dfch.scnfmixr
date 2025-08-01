@@ -125,6 +125,8 @@ class TransitionEvent(StrEnum):
     PROCESSING_DIGIT_LEAVE = auto()
 
     # Menu: Playback
+    LEAVING_PLAYBACK_ENTER = auto()
+    LEAVING_PLAYBACK_LEAVE = auto()
     SELECTING_PAUSE_ENTER = auto()
     SELECTING_PAUSE_LEAVE = auto()
     JUMPING_CLIP_END_ENTER = auto()

@@ -22,11 +22,11 @@
 
 """Module selecting_pause."""
 
-import time
-
+from ...public.messages.audio_playback import AudioPlayback
 from ..fsm import TransitionBase
 from ..fsm import StateBase
 from ..fsm import UiEventInfo
+from ..fsm import ExecutionContext
 from ..transition_event import TransitionEvent
 
 __all__ = [
@@ -50,8 +50,10 @@ class SelectingPause(TransitionBase):  # pylint: disable=R0903
                 TransitionEvent.SELECTING_PAUSE_LEAVE, False),
             target_state=target)
 
-    def invoke(self, _):
+    def invoke(self, ctx: ExecutionContext):
 
-        time.sleep(1)
+        assert isinstance(ctx, ExecutionContext)
+
+        ctx.events.publish(AudioPlayback.PauseResumeCommand())
 
         return True

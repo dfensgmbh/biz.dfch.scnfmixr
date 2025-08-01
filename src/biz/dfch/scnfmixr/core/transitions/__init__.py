@@ -72,6 +72,7 @@ from .toggling_mute import TogglingMute
 from .showing_status import ShowingStatus
 
 from .selecting_pause import SelectingPause
+from .leaving_playback import LeavingPlayback
 from .jumping_clip_start import JumpingClipStart
 from .jumping_clip_end import JumpingClipEnd
 from .jumping_clip_previous import JumpingClipPrevious
@@ -132,6 +133,7 @@ __all__ = [
     "ProcessingDigit",
 
     "SelectingPause",
+    "LeavingPlayback",
     "JumpingClipStart",
     "JumpingClipEnd",
     "JumpingClipPrevious",
