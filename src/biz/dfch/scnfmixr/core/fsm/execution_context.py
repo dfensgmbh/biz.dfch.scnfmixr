@@ -38,7 +38,7 @@ class ExecutionContext:
         error (str | None): Not None if an error led to the current invocation.
             Can contain the failed transition name or state name.
         previous (str | None): The previous state of the state machine (if there
-            one) or None.
+            is one) or None.
         event (str | None): The event that invoked the transition. Or None, if
             invoked on a State.
         events (MessageQueue): A queue for event signalling from inside
