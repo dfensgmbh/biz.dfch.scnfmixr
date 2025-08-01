@@ -39,6 +39,7 @@ from ..jack_commands import (
     JackConnection,
     JackTransport,
 )
+from ..public.storage import FileName
 from ..public.system import MessageBase
 from ..public.messages import IAudioRecorderMessage
 from ..public.messages import AudioRecorder as msgt
@@ -50,6 +51,44 @@ from ..system import MessageQueue
 __all__ = [
     "AudioRecorder",
 ]
+
+
+class TimeConversion:
+    """Conversion functions for time monotonic."""
+
+    _initial_value: float
+    _sample_rate: int
+
+    def __init__(self, value: float, sample_rate: int = 48000):
+
+        assert isinstance(value, float) and 0 <= value
+        assert isinstance(sample_rate, int) and 0 <= sample_rate
+
+        self._initial_value = value
+        self._sample_rate = sample_rate
+
+    def get_samples(self, value: float) -> int:
+        """Calculates the number of samples between initial value and value."""
+
+        assert isinstance(value, float) and self._initial_value <= value
+
+        return int((value - self._initial_value) * self._sample_rate)
+
+    def to_timestring(self, value: float) -> str:
+        """Returns an ISO8601 time string representing the delta of
+        initial_value and value."""
+
+        _seconds_per_hour = 3600
+        _seconds_per_minute = 60
+
+        seconds = int(value - self._initial_value)
+
+        hours, remainer = divmod(seconds, _seconds_per_hour)
+        minutes, seconds = divmod(remainer, _seconds_per_minute)
+
+        result = f"{hours:02}:{minutes:02}:{seconds:02}"
+
+        return result
 
 
 class AudioRecorder:
@@ -64,7 +103,9 @@ class AudioRecorder:
     _processes: list[Process]
     state: AudioRecorder.Event
 
-    items: list[str]
+    items: list[FileName]
+
+    _cue_points_times: list[float]
 
     class Event(Enum):
         """Notification events."""
@@ -119,6 +160,15 @@ class AudioRecorder:
 
             return
 
+        if isinstance(message, msgt.RecordingCuePointCommand):
+
+            log.debug("RecordingCuePointCommand: '%s'", message.value)
+
+            with self._sync_root:
+                self._cue_points_times.append(message.value)
+
+            return
+
         if isinstance(message, msgt.RecordingStartCommand):
 
             log.debug("RecordingStartCommand")
@@ -160,12 +210,14 @@ class AudioRecorder:
         self._processes = []
         self.state = AudioRecorder.Event.STOPPED
         self.items = []
+        self._cue_points_times = []
 
         self._message_queue.register(
             self._on_message,
             lambda e: isinstance(
                 e, (msgt.RecordingStartCommand,
                     msgt.RecordingStopCommand,
+                    msgt.RecordingCuePointCommand,
                     SystemMessage)))
 
         log.info("Initialising OK.")
@@ -203,6 +255,7 @@ class AudioRecorder:
         """Starts a recording."""
 
         assert items and isinstance(items, list) and 1 <= len(items) <= 2
+        assert all(isinstance(e, FileName) for e in items)
         assert isinstance(jack_device_name, str) and jack_device_name.strip()
 
         if self.state != AudioRecorder.Event.STOPPED:
@@ -217,7 +270,8 @@ class AudioRecorder:
         self.items = items
 
         self._set_state(AudioRecorder.Event.STARTING)
-        log.debug("Starting recording ... [%s]", list(self.items))
+        log.debug("Starting recording ... [%s]", [
+                  e.fullname for e in self.items])
 
         self._processes.clear()
         for item in items:
@@ -253,8 +307,12 @@ class AudioRecorder:
             time.sleep(0.25)
 
         JackTransport().start()
+        with self._sync_root:
+            self._cue_points_times.clear()
+            self._cue_points_times.append(time.monotonic())
 
-        log.info("Starting recording OK. [%s]", [e for e in self.items])
+        log.info("Starting recording OK. [%s]", [
+                 e.fullname for e in self.items])
         self._set_state(AudioRecorder.Event.STARTED)
 
         return True
@@ -266,7 +324,8 @@ class AudioRecorder:
             return False
 
         self._set_state(AudioRecorder.Event.STOPPING)
-        log.debug("Stopping recording ... [%s]", self.items)
+        log.debug("Stopping recording ... [%s]", [
+                  e.fullname for e in self.items])
 
         JackTransport().stop()
         time.sleep(3)
@@ -277,9 +336,66 @@ class AudioRecorder:
             log.info(
                 "Waiting for process [%s] OK. [%s]", process.pid, return_code)
 
-        log.info("Stopping recording OK. [%s]", self.items)
+        log.info("Stopping recording OK. [%s]", [
+            e.fullname for e in self.items])
         self._set_state(AudioRecorder.Event.STOPPED)
 
         self._processes.clear()
+
+        fileitem: FileName = self.items[0]
+        filename = fileitem.filename
+        sample_rate: int = 48000
+        frames: list[int] = []
+        lines: list[str] = []
+
+        with self._sync_root:
+
+            start_offset = self._cue_points_times[0]
+            convert = TimeConversion(start_offset, sample_rate)
+
+            for point in self._cue_points_times:
+                frame = convert.get_samples(point)
+                frames.append(frame)
+
+            # lines.append('REM GENRE Spech')
+            # lines.append('REM DATE 2025')
+            # lines.append(f'TITLE "{filename}"')
+            lines.append(f'FILE "{filename}" WAVE')
+            track_count = 1
+            for point in self._cue_points_times:
+                lines.append(f"TRACK {track_count:02} AUDIO")
+                lines.append(f"INDEX 01 {convert.to_timestring(point)}")
+                track_count += 1
+            text = '\n'.join(lines)
+
+        cmd = [
+            "/usr/bin/metaflac",
+            f'--set-tag="TITLE={filename}"',
+            fileitem.fullname
+        ]
+        log.debug("Setting title: [%s]", cmd)
+        Process.communicate(cmd)
+
+        cuesheet_fullname = f"/tmp/{filename}.cue"
+        cmd = [
+            "/usr/bin/metaflac",
+            f"--import-cuesheet-from={cuesheet_fullname}",
+            fileitem.fullname
+        ]
+        log.debug("Setting cue points: [%s]", text)
+        with open(cuesheet_fullname, 'w', encoding='utf-8') as file:
+            file.write(text)
+
+        log.debug("Setting cue points: [%s]", cmd)
+        Process.communicate(cmd)
+
+        cmd = [
+            "/usr/bin/metaflac",
+        ]
+        for frame in frames:
+            cmd.append(f"--add-seekpoint={frame}")
+        cmd.append(fileitem.fullname)
+        log.debug("Setting seek points: [%s]", cmd)
+        Process.communicate(cmd)
 
         return True

@@ -24,7 +24,9 @@
 
 from __future__ import annotations
 from abc import ABC
+import time
 
+from ..storage import FileName
 from ..system import (
     NotificationHigh,
     NotificationMedium,
@@ -72,19 +74,32 @@ class AudioRecorder:
     class StoppedNotification(NotificationMedium, IAudioRecorderMessage):
         """Status Stopped."""
 
+    class RecordingCuePointCommand(CommandMedium, IAudioRecorderMessage):
+        """Request for creating a cue marker."""
+
+        value: float
+
+        def __init__(self, value: float = time.monotonic()):
+            super().__init__()
+
+            assert isinstance(value, float)
+
+            self.value = value
+
     class RecordingStopCommand(CommandMedium, IAudioRecorderMessage):
         """Stop recording."""
 
     class RecordingStartCommand(CommandMedium, IAudioRecorderMessage):
         """Start recording."""
 
-        items: list[str]
+        items: list[FileName]
         jack_device: str
 
-        def __init__(self, items: list[str], jack_device: str):
+        def __init__(self, items: list[FileName], jack_device: str):
             super().__init__()
 
             assert items and isinstance(items, list)
+            assert all(isinstance(e, FileName) for e in items)
             assert isinstance(jack_device, str) and jack_device.strip()
 
             self.items = items
