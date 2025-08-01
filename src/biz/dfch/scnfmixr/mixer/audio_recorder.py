@@ -47,48 +47,12 @@ from ..mixer import AudioMixer
 from ..public.system.messages import SystemMessage
 from ..system import MessageQueue
 
+from .time_conversion import TimeConversion
+
 
 __all__ = [
     "AudioRecorder",
 ]
-
-
-class TimeConversion:
-    """Conversion functions for time monotonic."""
-
-    _initial_value: float
-    _sample_rate: int
-
-    def __init__(self, value: float, sample_rate: int = 48000):
-
-        assert isinstance(value, float) and 0 <= value
-        assert isinstance(sample_rate, int) and 0 <= sample_rate
-
-        self._initial_value = value
-        self._sample_rate = sample_rate
-
-    def get_samples(self, value: float) -> int:
-        """Calculates the number of samples between initial value and value."""
-
-        assert isinstance(value, float) and self._initial_value <= value
-
-        return int((value - self._initial_value) * self._sample_rate)
-
-    def to_timestring(self, value: float) -> str:
-        """Returns an ISO8601 time string representing the delta of
-        initial_value and value."""
-
-        _seconds_per_hour = 3600
-        _seconds_per_minute = 60
-
-        seconds = int(value - self._initial_value)
-
-        hours, remainer = divmod(seconds, _seconds_per_hour)
-        minutes, seconds = divmod(remainer, _seconds_per_minute)
-
-        result = f"{hours:02}:{minutes:02}:{seconds:02}"
-
-        return result
 
 
 class AudioRecorder:
@@ -353,19 +317,19 @@ class AudioRecorder:
             start_offset = self._cue_points_times[0]
             convert = TimeConversion(start_offset, sample_rate)
 
+            track_count = 1
+            lines.append(f'TITLE "{filename}"')
+            lines.append(f'FILE "{filename}" WAVE')
+
             for point in self._cue_points_times:
-                frame = convert.get_samples(point)
+
+                frame = convert.get_samples_aligned(point)
                 frames.append(frame)
 
-            # lines.append('REM GENRE Spech')
-            # lines.append('REM DATE 2025')
-            # lines.append(f'TITLE "{filename}"')
-            lines.append(f'FILE "{filename}" WAVE')
-            track_count = 1
-            for point in self._cue_points_times:
                 lines.append(f"TRACK {track_count:02} AUDIO")
-                lines.append(f"INDEX 01 {convert.to_timestring(point)}")
+                lines.append(f"INDEX 01 {convert.to_cuesheet_string(point)}")
                 track_count += 1
+
             text = '\n'.join(lines)
 
         cmd = [

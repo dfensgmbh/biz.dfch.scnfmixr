@@ -33,6 +33,7 @@ from .jack_source_point import JackSourcePoint
 from .jack_sink_point import JackSinkPoint
 from .jack_terminal_source_point import JackTerminalSourcePoint
 from .jack_terminal_sink_point import JackTerminalSinkPoint
+from .time_conversion import TimeConversion
 
 
 __all__ = [
@@ -47,4 +48,5 @@ __all__ = [
     "JackSinkPoint",
     "JackTerminalSourcePoint",
     "JackTerminalSinkPoint",
+    "TimeConversion",
 ]
