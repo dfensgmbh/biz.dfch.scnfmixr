@@ -196,6 +196,7 @@ class Process:
         cwd: str = None,
         max_wait_time: float = 5,
         encoding: str = "utf-8",
+        env: dict[str, str] = {},
         **kwargs
     ) -> tuple[list[str], list[str]]:
         """Sends text to a process and waits for return synchronously.
@@ -220,6 +221,7 @@ class Process:
         assert cmd and isinstance(cmd, list)
         assert stdin is None or isinstance(stdin, list)
         assert isinstance(max_wait_time, (int, float)) and 0 <= max_wait_time
+        assert isinstance(env, dict)
 
         _newline = '\n'
         _space = ' '
@@ -237,6 +239,9 @@ class Process:
         stdout3: str = ""
         stderr3: str = ""
 
+        _env = os.environ.copy()
+        _env.update(env)
+
         try:
             process = subprocess.Popen(  # pylint: disable=R1732
                 args=cmd,
@@ -247,6 +252,7 @@ class Process:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 start_new_session=True,
+                env=_env,
                 **kwargs,
             )
 
