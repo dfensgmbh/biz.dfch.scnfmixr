@@ -97,7 +97,9 @@ class FileName:  # pylint: disable=R0903
     def filename(self) -> str:
         """Returns the filename part of the filename."""
 
-        return self._value.removeprefix(os.path.dirname(self._value))
+        return self._value.removeprefix(
+            os.path.dirname(self._value)).strip(
+                os.path.sep)
 
     @property
     def fullname(self) -> str:
