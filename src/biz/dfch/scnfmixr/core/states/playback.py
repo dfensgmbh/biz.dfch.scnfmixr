@@ -25,9 +25,9 @@
 from __future__ import annotations
 from enum import StrEnum
 
-from ...system import MessageQueue
 from ...public.messages.audio_playback import AudioPlayback
 
+from ...playback.audio_playback import AudioPlayback as player
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
@@ -42,14 +42,14 @@ class Playback(StateBase):
 
         PAUSE_RESUME = "0"
         JUMP_CLIP_END = "1"
-        JUMP_CUE_PREVIOUS = "2"
-        JUMP_CLIP_PREVIOUS = "3"
-        SEEK_PREVIOUS = "4"
+        SEEK_NEXT = "2"
+        JUMP_CUE_NEXT = "3"
+        JUMP_CLIP_PREVIOUS = "4"
         MENU = "5"
-        SEEK_NEXT = "6"
+        JUMP_CLIP_NEXT = "6"
         JUMP_CLIP_START = "7"
-        JUMP_CUE_NEXT = "8"
-        JUMP_CLIP_NEXT = "9"
+        SEEK_PREVIOUS = "8"
+        JUMP_CUE_PREVIOUS = "9"
 
     def __init__(self):
         super().__init__(
@@ -66,10 +66,15 @@ class Playback(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        if type(self).__name__ != ctx.previous:
+        # Only initialise upon entering this state from another state.
+        if self == ctx.previous:
             return
 
-        MessageQueue.Factory.get().publish(AudioPlayback.PlaybackStartCommand())
+        # get / acquire are idempotent - safe to call them multiple times.
+        player.Factory.get()
+
+        # The start message shall be sent nevertheless.
+        ctx.events.publish(AudioPlayback.PlaybackStartCommand())
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

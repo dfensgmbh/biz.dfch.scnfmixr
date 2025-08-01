@@ -71,8 +71,50 @@ class AudioPlayback:
     class CuePointNextCommand(CommandMedium, IAudioPlaybackMessage):
         """CuePointNextCommand"""
 
-    class SeekPreviousCommand(CommandMedium, IAudioPlaybackMessage):
+    class SeekAbsoluteCommand(CommandMedium, IAudioPlaybackMessage):
+        """SeekAbsoluteCommand"""
+
+        value: int
+
+        def __init__(self, value: int):
+            super().__init__()
+
+            assert isinstance(value, int) and 0 <= value
+
+            self.value = value
+
+    class SeekRelativeCommand(CommandMedium, IAudioPlaybackMessage):
+        """SeekRelativeCommand"""
+
+        value: int
+
+        def __init__(self, value: int):
+            super().__init__()
+
+            assert isinstance(value, int) and 0 != value
+
+            self.value = value
+
+    class SeekPreviousCommand(SeekRelativeCommand, IAudioPlaybackMessage):
         """SeekPreviousCommand"""
 
-    class SeekNextCommand(CommandMedium, IAudioPlaybackMessage):
+        value: int
+
+        def __init__(self, value: int = -10):
+            assert isinstance(value, int) and 0 > value
+
+            super().__init__(value)
+
+            self.value = value
+
+    class SeekNextCommand(SeekRelativeCommand, IAudioPlaybackMessage):
         """SeekNextCommand"""
+
+        value: int
+
+        def __init__(self, value: int = 10):
+            assert isinstance(value, int) and 0 < value
+
+            super().__init__(value)
+
+            self.value = value
