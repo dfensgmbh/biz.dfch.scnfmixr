@@ -60,11 +60,11 @@ class StateEvent(StrEnum):
     INIT_AUDIO_ENTER = auto()
     INIT_AUDIO_LEAVE = auto()
 
-    SYSTEM_MENU_ENTER = auto()
-    SYSTEM_MENU_LEAVE = auto()
+    SYSTEM_ENTER = auto()
+    SYSTEM_LEAVE = auto()
 
-    RECORD_ENTER = auto()
-    RECORD_LEAVE = auto()
+    MAIN_ENTER = auto()
+    MAIN_LEAVE = auto()
     ONRECORD_ENTER = auto()
     ONRECORD_LEAVE = auto()
 

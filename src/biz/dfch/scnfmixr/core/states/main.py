@@ -49,7 +49,7 @@ class Main(StateBase):
         """Default ctor."""
 
         super().__init__(
-            info_enter=UiEventInfo(StateEvent.RECORD_ENTER, True),
+            info_enter=UiEventInfo(StateEvent.MAIN_ENTER, True),
             info_leave=None
         )
 

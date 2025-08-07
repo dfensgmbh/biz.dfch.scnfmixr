@@ -54,8 +54,8 @@ class System(StateBase):
         """Default ctor."""
 
         super().__init__(
-            info_enter=UiEventInfo(StateEvent.SYSTEM_MENU_ENTER, True),
-            info_leave=UiEventInfo(StateEvent.RECORD_LEAVE, False)
+            info_enter=UiEventInfo(StateEvent.SYSTEM_ENTER, True),
+            info_leave=UiEventInfo(StateEvent.SYSTEM_LEAVE, False)
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:
