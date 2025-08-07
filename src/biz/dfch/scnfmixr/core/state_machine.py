@@ -42,6 +42,7 @@ from .states import FinalState
 
 from .states import System
 from .transitions import ReturningTrue
+from .transitions import SettingDate, StoppingSystem, DisconnectingStorage
 
 from .states import SelectLanguage
 from .transitions import SelectingEnglish, SelectingGerman, SelectingFrench, SelectingItalian \
@@ -59,12 +60,6 @@ from .transitions import DetectingEx2, SkippingEx2
 from .states import InitialiseHi1
 from .transitions import DetectingHi1, SkippingHi1
 
-# from .states import InitialiseHi2
-# from .transitions import DetectingHi2, SkippingHi2
-
-# from .states import InitialiseHi3
-# from .transitions import DetectingHi3, SkippingHi3
-
 from .states import InitialiseRc1
 from .transitions import DetectingRc1, SkippingRc1, CleaningRc1, MountingRc1, UnmountingRc1 \
     # pylint: disable=C0301  # noqa: E501
@@ -80,8 +75,7 @@ from .states import InitialiseAudio
 from .transitions import InitialisingAudio
 
 from .states import Main
-from .transitions import StartingRecording, SettingDate, StoppingSystem, MountingStorage, DisconnectingStorage \
-    # pylint: disable=C0301  # noqa: E501
+from .transitions import StartingRecording
 
 from .states import OnRecord
 from .transitions import StoppingRecording, SettingCuePoint, TogglingMute, ShowingStatus \
@@ -161,6 +155,7 @@ class StateMachine:
 
     def start(self) -> None:
         "Starts the state machine."
+
         self.initialise()
         self._thread.start()
 
@@ -341,36 +336,24 @@ class StateMachine:
         menu[State.FINAL] = FinalState()
 
         # Define Transitions
-        current = menu[State.FINAL]
+        current: FinalState = menu[State.FINAL]
         (
             current
             .add_transition(ReturningTrue(current.Event.MENU,
                                           current))
         )
-        current = menu[State.SYSTEM]
+        current: System = menu[State.SYSTEM]
         (
             current
-            .add_transition(ReturningTrue(
-                current.Event.MENU,
-                current))
-            .add_transition(ReturningTrue(
-                current.Event.PLAYBACK,
-                menu[State.PLAYBACK]))
-            .add_transition(ReturningTrue(
-                current.Event.SELECT_LANGUAGE,
-                menu[State.LANGUAGE]))
             .add_transition(ReturningTrue(
                 current.Event.SELECT_RECORD,
                 menu[State.MAIN]))
             .add_transition(ReturningTrue(
-                current.Event.DETECT_STORAGE,
-                menu[State.INIT_RC1]))
-            .add_transition(DisconnectingStorage(
-                current.Event.DISCONNECT_STORAGE,
-                current))
+                current.Event.SELECT_PLAYBACK,
+                menu[State.PLAYBACK]))
             .add_transition(ReturningTrue(
-                current.Event.STOP_SYSTEM,
-                menu[State.FINAL]))
+                current.Event.SELECT_LANGUAGE,
+                menu[State.LANGUAGE]))
             .add_transition(ReturningTrue(
                 current.Event.SET_DATE,
                 menu[State.SET_DATE]))
@@ -380,22 +363,31 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.SET_NAME,
                 menu[State.SET_NAME]))
+            .add_transition(ReturningTrue(
+                current.Event.DETECT_STORAGE,
+                menu[State.INIT_RC1]))
+            .add_transition(DisconnectingStorage(
+                current.Event.DISCONNECT_STORAGE,
+                current))
+            .add_transition(ReturningTrue(
+                current.Event.STOP_SYSTEM,
+                menu[State.FINAL]))
         )
-        current = menu[State.ON_RECORD]
+        current: OnRecord = menu[State.ON_RECORD]
         (
             current
             .add_transition(ReturningTrue(
-                current.Event.MENU,
-                menu[State.SYSTEM]))
+                current.Event.HELP,
+                current))
+            .add_transition(StoppingRecording(
+                current.Event.STOP_RECORDING,
+                menu[State.MAIN]))
             .add_transition(SettingCuePoint(
                 current.Event.SET_CUE,
                 current))
             .add_transition(TogglingMute(
                 current.Event.TOGGLE_MUTE,
                 current))
-            .add_transition(StoppingRecording(
-                current.Event.STOP_RECORDING,
-                menu[State.MAIN]))
             .add_transition(ShowingStatus(
                 current.Event.SHOW_STATUS,
                 current))
@@ -403,7 +395,7 @@ class StateMachine:
                 current.Event.STOP_SYSTEM,
                 menu[State.FINAL]))
         )
-        current = menu[State.MAIN]
+        current: Main = menu[State.MAIN]
         (
             current
             .add_transition(ReturningTrue(
@@ -412,20 +404,17 @@ class StateMachine:
             .add_transition(StartingRecording(
                 current.Event.START_RECORDING,
                 menu[State.ON_RECORD]))
-            .add_transition(MountingStorage(
-                current.Event.MOUNT_STORAGE,
-                menu[State.FINAL]))
-            .add_transition(DisconnectingStorage(
-                current.Event.DISCONNECT_STORAGE,
-                menu[State.SYSTEM]))
-            .add_transition(StoppingSystem(
-                current.Event.STOP_SYSTEM,
-                menu[State.FINAL]))
+            .add_transition(ReturningTrue(
+                current.Event.START_PLAYBACK,
+                menu[State.PLAYBACK]))
             .add_transition(SettingDate(
                 current.Event.SET_DATE,
                 menu[State.SET_DATE]))
+            .add_transition(StoppingSystem(
+                current.Event.STOP_SYSTEM,
+                menu[State.FINAL]))
         )
-        current = menu[State.INIT_AUDIO]
+        current: InitialiseAudio = menu[State.INIT_AUDIO]
         (
             current
             .add_transition(InitialisingAudio(current.Event.INIT_AUDIO,
@@ -433,7 +422,7 @@ class StateMachine:
             .add_transition(InitialisingAudio(current.Event.SKIP_AUDIO,
                                               menu[State.SYSTEM]))
         )
-        current = menu[State.SET_NAME]
+        current: SetName = menu[State.SET_NAME]
         (
             current
             .add_transition(ProcessingDigit(current.Event.DIGIT_0, current))
@@ -452,7 +441,7 @@ class StateMachine:
                 current.Event.JUMP_NEXT,
                 menu[State.INIT_AUDIO]))
         )
-        current = menu[State.SET_TIME]
+        current: SetTime = menu[State.SET_TIME]
         (
             current
             .add_transition(ProcessingDigit(current.Event.DIGIT_0, current))
@@ -471,7 +460,7 @@ class StateMachine:
                 current.Event.JUMP_NEXT,
                 menu[State.SET_NAME]))
         )
-        current = menu[State.SET_DATE]
+        current: SetDate = menu[State.SET_DATE]
         (
             current
             .add_transition(ProcessingDigit(current.Event.DIGIT_0, current))
@@ -490,7 +479,7 @@ class StateMachine:
                 current.Event.JUMP_NEXT,
                 menu[State.SET_TIME]))
         )
-        current = menu[State.INIT_RC2]
+        current: InitialiseRc2 = menu[State.INIT_RC2]
         (
             current
             .add_transition(ReturningTrue(
@@ -512,7 +501,7 @@ class StateMachine:
                 current.Event.UNMOUNT_DEVICE,
                 current))
         )
-        current = menu[State.INIT_RC1]
+        current: InitialiseRc1 = menu[State.INIT_RC1]
         (
             current
             .add_transition(ReturningTrue(current.Event.MENU,
@@ -528,7 +517,7 @@ class StateMachine:
             .add_transition(UnmountingRc1(current.Event.UNMOUNT_DEVICE,
                                           current))
         )
-        current = menu[State.INIT_EX2]
+        current: InitialiseEx2 = menu[State.INIT_EX2]
         (
             current
             .add_transition(DetectingEx2(
@@ -539,7 +528,7 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_RC1]))
         )
-        current = menu[State.INIT_EX1]
+        current: InitialiseEx1 = menu[State.INIT_EX1]
         (
             current
             .add_transition(DetectingEx1(
@@ -549,7 +538,7 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_EX2]))
         )
-        current = menu[State.LANGUAGE]
+        current: SelectLanguage = menu[State.LANGUAGE]
         (
             current
             .add_transition(ReturningTrue(
@@ -568,7 +557,7 @@ class StateMachine:
                 current.Event.SELECT_ITALIAN,
                 menu[State.INIT_EX1]))
         )
-        current = menu[State.INIT_HI1]
+        current: InitialiseHi1 = menu[State.INIT_HI1]
         (
             current
             .add_transition(DetectingHi1(
@@ -578,7 +567,7 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.LANGUAGE]))
         )
-        current = menu[State.INIT_LCL]
+        current: InitialiseLcl = menu[State.INIT_LCL]
         (
             current
             .add_transition(ReturningTrue(
@@ -591,12 +580,12 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_HI1]))
         )
-        current = menu[State.PLAYBACK]
+        current: Playback = menu[State.PLAYBACK]
         (
             current
             .add_transition(LeavingPlayback(
                 current.Event.MENU,
-                menu[State.SYSTEM]))
+                menu[State.MAIN]))
             .add_transition(SelectingPause(
                 current.Event.PAUSE_RESUME,
                 current))
@@ -631,7 +620,7 @@ class StateMachine:
         self._fsm = Fsm(menu[State.INIT_LCL], self._ctx)
         self._fsm.start()
 
-        # for line in self._fsm.visualise():
-        #     log.debug(line)
+        for line in self._fsm.visualise():
+            log.debug(line)
 
         log.info("Initialising state machine OK.")

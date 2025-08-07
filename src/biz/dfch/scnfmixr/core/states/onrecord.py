@@ -43,6 +43,7 @@ class OnRecord(StateBase):
         SET_CUE = InputEventMap.KEY_2
         TOGGLE_MUTE = InputEventMap.KEY_3
         SHOW_STATUS = InputEventMap.KEY_4
+        STOP_SYSTEM = InputEventMap.KEY_9
 
     def __init__(self):
         """Default ctor."""

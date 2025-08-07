@@ -44,8 +44,8 @@ class InitialiseHi3(StateBase):
         """Events for this state."""
 
         HELP = InputEventMap.KEY_ASTERISK
-        DETECT_DEVICE = InputEventMap.KEY_1  # Detect the device.
-        SKIP_DEVICE = InputEventMap.KEY_2  # Skip the device.
+        DETECT_DEVICE = InputEventMap.KEY_1
+        SKIP_DEVICE = InputEventMap.KEY_2
 
     def __init__(self):
         """Default ctor."""
