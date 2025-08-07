@@ -54,7 +54,7 @@ class TimeConversion:
 
         # We need the least common multiplier of both the FLAC frame size
         # (which is fixed at 4096). And the cue sheet fps (based on the sampling
-        # rate). This will be 10240 for 48000Hz.
+        # rate). This will be 20480 for 48000Hz.
         self._lcm = TimeConversion._get_lcm(
             self._flac_frame_size, self._cue_frame_size)
 
