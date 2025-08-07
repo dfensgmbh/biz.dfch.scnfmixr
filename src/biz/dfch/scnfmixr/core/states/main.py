@@ -20,29 +20,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module record."""
+"""Module main."""
 
 from __future__ import annotations
 from enum import StrEnum
 
+from ...public.input import InputEventMap
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
 from ..state_event import StateEvent
 
 
-class Record(StateBase):
-    """Implements the record menu."""
+class Main(StateBase):
+    """Implements the main menu."""
 
     class Event(StrEnum):
         """Events for this state."""
 
-        MENU = "0"
-        START_RECORDING = "1"
-        SET_DATE = "2"
-        MOUNT_STORAGE = "7"
-        DISCONNECT_STORAGE = "8"
-        STOP_SYSTEM = "9"
+        HELP = InputEventMap.KEY_ASTERISK
+        MENU = InputEventMap.KEY_5
+        START_RECORDING = InputEventMap.KEY_1
+        START_PLAYBACK = InputEventMap.KEY_2
+        SET_DATE = InputEventMap.KEY_3
+        STOP_SYSTEM = InputEventMap.KEY_9
 
     def __init__(self):
         """Default ctor."""

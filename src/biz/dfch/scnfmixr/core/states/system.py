@@ -25,28 +25,30 @@
 from __future__ import annotations
 from enum import StrEnum
 
+from ...public.input import InputEventMap
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
 from ..state_event import StateEvent
 
 
-class SystemMenu(StateBase):
+class System(StateBase):
     """Implements State1 of the application."""
 
     class Event(StrEnum):
         """Events for this state."""
 
-        MENU = "0"
-        SELECT_RECORD = "1"
-        PLAYBACK = "2"
-        SELECT_LANGUAGE = "3"
-        SET_DATE = "4"
-        SET_TIME = "5"
-        SET_NAME = "6"
-        DETECT_STORAGE = "7"
-        DISCONNECT_STORAGE = "8"
-        STOP_SYSTEM = "9"
+        # MENU = InputEventMap.KEY_5
+        HELP = InputEventMap.KEY_ASTERISK
+        SELECT_RECORD = InputEventMap.KEY_1
+        SELECT_PLAYBACK = InputEventMap.KEY_2
+        SELECT_LANGUAGE = InputEventMap.KEY_3
+        SET_DATE = InputEventMap.KEY_4
+        SET_TIME = InputEventMap.KEY_5
+        SET_NAME = InputEventMap.KEY_6
+        DETECT_STORAGE = InputEventMap.KEY_7
+        DISCONNECT_STORAGE = InputEventMap.KEY_8
+        STOP_SYSTEM = InputEventMap.KEY_9
 
     def __init__(self):
         """Default ctor."""

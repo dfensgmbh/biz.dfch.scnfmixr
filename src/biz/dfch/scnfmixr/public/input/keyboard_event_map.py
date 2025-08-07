@@ -24,6 +24,8 @@
 
 from enum import StrEnum
 
+from .input_event_map import InputEventMap
+
 
 class KeyboardEventMap(StrEnum):
     """Maps keyboard key codes to state machine events.
@@ -33,41 +35,43 @@ class KeyboardEventMap(StrEnum):
     only the scan code are processed (and not keys in combination like SHIFT).
     """
 
-    KEY_KP0 = "0"
-    KEY_KP1 = "1"
-    KEY_KP2 = "2"
-    KEY_KP3 = "3"
-    KEY_KP4 = "4"
-    KEY_KP5 = "5"
-    KEY_KP6 = "6"
-    KEY_KP7 = "7"
-    KEY_KP8 = "8"
-    KEY_KP9 = "9"
+    KEY_KP0 = InputEventMap.KEY_0
+    KEY_0 = InputEventMap.KEY_0
 
-    KEY_0 = "0"
-    KEY_1 = "1"
-    KEY_2 = "2"
-    KEY_3 = "3"
-    KEY_4 = "4"
-    KEY_5 = "5"
-    KEY_6 = "6"
-    KEY_7 = "7"
-    KEY_8 = "8"
-    KEY_9 = "9"
+    KEY_KP1 = InputEventMap.KEY_1
+    KEY_1 = InputEventMap.KEY_1
+    KEY_KP2 = InputEventMap.KEY_2
+    KEY_2 = InputEventMap.KEY_2
+    KEY_KP3 = InputEventMap.KEY_3
+    KEY_3 = InputEventMap.KEY_3
+
+    KEY_KP4 = InputEventMap.KEY_4
+    KEY_4 = InputEventMap.KEY_4
+    KEY_KP5 = InputEventMap.KEY_5
+    KEY_5 = InputEventMap.KEY_5
+    KEY_KP6 = InputEventMap.KEY_6
+    KEY_6 = InputEventMap.KEY_6
+
+    KEY_7 = InputEventMap.KEY_7
+    KEY_KP7 = InputEventMap.KEY_7
+    KEY_8 = InputEventMap.KEY_8
+    KEY_KP8 = InputEventMap.KEY_8
+    KEY_9 = InputEventMap.KEY_9
+    KEY_KP9 = InputEventMap.KEY_9
+
+    KEY_KPENTER = InputEventMap.KEY_ENTER
+    KEY_ENTER = InputEventMap.KEY_ENTER
 
     KEY_DOT = "."
     KEY_KPDOT = "."
 
     KEY_KPPLUS = "+"
     KEY_KPMINUS = "-"
-    KEY_KPASTERISK = "*"
+    KEY_KPASTERISK = InputEventMap.KEY_ASTERISK
     KEY_KPSLASH = "/"
     KEY_EQUAL = "="
 
-    KEY_KPENTER = "!"
-    KEY_ENTER = "!"
-
-    KEY_TAB = "$"
-    KEY_BACKSPACE = "£"
+    KEY_TAB = InputEventMap.KEY_TAB
+    KEY_BACKSPACE = InputEventMap.KEY_BACKSPACE
 
     KEY_NUMLOCK = "?"

@@ -24,7 +24,7 @@
 
 from __future__ import annotations
 
-from .system_menu import SystemMenu
+from .system import System
 from .initialise_lcl import InitialiseLcl
 from .initialise_hi1 import InitialiseHi1
 from .initialise_hi2 import InitialiseHi2
@@ -41,7 +41,7 @@ from .set_name import SetName
 
 from .initialise_audio import InitialiseAudio
 
-from .record import Record
+from .main import Main
 from .onrecord import OnRecord
 
 from .playback import Playback
@@ -50,7 +50,7 @@ from .final_state import FinalState
 
 
 __all__ = [
-    "SystemMenu",
+    "System",
 
     "InitialiseLcl",
 
@@ -74,7 +74,7 @@ __all__ = [
 
     "InitialiseAudio",
 
-    "Record",
+    "Main",
     "OnRecord",
 
     "Playback",

@@ -26,6 +26,7 @@ from __future__ import annotations
 from enum import StrEnum
 
 from biz.dfch.logging import log
+from ...public.input import InputEventMap
 from ...app import ApplicationContext
 from ...public.storage import StorageDevice
 from ...public.system.messages import SystemMessage
@@ -44,12 +45,12 @@ class InitialiseRc1(StateBase):
     class Event(StrEnum):
         """Events for this state."""
 
-        MENU = "0"  # Return to the next menu in the hierarchy.
-        DETECT_DEVICE = "1"  # Detect the device.
-        SKIP_DEVICE = "2"  # Skip the device.
-        CLEAN_DEVICE = "3"  # Clean the device.
-        MOUNT_DEVICE = "4"  # Mount the device.
-        UNMOUNT_DEVICE = "5"  # Unmount the device.
+        HELP = InputEventMap.KEY_ASTERISK
+        DETECT_DEVICE = InputEventMap.KEY_1
+        SKIP_DEVICE = InputEventMap.KEY_2
+        CLEAN_DEVICE = InputEventMap.KEY_7
+        MOUNT_DEVICE = InputEventMap.KEY_8
+        UNMOUNT_DEVICE = InputEventMap.KEY_9
 
     def __init__(self):
         """Default ctor."""

@@ -61,6 +61,8 @@ class AudioRecorder:
     Attributes:
     """
 
+    _MAX_CUE_POINTS = 99
+
     _message_queue: MessageQueue
     _sync_root: threading.Lock
     _callbacks: list[Callable[[threading.Event], None]]
@@ -129,6 +131,8 @@ class AudioRecorder:
             log.debug("RecordingCuePointCommand: '%s'", message.value)
 
             with self._sync_root:
+                if self._MAX_CUE_POINTS <= len(self._cue_points_times):
+                    return
                 self._cue_points_times.append(message.value)
 
             return
@@ -309,7 +313,7 @@ class AudioRecorder:
         fileitem: FileName = self.items[0]
         filename = fileitem.filename
         sample_rate: int = 48000
-        frames: list[int] = []
+        samples: list[int] = []
         lines: list[str] = []
 
         with self._sync_root:
@@ -318,13 +322,12 @@ class AudioRecorder:
             convert = TimeConversion(start_offset, sample_rate)
 
             track_count = 1
-            lines.append(f'TITLE "{filename}"')
             lines.append(f'FILE "{filename}" WAVE')
 
-            for point in self._cue_points_times:
+            for point in self._cue_points_times[1:]:
 
-                frame = convert.get_samples_aligned(point)
-                frames.append(frame)
+                sample = convert.get_samples_aligned(point)
+                samples.append(sample)
 
                 lines.append(f"TRACK {track_count:02} AUDIO")
                 lines.append(f"INDEX 01 {convert.to_cuesheet_string(point)}")
@@ -356,8 +359,8 @@ class AudioRecorder:
         cmd = [
             "/usr/bin/metaflac",
         ]
-        for frame in frames:
-            cmd.append(f"--add-seekpoint={frame}")
+        for sample in samples:
+            cmd.append(f"--add-seekpoint={sample}")
         cmd.append(fileitem.fullname)
         log.debug("Setting seek points: [%s]", cmd)
         Process.communicate(cmd)

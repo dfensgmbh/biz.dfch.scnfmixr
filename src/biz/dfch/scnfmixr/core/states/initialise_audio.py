@@ -27,6 +27,7 @@ from enum import StrEnum
 import time
 
 from biz.dfch.logging import log
+from ...public.input import InputEventMap
 from ...public.system.messages import SystemMessage
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
@@ -42,9 +43,9 @@ class InitialiseAudio(StateBase):
     class Event(StrEnum):
         """Events for this state."""
 
-        MENU = "0"  # Return to the next menu in the hierarchy.
-        INIT_AUDIO = "1"  # Initialise audio system.
-        SKIP_AUDIO = "2"  # Skip audio initialisation.
+        HELP = InputEventMap.KEY_ASTERISK
+        INIT_AUDIO = InputEventMap.KEY_1  # Initialise audio system.
+        SKIP_AUDIO = InputEventMap.KEY_2  # Skip audio initialisation.
 
     def __init__(self):
 

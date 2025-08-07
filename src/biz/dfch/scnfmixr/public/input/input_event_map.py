@@ -20,16 +20,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Package input."""
+"""Module input_event_map."""
 
-from __future__ import annotations
+from enum import StrEnum
 
-from .input_device import InputDevice
-from .keyboard_event_map import KeyboardEventMap
-from .input_event_map import InputEventMap
 
-__all__ = [
-    "InputDevice",
-    "KeyboardEventMap",
-    "InputEventMap",
-]
+class InputEventMap(StrEnum):
+    """Input events for state transitions."""
+
+    KEY_ASTERISK = "*"
+    KEY_HASH = "#"
+    KEY_0 = "0"
+
+    KEY_1 = "1"
+    KEY_2 = "2"
+    KEY_3 = "3"
+
+    KEY_4 = "4"
+    KEY_5 = "5"
+    KEY_6 = "6"
+
+    KEY_7 = "7"
+    KEY_8 = "8"
+    KEY_9 = "9"
+
+    KEY_ENTER = "!"
+    KEY_BACKSPACE = "£"
+    KEY_TAB = "$"

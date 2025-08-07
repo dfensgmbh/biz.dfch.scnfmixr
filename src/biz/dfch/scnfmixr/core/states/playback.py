@@ -25,8 +25,8 @@
 from __future__ import annotations
 from enum import StrEnum
 
+from ...public.input import InputEventMap
 from ...public.messages.audio_playback import AudioPlayback
-
 from ...playback.audio_playback import AudioPlayback as player
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
@@ -40,16 +40,17 @@ class Playback(StateBase):
     class Event(StrEnum):
         """Events for this state."""
 
-        PAUSE_RESUME = "0"
-        JUMP_CLIP_END = "1"
-        SEEK_NEXT = "2"
-        JUMP_CUE_NEXT = "3"
-        JUMP_CLIP_PREVIOUS = "4"
-        MENU = "5"
-        JUMP_CLIP_NEXT = "6"
-        JUMP_CLIP_START = "7"
-        SEEK_PREVIOUS = "8"
-        JUMP_CUE_PREVIOUS = "9"
+        HELP = InputEventMap.KEY_ASTERISK
+        PAUSE_RESUME = InputEventMap.KEY_0
+        JUMP_CLIP_END = InputEventMap.KEY_1
+        SEEK_NEXT = InputEventMap.KEY_2
+        JUMP_CUE_NEXT = InputEventMap.KEY_3
+        JUMP_CLIP_PREVIOUS = InputEventMap.KEY_4
+        MENU = InputEventMap.KEY_5
+        JUMP_CLIP_NEXT = InputEventMap.KEY_6
+        JUMP_CLIP_START = InputEventMap.KEY_7
+        SEEK_PREVIOUS = InputEventMap.KEY_8
+        JUMP_CUE_PREVIOUS = InputEventMap.KEY_9
 
     def __init__(self):
         super().__init__(

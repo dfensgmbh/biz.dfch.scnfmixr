@@ -28,6 +28,7 @@ from enum import StrEnum
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
+from ...public.input import InputEventMap
 from ...public.system.messages import SystemMessage
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
@@ -41,19 +42,20 @@ class SetDate(StateBase):
     class Event(StrEnum):
         """Events for this state."""
 
-        DIGIT_0 = "0"
-        DIGIT_1 = "1"
-        DIGIT_2 = "2"
-        DIGIT_3 = "3"
-        DIGIT_4 = "4"
-        DIGIT_5 = "5"
-        DIGIT_6 = "6"
-        DIGIT_7 = "7"
-        DIGIT_8 = "8"
-        DIGIT_9 = "9"
-        BACK_SPACE = "£"
-        ENTER = "!"
-        JUMP_NEXT = "|"
+        HELP = InputEventMap.KEY_ASTERISK
+        DIGIT_0 = InputEventMap.KEY_0
+        DIGIT_1 = InputEventMap.KEY_1
+        DIGIT_2 = InputEventMap.KEY_2
+        DIGIT_3 = InputEventMap.KEY_3
+        DIGIT_4 = InputEventMap.KEY_4
+        DIGIT_5 = InputEventMap.KEY_5
+        DIGIT_6 = InputEventMap.KEY_6
+        DIGIT_7 = InputEventMap.KEY_7
+        DIGIT_8 = InputEventMap.KEY_8
+        DIGIT_9 = InputEventMap.KEY_9
+        BACK_SPACE = InputEventMap.KEY_BACKSPACE
+        ENTER = InputEventMap.KEY_ENTER
+        JUMP_NEXT = InputEventMap.KEY_TAB
 
     def __init__(self):
         """Default ctor."""

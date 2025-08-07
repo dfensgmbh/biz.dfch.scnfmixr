@@ -25,6 +25,7 @@
 from __future__ import annotations
 from enum import StrEnum
 
+from ...public.input import InputEventMap
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
@@ -32,17 +33,16 @@ from ..state_event import StateEvent
 
 
 class OnRecord(StateBase):
-    """Implements the record menu."""
+    """Implements the menu while recording."""
 
     class Event(StrEnum):
         """Events for this state."""
 
-        MENU = "0"
-        STOP_RECORDING = "1"
-        SET_CUE = "2"
-        TOGGLE_MUTE = "3"
-        SHOW_STATUS = "5"
-        STOP_SYSTEM = "9"
+        HELP = InputEventMap.KEY_ASTERISK
+        STOP_RECORDING = InputEventMap.KEY_1
+        SET_CUE = InputEventMap.KEY_2
+        TOGGLE_MUTE = InputEventMap.KEY_3
+        SHOW_STATUS = InputEventMap.KEY_4
 
     def __init__(self):
         """Default ctor."""

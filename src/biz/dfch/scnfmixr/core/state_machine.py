@@ -40,7 +40,7 @@ from .fsm import ExecutionContext, Fsm, StateBase
 
 from .states import FinalState
 
-from .states import SystemMenu
+from .states import System
 from .transitions import ReturningTrue
 
 from .states import SelectLanguage
@@ -79,7 +79,7 @@ from .transitions import ProcessingDigit
 from .states import InitialiseAudio
 from .transitions import InitialisingAudio
 
-from .states import Record
+from .states import Main
 from .transitions import StartingRecording, SettingDate, StoppingSystem, MountingStorage, DisconnectingStorage \
     # pylint: disable=C0301  # noqa: E501
 
@@ -118,7 +118,7 @@ class State(Enum):
     SET_NAME = auto()
     INIT_AUDIO = auto()
     SYSTEM = auto()
-    RECORD = auto()
+    MAIN = auto()
     ON_RECORD = auto()
     PLAYBACK = auto()
     FINAL = auto()
@@ -322,8 +322,8 @@ class StateMachine:
         assert State.SET_NAME not in menu
         menu[State.SET_NAME] = SetName()
 
-        assert State.RECORD not in menu
-        menu[State.RECORD] = Record()
+        assert State.MAIN not in menu
+        menu[State.MAIN] = Main()
 
         assert State.ON_RECORD not in menu
         menu[State.ON_RECORD] = OnRecord()
@@ -335,7 +335,7 @@ class StateMachine:
         menu[State.PLAYBACK] = Playback()
 
         assert State.SYSTEM not in menu
-        menu[State.SYSTEM] = SystemMenu()
+        menu[State.SYSTEM] = System()
 
         assert State.FINAL not in menu
         menu[State.FINAL] = FinalState()
@@ -361,7 +361,7 @@ class StateMachine:
                 menu[State.LANGUAGE]))
             .add_transition(ReturningTrue(
                 current.Event.SELECT_RECORD,
-                menu[State.RECORD]))
+                menu[State.MAIN]))
             .add_transition(ReturningTrue(
                 current.Event.DETECT_STORAGE,
                 menu[State.INIT_RC1]))
@@ -395,7 +395,7 @@ class StateMachine:
                 current))
             .add_transition(StoppingRecording(
                 current.Event.STOP_RECORDING,
-                menu[State.RECORD]))
+                menu[State.MAIN]))
             .add_transition(ShowingStatus(
                 current.Event.SHOW_STATUS,
                 current))
@@ -403,7 +403,7 @@ class StateMachine:
                 current.Event.STOP_SYSTEM,
                 menu[State.FINAL]))
         )
-        current = menu[State.RECORD]
+        current = menu[State.MAIN]
         (
             current
             .add_transition(ReturningTrue(
@@ -429,7 +429,7 @@ class StateMachine:
         (
             current
             .add_transition(InitialisingAudio(current.Event.INIT_AUDIO,
-                                              menu[State.RECORD]))
+                                              menu[State.MAIN]))
             .add_transition(InitialisingAudio(current.Event.SKIP_AUDIO,
                                               menu[State.SYSTEM]))
         )

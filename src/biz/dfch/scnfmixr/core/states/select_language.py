@@ -28,6 +28,7 @@ from enum import StrEnum
 from biz.dfch.logging import log
 from biz.dfch.i18n import LanguageCode
 
+from ...public.input import InputEventMap
 from ...public.system.messages import SystemMessage
 from ...app import ApplicationContext
 from ..fsm import UiEventInfo
@@ -42,12 +43,12 @@ class SelectLanguage(StateBase):
     class Event(StrEnum):
         """Events for this state."""
 
-        MENU = "0"
-        SELECT_ENGLISH = "1"
-        SELECT_GERMAN = "2"
-        SELECT_FRENCH = "3"
-        SELECT_ITALIAN = "4"
-        EXIT = "5"
+        HELP = InputEventMap.KEY_ASTERISK
+        MENU = InputEventMap.KEY_5
+        SELECT_ENGLISH = InputEventMap.KEY_1
+        SELECT_GERMAN = InputEventMap.KEY_2
+        SELECT_FRENCH = InputEventMap.KEY_3
+        SELECT_ITALIAN = InputEventMap.KEY_4
 
     def __init__(self):
         """Default ctor."""

@@ -28,11 +28,12 @@ from enum import StrEnum
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
+from ...public.input import InputEventMap
+from ...system import MessageQueue
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
 from ..state_event import StateEvent
-from ...system import MessageQueue
 
 from ...public.system.messages import SystemMessage
 
@@ -43,7 +44,8 @@ class FinalState(StateBase):
     class Event(StrEnum):
         """Events for this state."""
 
-        MENU = "0"
+        HELP = InputEventMap.KEY_ASTERISK
+        MENU = InputEventMap.KEY_5
 
     def __init__(self):
 
