@@ -170,8 +170,8 @@ class JackSignalPath(ISignalPath, IAcquirable):
             return self
 
         self._thread_pool.invoke(
-            Retry(first_wait_time_ms=500,
-                  base_wait_time_interval_ms=250,
+            Retry(first_wait_time_ms=350,
+                  base_wait_time_interval_ms=200,
                   spin_attempts=25,
                   description=self.name).invoke, self._connect_path)
 
