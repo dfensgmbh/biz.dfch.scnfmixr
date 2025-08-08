@@ -37,7 +37,12 @@ from .media_player_type import MediaPlayerType
 
 
 class MediaPlayerClient(IAcquirable):
-    """Wraps the `mpc` for `mpd`."""
+    """Wraps the `mpc` for `mpd`.
+
+    Works with:
+    * Music Player Daemon **0.23.12** (0.23.12)
+    * mpc version: **0.34**
+    """
 
     _MPC_FULLNAME = "/usr/bin/mpc"
     _MPD_HOST_ENV_NAME = "MPD_HOST"

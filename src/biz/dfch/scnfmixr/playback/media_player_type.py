@@ -35,13 +35,21 @@ __all__ = [
 class MediaPlayerType(StrEnum):
     """Supported media player types.
 
+    Note: The defined socket names must match the defined socket names in 
+    `.config/mpd/*/mpd.conf`.
+
+    * PLAYBACK: `~/.config/mpd/playback/mpd.conf`
+    * MENU: `~/.config/mpd/menu/mpd.conf`
+
+    Base path is `/run/user/<uid>/` (for current user).
+
     Attributes:
         PLAYBACK: The player instance for audio playback.
-        MENU_PLAYER: The player instance for menu audio feedback.
+        MENU: The player instance for menu audio feedback.
     """
 
     PLAYBACK = "mpd.playback.socket"
-    MENU_PLAYER = "mpd.menu_player.soxket"
+    MENU = "mpd.menu.socket"
 
     @staticmethod
     def get_value(key: MediaPlayerType) -> str:
