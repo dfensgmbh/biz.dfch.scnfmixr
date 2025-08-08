@@ -27,6 +27,7 @@ from .media_player_type import MediaPlayerType
 from .media_player_command import MediaPlayerCommand
 from .media_player_option import MediaPlayerOption
 from .media_player_client import MediaPlayerClient
+from .metaflac_visitor import MetaflacVisitor
 
 __all__ = [
     "AudioPlayback",
@@ -34,4 +35,5 @@ __all__ = [
     "MediaPlayerCommand",
     "MediaPlayerOption",
     "MediaPlayerClient",
+    "MetaflacVisitor",
 ]
