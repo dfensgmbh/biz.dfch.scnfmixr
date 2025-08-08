@@ -124,6 +124,7 @@ class MediaPlayerClient(IAcquirable):
 
         cmd = [
             self._MPC_FULLNAME,
+            MediaPlayerOption.FORMAT_FILE,
             MediaPlayerCommand.STATUS,
         ]
         stdout, _ = self._invoke(cmd)
@@ -354,7 +355,6 @@ class MediaPlayerClient(IAcquirable):
             cmd = [
                 self._MPC_FULLNAME,
                 MediaPlayerCommand.CLEAR,
-                "playlist_test",
             ]
             self._invoke(cmd)
 

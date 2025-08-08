@@ -27,7 +27,6 @@ from __future__ import annotations
 from .iconnectable_source_or_sink_device import IConnectableSourceOrSinkDevice
 from .iconnectable_source_point import IConnectableSourcePoint
 from .iconnectable_source_set import IConnectableSourceSet
-from .iconnectable_source import IConnectableSource
 
 
 class IConnectableSourceDevice(

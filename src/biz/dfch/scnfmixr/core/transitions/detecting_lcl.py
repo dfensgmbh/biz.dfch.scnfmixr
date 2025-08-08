@@ -29,7 +29,6 @@ from ...audio import AudioDeviceInfo
 from ...alsa_usb import AlsaStreamInfoParser
 from ...audio import UsbAudioDeviceNotDetectedError
 from ...mixer import AudioMixer
-from ...mixer import AudioMixerConfiguration
 from ...mixer import DeviceFactory
 from ...public.audio import AudioDevice
 from ...public.mixer import AudioInput, AudioOutput
@@ -91,8 +90,6 @@ class DetectingLcl(TransitionBase):
 
             log.debug("Detecting '%s' on '%s' OK.", device, value)
 
-            self._initialise_local_audio(audio_output)
-
             return True
 
         except UsbAudioDeviceNotDetectedError as ex:
@@ -108,19 +105,3 @@ class DetectingLcl(TransitionBase):
                       device.name, ex, exc_info=True)
 
             return False
-
-    def _initialise_local_audio(self, device: AudioOutput) -> None:
-        """Initialises the audio mixer for local playback."""
-
-        mixer = AudioMixer.Factory.get()
-        assert mixer
-
-        cfg = AudioMixerConfiguration.get_default()
-        cfg.default_output = device.name
-        cfg.add_xput(device)
-        mixer.initialise(cfg)
-
-        # ports = device._alsa_jack_base.get_ports()
-
-        # for port in ports:
-        #     log.debug("[%s] port '%s'", device.name, port.name)

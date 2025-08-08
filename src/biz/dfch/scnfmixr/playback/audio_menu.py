@@ -190,9 +190,9 @@ class AudioMenu(IAcquirable):
             self.release()
             return
 
-        log.debug("Message type: '%s'", type(message))
-
         if isinstance(message, SystemMessage.UiEventInfoAudioMessage):
+            log.debug("_on_message: [type: '%s'] [path: '%s']", type(
+                message).__name__, message.path)
             self._queue.enqueue(message)
             self._signal.set()
             return
