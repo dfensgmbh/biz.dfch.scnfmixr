@@ -25,12 +25,10 @@
 from __future__ import annotations
 
 from .user_interaction_audio import UserInteractionAudio
-from .audio_player import AudioPlayer
 from .keyboard_handler import KeyboardHandler
 from .event_handler_base import EventHandlerBase
 
 __all__ = [
-    "AudioPlayer",
     "EventHandlerBase",
     "KeyboardHandler",
     "UserInteractionAudio",
