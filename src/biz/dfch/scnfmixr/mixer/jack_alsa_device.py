@@ -91,7 +91,7 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
             card_id (int): Id of the ALSA card (starting at `0`).
             device_id (int): Id of the ALSA device (starting at `0`).
             parser (AlsaStramInfoParser): An instance to the stream info parser
-                of the ALSA  card and device.
+                of the ALSA card and device.
         """
         super().__init__(Connection.jack_alsa_client_from_base(name))
 

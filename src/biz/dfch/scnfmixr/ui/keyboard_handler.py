@@ -98,7 +98,8 @@ class KeyboardHandler(EventHandlerBase):
 
     def _worker(self) -> None:
 
-        log.debug("Starting worker ...")
+        log.debug("Initialisiung _worker ...")
+        log.info("Initialisiung _worker OK.")
 
         while not self.stop_processing.is_set():
 
@@ -131,7 +132,7 @@ class KeyboardHandler(EventHandlerBase):
             finally:
                 time.sleep(self._WAIT_INTERVAL_MS / 1000)
 
-        log.debug("Stopping worker ...")
+        log.info("Stopping worker OK.")
 
     def _translate(self, key: str, default: str = "") -> str:
 

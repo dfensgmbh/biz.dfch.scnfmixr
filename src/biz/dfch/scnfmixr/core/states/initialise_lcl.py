@@ -70,7 +70,7 @@ class InitialiseLcl(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        # If state machine was just started, we loop until transistion succeeds.
+        # If state machine was just started, we loop until transition succeeds.
         if not ctx.previous:
 
             # If detection failed, we wait before the next attempt.

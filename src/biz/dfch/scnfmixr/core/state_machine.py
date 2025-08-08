@@ -357,7 +357,7 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.SELECT_LANGUAGE,
                 menu[State.LANGUAGE]))
-            .add_transition(ReturningTrue(
+            .add_transition(SettingDate(
                 current.Event.SET_DATE,
                 menu[State.SET_DATE]))
             .add_transition(ReturningTrue(
@@ -645,10 +645,10 @@ class StateMachine:
 
         self._ctx = ExecutionContext(None, None, events=self._messsage_queue)
 
-        self._fsm = Fsm(menu[State.INIT_LCL], self._ctx)
+        self._fsm = Fsm(initial_state=menu[State.INIT_LCL], ctx=self._ctx)
         self._fsm.start()
 
-        for line in self._fsm.visualise():
-            log.debug(line)
+        # for line in self._fsm.visualise():
+        #     log.debug(line)
 
         log.info("Initialising state machine OK.")
