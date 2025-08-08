@@ -140,7 +140,7 @@ class SystemMessage:
         def __init__(self, value: UiEventInfo):
             super().__init__()
 
-            assert value
+            assert isinstance(value, UiEventInfo)
 
             self.value = value
 
