@@ -361,13 +361,13 @@ class Fsm:
             AssertionError: Raised if event contains multiple characters.
         """
 
-        # DFTODO: Convert to set() in start or init for ,more efficient check.
-        assert (isinstance(event, str)
-                and any(event == e for e in InputEventMap)  # noqa: E501
-                and event.strip())
-
+        assert isinstance(event, str) and event.strip()
         if not self._is_started:
             return False
+
+        # DFTODO: Convert to set() in start or init for ,more efficient check.
+        if all(event != e for e in InputEventMap):
+            log.warning("Invalid event detected: '%s'.", event)
 
         with self._sync_root:
 

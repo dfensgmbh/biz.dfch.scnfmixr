@@ -49,9 +49,9 @@ class InitialiseRc2(StateBase):
         DETECT_DEVICE = InputEventMap.KEY_1
         SKIP_DEVICE = InputEventMap.KEY_2
         MENU = InputEventMap.KEY_5
-        CLEAN_DEVICE = InputEventMap.KEY_7
-        MOUNT_DEVICE = InputEventMap.KEY_8
-        UNMOUNT_DEVICE = InputEventMap.KEY_9
+        MOUNT_DEVICE = InputEventMap.KEY_7
+        UNMOUNT_DEVICE = InputEventMap.KEY_8
+        CLEAN_DEVICE = InputEventMap.KEY_9
 
     def __init__(self):
         """Default ctor."""

@@ -40,8 +40,7 @@ class System(StateBase):
 
         # MENU = InputEventMap.KEY_5
         HELP = InputEventMap.KEY_ASTERISK
-        SELECT_RECORD = InputEventMap.KEY_1
-        SELECT_PLAYBACK = InputEventMap.KEY_2
+        SELECT_MAIN = InputEventMap.KEY_1
         SELECT_LANGUAGE = InputEventMap.KEY_3
         SET_DATE = InputEventMap.KEY_4
         SET_TIME = InputEventMap.KEY_5
