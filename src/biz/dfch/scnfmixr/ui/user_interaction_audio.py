@@ -27,8 +27,8 @@ from biz.dfch.i18n import I18n
 from ..application_context import ApplicationContext
 from ..public.system.messages import SystemMessage
 from ..core.fsm import UserInteractionBase
-from ..core.fsm import UiEventInfo
-from .audio_player import AudioPlayer
+from ..playback.audio_menu import AudioMenu
+
 
 __all__ = [
     "UserInteractionAudio",
@@ -36,11 +36,16 @@ __all__ = [
 
 
 class UserInteractionAudio(UserInteractionBase):
-    """Audio UI output handling."""
+    """Audio UI output handling.
+
+    This class will subscribe to messages of type `UiEventInfoMessageBase` and
+    publish `UiEventInfoAudioMessage` with the original type and translated
+    physical paths (honouring the current language setting).
+    """
 
     _AUDIO_FILE_EXTENSION = ".wav"
 
-    _player: AudioPlayer
+    _player: AudioMenu
     _i18n: I18n
     _app_ctx: ApplicationContext
 
@@ -50,7 +55,9 @@ class UserInteractionAudio(UserInteractionBase):
 
         assert jack_name and jack_name.strip()
 
-        self._player = AudioPlayer(jack_name)
+        self._player = AudioMenu.Factory.get()
+        self._player.acquire()
+
         self._i18n = I18n.Factory.get()
 
         self._app_ctx = ApplicationContext.Factory.get()
@@ -71,25 +78,6 @@ class UserInteractionAudio(UserInteractionBase):
 
         self._message_queue.publish(
             SystemMessage.UiEventInfoAudioMessage(
-                type(message),
-                path,
-                message.value))
-
-        # self._player.clear(True)
-        # self._player.enqueue((path, message.value.is_loop))
-
-    # def update(self, item):
-
-    #     assert item
-    #     assert isinstance(item, UiEventInfo)
-
-    #     app_ctx = ApplicationContext.Factory.get()
-
-    #     # DFTODO - adjust to something dynamic.
-    #     path = self._i18n.get_resource_path(
-    #         (f"{item.name}"
-    #          f"{self._AUDIO_FILE_EXTENSION}"),
-    #         app_ctx.ui_parameters.language)
-
-    #     self._player.clear(True)
-    #     self._player.enqueue((path, item.is_loop))
+                _type=type(message),
+                path=path,
+                message=message.value))

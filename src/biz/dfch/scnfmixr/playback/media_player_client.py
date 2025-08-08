@@ -47,6 +47,7 @@ class MediaPlayerClient(IAcquirable):
     _MPC_FULLNAME = "/usr/bin/mpc"
     _MPD_HOST_ENV_NAME = "MPD_HOST"
 
+    _type: MediaPlayerType
     _sync_root: Lock
     _is_acquired: bool
 
@@ -56,6 +57,7 @@ class MediaPlayerClient(IAcquirable):
 
         assert isinstance(_type, MediaPlayerType)
 
+        self._type = _type
         self._sync_root = Lock()
         self._is_acquired = False
 
@@ -72,10 +74,10 @@ class MediaPlayerClient(IAcquirable):
         stdout, stderr = Process.communicate(cmd, env=self._env)
 
         if isinstance(stdout, list) and 0 < len(stdout):
-            log.debug("stdout: [%s]", stdout)
+            log.debug("[%s] stdout: [%s]", self._type.name, stdout)
 
         if isinstance(stderr, list) and 0 < len(stderr):
-            log.warning("stderr: [%s]", stderr)
+            log.warning("[%s] stderr: [%s]", self._type.name, stderr)
 
         return (stdout, stderr)
 
@@ -118,12 +120,10 @@ class MediaPlayerClient(IAcquirable):
         """Returns information about the currently playing file or None."""
 
         # [playing] #1/2   0:09/1:15 (12%)
-        # time_pattern = r'(\d+:)?\d{1,2}:\d{2}'
         time_pattern = r'(?:\d+:)?\d{1,2}:\d{2}'
 
         cmd = [
             self._MPC_FULLNAME,
-            # MediaPlayerOption.FORMAT_FILE,
             MediaPlayerCommand.STATUS,
         ]
         stdout, _ = self._invoke(cmd)

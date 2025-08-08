@@ -22,6 +22,7 @@
 
 """Package playback."""
 
+from .audio_menu import AudioMenu
 from .audio_playback import AudioPlayback
 from .media_player_type import MediaPlayerType
 from .media_player_command import MediaPlayerCommand
@@ -30,6 +31,7 @@ from .media_player_client import MediaPlayerClient
 from .metaflac_visitor import MetaflacVisitor
 
 __all__ = [
+    "AudioMenu",
     "AudioPlayback",
     "MediaPlayerType",
     "MediaPlayerCommand",
