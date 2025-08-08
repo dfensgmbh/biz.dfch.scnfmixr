@@ -28,10 +28,12 @@ import threading
 
 from biz.dfch.logging import log
 
-from .execution_context import ExecutionContext
-from .state_base import StateBase
+from ...public.input import InputEventMap
 from ...public.system.messages import SystemMessage
 from ...system import MessageQueue
+from .execution_context import ExecutionContext
+from .state_base import StateBase
+
 
 __all__ = ["Fsm"]
 
@@ -228,6 +230,11 @@ class Fsm:
                 started.
         """
 
+        # DFTODO: Some things to improve here:
+        # 1. Why do we check if stop signal is set during start()?
+        # 2. Logging "starting ..." and "starting OK" seems inconsistent.
+        # 3. Should not we dispatch a "on enter" "WAV" as well?
+
         log.info("Starting state machine ...")
         self._message_queue.publish(
             SystemMessage.StateMachine.StateMachineStarting())
@@ -248,18 +255,24 @@ class Fsm:
 
             log.debug("Invoking 'on_enter' for '%s' ...",
                       type(self._current_state).__name__)
+
+            if self._current_state.info_enter:
+                self._message_queue.publish(
+                    SystemMessage.UiEventInfoStateEnterMessage(
+                        self.current_state.info_enter))
+
             ctx = ExecutionContext(
                 source=None,
                 error=None,
                 previous=self._previous_state,
                 events=self._initial_context.events)
             self._current_state.on_enter(ctx)
-            log.info("Invoking 'on_enter' for '%s' RETURNED.",
+
+            log.info("Invoking 'on_enter' for '%s' OK.",
                      type(self._current_state).__name__)
 
         self._message_queue.publish(
             SystemMessage.StateMachine.StateMachineStarted())
-
         log.info("Starting state machine OK.")
 
         if ctx.signal_stop.is_set():
@@ -348,7 +361,10 @@ class Fsm:
             AssertionError: Raised if event contains multiple characters.
         """
 
-        assert event and event.strip()
+        # DFTODO: Convert to set() in start or init for ,more efficient check.
+        assert (isinstance(event, str)
+                and any(event == e for e in InputEventMap)  # noqa: E501
+                and event.strip())
 
         if not self._is_started:
             return False
@@ -386,7 +402,6 @@ class Fsm:
             self._is_in_transit = True
 
             if self._current_state.info_leave:
-                # self._ui.update(self.current_state.info_leave)
                 self._message_queue.publish(
                     SystemMessage.UiEventInfoStateLeaveMessage(
                         self.current_state.info_leave))
@@ -399,7 +414,7 @@ class Fsm:
                 previous=self._previous_state,
                 events=self._initial_context.events)
             self._current_state.on_leave(ctx)
-            log.info("Invoking 'on_leave' for '%s' RETURNED.",
+            log.info("Invoking 'on_leave' for '%s' OK.",
                      type(self._current_state).__name__)
 
             if ctx.signal_stop.is_set():
@@ -411,7 +426,6 @@ class Fsm:
                 return False
 
             if transition.info_enter:
-                # self._ui.update(transition.info_enter)
                 self._message_queue.publish(
                     SystemMessage.UiEventInfoTransitionEnterMessage(
                         transition.info_enter))
@@ -429,6 +443,7 @@ class Fsm:
 
             self._is_in_transit = False
 
+            # Fallback to and re-enter state where we came from.
             if not result:
                 log.error("Invoking transition '%s' for '%s' FAILED.",
                           type(transition).__name__,
@@ -437,10 +452,10 @@ class Fsm:
                 log.debug("Invoking 'on_enter' for '%s' ...",
                           type(self._current_state).__name__)
 
-                # self._ui.update(self.current_state.info_enter)
-                self._message_queue.publish(
-                    SystemMessage.UiEventInfoStateEnterMessage(
-                        self.current_state.info_enter))
+                if self._current_state.info_enter:
+                    self._message_queue.publish(
+                        SystemMessage.UiEventInfoStateEnterMessage(
+                            self.current_state.info_enter))
 
                 ctx = ExecutionContext(
                     source=type(self._current_state).__name__,
@@ -448,7 +463,8 @@ class Fsm:
                     previous=self._previous_state,
                     events=self._initial_context.events)
                 self._current_state.on_enter(ctx)
-                log.info("Invoking 'on_enter' for '%s' RETURNED.",
+
+                log.info("Invoking 'on_enter' for '%s' OK.",
                          type(self._current_state).__name__)
 
                 if ctx.signal_stop.is_set():
@@ -457,16 +473,15 @@ class Fsm:
 
                     self.stop()
 
-                    return False
-
-                return result
+                # Returh false here, not because fsm stopped, but because
+                # transition failed.
+                return False
 
             log.info("Invoking transition '%s' for '%s' OK.",
                      type(transition).__name__,
                      type(self._current_state).__name__)
 
             if transition.info_leave:
-                # self._ui.update(transition.info_leave)
                 self._message_queue.publish(
                     SystemMessage.UiEventInfoTransitionLeaveMessage(
                         transition.info_leave))
@@ -485,21 +500,21 @@ class Fsm:
                 # Do not return False here, as the transition itself succeeded.
                 return True
 
+            log.debug("Invoking 'on_enter' for '%s' ...",
+                      type(self._current_state).__name__)
+
             if self._current_state.info_enter:
-                # self._ui.update(self._current_state.info_enter)
                 self._message_queue.publish(
                     SystemMessage.UiEventInfoStateEnterMessage(
                         self.current_state.info_enter))
 
-            log.debug("Invoking 'on_enter' for '%s' ...",
-                      type(self._current_state).__name__)
             ctx = ExecutionContext(
                 source=type(transition).__name__,
                 error=None,
                 previous=self._previous_state,
                 events=self._initial_context.events)
             self._current_state.on_enter(ctx)
-            log.info("Invoking 'on_enter' for '%s' RETURNED.",
+            log.info("Invoking 'on_enter' for '%s' OK.",
                      type(self._current_state).__name__)
 
             if ctx.signal_stop.is_set():
