@@ -33,7 +33,7 @@ from typing import (
 from threading import Event, Lock, Thread
 
 from biz.dfch.logging import log
-from ...asyn import ConcurrentDoubleSideQueueT
+from biz.dfch.asyn import ConcurrentDoubleSideQueueT
 from ..public.system import (
     MessageBase,
 )
