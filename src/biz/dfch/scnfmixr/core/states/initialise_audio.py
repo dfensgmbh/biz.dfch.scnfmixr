@@ -44,8 +44,9 @@ class InitialiseAudio(StateBase):
         """Events for this state."""
 
         HELP = InputEventMap.KEY_ASTERISK
-        INIT_AUDIO = InputEventMap.KEY_1  # Initialise audio system.
-        SKIP_AUDIO = InputEventMap.KEY_2  # Skip audio initialisation.
+        INIT_AUDIO = InputEventMap.KEY_1
+        # DFTODO: why would we ever skip audio initialisation?
+        SKIP_AUDIO = InputEventMap.KEY_2
 
     def __init__(self):
 
