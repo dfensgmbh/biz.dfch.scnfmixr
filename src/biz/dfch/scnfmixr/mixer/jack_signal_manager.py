@@ -30,10 +30,12 @@ import time
 from typing import Callable, ClassVar
 
 from biz.dfch.logging import log
-from biz.dfch.scnfmixr.jack_commands import JackConnection
-from biz.dfch.asyn.thread_pool import ThreadPool
-from biz.dfch.scnfmixr.public.messages import SystemMessage, Topology
-from biz.dfch.scnfmixr.public.mixer import (
+from biz.dfch.asyn import ThreadPool
+
+from ..system import MessageQueue
+from ..jack_commands import JackConnection
+from ..public.messages import SystemMessage, Topology
+from ..public.mixer import (
     ConnectionInfo,
     ConnectionPolicy,
     ConnectionPolicyException,
@@ -65,10 +67,10 @@ class JackSignalManager(AcquirableManagerMixin):
 
     _thread_pool: ThreadPool
 
+    _mq: MessageQueue
+
     _is_acquired: bool
     _sync_root: Lock
-    _signal: Event
-    _signal_shutdown: Event
     _info: ConnectionInfo
     _paths: dict[str, tuple[State, ISignalPath]]
     _points: dict[str, tuple[State, IConnectablePoint]]
@@ -86,10 +88,10 @@ class JackSignalManager(AcquirableManagerMixin):
 
         self._thread_pool = ThreadPool.Factory.get()
 
+        self._mq = MessageQueue.Factory.get()
+
         self._is_acquired = False
         self._sync_root = Lock()
-        self._signal = Event()
-        self._signal_shutdown = Event()
         self._info = ConnectionInfo({})
         self._paths = {}
         self._points = {}
@@ -452,6 +454,9 @@ class JackSignalManager(AcquirableManagerMixin):
         self._worker_signal_stop.clear()
         self._worker_thread.start()
 
+        self._mq.register(self._on_message, lambda e: isinstance(
+            e, SystemMessage.Shutdown))
+
         self._is_acquired = True
 
     def do_release(self):
@@ -461,24 +466,16 @@ class JackSignalManager(AcquirableManagerMixin):
 
         self._worker_signal_stop.set()
 
+        self._mq.unregister(self._on_message)
+
         self._is_acquired = False
 
     def _on_message(self, message):
         """Message handler."""
 
-        # if isinstance(message, Topology.ChangedNotification):
-
-        #     with self._sync_root:
-        #         assert isinstance(message.value, ConnectionInfo)
-        #         self._info = message.value
-
-        #     self._signal.set()
-
-        #     return
-
         if isinstance(message, SystemMessage.Shutdown):
 
-            self._signal_shutdown.set()
+            self.release()
 
             return
 
