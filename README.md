@@ -293,7 +293,7 @@ sudo tee /etc/security/limits.d/audio.conf > /dev/null <<EOF
 EOF
 
 # Packages to be installed:
-sudo apt-get -y install pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber zita-ajbridge flac sndfile-tools ecasound jackd2 jack-tools exfat-fuse exfatprogs jack-capture lv2-dev lilv-utils x42-plugins zam-plugins calf-plugins lsp-plugins 
+sudo apt-get -y install pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber zita-ajbridge flac sndfile-tools ecasound jackd2 jack-tools exfat-fuse exfatprogs jack-capture lv2-dev lilv-utils x42-plugins zam-plugins calf-plugins lsp-plugins mpd mpc
 ```
 
 ### jackd.service
@@ -328,6 +328,8 @@ Note: it has been reported, that `status` will not show JACK running, despite it
 
 ### scnfmixr.service
 
+As `admin` create with `nano ~/.config/systemd/user/scnfmixr.service`:
+
 ```
 [Unit]
 Description=scnfmixr (Secure Conference Mixer and Recorder)
@@ -349,18 +351,85 @@ WantedBy=default.target
 
 ```
 # Disable service.
-sudo systemctl disable scnfmixr.service
-sudo systemctl stop scnfmixr.service
-sudo systemctl daemon-reload
+sudo systemctl --user disable scnfmixr.service
+sudo systemctl --user stop scnfmixr.service
+sudo systemctl --user daemon-reload
 
 # Enable service.
-sudo ln -fs ~/scnfmixr/src/app.service /etc/systemd/system/scnfmixr.service
-sudo systemctl enable scnfmixr.service
-sudo systemctl daemon-reload
-sudo systemctl start scnfmixr.service
-sudo systemctl status scnfmixr.service
+sudo systemctl --user enable scnfmixr.service
+sudo systemctl --user daemon-reload
+sudo systemctl --user start scnfmixr.service
+sudo systemctl --user status scnfmixr.service
 journalctl -u scnfmixr.service
 ```
+
+### mpd@.service
+
+As `admin` create with `nano ~/.config/systemd/user/mpd@.service`:
+
+```
+[Unit]
+Description=Music Player Daemon (%i)
+After=sound.target
+
+[Service]
+ExecStart=/usr/bin/mpd --no-daemon %h/.config/mpd/%i/mpd.conf
+Restart=on-abort
+
+[Install]
+WantedBy=default.target
+```
+
+### Enabling, starting and stopping the mpd@.service
+
+Note: The configuration files are defined for user `admin` with `uid` `1000`.
+
+```
+# Create links for 
+mkdir ~/MpdMusic
+mkdir ~/MpdMusic/playback
+ln ~/MpdMusic/playback/EN ~/PhoneTap/src/biz/dfch/scnfmixr/res/EN/
+ln ~/MpdMusic/playback/DE ~/PhoneTap/src/biz/dfch/scnfmixr/res/DE/
+ln ~/MpdMusic/playback/FR ~/PhoneTap/src/biz/dfch/scnfmixr/res/FR/
+ln ~/MpdMusic/playback/IT ~/PhoneTap/src/biz/dfch/scnfmixr/res/IT/
+
+mkdir ~/MpdMusic/menu
+ln ~/MpdMusic/menu/rc1 ~/mnt/rc1/
+ln ~/MpdMusic/menu/rc2 ~/mnt/rc2/
+```
+
+```
+systemctl --user enable --now mpd@playback.service
+systemctl --user enable --now mpd@menu.service
+```
+
+#### Testing:
+
+```
+systemctl --user status mpd@menu.service
+systemctl --user status mpd@playback.service
+```
+
+The individual MPD instances communicate via sockets with the (MPC) client:
+
+```
+/run/user/1000/mpd.playback.socket
+/run/user/1000/mpd.menu.socket
+```
+
+The client will use that socket if it is defined in the environment variable `MPD_HOST`. So, we can run the following commands from the shell to communicate with the respective instances:
+
+```
+MPD_HOST=/run/user/1000/mpd.menu.socket mpc update
+MPD_HOST=/run/user/1000/mpd.menu.socket mpc status
+
+MPD_HOST=/run/user/1000/mpd.playback.socket mpc update
+MPD_HOST=/run/user/1000/mpd.playback.socket mpc status
+```
+
+Note: as mentioned above, the user id is hardcoded to `1000` (which is `admin`).
+
+
 
 ## Target Directory
 ```
