@@ -33,11 +33,11 @@ from ..public.mixer import (
     ConnectionInfo,
     ConnectionPolicy,
     IConnectablePointOrSet,
+    IConnectableDevice,
 )
-from ..public.mixer.iconnectable_device import IConnectableDevice
 
 from ..system import MessageQueue
-from ..public.messages import MessageBase, Topology
+from ..public.messages import Topology
 
 from ..public.audio import (
     Format,
@@ -49,15 +49,17 @@ from .jack_signal_manager import JackSignalManager
 
 __all__ = [
     "JackBusDevice",
+    "EcasoundCommandLineBuilder",
 ]
 
 
-class JackBusDeviceManager:
-    """Manages JACK bus devices."""
+class EcasoundCommandLineBuilder:
+    """Creates an ecasound command line for a mix bus device.
 
+    See: http://nosignal.fi/ecasound/Documentation/ecasound_manpage.html
+    """
 
-class EcasoundCommandBuilder:
-    """Creates ecasound command lines."""
+    _ECASOUND_FULLNAME = '/usr/bin/ecasound'
 
     def create_bus(
         self,
@@ -78,12 +80,16 @@ class EcasoundCommandBuilder:
             chain = client
 
         result = [
-            '/usr/bin/ecasound',
+            self._ECASOUND_FULLNAME,
+            # Scheduling priority SCHED_FIFO: 80
             '-r:80',
+            # Buffer mode: realtime
             '-B:rt',
+            '-q',
             f'-G:jack,":{client}",notransport',
             f'-a:"{chain}"',
             f'-f:{encoding.name.lower()},{channel_count},{sample_rate.value}',
+            # LowCut / High-pass filter 80Hz
             '-efh:80',
             f'-i:jack,,{Connection.get_jack_sink_port_prefix()}',
             f'-o:jack,,{Connection.get_jack_source_port_prefix()}',
@@ -132,7 +138,7 @@ class JackBusDevice(IConnectableDevice, AcquirableDeviceMixin):
             self._logical_name)
 
         client = Connection.jack_mixbus_client_from_base(self._logical_name)
-        cmd = EcasoundCommandBuilder().create_bus(
+        cmd = EcasoundCommandLineBuilder().create_bus(
             client=client,
             channel_count=self._channel_count,
         )
