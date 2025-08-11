@@ -26,28 +26,27 @@ from __future__ import annotations
 import weakref
 
 from biz.dfch.logging import log
-from ..public.mixer.iterminal_source_point import ITerminalSourcePoint
-from ..public.mixer.iterminal_source_or_sink_point import ITerminalSourceOrSinkPoint
-from .signal_path_manager import SignalPathManager
-from ..public.mixer.isignal_path import ISignalPath
-from ..public.mixer.iconnectable_sink_point import IConnectableSinkPoint
-from ..public.mixer.iconnectable_source_point import IConnectableSourcePoint
-
-from ..public.mixer.iterminal_sink_point import (
-    ITerminalSinkPoint,
-)
 
 from ..jack_commands import (
     AlsaToJack,
-    JackToAlsa
+    JackToAlsa,
+)
+from ..public.mixer import (
+    ITerminalSourcePoint,
+    ITerminalSourceOrSinkPoint,
+    ISignalPath,
+    IConnectableSinkPoint,
+    IConnectableSourcePoint,
+    ITerminalSinkPoint,
+    Connection,
 )
 from ..public.audio import (
     AlsaInterfaceInfo,
-    Constant
+    Constant,
 )
-from ..public.mixer import Connection
 
 from .signal_path import SignalPath
+from .signal_path_manager import SignalPathManager
 
 
 __all__ = [
@@ -129,11 +128,11 @@ class AlsaJackAudioPointManager():
                 rate=self._sink.sample_rate.value)
 
             sources.extend(
-                [AlsaJackAudioSourcePoint(e, self)
+                [AlsaJackAudioSourcePoint(e, self)  # pylint: disable=E0110
                  for e in self._alsa_to_jack_source.get_port_names()])
 
             sinks.extend(
-                [AlsaJackAudioSinkPoint(e, self)
+                [AlsaJackAudioSinkPoint(e, self)  # pylint: disable=E0110
                  for e in self._jack_to_alsa_sink.get_port_names()])
 
             result: tuple[
@@ -212,7 +211,7 @@ class AlsaJackAudioPointManager():
         assert isinstance(sink, IConnectableSinkPoint)
 
         mgr = SignalPathManager.Factory.get()
-        return SignalPath(source, sink, mgr)
+        return SignalPath(source, sink, mgr)  # pylint: disable=E0110
 
     def is_active(self, point: ITerminalSourceOrSinkPoint) -> bool:
         """Determines whether the signal point is active or not."""
