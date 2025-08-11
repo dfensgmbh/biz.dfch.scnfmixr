@@ -63,6 +63,9 @@ class AudioRecorder:
 
     _MAX_CUE_POINTS = 99
 
+    _JACK_CAPTURE_NAME = "jack_capture"
+    _JACK_CAPTURE_FULLNAME = f"/usr/bin/{_JACK_CAPTURE_NAME}"
+
     _message_queue: MessageQueue
     _sync_root: threading.Lock
     _callbacks: list[Callable[[threading.Event], None]]
@@ -244,7 +247,7 @@ class AudioRecorder:
         self._processes.clear()
         for item in items:
             cmd: list[str] = [
-                "/usr/bin/jack_capture",
+                self._JACK_CAPTURE_FULLNAME,
                 # "-V",
                 "-dc",
                 "--daemon",
@@ -271,7 +274,7 @@ class AudioRecorder:
             cmd.append(item)
             self._processes.append(Process.start(cmd, wait_on_completion=False))
 
-        while not JackConnection.has_client_name("jack_capture"):
+        while not JackConnection.has_client_name(self._JACK_CAPTURE_NAME):
             time.sleep(0.25)
 
         JackTransport().start()
