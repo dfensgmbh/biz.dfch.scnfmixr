@@ -76,7 +76,7 @@ class JackConnection:
     # DFTODO - is this method inside the correct class?
     @staticmethod
     def has_client_name(name: str) -> bool:
-        """Determines whether a JACK client names exists."""
+        """Determines whether a JACK client name exists."""
 
         assert name and name.strip()
 
@@ -88,6 +88,22 @@ class JackConnection:
 
         return any(e for e in text if e.split(
             JackConnection._JACK_LSP_CLIENT_PORT_SEPARATOR)[0] == name)
+
+    # DFTODO - is this method inside the correct class?
+    @staticmethod
+    def has_port_name(name: str) -> bool:
+        """Determines whether a JACK port name exists."""
+
+        assert isinstance(name, str) and name.strip()
+
+        cmd: list[str] = [
+            JackConnection._JACK_LSP_FULLNAME,
+            name
+        ]
+
+        text, _ = Process.communicate(cmd, max_wait_time=0.25)
+
+        return any(e == name for e in text)
 
     # DFTODO - is this method inside the correct class?
     @staticmethod

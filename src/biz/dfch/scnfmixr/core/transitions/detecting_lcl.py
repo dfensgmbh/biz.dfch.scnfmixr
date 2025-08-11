@@ -22,12 +22,15 @@
 
 """Module detecting_lcl."""
 
+import time
+
 from biz.dfch.logging import log
 
+from ...alsa_usb import AlsaStreamInfoParser
 from ...application_context import ApplicationContext
 from ...audio import AudioDeviceInfo
-from ...alsa_usb import AlsaStreamInfoParser
 from ...audio import UsbAudioDeviceNotDetectedError
+from ...jack_commands import JackConnection
 from ...mixer import AudioMixer
 from ...mixer import DeviceFactory
 from ...public.audio import AudioDevice
@@ -40,8 +43,7 @@ from ..fsm import StateBase
 from ..transition_event import TransitionEvent
 
 
-# pylint: disable=R0903
-class DetectingLcl(TransitionBase):
+class DetectingLcl(TransitionBase):  # pylint: disable=R0903
     """Detecting device LCL."""
 
     def __init__(self, event: str, target_state: StateBase):
@@ -87,6 +89,19 @@ class DetectingLcl(TransitionBase):
             jack_device.connect_to(channel.as_sink_set(), ConnectionPolicy.DUAL)
             bus = mixbus.get_device(MixbusDevice.MX3)
             bus.connect_to(jack_device.as_sink_set(), ConnectionPolicy.DUAL)
+
+            # Here, we wait until we see the zita device running.
+            for sink in jack_device.sinks:
+
+                log.debug("Waiting for sink '%s' ...", sink.name)
+                while not JackConnection.has_port_name(sink.name):
+                    time.sleep(0.25)
+                log.info("Waiting for sink '%s' OK.", sink.name)
+
+                log.debug("Waiting for sink '%s' ...", sink.name)
+                while not JackConnection.has_port_name(sink.name):
+                    time.sleep(0.25)
+                log.info("Waiting for sink '%s' OK.", sink.name)
 
             log.debug("Detecting '%s' on '%s' OK.", device, value)
 
