@@ -20,42 +20,32 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module system_menu."""
+"""Module storage_management."""
 
-from __future__ import annotations
 from enum import StrEnum
 
-from ...public.input import InputEventMap
-from ..fsm import UiEventInfo
-from ..fsm import ExecutionContext
-from ..fsm import StateBase
-from ..state_event import StateEvent
+from biz.dfch.scnfmixr.core.fsm import ExecutionContext, StateBase, UiEventInfo
+from biz.dfch.scnfmixr.core.state_event import StateEvent
+from biz.dfch.scnfmixr.public.input import InputEventMap
 
 
-class System(StateBase):
-    """Implements the System menu of the application."""
+class StorageManagement(StateBase):
+    """Implements StorageManagement menu of the application."""
 
     class Event(StrEnum):
         """Events for this state."""
 
-        # MENU = InputEventMap.KEY_5
         HELP = InputEventMap.KEY_ASTERISK
-        SELECT_MAIN = InputEventMap.KEY_1
-        SELECT_LANGUAGE = InputEventMap.KEY_2
-        SELECT_STORAGE = InputEventMap.KEY_3
-        SET_DATE = InputEventMap.KEY_4
-        SET_TIME = InputEventMap.KEY_5
-        SET_NAME = InputEventMap.KEY_6
-        DETECT_STORAGE = InputEventMap.KEY_7
-        DISCONNECT_STORAGE = InputEventMap.KEY_8
-        STOP_SYSTEM = InputEventMap.KEY_9
+        MENU = InputEventMap.KEY_5
+        SELECT_RC1 = InputEventMap.KEY_1
+        SELECT_RC2 = InputEventMap.KEY_2
 
     def __init__(self):
         """Default ctor."""
 
         super().__init__(
-            info_enter=UiEventInfo(StateEvent.SYSTEM_ENTER, True),
-            info_leave=UiEventInfo(StateEvent.SYSTEM_LEAVE, False)
+            info_enter=UiEventInfo(StateEvent.STORAGE_MANAGEMENT_ENTER, True),
+            info_leave=UiEventInfo(StateEvent.STORAGE_MANAGEMENT_LEAVE, False)
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

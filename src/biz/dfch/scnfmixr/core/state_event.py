@@ -63,6 +63,9 @@ class StateEvent(StrEnum):
     SYSTEM_ENTER = auto()
     SYSTEM_LEAVE = auto()
 
+    STORAGE_MANAGEMENT_ENTER = auto()
+    STORAGE_MANAGEMENT_LEAVE = auto()
+
     MAIN_ENTER = auto()
     MAIN_LEAVE = auto()
     ONRECORD_ENTER = auto()

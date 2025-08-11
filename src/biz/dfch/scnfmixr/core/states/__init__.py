@@ -45,6 +45,7 @@ from .main import Main
 from .onrecord import OnRecord
 
 from .playback import Playback
+from .storage_management import StorageManagement
 
 from .final_state import FinalState
 
@@ -78,6 +79,8 @@ __all__ = [
     "OnRecord",
 
     "Playback",
+
+    "StorageManagement",
 
     "FinalState",
 ]

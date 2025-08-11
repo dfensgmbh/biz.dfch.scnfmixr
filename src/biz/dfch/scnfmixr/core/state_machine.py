@@ -40,6 +40,8 @@ from .fsm import ExecutionContext, Fsm, StateBase
 
 from .states import FinalState
 
+from .states import StorageManagement
+
 from .states import System
 from .transitions import ReturningTrue
 from .transitions import SettingDate, StoppingSystem, DisconnectingStorage
@@ -115,6 +117,7 @@ class State(Enum):
     MAIN = auto()
     ON_RECORD = auto()
     PLAYBACK = auto()
+    STORAGE = auto()
     FINAL = auto()
 
 
@@ -332,6 +335,9 @@ class StateMachine:
         assert State.SYSTEM not in menu
         menu[State.SYSTEM] = System()
 
+        assert State.STORAGE not in menu
+        menu[State.STORAGE] = StorageManagement()
+
         assert State.FINAL not in menu
         menu[State.FINAL] = FinalState()
 
@@ -357,6 +363,9 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.SELECT_LANGUAGE,
                 menu[State.LANGUAGE]))
+            .add_transition(ReturningTrue(
+                current.Event.SELECT_STORAGE,
+                menu[State.STORAGE]))
             .add_transition(SettingDate(
                 current.Event.SET_DATE,
                 menu[State.SET_DATE]))
@@ -394,6 +403,16 @@ class StateMachine:
             .add_transition(ShowingStatus(
                 current.Event.SHOW_STATUS,
                 current))
+        )
+        current: Main = menu[State.STORAGE]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(ReturningTrue(
+                current.Event.MENU,
+                menu[State.SYSTEM]))
         )
         current: Main = menu[State.MAIN]
         (

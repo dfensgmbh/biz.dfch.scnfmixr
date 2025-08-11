@@ -26,6 +26,7 @@ from biz.dfch.i18n import I18n
 
 from ..application_context import ApplicationContext
 from ..public.system.messages import SystemMessage
+from ..public.audio import FileFormat
 from ..core.fsm import UserInteractionBase
 from ..playback.audio_menu import AudioMenu
 
@@ -43,7 +44,7 @@ class UserInteractionAudio(UserInteractionBase):
     physical paths (honouring the current language setting).
     """
 
-    _AUDIO_FILE_EXTENSION = ".wav"
+    _AUDIO_FILE_EXTENSION = f".{FileFormat.WAV}"
 
     _player: AudioMenu
     _i18n: I18n
@@ -71,6 +72,7 @@ class UserInteractionAudio(UserInteractionBase):
         assert isinstance(message, SystemMessage.UiEventInfoMessageBase)
 
         # DFTODO - adjust to something dynamic.
+        # And check if file actually exists with "os.path.isfile".
         path = self._i18n.get_resource_path(
             (f"{message.value.name}"
              f"{self._AUDIO_FILE_EXTENSION}"),

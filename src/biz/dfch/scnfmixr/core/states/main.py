@@ -42,7 +42,6 @@ class Main(StateBase):
         MENU = InputEventMap.KEY_5
         START_RECORDING = InputEventMap.KEY_1
         START_PLAYBACK = InputEventMap.KEY_2
-        STOP_SYSTEM = InputEventMap.KEY_9
 
     def __init__(self):
         """Default ctor."""
