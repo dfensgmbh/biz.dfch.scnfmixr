@@ -372,7 +372,7 @@ class StateMachine:
             .add_transition(DisconnectingStorage(
                 current.Event.DISCONNECT_STORAGE,
                 current))
-            .add_transition(ReturningTrue(
+            .add_transition(StoppingSystem(
                 current.Event.STOP_SYSTEM,
                 menu[State.FINAL]))
         )
@@ -394,9 +394,6 @@ class StateMachine:
             .add_transition(ShowingStatus(
                 current.Event.SHOW_STATUS,
                 current))
-            .add_transition(StoppingSystem(
-                current.Event.STOP_SYSTEM,
-                menu[State.FINAL]))
         )
         current: Main = menu[State.MAIN]
         (
