@@ -437,9 +437,6 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.START_PLAYBACK,
                 menu[State.PLAYBACK]))
-            .add_transition(StoppingSystem(
-                current.Event.STOP_SYSTEM,
-                menu[State.FINAL]))
         )
         current: InitialiseAudio = menu[State.INIT_AUDIO]
         (
