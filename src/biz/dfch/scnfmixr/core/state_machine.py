@@ -96,6 +96,7 @@ from .transitions import (
     JumpingCuePrevious,
     JumpingCueNext,
     LeavingPlayback,
+    HelpingPlayback,
 )
 
 
@@ -631,7 +632,7 @@ class StateMachine:
         current: Playback = menu[State.PLAYBACK]
         (
             current
-            .add_transition(ReturningTrue(
+            .add_transition(HelpingPlayback(
                 current.Event.HELP,
                 current))
             .add_transition(LeavingPlayback(

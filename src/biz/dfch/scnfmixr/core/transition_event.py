@@ -149,3 +149,5 @@ class TransitionEvent(StrEnum):
     SEEKING_NEXT_LEAVE = auto()
     SEEKING_PREVIOUS_ENTER = auto()
     SEEKING_PREVIOUS_LEAVE = auto()
+    HELPING_PLAYBACK_ENTER = auto()
+    HELPING_PLAYBACK_LEAVE = auto()
