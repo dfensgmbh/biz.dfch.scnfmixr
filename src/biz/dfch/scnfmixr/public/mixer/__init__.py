@@ -73,7 +73,11 @@ from .iconnectable_device import IConnectableDevice
 
 from .source_set_view import SourceSetView
 from .sink_set_view import SinkSetView
-from .mixbus_device import MixbusDevice, IsoChannel
+from .mixbus_device import (
+    MixbusDevice,
+    IsoChannelDry,
+    IsoChannelWet,
+)
 
 
 __all__ = [
@@ -122,5 +126,6 @@ __all__ = [
     "AudioOutput",
 
     "MixbusDevice",
-    "IsoChannel",
+    "IsoChannelDry",
+    "IsoChannelWet",
 ]

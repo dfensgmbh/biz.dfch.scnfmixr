@@ -22,8 +22,12 @@
 
 """Module device_factory."""
 
-from biz.dfch.scnfmixr.alsa_usb import AlsaStreamInfoParser
-from ..public.mixer import MixbusDevice, IsoChannel
+from ..alsa_usb import AlsaStreamInfoParser
+from ..public.mixer import (
+    MixbusDevice,
+    IsoChannelDry,
+    IsoChannelWet,
+)
 from ..public.mixer import ConnectionPolicy
 from .jack_alsa_device import JackAlsaDevice
 from .jack_bus_device import JackBusDevice
@@ -72,15 +76,16 @@ class DeviceFactory:
         mx0 = JackBusDevice(MixbusDevice.MX0.name).acquire() \
             # pylint: disable=E0110
         mx1 = JackBusDevice(MixbusDevice.MX1.name,  # pylint: disable=E0110
-                            channel_count=len(
-                                IsoChannel)).acquire()
-        mx2 = JackBusDevice(MixbusDevice.MX2.name).acquire() \
-            # pylint: disable=E0110
+                            channel_count=len(IsoChannelDry)).acquire()
+        mx2 = JackBusDevice(MixbusDevice.MX2.name,  # pylint: disable=E0110
+                            channel_count=len(IsoChannelWet)).acquire()
         mx3 = JackBusDevice(MixbusDevice.MX3.name).acquire() \
             # pylint: disable=E0110
         mx4 = JackBusDevice(MixbusDevice.MX4.name).acquire() \
             # pylint: disable=E0110
         mx5 = JackBusDevice(MixbusDevice.MX5.name).acquire() \
+            # pylint: disable=E0110
+        mx6 = JackBusDevice(MixbusDevice.MX6.name).acquire() \
             # pylint: disable=E0110
 
         dr0 = JackBusDevice(MixbusDevice.DR0.name).acquire() \
@@ -100,10 +105,10 @@ class DeviceFactory:
         dr1.connect_to(mx0.as_sink_set(), ConnectionPolicy.DUAL)
         dr2.connect_to(mx0.as_sink_set(), ConnectionPolicy.DUAL)
 
-        mx2.connect_to(mx0.as_sink_set(), ConnectionPolicy.DUAL)
         mx3.connect_to(mx0.as_sink_set(), ConnectionPolicy.DUAL)
         mx4.connect_to(mx0.as_sink_set(), ConnectionPolicy.DUAL)
         mx5.connect_to(mx0.as_sink_set(), ConnectionPolicy.DUAL)
+        mx6.connect_to(mx0.as_sink_set(), ConnectionPolicy.DUAL)
 
         dr0.connect_to(wt0.as_sink_set(), ConnectionPolicy.DUAL)
         dr1.connect_to(wt1.as_sink_set(), ConnectionPolicy.DUAL)
@@ -117,31 +122,32 @@ class DeviceFactory:
         dr2.connect_to(mx5.as_sink_set(), ConnectionPolicy.DUAL)
 
         mx0.connect_to(mx1.as_sink_set(), ConnectionPolicy.DUAL)
-        dr0.sources[IsoChannel.LEFT].connect_to(
-            mx1.sinks[IsoChannel.DR0_LEFT])
-        dr0.sources[IsoChannel.RIGHT].connect_to(
-            mx1.sinks[IsoChannel.DR0_RIGHT])
-        dr1.sources[IsoChannel.LEFT].connect_to(
-            mx1.sinks[IsoChannel.DR1_LEFT])
-        dr1.sources[IsoChannel.RIGHT].connect_to(
-            mx1.sinks[IsoChannel.DR1_RIGHT])
-        dr2.sources[IsoChannel.LEFT].connect_to(
-            mx1.sinks[IsoChannel.DR2_LEFT])
-        dr2.sources[IsoChannel.RIGHT].connect_to(
-            mx1.sinks[IsoChannel.DR2_RIGHT])
+        dr0.sources[IsoChannelDry.MST_LEFT].connect_to(
+            mx1.sinks[IsoChannelDry.DR0_LEFT])
+        dr0.sources[IsoChannelDry.MST_RIGHT].connect_to(
+            mx1.sinks[IsoChannelDry.DR0_RIGHT])
+        dr1.sources[IsoChannelDry.MST_LEFT].connect_to(
+            mx1.sinks[IsoChannelDry.DR1_LEFT])
+        dr1.sources[IsoChannelDry.MST_RIGHT].connect_to(
+            mx1.sinks[IsoChannelDry.DR1_RIGHT])
+        dr2.sources[IsoChannelDry.MST_LEFT].connect_to(
+            mx1.sinks[IsoChannelDry.DR2_LEFT])
+        dr2.sources[IsoChannelDry.MST_RIGHT].connect_to(
+            mx1.sinks[IsoChannelDry.DR2_RIGHT])
 
-        wt0.sources[IsoChannel.LEFT].connect_to(
-            mx1.sinks[IsoChannel.WT0_LEFT])
-        wt0.sources[IsoChannel.RIGHT].connect_to(
-            mx1.sinks[IsoChannel.WT0_RIGHT])
-        wt1.sources[IsoChannel.LEFT].connect_to(
-            mx1.sinks[IsoChannel.WT1_LEFT])
-        wt1.sources[IsoChannel.RIGHT].connect_to(
-            mx1.sinks[IsoChannel.WT1_RIGHT])
-        wt2.sources[IsoChannel.LEFT].connect_to(
-            mx1.sinks[IsoChannel.WT2_LEFT])
-        wt2.sources[IsoChannel.RIGHT].connect_to(
-            mx1.sinks[IsoChannel.WT2_RIGHT])
+        mx0.connect_to(mx2.as_sink_set(), ConnectionPolicy.DUAL)
+        wt0.sources[IsoChannelWet.MST_LEFT].connect_to(
+            mx2.sinks[IsoChannelWet.WT0_LEFT])
+        wt0.sources[IsoChannelWet.MST_RIGHT].connect_to(
+            mx2.sinks[IsoChannelWet.WT0_RIGHT])
+        wt1.sources[IsoChannelWet.MST_LEFT].connect_to(
+            mx2.sinks[IsoChannelWet.WT1_LEFT])
+        wt1.sources[IsoChannelWet.MST_RIGHT].connect_to(
+            mx2.sinks[IsoChannelWet.WT1_RIGHT])
+        wt2.sources[IsoChannelWet.MST_LEFT].connect_to(
+            mx2.sinks[IsoChannelWet.WT2_LEFT])
+        wt2.sources[IsoChannelWet.MST_RIGHT].connect_to(
+            mx2.sinks[IsoChannelWet.WT2_RIGHT])
 
         result.append(mx0)
         result.append(mx1)
@@ -149,6 +155,7 @@ class DeviceFactory:
         result.append(mx3)
         result.append(mx4)
         result.append(mx5)
+        result.append(mx6)
         result.append(dr0)
         result.append(wt0)
         result.append(dr1)

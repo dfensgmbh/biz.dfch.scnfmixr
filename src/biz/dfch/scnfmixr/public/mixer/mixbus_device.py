@@ -22,9 +22,15 @@
 
 """Logical names of mixbus devices in the system."""
 
-from enum import IntEnum, StrEnum, auto
+from enum import IntEnum, StrEnum
 
 from .connection import Connection
+
+__all__ = [
+    "MixbusDevice",
+    "IsoChannelDry",
+    "IsoChannelWet",
+]
 
 
 class MixbusDevice(StrEnum):
@@ -32,11 +38,12 @@ class MixbusDevice(StrEnum):
 
     Attributes:
         MX0: The master stereo bus.
-        MX1: The isolated track bus (includes master left and right).
-        MX2: The monitoring stereo bus.
+        MX1: The isolated DRY track bus (includes master left and right).
+        MX2: The isolated WET track bus (includes master left and right).
         MX3: The LCL stereo bus.
         MX4: The EX1 stereo bus.
         MX5: The EX2 stereo bus.
+        MX6: The monitoring stereo bus.
         DR0: The 1st dry stereo channel strip.
         WT0: The 1st wet stereo channel strip.
         DR1: The 2nd dry stereo channel strip.
@@ -51,6 +58,7 @@ class MixbusDevice(StrEnum):
     MX3 = Connection.jack_mixbus_client_from_base("MX3")
     MX4 = Connection.jack_mixbus_client_from_base("MX4")
     MX5 = Connection.jack_mixbus_client_from_base("MX5")
+    MX6 = Connection.jack_mixbus_client_from_base("MX6")
     DR0 = Connection.jack_mixbus_client_from_base("DR0")
     WT0 = Connection.jack_mixbus_client_from_base("WT0")
     DR1 = Connection.jack_mixbus_client_from_base("DR1")
@@ -59,20 +67,27 @@ class MixbusDevice(StrEnum):
     WT2 = Connection.jack_mixbus_client_from_base("WT2")
 
 
-class IsoChannel(IntEnum):
-    """Iso channel names."""
+class IsoChannelDry(IntEnum):
+    """Iso channel DRY names."""
 
-    LEFT = 0
-    RIGHT = 1
+    MST_LEFT = 0
+    MST_RIGHT = 1
     DR0_LEFT = 2
     DR0_RIGHT = 3
     DR1_LEFT = 4
     DR1_RIGHT = 5
     DR2_LEFT = 6
     DR2_RIGHT = 7
-    WT0_LEFT = 8
-    WT0_RIGHT = 9
-    WT1_LEFT = 10
-    WT1_RIGHT = 11
-    WT2_LEFT = 12
-    WT2_RIGHT = 13
+
+
+class IsoChannelWet(IntEnum):
+    """Iso channel WET names."""
+
+    MST_LEFT = 0
+    MST_RIGHT = 1
+    WT0_LEFT = 2
+    WT0_RIGHT = 3
+    WT1_LEFT = 4
+    WT1_RIGHT = 5
+    WT2_LEFT = 6
+    WT2_RIGHT = 7
