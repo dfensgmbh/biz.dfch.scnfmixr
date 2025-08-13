@@ -65,6 +65,11 @@ from .stopping_system import StoppingSystem
 from .setting_date import SettingDate
 from .mounting_storage import MountingStorage
 from .disconnecting_storage import DisconnectingStorage
+from .formatting_storage import (
+    FormattingStorage,
+    FormattingStorageRc1,
+    FormattingStorageRc2,
+)
 
 from .stopping_recording import StoppingRecording
 from .setting_cuepoint import SettingCuePoint
@@ -81,6 +86,7 @@ from .jumping_cue_previous import JumpingCuePrevious
 from .jumping_cue_next import JumpingCueNext
 from .seeking_previous import SeekingPrevious
 from .seeking_next import SeekingNext
+from .helping_playback import HelpingPlayback
 
 
 __all__ = [
@@ -123,6 +129,9 @@ __all__ = [
     "SettingDate",
     "MountingStorage",
     "DisconnectingStorage",
+    "FormattingStorage",
+    "FormattingStorageRc1",
+    "FormattingStorageRc2",
     "StoppingSystem",
 
     "StoppingRecording",
@@ -142,4 +151,5 @@ __all__ = [
     "JumpingCueNext",
     "SeekingPrevious",
     "SeekingNext",
+    "HelpingPlayback",
 ]

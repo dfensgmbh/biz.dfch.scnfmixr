@@ -37,8 +37,12 @@ class StorageManagement(StateBase):
 
         HELP = InputEventMap.KEY_ASTERISK
         MENU = InputEventMap.KEY_5
-        SELECT_RC1 = InputEventMap.KEY_1
-        SELECT_RC2 = InputEventMap.KEY_2
+        DETECT_RC1 = InputEventMap.KEY_1
+        DETECT_RC2 = InputEventMap.KEY_3
+        FORMAT_RC1 = InputEventMap.KEY_4
+        FORMAT_RC2 = InputEventMap.KEY_6
+        CLEAN_RC1 = InputEventMap.KEY_7
+        CLEAN_RC2 = InputEventMap.KEY_9
 
     def __init__(self):
         """Default ctor."""

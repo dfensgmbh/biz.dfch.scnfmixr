@@ -98,15 +98,19 @@ class TransitionEvent(StrEnum):
     INITIALISING_AUDIO_ENTER = auto()
     INITIALISING_AUDIO_LEAVE = auto()
 
-    # Menu: Record.
+    # Menu: Main.
     STARTING_RECORDING_ENTER = auto()
     STARTING_RECORDING_LEAVE = auto()
     SETTING_DATE_ENTER = auto()
     SETTING_DATE_LEAVE = auto()
+
+    # Menu: System.
     MOUNTING_STORAGE_ENTER = auto()
     MOUNTING_STORAGE_LEAVE = auto()
     DISCONNECTING_STORAGE_ENTER = auto()
     DISCONNECTING_STORAGE_LEAVE = auto()
+    FORMATTING_STORAGE_ENTER = auto()
+    FORMATTING_STORAGE_LEAVE = auto()
     STOPPING_SYSTEM_ENTER = auto()
     STOPPING_SYSTEM_LEAVE = auto()
 

@@ -41,6 +41,7 @@ from .fsm import ExecutionContext, Fsm, StateBase
 from .states import FinalState
 
 from .states import StorageManagement
+from .transitions import FormattingStorageRc1, FormattingStorageRc2
 
 from .states import System
 from .transitions import ReturningTrue
@@ -413,6 +414,12 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.MENU,
                 menu[State.SYSTEM]))
+            .add_transition(FormattingStorageRc1(
+                current.Event.FORMAT_RC1,
+                current))
+            .add_transition(FormattingStorageRc2(
+                current.Event.FORMAT_RC2,
+                current))
         )
         current: Main = menu[State.MAIN]
         (

@@ -23,10 +23,14 @@
 """Package device_operations."""
 
 import os
+import re
 
+from biz.dfch.logging import log
 from biz.dfch.asyn import Process
 from text import TextUtils
+
 from ...public.storage import StorageDeviceInfo
+
 
 __all__ = [
     "DeviceOperations",
@@ -40,11 +44,35 @@ class DeviceOperations:
         is_mounted (bool): Determines wether the device is mounted.
     """
 
+    _TRAILING_DIGITS = r'\d+$'
+    _EMPTY = ''
+    _SPACE = ' '
+
     _SUDO_FULLNAME = "/usr/bin/sudo"
     _UDISKSCTL_FULLNAME = "/usr/bin/udisksctl"
     _UDISKSCTL_CMD_UNMOUNT = "unmount"
     _UDISKSCTL_CMD_POWEROFF = "power-off"
     _UDISKSCTL_OPT_BLOCK_DEVICE = "-b"
+
+    _WIPEFS_FULLNAME = "/usr/sbin/wipefs"
+    _WIPEFS_OPT_ALL = "--all"
+    _WIPEFS_OPT_FORCE = "--force"
+
+    _PARTED_FULLNAME = "parted"
+    _PARTED_CMD_MKLABEL = "mklabel"
+    _PARTED_CMD_MKLABEL_MSDOS = "msdos"
+    _PARTED_OPT_A = "-a"
+    _PARTED_OPT_A_VALUE = "optimal"
+    _PARTED_CMD_MKPART = "mkpart"
+    _PARTED_CMD_MKPART_PRIMARY = "primary"
+    _PARTED_CMD_MKPART_PRIMARY_START = "0%"
+    _PARTED_CMD_MKPART_PRIMARY_END = "100%"
+    _PARTED_STDERR_INFO_PREFIX = "Information"
+
+    _MKFS_EXFAT_FULLNAME = "/usr/sbin/mkfs.exfat"
+    _MKFS_EXFAT_OPT_NAME = "-L"
+    _MKFS_EXFAT_OPT_BLOCKSIZE = "-b"
+    _MKFS_EXFAT_OPT_BLOCKSIZE_VALUE = "4096"
 
     _PROC_MOUNT_FULLNAME = "/proc/mounts"
 
@@ -146,8 +174,86 @@ class DeviceOperations:
 
         raise NotImplementedError("Not yet implemented.")
 
-    def initialise_disk(self) -> bool:
+    def format_disk(self, name: str) -> bool:
         """Removes all partitions and creates a new single partition with ExFAT
         file system."""
 
-        raise NotImplementedError("Not yet implemented.")
+        assert isinstance(name, str) and name.strip()
+
+        block_device = re.sub(self._TRAILING_DIGITS,
+                              self._EMPTY, self._device_info.full_name)
+
+        cmd: list[str] = [
+            self._SUDO_FULLNAME,
+            self._WIPEFS_FULLNAME,
+            self._WIPEFS_OPT_ALL,
+            self._WIPEFS_OPT_FORCE,
+            block_device,
+        ]
+
+        stdout, stderr = Process.communicate(cmd)
+        if 0 < len(stderr):
+            log.warning("'%s' FAILED: [%s]", self._SPACE.join(cmd), stderr)
+            return False
+        if 0 < len(stdout):
+            log.debug("'%s' OK: [%s]", self._SPACE.join(cmd), stdout)
+
+        cmd: list[str] = [
+            self._SUDO_FULLNAME,
+            self._PARTED_FULLNAME,
+            block_device,
+            self._PARTED_CMD_MKLABEL,
+            self._PARTED_CMD_MKLABEL_MSDOS,
+        ]
+
+        stdout, stderr = Process.communicate(cmd)
+        if 0 < len(stderr):
+            log.warning("'%s' RETURNED: [%s]", self._SPACE.join(cmd), stderr)
+            if not stderr[0].startswith(self._PARTED_STDERR_INFO_PREFIX):
+                return False
+        if 0 < len(stdout):
+            log.debug("'%s' OK: [%s]", self._SPACE.join(cmd), stdout)
+
+        cmd: list[str] = [
+            self._SUDO_FULLNAME,
+            self._PARTED_FULLNAME,
+            self._PARTED_OPT_A,
+            self._PARTED_OPT_A_VALUE,
+            block_device,
+            self._PARTED_CMD_MKPART,
+            self._PARTED_CMD_MKPART_PRIMARY,
+            self._PARTED_CMD_MKPART_PRIMARY_START,
+            self._PARTED_CMD_MKPART_PRIMARY_END,
+        ]
+
+        stdout, stderr = Process.communicate(cmd)
+        if 0 < len(stderr):
+            log.warning("'%s' RETURNED: [%s]", self._SPACE.join(cmd), stderr)
+            if not stderr[0].startswith(self._PARTED_STDERR_INFO_PREFIX):
+                return False
+        if 0 < len(stdout):
+            log.debug("'%s' OK: [%s]", self._SPACE.join(cmd), stdout)
+
+        if self._device_info.full_name[-1].isdigit():
+            partition_device = self._device_info.full_name
+        else:
+            partition_device = f"{self._device_info.full_name}1"
+
+        cmd: list[str] = [
+            self._SUDO_FULLNAME,
+            self._MKFS_EXFAT_FULLNAME,
+            self._MKFS_EXFAT_OPT_NAME,
+            name,
+            self._MKFS_EXFAT_OPT_BLOCKSIZE,
+            self._MKFS_EXFAT_OPT_BLOCKSIZE_VALUE,
+            partition_device,
+        ]
+
+        stdout, stderr = Process.communicate(cmd)
+        if 0 < len(stderr):
+            log.warning("'%s' FAILED: [%s]", self._SPACE.join(cmd), stderr)
+            return False
+        if 0 < len(stdout):
+            log.debug("'%s' OK: [%s]", self._SPACE.join(cmd), stdout)
+
+        return True
