@@ -275,7 +275,7 @@ class DetectingRcWorker(InterfaceDetectorBase):
                       self._requested_usb_id)
             return None
 
-        # DFTODO: Note: we have to change the logic to start enumerating via 
+        # DFTODO: Note: we have to change the logic to start enumerating via
         # lsblk and then select the device.
         # Until then, we have to manually construct the StorageDeviceInfo.
         # And for that, as of now we have to assume the type: partition.

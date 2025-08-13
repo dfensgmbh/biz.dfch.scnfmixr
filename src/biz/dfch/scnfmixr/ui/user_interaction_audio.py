@@ -44,7 +44,7 @@ class UserInteractionAudio(UserInteractionBase):
     physical paths (honouring the current language setting).
     """
 
-    _AUDIO_FILE_EXTENSION = f".{FileFormat.WAV}"
+    _AUDIO_FILE_EXTENSION = f".{FileFormat.WAV.value}"
 
     _player: AudioMenu
     _i18n: I18n
