@@ -292,6 +292,28 @@ class ConnectionInfo:
         result = self._group_by_client()[client]
         return result
 
+    def get_connection_entries(self, entry: str) -> list[str]:
+        """Returns the connections entries for this entry name
+        (**`system:capture_1`**).
+
+        Args:
+            entry (str): The entry name to match.
+
+        Returns:
+            list[str]: A list of entries this `entry` is connected to.
+        """
+
+        assert isinstance(entry, str) and entry.strip()
+
+        if not self.is_entry(entry):
+            result: list[str] = []
+            return result
+
+        # Check either key combination, or default.
+        return self._values.get((entry, False),
+                                self._values.get((entry, True),
+                                                 None))
+
     def is_connected(self, entry: str) -> bool:
         """Determines whether the specified entry name (**`system:capture_1`**)
         is connected to another entry.

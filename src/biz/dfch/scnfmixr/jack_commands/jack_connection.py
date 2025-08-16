@@ -221,7 +221,9 @@ class JackConnection:
     @staticmethod
     def get_connections3() -> dict[tuple[str, bool], list[str]]:
         """Gets connnections with source and sink information.
-        
+
+        Use `ConnectionInfo` to process the result of this method.
+
         Returns:
             dict (tuple[str, bool], list[str])
         """
