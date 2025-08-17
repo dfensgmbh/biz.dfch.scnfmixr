@@ -210,7 +210,7 @@ class AudioMenu(IAcquirable):
         assert isinstance(message, msgt.UiEventInfoAudioMessage)
         assert message.type is msgt.UiEventInfoStateEnterMessage
 
-        self._client.load_queue(lambda e: e in message.path)
+        self._client.load_resource_queue(lambda e: e in message.path)
         self._client.start()
 
     def get_fullname(self, value: str) -> str:
@@ -236,7 +236,7 @@ class AudioMenu(IAcquirable):
         assert message.type is msgt.UiEventInfoStateLeaveMessage
 
         self._client.clear()
-        self._client.load_queue(lambda e: e in message.path)
+        self._client.load_resource_queue(lambda e: e in message.path)
         self._client.start()
 
     def _on_transition_enter(
@@ -248,7 +248,7 @@ class AudioMenu(IAcquirable):
         assert isinstance(message, msgt.UiEventInfoAudioMessage)
         assert message.type is msgt.UiEventInfoTransitionEnterMessage
 
-        self._client.load_queue(lambda e: e in message.path)
+        self._client.load_resource_queue(lambda e: e in message.path)
         self._client.start()
 
     def _on_transition_leave(
@@ -261,7 +261,7 @@ class AudioMenu(IAcquirable):
         assert message.type is msgt.UiEventInfoTransitionLeaveMessage
 
         self._client.clear()
-        self._client.load_queue(lambda e: e in message.path)
+        self._client.load_resource_queue(lambda e: e in message.path)
         self._client.start()
 
     @property
