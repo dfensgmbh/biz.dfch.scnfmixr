@@ -173,19 +173,23 @@ Press "1" to go to the "Main" menu.
 Press "2" to select the language.
 Press "3" to go to the "Storage" menu.
 Press "4" to set the date.
-Press "5" to set the time.
+Press "6" to set the time.
 Press "9" to stop the device.
 
 Press "STAR" to repeat this message.
 """  # noqa: E501
 
-        # # HELP = InputEventMap.KEY_ASTERISK
-        # # SELECT_MAIN = InputEventMap.KEY_1
-        # # SELECT_LANGUAGE = InputEventMap.KEY_2
-        # SELECT_STORAGE = InputEventMap.KEY_3
-        # # SET_DATE = InputEventMap.KEY_4
-        # # SET_TIME = InputEventMap.KEY_5
-        # SET_NAME = InputEventMap.KEY_6
-        # DETECT_STORAGE = InputEventMap.KEY_7
-        # DISCONNECT_STORAGE = InputEventMap.KEY_8
-        # STOP_SYSTEM = InputEventMap.KEY_9
+    StateEvent.STORAGE_MANAGEMENT_ENTER = """
+The "Storage" menu
+
+Press "0" to disconnect all storage devices.
+Press "1" to detect "Storage Device One".
+Press "3" to detect "Storage Device Two".
+Press "4" to format "Storage Device One".
+Press "5" to go to the "System" menu.
+Press "6" to format "Storage Device Two".
+Press "7" to clean "Storage Device One".
+Press "9" to clean "Storage Device Two".
+
+Press "STAR" to repeat this message.
+"""  # noqa: E501
