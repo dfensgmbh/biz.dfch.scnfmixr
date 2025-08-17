@@ -161,7 +161,7 @@ Press "2" to start a dry iso and a stereo recording.
 Press "3" to start a wet iso, dry iso and stereo recording.
 Press "4" to start playback.
 Press "5" to go to the "System" menu.
-Press "6" to set a new name for your recording.
+Press "6" to set a new name for your next recording.
 Press "9" to stop the device.
 Press "STAR" to repeat this message.
 """  # noqa: E501
