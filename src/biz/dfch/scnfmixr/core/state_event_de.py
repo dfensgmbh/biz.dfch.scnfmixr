@@ -83,7 +83,7 @@ Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 """  # noqa: E501
 
     StateEvent.INITIALISE_RC2_ENTER = """
-Menü zur "Initialisierung des Speichergeräts Zwei"
+Menü zur "Initialisierung des Speichergeräts ZWEI"
 
 Wählen Sie "1" für die Geräteerkennung.
 Wählen Sie "2", um die Geräteerkennung zu überspringen.
@@ -153,7 +153,7 @@ Wählen Sie "2", um eine "dry iso"-Aufnahme mit einer zusätzlichen Stereoaufnah
 Wählen Sie "3", um "wet iso"-Aufnahme und eine "dry iso"-Aufnahme mit einer zusätzlichen Stereoaufnahme zu starten.
 Wählen Sie "4", um die Wiedergabe zu starten.
 Wählen Sie "5", um zum "System-Menü" zu gelangen.
-Wählen Sie "6", um einen neuen Namen für Ihre Aufnahme festzulegen.
+Wählen Sie "6", um einen neuen Namen für Ihre nächste Aufnahme festzulegen.
 Wählen Sie "9", um das Gerät zu stoppen.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 """  # noqa: E501
@@ -169,4 +169,8 @@ Wählen Sie "6", um eine Uhrzeit einzugeben.
 Wählen Sie "9", um das Gerät zu stoppen.
 
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
+"""  # noqa: E501
+
+    StateEvent.FINAL_STATE_ENTER = """
+<<<no text message, only outro sound>>>
 """  # noqa: E501
