@@ -25,7 +25,7 @@
 from .state_event import StateEvent
 
 
-class StateEventEn(dict[StateEvent, str]):
+class StateEventFr(dict[StateEvent, str]):
     """Texts for FR state events messages."""
 
     StateEvent.INITIALISE_LCL_ENTER = """
