@@ -28,19 +28,23 @@ from enum import StrEnum, auto
 class StateEvent(StrEnum):
     """State Enter and Leave audio information."""
 
-    # Detection of 
+    # Detection of local audio device.
+    INITIALISE_LCL_ENTER = auto()
+    # This will be the welcome sound.
+    INITIALISE_LCL_LEAVE = auto()
+
+    # Detection of input device.
     INITIALISE_HI1_ENTER = auto()
+    # This will be the welcome sound.
     INITIALISE_HI1_LEAVE = auto()
 
-    INITIALISE_LCL_ENTER = auto()
-    INITIALISE_LCL_LEAVE = auto()
+    SELECT_LANGUAGE_ENTER = auto()
+
     INITIALISE_EX1_ENTER = auto()
     INITIALISE_EX2_ENTER = auto()
 
     INITIALISE_RC1_ENTER = auto()
     INITIALISE_RC2_ENTER = auto()
-
-    SELECT_LANGUAGE_ENTER = auto()
 
     SET_DATE_ENTER = auto()
     SET_TIME_ENTER = auto()

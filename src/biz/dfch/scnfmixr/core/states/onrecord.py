@@ -26,10 +26,8 @@ from __future__ import annotations
 from enum import StrEnum
 
 from ...public.input import InputEventMap
-from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
-from ..state_event import StateEvent
 
 
 class OnRecord(StateBase):
@@ -48,7 +46,7 @@ class OnRecord(StateBase):
         """Default ctor."""
 
         super().__init__(
-            info_enter=UiEventInfo(StateEvent.ONRECORD_ENTER, True),
+            info_enter=None,
             info_leave=None
         )
 

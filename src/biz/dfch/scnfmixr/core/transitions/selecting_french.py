@@ -23,9 +23,7 @@
 """Module SelectingFrench."""
 
 from biz.dfch.i18n import LanguageCode
-from ..fsm import UiEventInfo
 from ..fsm import StateBase
-from ..transition_event import TransitionEvent
 
 from .selecting_language_base import SelectingLanguageBase
 
@@ -38,9 +36,7 @@ class SelectingFrench(SelectingLanguageBase):
 
         super().__init__(
             event=event,
-            info_enter=UiEventInfo(
-                TransitionEvent.SELECTING_FRENCH_ENTER, False),
-            info_leave=UiEventInfo(
-                TransitionEvent.SELECTING_FRENCH_LEAVE, False),
+            info_enter=None,
+            info_leave=None,
             target_state=target,
             language=LanguageCode.FR)

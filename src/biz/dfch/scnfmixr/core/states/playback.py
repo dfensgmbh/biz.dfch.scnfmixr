@@ -28,10 +28,8 @@ from enum import StrEnum
 from ...public.input import InputEventMap
 from ...public.messages.audio_playback import AudioPlayback
 from ...playback.audio_playback import AudioPlayback as player
-from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
-from ..state_event import StateEvent
 
 
 class Playback(StateBase):
@@ -54,8 +52,8 @@ class Playback(StateBase):
 
     def __init__(self):
         super().__init__(
-            info_enter=UiEventInfo(StateEvent.PLAYBACK_ENTER, True),
-            info_leave=UiEventInfo(StateEvent.PLAYBACK_LEAVE, True),
+            info_enter=None,
+            info_leave=None,
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

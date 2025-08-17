@@ -22,6 +22,8 @@
 
 """Module stopping_system."""
 
+import time
+
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
@@ -39,11 +41,13 @@ class StoppingSystem(TransitionBase):
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.STOPPING_SYSTEM_ENTER, False),
+            info_enter=None,
             info_leave=UiEventInfo(
                 TransitionEvent.STOPPING_SYSTEM_LEAVE, False),
             target_state=target)
 
     def invoke(self, _):
+
+        time.sleep(1)
+
         return True

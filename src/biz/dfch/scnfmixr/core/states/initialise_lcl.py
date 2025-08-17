@@ -29,10 +29,8 @@ import time
 from biz.dfch.logging import log
 from ...public.input import InputEventMap
 from ...public.system.messages import SystemMessage
-from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
-from ..state_event import StateEvent
 
 
 class InitialiseLcl(StateBase):
@@ -49,16 +47,13 @@ class InitialiseLcl(StateBase):
         HELP = InputEventMap.KEY_ASTERISK
         DETECT_DEVICE = InputEventMap.KEY_1
         SKIP_DEVICE = InputEventMap.KEY_2
-        MENU = InputEventMap.KEY_5
 
     def __init__(self):
         """Default ctor."""
 
         super().__init__(
-            info_enter=UiEventInfo(
-                StateEvent.INITIALISE_LCL_ENTER, True),
-            info_leave=UiEventInfo(
-                StateEvent.INITIALISE_LCL_LEAVE, False)
+            info_enter=None,
+            info_leave=None,
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

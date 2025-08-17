@@ -194,6 +194,10 @@ Press "9" to clean "Storage Device Two".
 Press "STAR" to repeat this message.
 """  # noqa: E501
 
+    StateEvent.INIT_AUDIO_LEAVE = """
+Audio system fully initialised.
+"""  # noqa: E501
+
     StateEvent.FINAL_STATE_ENTER = """
 <<<no text message, only outro sound>>>
 """  # noqa: E501

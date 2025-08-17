@@ -39,11 +39,13 @@ class Main(StateBase):
         """Events for this state."""
 
         HELP = InputEventMap.KEY_ASTERISK
-        MENU = InputEventMap.KEY_5
         START_RECORDING_MX0 = InputEventMap.KEY_1
         START_RECORDING_MX1 = InputEventMap.KEY_2
         START_RECORDING_MX2 = InputEventMap.KEY_3
         START_PLAYBACK = InputEventMap.KEY_4
+        MENU = InputEventMap.KEY_5
+        SET_NAME = InputEventMap.KEY_6
+        STOP_SYSTEM = InputEventMap.KEY_9
 
     def __init__(self):
         """Default ctor."""

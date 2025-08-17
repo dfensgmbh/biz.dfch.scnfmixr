@@ -23,9 +23,7 @@
 """Module SelectingItalian."""
 
 from biz.dfch.i18n import LanguageCode
-from ..fsm import UiEventInfo
 from ..fsm import StateBase
-from ..transition_event import TransitionEvent
 
 from .selecting_language_base import SelectingLanguageBase
 
@@ -39,9 +37,7 @@ class SelectingItalian(SelectingLanguageBase):
 
         super().__init__(
             event=event,
-            info_enter=UiEventInfo(
-                TransitionEvent.SELECTING_ITALIAN_ENTER, False),
-            info_leave=UiEventInfo(
-                TransitionEvent.SELECTING_ITALIAN_LEAVE, False),
+            info_enter=None,
+            info_leave=None,
             target_state=target,
             language=LanguageCode.IT)

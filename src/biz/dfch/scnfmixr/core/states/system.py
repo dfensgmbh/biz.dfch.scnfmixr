@@ -38,7 +38,6 @@ class System(StateBase):
     class Event(StrEnum):
         """Events for this state."""
 
-        # MENU = InputEventMap.KEY_5
         HELP = InputEventMap.KEY_ASTERISK
         SELECT_MAIN = InputEventMap.KEY_1
         SELECT_LANGUAGE = InputEventMap.KEY_2

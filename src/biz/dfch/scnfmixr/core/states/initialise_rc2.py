@@ -48,7 +48,7 @@ class InitialiseRc2(StateBase):
         HELP = InputEventMap.KEY_ASTERISK
         DETECT_DEVICE = InputEventMap.KEY_1
         SKIP_DEVICE = InputEventMap.KEY_2
-        MENU = InputEventMap.KEY_5
+        FORMAT_DEVICE = InputEventMap.KEY_6
         MOUNT_DEVICE = InputEventMap.KEY_7
         UNMOUNT_DEVICE = InputEventMap.KEY_8
         CLEAN_DEVICE = InputEventMap.KEY_9
@@ -59,8 +59,7 @@ class InitialiseRc2(StateBase):
         super().__init__(
             info_enter=UiEventInfo(
                 StateEvent.INITIALISE_RC2_ENTER, True),
-            info_leave=UiEventInfo(
-                StateEvent.INITIALISE_RC2_LEAVE, False)
+            info_leave=None,
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

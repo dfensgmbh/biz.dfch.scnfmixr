@@ -44,7 +44,6 @@ class SelectLanguage(StateBase):
         """Events for this state."""
 
         HELP = InputEventMap.KEY_ASTERISK
-        MENU = InputEventMap.KEY_5
         SELECT_ENGLISH = InputEventMap.KEY_1
         SELECT_GERMAN = InputEventMap.KEY_2
         SELECT_FRENCH = InputEventMap.KEY_3
