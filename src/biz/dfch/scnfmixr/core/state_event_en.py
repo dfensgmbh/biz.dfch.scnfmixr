@@ -51,7 +51,7 @@ Press "STAR" to repeat this message.
 The "Language Selection" menu
 
 Press "1" for english.
-Drücken Sie "2" für deutsch.
+Wählen Sie "2" für deutsch.
 Selectionner "3" pour français.
 Scegliere "4" por italiano.
 Press "STAR" to repeat this message.
