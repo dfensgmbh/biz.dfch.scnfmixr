@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module state_event_de."""
+"""Module state_event_en."""
 
 from .state_event import StateEvent
 

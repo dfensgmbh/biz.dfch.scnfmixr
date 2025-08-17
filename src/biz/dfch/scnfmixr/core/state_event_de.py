@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module state_event_en."""
+"""Module state_event_de."""
 
 from biz.dfch.scnfmixr.core.state_event import StateEvent
 
