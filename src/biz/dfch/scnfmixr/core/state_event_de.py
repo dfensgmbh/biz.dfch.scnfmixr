@@ -166,24 +166,8 @@ Wählen Sie "1" um zum "Hauptmenü" zu gelangen.
 Wählen Sie "2" um die Sprache auszuwählen.
 Wählen Sie "3" um zum "Speichermenü" zu gelangen.
 Wählen Sie "4" um ein Datum einzugeben.
-Wählen Sie "5" um eine Uhrzeit einzugeben.
+Wählen Sie "6" um eine Uhrzeit einzugeben.
 Wählen Sie "9" um das Gerät zu stoppen.
 
 Wählen Sie "STERN" um diese Nachricht zu wiederholen.
-"""  # noqa: E501
-
-        # # HELP = InputEventMap.KEY_ASTERISK
-        # # SELECT_MAIN = InputEventMap.KEY_1
-        # # SELECT_LANGUAGE = InputEventMap.KEY_2
-        # SELECT_STORAGE = InputEventMap.KEY_3
-        # # SET_DATE = InputEventMap.KEY_4
-        # # SET_TIME = InputEventMap.KEY_5
-        # SET_NAME = InputEventMap.KEY_6
-        # DETECT_STORAGE = InputEventMap.KEY_7
-        # DISCONNECT_STORAGE = InputEventMap.KEY_8
-        # STOP_SYSTEM = InputEventMap.KEY_9
-    StateEvent.SET_DATE_ENTER = """
-"""  # noqa: E501
-
-    StateEvent.SET_TIME_ENTER = """
 """  # noqa: E501
