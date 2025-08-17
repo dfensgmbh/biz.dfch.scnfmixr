@@ -410,7 +410,7 @@ class StateMachine:
                 current.Event.SHOW_STATUS,
                 current))
         )
-        current: Main = menu[State.STORAGE]
+        current: StorageManagement = menu[State.STORAGE]
         (
             current
             .add_transition(ReturningTrue(
@@ -519,11 +519,9 @@ class StateMachine:
         current: InitialiseRc2 = menu[State.INIT_RC2]
         (
             current
-            .add_transition(ReturningTrue(current.Event.HELP,
-                                          current))
             .add_transition(ReturningTrue(
-                current.Event.MENU,
-                menu[State.SYSTEM]))
+                current.Event.HELP,
+                current))
             .add_transition(DetectingRc2(
                 current.Event.DETECT_DEVICE,
                 menu[State.SET_DATE]))
@@ -545,8 +543,6 @@ class StateMachine:
             current
             .add_transition(ReturningTrue(current.Event.HELP,
                                           current))
-            .add_transition(ReturningTrue(current.Event.MENU,
-                                          menu[State.SYSTEM]))
             .add_transition(DetectingRc1(current.Event.DETECT_DEVICE,
                                          menu[State.INIT_RC2]))
             .add_transition(SkippingRc1(current.Event.SKIP_DEVICE,
@@ -566,7 +562,6 @@ class StateMachine:
                 current))
             .add_transition(DetectingEx2(
                 current.Event.DETECT_DEVICE,
-
                 menu[State.INIT_RC1]))
             .add_transition(SkippingEx2(
                 current.Event.SKIP_DEVICE,
@@ -591,9 +586,6 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.HELP,
                 current))
-            .add_transition(ReturningTrue(
-                current.Event.MENU,
-                menu[State.SYSTEM]))
             .add_transition(SelectingEnglish(
                 current.Event.SELECT_ENGLISH,
                 menu[State.INIT_EX1]))
@@ -626,9 +618,6 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.HELP,
                 current))
-            .add_transition(ReturningTrue(
-                current.Event.MENU,
-                menu[State.SYSTEM]))
             .add_transition(DetectingLcl(
                 current.Event.DETECT_DEVICE,
                 menu[State.INIT_HI1]))
