@@ -50,6 +50,7 @@ class MediaPlayerClient(IAcquirable):
     _type: MediaPlayerType
     _sync_root: Lock
     _is_acquired: bool
+    _resource_files: list[str]
 
     _env: dict[str, str]
 
@@ -60,6 +61,7 @@ class MediaPlayerClient(IAcquirable):
         self._type = _type
         self._sync_root = Lock()
         self._is_acquired = False
+        self._resource_files = []
 
         self._env = {
             self._MPD_HOST_ENV_NAME: MediaPlayerType.get_value(_type),
@@ -80,6 +82,51 @@ class MediaPlayerClient(IAcquirable):
             log.warning("[%s] stderr: [%s]", self._type.name, stderr)
 
         return (stdout, stderr)
+
+    def _get_resource_files(self) -> list[str]:
+        """Loads all resources files."""
+
+        if 0 < len(self._resource_files):
+            return self._resource_files
+
+        cmd = [
+            self._MPC_FULLNAME,
+            MediaPlayerCommand.LIST_AUDIO,
+        ]
+        result, _ = self._invoke(cmd)
+
+        self._resource_files = result
+
+        return self._resource_files
+
+    def load_resource_queue(
+            self,
+            predicate: Callable[[str], bool] | None = None
+    ) -> list[str]:
+        """Loads the current based on the result of the predicate."""
+
+        assert predicate is None or predicate and callable(predicate)
+
+        result: list[str] = []
+
+        for file in self._get_resource_files():
+            if not predicate(file):
+                continue
+
+            cmd = [
+                self._MPC_FULLNAME,
+                MediaPlayerCommand.ADD,
+                file,
+            ]
+            result, _ = self._invoke(cmd)
+
+        cmd = [
+            self._MPC_FULLNAME,
+            MediaPlayerCommand.PLAYLIST,
+        ]
+        result, _ = self._invoke(cmd)
+
+        return result
 
     def load_queue(
             self,
