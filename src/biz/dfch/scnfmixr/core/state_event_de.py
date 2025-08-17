@@ -171,3 +171,19 @@ Wählen Sie "9" um das Gerät zu stoppen.
 
 Wählen Sie "STERN" um diese Nachricht zu wiederholen.
 """  # noqa: E501
+
+    StateEvent.STORAGE_MANAGEMENT_ENTER = """
+"Speichermenü"
+
+Wählen Sie "0", um alle Speichergeräte zu trennen.
+Wählen Sie "1", um "Speichergerät Eins" zu erkennen.
+Wählen Sie "3", um "Speichergerät Zwei" zu erkennen.
+Wählen Sie "4", um "Speichergerät Eins" zu formatieren.
+Wählen Sie "5", um zum "Systemmenü" zu gelangen.
+Wählen Sie "6", um "Speichergerät Zwei" zu formatieren.
+Wählen Sie "7", um "Speichergerät Eins" zu säubern.
+Wählen Sie "9", um "Speichergerät Zwei" zu säubern.
+
+
+Wählen Sie "STERN" um diese Nachricht zu wiederholen.
+"""  # noqa: E501
