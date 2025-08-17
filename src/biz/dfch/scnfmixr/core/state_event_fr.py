@@ -139,7 +139,7 @@ Exemple :
 
 zéro-huit-un-cinq
 
-cinq-six-quatre-deux pour 08 15 56 42.
+cinq-six-quatre-deux pour zéro-huit 15 56 42.
 
 Appuyez sur "ASTÉRISQUE" pour répéter ce message.
 """  # noqa: E501
@@ -148,8 +148,8 @@ Appuyez sur "ASTÉRISQUE" pour répéter ce message.
 Le menu "Principal"
 
 Appuyez sur "1" pour démarrer un enregistrement stéréo.
-Appuyez sur "2" pour démarrer un enregistrement dry iso et un enregistrement stéréo.
-Appuyez sur "3" pour démarrer un enregistrement wet iso, un enregistrement dry iso et un enregistrement stéréo.
+Appuyez sur "2" pour démarrer un enregistrement "dry iso" et un enregistrement stéréo.
+Appuyez sur "3" pour démarrer un enregistrement "wet iso", un enregistrement "dry iso" et un enregistrement stéréo.
 Appuyez sur "4" pour démarrer la lecture.
 Appuyez sur "5" pour accéder au menu "Système".
 Appuyez sur "6" pour attribuer un nouveau nom à votre prochain enregistrement.
@@ -168,6 +168,10 @@ Appuyez sur "4" pour sélectionner la date.
 Appuyez sur "5" pour sélectionner l'heure.
 Appuyez sur "9" pour arrêter l'appareil.
 Appuyez sur "ASTÉRISQUE" pour répéter ce message.
+"""  # noqa: E501
+
+    StateEvent.INIT_AUDIO_LEAVE = """
+Système audio entièrement initialisé.
 """  # noqa: E501
 
     StateEvent.FINAL_STATE_ENTER = """
