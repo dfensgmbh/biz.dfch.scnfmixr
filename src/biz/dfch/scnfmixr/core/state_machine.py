@@ -78,7 +78,11 @@ from .states import InitialiseAudio
 from .transitions import InitialisingAudio
 
 from .states import Main
-from .transitions import StartingRecording
+from .transitions.starting_recording_mixes import (
+    StartingRecordingMx0,
+    StartingRecordingMx1,
+    StartingRecordingMx2,
+)
 
 from .states import OnRecord
 from .transitions import StoppingRecording, SettingCuePoint, TogglingMute, ShowingStatus \
@@ -431,8 +435,14 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.MENU,
                 menu[State.SYSTEM]))
-            .add_transition(StartingRecording(
-                current.Event.START_RECORDING,
+            .add_transition(StartingRecordingMx0(
+                current.Event.START_RECORDING_MX0,
+                menu[State.ON_RECORD]))
+            .add_transition(StartingRecordingMx1(
+                current.Event.START_RECORDING_MX1,
+                menu[State.ON_RECORD]))
+            .add_transition(StartingRecordingMx2(
+                current.Event.START_RECORDING_MX2,
                 menu[State.ON_RECORD]))
             .add_transition(ReturningTrue(
                 current.Event.START_PLAYBACK,

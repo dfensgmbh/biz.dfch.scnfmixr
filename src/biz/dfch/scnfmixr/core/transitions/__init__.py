@@ -60,7 +60,12 @@ from .unmounting_rc2 import UnmountingRc2
 from .processing_digit import ProcessingDigit
 
 from .initialising_audio import InitialisingAudio
-from .starting_recording import StartingRecording
+from .starting_recording_mixes import (
+    StartingRecordingMx0,
+    StartingRecordingMx1,
+    StartingRecordingMx2,
+)
+from .stopping_recording import StoppingRecording
 from .stopping_system import StoppingSystem
 from .setting_date import SettingDate
 from .mounting_storage import MountingStorage
@@ -71,7 +76,6 @@ from .formatting_storage import (
     FormattingStorageRc2,
 )
 
-from .stopping_recording import StoppingRecording
 from .setting_cuepoint import SettingCuePoint
 from .toggling_mute import TogglingMute
 from .showing_status import ShowingStatus
@@ -125,7 +129,7 @@ __all__ = [
 
     "InitialisingAudio",
 
-    "StartingRecording",
+    "starting_recording_mixes",
     "SettingDate",
     "MountingStorage",
     "DisconnectingStorage",
@@ -134,6 +138,9 @@ __all__ = [
     "FormattingStorageRc2",
     "StoppingSystem",
 
+    "StartingRecordingMx0",
+    "StartingRecordingMx1",
+    "StartingRecordingMx2",
     "StoppingRecording",
     "TogglingMute",
     "SettingCuePoint",

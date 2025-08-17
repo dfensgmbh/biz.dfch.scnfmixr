@@ -40,8 +40,10 @@ class Main(StateBase):
 
         HELP = InputEventMap.KEY_ASTERISK
         MENU = InputEventMap.KEY_5
-        START_RECORDING = InputEventMap.KEY_1
-        START_PLAYBACK = InputEventMap.KEY_2
+        START_RECORDING_MX0 = InputEventMap.KEY_1
+        START_RECORDING_MX1 = InputEventMap.KEY_2
+        START_RECORDING_MX2 = InputEventMap.KEY_3
+        START_PLAYBACK = InputEventMap.KEY_4
 
     def __init__(self):
         """Default ctor."""

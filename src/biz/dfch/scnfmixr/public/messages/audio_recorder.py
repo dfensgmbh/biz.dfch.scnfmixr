@@ -92,18 +92,19 @@ class AudioRecorder:
     class RecordingStartCommand(CommandMedium, IAudioRecorderMessage):
         """Start recording."""
 
-        items: list[FileName]
-        jack_device: str
+        items: dict[str, list[FileName]]
 
-        def __init__(self, items: list[FileName], jack_device: str):
+        def __init__(self, items: dict[str, list[FileName]]):
             super().__init__()
 
-            assert items and isinstance(items, list)
-            assert all(isinstance(e, FileName) for e in items)
-            assert isinstance(jack_device, str) and jack_device.strip()
+            assert items and isinstance(items, dict)
+            assert all(isinstance(e, str) for e in items)
+            assert all(
+                isinstance(e, list) and all(
+                    isinstance(item, FileName)
+                    for item in e) for e in items.values())
 
             self.items = items
-            self.jack_device = jack_device
 
     class RecordingPauseCommand(CommandMedium, IAudioRecorderMessage):
         """Pause recording."""

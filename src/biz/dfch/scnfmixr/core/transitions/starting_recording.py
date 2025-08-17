@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module starting_recording."""
+"""Module starting_recording_mx0."""
 
 from biz.dfch.logging import log
 
@@ -40,10 +40,18 @@ from ..transition_event import TransitionEvent
 class StartingRecording(TransitionBase):
     """Starts a recording."""
 
-    def __init__(self, event: str, target: StateBase):
+    _devices: list[MixbusDevice] = []
+
+    def __init__(
+            self,
+            event: str,
+            target: StateBase,
+            devices: list[MixbusDevice]):
 
         assert event and event.strip()
         assert target
+        assert isinstance(devices, list)
+        assert all(isinstance(e, MixbusDevice) for e in devices)
 
         super().__init__(
             event,
@@ -53,48 +61,56 @@ class StartingRecording(TransitionBase):
                 TransitionEvent.STARTING_RECORDING_LEAVE, False),
             target_state=target)
 
+        self._devices = devices
+
     def invoke(self, _):
 
         app_ctx = ApplicationContext.Factory.get()
         base_name = app_ctx.date_time_name_input.get_name()
         now = SystemTime.Factory.get().now()
 
+        items: dict[str, list[FileName]] = {}
+
         AudioRecorder.Factory.get()
 
-        files: list[str] = []
+        for mixbus_device in self._devices:
 
-        jack_device = MixbusDevice.MX0
-        suffix = jack_device.name
-        for device, device_info in app_ctx.storage_configuration_map.items():
+            files: list[FileName] = []
 
-            file = FileName(
-                path_name=device_info.mount_point,
-                base_name=base_name,
-                dt=now,
-                suffix=suffix
-            )
+            suffix = mixbus_device.name
+            for device, device_info in \
+                    app_ctx.storage_configuration_map.items():
 
-            log.debug("[%s] Filename '%s' [path: %s] [file: %s]",
-                      device.name,
-                      file.fullname,
-                      file.direxists,
-                      file.exists)
+                file = FileName(
+                    path_name=device_info.mount_point,
+                    base_name=base_name,
+                    dt=now,
+                    suffix=suffix
+                )
 
-            if file.direxists and not file.exists:
-                files.append(file)
+                log.debug("[%s] Filename '%s' [path: %s] [file: %s]",
+                          device.name,
+                          file.fullname,
+                          file.direxists,
+                          file.exists)
 
-        if 0 == len(files):
-            log.error("No storage devices detected. Cannot record.")
-            return False
+                if file.direxists and not file.exists:
+                    files.append(file)
 
-        log.debug("Waiting for recording to start ...")
+            if 0 == len(files):
+                log.error("No storage devices detected. Cannot record.")
+                return False
+
+            items[mixbus_device.value] = files
+
+        log.debug("Waiting for recording to start ... [%s]", items)
 
         with FuncExecutor(
             lambda _: True,
             lambda e: isinstance(e, msgt.StartedNotification)
         ) as sync:
             result = sync.invoke(
-                msgt.RecordingStartCommand(files, jack_device.value))
+                msgt.RecordingStartCommand(items))
 
         if result:
             log.info("Waiting for recording to start OK.")

@@ -39,6 +39,8 @@ from ..jack_commands import (
     JackConnection,
     JackTransport,
 )
+from ..public.audio import FileFormat, SampleRate
+from ..public.mixer import ConnectionInfo
 from ..public.storage import FileName
 from ..public.system import MessageBase
 from ..public.messages import IAudioRecorderMessage
@@ -65,6 +67,16 @@ class AudioRecorder:
 
     _JACK_CAPTURE_NAME = "jack_capture"
     _JACK_CAPTURE_FULLNAME = f"/usr/bin/{_JACK_CAPTURE_NAME}"
+    _JACK_OPT_VERBOSE = "--verbose"
+    _JACK_OPT_DISABLE_CONSOLE = "--disable-console"
+    _JACK_OPT_DAEMON = "--daemon"
+    _JACK_OPT_JACK_TRANSPORT = "--jack-transport"
+    _JACK_OPT_FILE_FORMAT = "--format"
+    _JACK_OPT_FILE_FORMAT_VALUE = FileFormat.FLAC
+    _JACK_OPT_BIT_DEPTH = "--bitdepth"
+    _JACK_OPT_BIT_DEPTH_VALUE = "24"
+    _JACK_OPT_CHANNEL_COUNT = "--channels"
+    _JACK_OPT_PORT_NAME = "--port"
 
     _message_queue: MessageQueue
     _sync_root: threading.Lock
@@ -72,7 +84,7 @@ class AudioRecorder:
     _processes: list[Process]
     state: AudioRecorder.Event
 
-    items: list[FileName]
+    items: dict[str, list[FileName]]
 
     _cue_points_times: list[float]
 
@@ -146,12 +158,15 @@ class AudioRecorder:
 
             cmd = cast(msgt.RecordingStartCommand, message)
             items = cmd.items
-            jack_device = cmd.jack_device
-            assert items and isinstance(items, list) and 1 <= len(items) <= 2
-            assert isinstance(jack_device, str) and jack_device.strip()
+            assert items and isinstance(items, dict)
+            assert all(isinstance(e, str) for e in items)
+            assert all(
+                isinstance(e, list) and all(
+                    isinstance(item, FileName)
+                    for item in e) for e in items.values())
 
             def _worker_start():
-                self.start(items, jack_device)
+                self.start(items)
 
             threading.Thread(target=_worker_start, daemon=True).start()
 
@@ -222,68 +237,83 @@ class AudioRecorder:
                 self._message_queue.publish(
                     msgt.StateErrorMessage())
 
-    def start(self, items: list[str], jack_device_name: str) -> bool:
+    # def start(self, items: list[str], jack_device_name: str) -> bool:
+    def start(self, items: dict[str, list[FileName]]) -> bool:
         """Starts a recording."""
 
-        assert items and isinstance(items, list) and 1 <= len(items) <= 2
-        assert all(isinstance(e, FileName) for e in items)
-        assert isinstance(jack_device_name, str) and jack_device_name.strip()
+        assert items and isinstance(items, dict)
+        assert all(isinstance(e, str) for e in items)
+        assert all(
+            isinstance(e, list) and all(
+                isinstance(item, FileName)
+                for item in e) for e in items.values())
 
         if self.state != AudioRecorder.Event.STOPPED:
             return False
 
-        mixbus = AudioMixer.Factory.get().mixbus
-        jack_device = mixbus.get_device(jack_device_name)
-        port_names = [e.name for e in jack_device.sources]
-        log.debug("Setting up capture from these '%s' ports [%s] ...",
-                  len(port_names), port_names)
-
         self.items = items
 
-        self._set_state(AudioRecorder.Event.STARTING)
-        log.debug("Starting recording ... [%s]", [
-                  e.fullname for e in self.items])
-
+        mixbus = AudioMixer.Factory.get().mixbus
         self._processes.clear()
-        for item in items:
-            cmd: list[str] = [
-                self._JACK_CAPTURE_FULLNAME,
-                # "-V",
-                "-dc",
-                "--daemon",
-                "-jt",
-                "-f",
-                "flac",
-                "-b",
-                "24",
-                "-c",
-                # "2",
-                # "EX2-O:*",
-                # "-p",
-                # "MixBus:*",
-                # "-p",
-                # "MixBus:MX0:capture_1",
-                # "-p",
-                # "MixBus:MX0:capture_2",
-                # item
-            ]
-            cmd.append(len(port_names))
-            for port_name in port_names:
-                cmd.append("-p")
-                cmd.append(port_name)
-            cmd.append(item)
-            self._processes.append(Process.start(cmd, wait_on_completion=False))
 
-        while not JackConnection.has_client_name(self._JACK_CAPTURE_NAME):
-            time.sleep(0.25)
+        all_port_names: dict[str, int] = {}
+        for mixbus_device_name, filenames in items.items():
 
-        JackTransport().start()
+            mixbus_device = mixbus.get_device(mixbus_device_name)
+            port_names = [e.name for e in mixbus_device.sources]
+            log.debug("[%s] Setting up capture from these '%s' ports [%s] ...",
+                      mixbus_device_name, len(port_names), port_names)
+
+            self._set_state(AudioRecorder.Event.STARTING)
+            log.debug("Starting recording ... [%s]", [
+                e.fullname for e in filenames])
+
+            for filename in filenames:
+                cmd: list[str] = [
+                    self._JACK_CAPTURE_FULLNAME,
+                    self._JACK_OPT_VERBOSE,
+                    self._JACK_OPT_DISABLE_CONSOLE,
+                    self._JACK_OPT_DAEMON,
+                    self._JACK_OPT_JACK_TRANSPORT,
+                    self._JACK_OPT_FILE_FORMAT,
+                    self._JACK_OPT_FILE_FORMAT_VALUE,
+                    self._JACK_OPT_BIT_DEPTH,
+                    self._JACK_OPT_BIT_DEPTH_VALUE,
+                    self._JACK_OPT_CHANNEL_COUNT,
+                ]
+                cmd.append(len(port_names))
+                for port_name in port_names:
+                    cmd.append(self._JACK_OPT_PORT_NAME)
+                    cmd.append(port_name)
+                    all_port_names[port_name] = 1 + \
+                        all_port_names.get(port_name, 0)
+                cmd.append(filename.fullname)
+                self._processes.append(
+                    Process.start(cmd, wait_on_completion=False))
+
         with self._sync_root:
             self._cue_points_times.clear()
             self._cue_points_times.append(time.monotonic())
 
-        log.info("Starting recording OK. [%s]", [
-                 e.fullname for e in self.items])
+        for port_name, count in all_port_names.items():
+            others: list[str] = []
+            log.debug("Waiting for '%s' connections on port '%s' ...",
+                      count, port_name)
+            while True:
+                info = ConnectionInfo(JackConnection.get_connections3())
+                others = [e for e in info.get_connection_entries(
+                    port_name) if e.startswith(self._JACK_CAPTURE_NAME)]
+
+                log.debug("%s [%s]: Connections [%s]", port_name, count, others)
+                if count <= len(others):
+                    break
+                time.sleep(0.25)
+
+        JackTransport().start()
+
+        for mixbus_device_name, filenames in items.items():
+            log.info("Starting recording OK. [%s]", [
+                e.fullname for e in filenames])
         self._set_state(AudioRecorder.Event.STARTED)
 
         return True
@@ -291,81 +321,102 @@ class AudioRecorder:
     def stop(self) -> bool:
         """Stops a recording."""
 
+        # DFTODO - adjust to process all filenames.
+
         if self.state != AudioRecorder.Event.STARTED:
             return False
 
+        # Weird syntax ... but here, we flatten the all filenames into a
+        # single list.
+        filenames = [f for _, f in self.items.items() for f in f]
+
         self._set_state(AudioRecorder.Event.STOPPING)
         log.debug("Stopping recording ... [%s]", [
-                  e.fullname for e in self.items])
+                  e.fullname for e in filenames])
 
         JackTransport().stop()
-        time.sleep(3)
+        # Here we use the time that is used by jack_capture to periodically
+        # flush its buffers.
+        time.sleep(4)
 
         for process in self._processes:
             log.debug("Waiting for process [%s] ...", process.pid)
+            # DFTODO - why do not use here "stop" or expose wait in "Process"?
             return_code = process._popen.wait()
             log.info(
                 "Waiting for process [%s] OK. [%s]", process.pid, return_code)
 
         log.info("Stopping recording OK. [%s]", [
-            e.fullname for e in self.items])
+            e.fullname for e in filenames])
         self._set_state(AudioRecorder.Event.STOPPED)
 
         self._processes.clear()
 
-        fileitem: FileName = self.items[0]
-        filename = fileitem.filename
-        sample_rate: int = 48000
-        samples: list[int] = []
-        lines: list[str] = []
+        # DFTODO - the following section needs heavy cleanup.
+        # * Extract to function
+        # * Do seekpoint / cue marker calculation only once.
+        # * Use const for cmd line options.
+        # * Rethink section locking.
+        for f in filenames:
 
-        with self._sync_root:
+            # DFTODO - extract to function.
+            _METAFLAC_FULLNAME = "/usr/bin/metaflac"  # pylint: disable=C0103
 
-            start_offset = self._cue_points_times[0]
-            convert = TimeConversion(start_offset, sample_rate)
+            filename = f.filename
+            fullname = f.fullname
+            sample_rate: int = SampleRate.R48000.value
+            samples: list[int] = []
+            lines: list[str] = []
 
-            track_count = 1
-            lines.append(f'FILE "{filename}" WAVE')
+            # DFTODO - why do we lock this section?
+            with self._sync_root:
 
-            for point in self._cue_points_times[1:]:
+                start_offset = self._cue_points_times[0]
+                convert = TimeConversion(start_offset, sample_rate)
 
-                sample = convert.get_samples_aligned(point)
-                samples.append(sample)
+                track_count = 1
+                lines.append(f'FILE "{filename}" WAVE')
 
-                lines.append(f"TRACK {track_count:02} AUDIO")
-                lines.append(f"INDEX 01 {convert.to_cuesheet_string(point)}")
-                track_count += 1
+                for point in self._cue_points_times[1:]:
 
-            text = '\n'.join(lines)
+                    sample = convert.get_samples_aligned(point)
+                    samples.append(sample)
 
-        cmd = [
-            "/usr/bin/metaflac",
-            f'--set-tag="TITLE={filename}"',
-            fileitem.fullname
-        ]
-        log.debug("Setting title: [%s]", cmd)
-        Process.communicate(cmd)
+                    lines.append(f"TRACK {track_count:02} AUDIO")
+                    lines.append(
+                        f"INDEX 01 {convert.to_cuesheet_string(point)}")
+                    track_count += 1
 
-        cuesheet_fullname = f"/tmp/{filename}.cue"
-        cmd = [
-            "/usr/bin/metaflac",
-            f"--import-cuesheet-from={cuesheet_fullname}",
-            fileitem.fullname
-        ]
-        log.debug("Setting cue points: [%s]", text)
-        with open(cuesheet_fullname, 'w', encoding='utf-8') as file:
-            file.write(text)
+                text = '\n'.join(lines)
 
-        log.debug("Setting cue points: [%s]", cmd)
-        Process.communicate(cmd)
+            cmd = [
+                _METAFLAC_FULLNAME,
+                f'--set-tag="TITLE={filename}"',
+                fullname
+            ]
+            log.debug("Setting title: [%s]", cmd)
+            Process.communicate(cmd)
 
-        cmd = [
-            "/usr/bin/metaflac",
-        ]
-        for sample in samples:
-            cmd.append(f"--add-seekpoint={sample}")
-        cmd.append(fileitem.fullname)
-        log.debug("Setting seek points: [%s]", cmd)
-        Process.communicate(cmd)
+            cuesheet_fullname = f"/tmp/{filename}.cue"
+            cmd = [
+                _METAFLAC_FULLNAME,
+                f"--import-cuesheet-from={cuesheet_fullname}",
+                fullname
+            ]
+            log.debug("Setting cue points: [%s]", text)
+            with open(cuesheet_fullname, 'w', encoding='utf-8') as file:
+                file.write(text)
+
+            log.debug("Setting cue points: [%s]", cmd)
+            Process.communicate(cmd)
+
+            cmd = [
+                _METAFLAC_FULLNAME,
+            ]
+            for sample in samples:
+                cmd.append(f"--add-seekpoint={sample}")
+            cmd.append(fullname)
+            log.debug("Setting seek points: [%s]", cmd)
+            Process.communicate(cmd)
 
         return True

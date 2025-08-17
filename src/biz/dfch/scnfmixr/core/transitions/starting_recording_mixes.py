@@ -20,22 +20,29 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module sample_rate."""
+"""Module starting_recording_mixes."""
 
-from enum import IntEnum
+from biz.dfch.scnfmixr.public.mixer import MixbusDevice
+from .starting_recording import StartingRecording
 
 
-class SampleRate(IntEnum):
-    """Supported sample rates."""
+class StartingRecordingMx0(StartingRecording):
+    """Starts a recording for MX0."""
 
-    R08000 = 8000
-    R16000 = 16000
-    R24000 = 24000
-    R32000 = 32000
-    R44100 = 44100
-    CD = R44100
-    R48000 = 48000
-    R88200 = 88200
-    R96000 = 96000
-    SACD = R96000
-    DEFAULT = 48000
+    def __init__(self, event, target):
+        super().__init__(event, target, [MixbusDevice.MX0])
+
+
+class StartingRecordingMx1(StartingRecording):
+    """Starts a recording for MX0, MX1"""
+
+    def __init__(self, event, target):
+        super().__init__(event, target, [MixbusDevice.MX0, MixbusDevice.MX1])
+
+
+class StartingRecordingMx2(StartingRecording):
+    """Starts a recording for MX0, MX1, MX2."""
+
+    def __init__(self, event, target):
+        super().__init__(event, target, [
+            MixbusDevice.MX0, MixbusDevice.MX1, MixbusDevice.MX2])
