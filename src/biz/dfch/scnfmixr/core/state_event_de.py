@@ -183,8 +183,11 @@ Wählen Sie "6", um "Speichergerät Zwei" zu formatieren.
 Wählen Sie "7", um "Speichergerät Eins" zu säubern.
 Wählen Sie "9", um "Speichergerät Zwei" zu säubern.
 
-
 Wählen Sie "STERN" um diese Nachricht zu wiederholen.
+"""  # noqa: E501
+
+    StateEvent.INIT_AUDIO_LEAVE = """
+Das Audio-System wurde vollständig initialisiert.
 """  # noqa: E501
 
     StateEvent.FINAL_STATE_ENTER = """
