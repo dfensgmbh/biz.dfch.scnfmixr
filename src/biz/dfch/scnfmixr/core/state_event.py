@@ -28,37 +28,27 @@ from enum import StrEnum, auto
 class StateEvent(StrEnum):
     """State Enter and Leave audio information."""
 
+    # Detection of 
     INITIALISE_HI1_ENTER = auto()
     INITIALISE_HI1_LEAVE = auto()
-    INITIALISE_HI2_ENTER = auto()
-    INITIALISE_HI2_LEAVE = auto()
-    INITIALISE_HI3_ENTER = auto()
-    INITIALISE_HI3_LEAVE = auto()
 
     INITIALISE_LCL_ENTER = auto()
     INITIALISE_LCL_LEAVE = auto()
     INITIALISE_EX1_ENTER = auto()
-    INITIALISE_EX1_LEAVE = auto()
     INITIALISE_EX2_ENTER = auto()
-    INITIALISE_EX2_LEAVE = auto()
 
     INITIALISE_RC1_ENTER = auto()
-    INITIALISE_RC1_LEAVE = auto()
     INITIALISE_RC2_ENTER = auto()
-    INITIALISE_RC2_LEAVE = auto()
 
     SELECT_LANGUAGE_ENTER = auto()
-    SELECT_LANGUAGE_LEAVE = auto()
 
     SET_DATE_ENTER = auto()
-    SET_DATE_LEAVE = auto()
     SET_TIME_ENTER = auto()
-    SET_TIME_LEAVE = auto()
     SET_NAME_ENTER = auto()
-    SET_NAME_LEAVE = auto()
 
-    INIT_AUDIO_ENTER = auto()
     INIT_AUDIO_LEAVE = auto()
+
+    MAIN_ENTER = auto()
 
     SYSTEM_ENTER = auto()
     SYSTEM_LEAVE = auto()
@@ -66,13 +56,4 @@ class StateEvent(StrEnum):
     STORAGE_MANAGEMENT_ENTER = auto()
     STORAGE_MANAGEMENT_LEAVE = auto()
 
-    MAIN_ENTER = auto()
-    MAIN_LEAVE = auto()
-    ONRECORD_ENTER = auto()
-    ONRECORD_LEAVE = auto()
-
-    PLAYBACK_ENTER = auto()
-    PLAYBACK_LEAVE = auto()
-
     FINAL_STATE_ENTER = auto()
-    FINAL_STATE_LEAVE = auto()
