@@ -111,7 +111,6 @@ zéro-trois-deux-sept pour le 27 mars 1927.
 Appuyez sur «ASTÉRISQUE» pour répéter ce message.
 """  # noqa: E501
 
-
     StateEvent.SET_TIME_ENTER = """
 Le menu "Heure"
 
@@ -162,10 +161,11 @@ Appuyez sur "ASTÉRISQUE" pour répéter ce message.
     StateEvent.SYSTEM_ENTER = """
 Le menu «Système»  
 
-Appuyez sur «1» pour accéder au menu «Principal». 
-Appuyez sur «2» pour sélectionner la langue. 
-Appuyez sur «3» pour accéder au menu «Mémoire». Appuyez sur « 4 » pour configurer la date. 
-Appuyez sur «5» pour configurer l'heure. 
-Appuyez sur «9» pour arrêter l'appareil. 
+Appuyez sur «1» pour accéder au menu «Principal».
+Appuyez sur «2» pour sélectionner la langue.
+Appuyez sur «3» pour accéder au menu «Mémoire».
+Appuyez sur «4» pour sélectionner la date.
+Appuyez sur «5» pour sélectionner l'heure.
+Appuyez sur «9» pour arrêter l'appareil.
 Appuyez sur «ASTÉRISQUE» pour répéter ce message.  
 """  # noqa: E501
