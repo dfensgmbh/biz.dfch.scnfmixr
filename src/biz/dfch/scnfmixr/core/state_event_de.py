@@ -101,7 +101,7 @@ Menü "Datum"
 Geben Sie ein achtstelliges Datum ein, beginnend mit den 4 Ziffern des Jahres, gefolgt von den 2 Ziffern des Monats und den 2 Ziffern des Tages.
 
 Um eine Ziffer zu löschen, drücken Sie die "RÜCK-TASTE" oder "BACK-SPACE" Taste.
-Wenn Sie die Eingabe des Wertes abgeschlossen haben, oder von vorne beginnen möchten, drücken Sie die "Eingabetaste" oder "ENTER" Taste.
+Wenn Sie die Eingabe des Wertes abgeschlossen haben, oder von vorne beginnen möchten, drücken Sie die "EINGABE-TASTE" oder "ENTER" Taste.
 
 Beispiel:
 
@@ -119,7 +119,7 @@ Geben Sie eine vierstellige Uhrzeit ein, beginnend mit den 2 Ziffern im 24 Stund
 
 
 Um eine Ziffer zu löschen, drücken Sie die "RÜCK-TASTE" oder "BACK-SPACE" Taste.
-Wenn Sie die Eingabe des Wertes abgeschlossen haben, oder von vorne beginnen möchten, drücken Sie die "Eingabetaste" oder "ENTER" Taste.
+Wenn Sie die Eingabe des Wertes abgeschlossen haben, oder von vorne beginnen möchten, drücken Sie die "EINGABE-TASTE" oder "ENTER" Taste.
 
 Beispiel:
 
@@ -134,7 +134,7 @@ Menü "Dateiname"
 Geben Sie einen achtstelligen Namen ein, der als eindeutiger Name in Ihrer Aufzeichnung verwendet wird.
 
 Um eine Ziffer zu löschen, drücken Sie die "RÜCK-TASTE" oder "BACK-SPACE" Taste.
-Wenn Sie die Eingabe des Wertes abgeschlossen haben, oder von vorne beginnen möchten, drücken Sie die "Eingabetaste" oder "ENTER" Taste.
+Wenn Sie die Eingabe des Wertes abgeschlossen haben, oder von vorne beginnen möchten, drücken Sie die "EINGABE-TASTE" oder "ENTER" Taste.
 
 Beispiel:
 
@@ -175,13 +175,13 @@ Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 Menü für "Speichergeräte"
 
 Wählen Sie "0", um alle Speichergeräte zu trennen.
-Wählen Sie "1", um "Speichergerät Eins" zu erkennen.
-Wählen Sie "3", um "Speichergerät Zwei" zu erkennen.
-Wählen Sie "4", um "Speichergerät Eins" zu formatieren.
+Wählen Sie "1", um "Speichergerät EINS" zu erkennen.
+Wählen Sie "3", um "Speichergerät ZWEI" zu erkennen.
+Wählen Sie "4", um "Speichergerät EINS" zu formatieren.
 Wählen Sie "5", um zum "System-Menü" zu gelangen.
-Wählen Sie "6", um "Speichergerät Zwei" zu formatieren.
-Wählen Sie "7", um "Speichergerät Eins" zu säubern.
-Wählen Sie "9", um "Speichergerät Zwei" zu säubern.
+Wählen Sie "6", um "Speichergerät ZWEI" zu formatieren.
+Wählen Sie "7", um "Speichergerät EINS" zu säubern.
+Wählen Sie "9", um "Speichergerät ZWEI" zu säubern.
 
 Wählen Sie "STERN" um diese Nachricht zu wiederholen.
 """  # noqa: E501
