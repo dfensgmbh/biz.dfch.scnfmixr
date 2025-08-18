@@ -72,7 +72,18 @@ from .transitions import DetectingRc2, SkippingRc2, CleaningRc2, MountingRc2, Un
     # pylint: disable=C0301  # noqa: E501
 
 from .states import SetDate, SetTime, SetName
-from .transitions import ProcessingDigit
+from .transitions import ProcessingDigit0
+from .transitions import ProcessingDigit1
+from .transitions import ProcessingDigit2
+from .transitions import ProcessingDigit3
+from .transitions import ProcessingDigit4
+from .transitions import ProcessingDigit5
+from .transitions import ProcessingDigit6
+from .transitions import ProcessingDigit7
+from .transitions import ProcessingDigit8
+from .transitions import ProcessingDigit9
+from .transitions import ProcessingDigitOk
+from .transitions import ProcessingDigitBackspace
 
 from .states import InitialiseAudio
 from .transitions import InitialisingAudio
@@ -378,15 +389,6 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.SET_TIME,
                 menu[State.SET_TIME]))
-            .add_transition(ReturningTrue(
-                current.Event.SET_NAME,
-                menu[State.SET_NAME]))
-            .add_transition(ReturningTrue(
-                current.Event.DETECT_STORAGE,
-                menu[State.INIT_RC1]))
-            .add_transition(DisconnectingStorage(
-                current.Event.DISCONNECT_STORAGE,
-                current))
             .add_transition(StoppingSystem(
                 current.Event.STOP_SYSTEM,
                 menu[State.FINAL]))
@@ -419,11 +421,20 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.MENU,
                 menu[State.SYSTEM]))
+            .add_transition(DisconnectingStorage(
+                current.Event.DISCONNECT_STORAGE,
+                current))
             .add_transition(FormattingStorageRc1(
                 current.Event.FORMAT_RC1,
                 current))
             .add_transition(FormattingStorageRc2(
                 current.Event.FORMAT_RC2,
+                current))
+            .add_transition(DetectingRc1(
+                current.Event.DETECT_RC1,
+                current))
+            .add_transition(DetectingRc2(
+                current.Event.DETECT_RC2,
                 current))
         )
         current: Main = menu[State.MAIN]
@@ -447,6 +458,9 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.START_PLAYBACK,
                 menu[State.PLAYBACK]))
+            .add_transition(StoppingSystem(
+                current.Event.STOP_SYSTEM,
+                menu[State.FINAL]))
         )
         current: InitialiseAudio = menu[State.INIT_AUDIO]
         (
@@ -462,18 +476,20 @@ class StateMachine:
         current: SetName = menu[State.SET_NAME]
         (
             current
-            .add_transition(ProcessingDigit(current.Event.DIGIT_0, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_1, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_2, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_3, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_4, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_5, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_6, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_7, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_8, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_9, current))
-            .add_transition(ProcessingDigit(current.Event.BACK_SPACE, current))
-            .add_transition(ProcessingDigit(current.Event.ENTER, current))
+            .add_transition(ProcessingDigit0(current.Event.DIGIT_0, current))
+            .add_transition(ProcessingDigit1(current.Event.DIGIT_1, current))
+            .add_transition(ProcessingDigit2(current.Event.DIGIT_2, current))
+            .add_transition(ProcessingDigit3(current.Event.DIGIT_3, current))
+            .add_transition(ProcessingDigit4(current.Event.DIGIT_4, current))
+            .add_transition(ProcessingDigit5(current.Event.DIGIT_5, current))
+            .add_transition(ProcessingDigit6(current.Event.DIGIT_6, current))
+            .add_transition(ProcessingDigit7(current.Event.DIGIT_7, current))
+            .add_transition(ProcessingDigit8(current.Event.DIGIT_8, current))
+            .add_transition(ProcessingDigit9(current.Event.DIGIT_9, current))
+            .add_transition(ProcessingDigitOk(current.Event.ENTER, current))
+            .add_transition(ProcessingDigitBackspace(
+                current.Event.BACK_SPACE,
+                current))
             .add_transition(ReturningTrue(
                 current.Event.JUMP_NEXT,
                 menu[State.INIT_AUDIO]))
@@ -481,18 +497,20 @@ class StateMachine:
         current: SetTime = menu[State.SET_TIME]
         (
             current
-            .add_transition(ProcessingDigit(current.Event.DIGIT_0, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_1, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_2, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_3, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_4, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_5, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_6, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_7, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_8, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_9, current))
-            .add_transition(ProcessingDigit(current.Event.BACK_SPACE, current))
-            .add_transition(ProcessingDigit(current.Event.ENTER, current))
+            .add_transition(ProcessingDigit0(current.Event.DIGIT_0, current))
+            .add_transition(ProcessingDigit1(current.Event.DIGIT_1, current))
+            .add_transition(ProcessingDigit2(current.Event.DIGIT_2, current))
+            .add_transition(ProcessingDigit3(current.Event.DIGIT_3, current))
+            .add_transition(ProcessingDigit4(current.Event.DIGIT_4, current))
+            .add_transition(ProcessingDigit5(current.Event.DIGIT_5, current))
+            .add_transition(ProcessingDigit6(current.Event.DIGIT_6, current))
+            .add_transition(ProcessingDigit7(current.Event.DIGIT_7, current))
+            .add_transition(ProcessingDigit8(current.Event.DIGIT_8, current))
+            .add_transition(ProcessingDigit9(current.Event.DIGIT_9, current))
+            .add_transition(ProcessingDigitOk(current.Event.ENTER, current))
+            .add_transition(ProcessingDigitBackspace(
+                current.Event.BACK_SPACE,
+                current))
             .add_transition(ReturningTrue(
                 current.Event.JUMP_NEXT,
                 menu[State.SET_NAME]))
@@ -500,18 +518,20 @@ class StateMachine:
         current: SetDate = menu[State.SET_DATE]
         (
             current
-            .add_transition(ProcessingDigit(current.Event.DIGIT_0, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_1, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_2, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_3, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_4, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_5, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_6, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_7, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_8, current))
-            .add_transition(ProcessingDigit(current.Event.DIGIT_9, current))
-            .add_transition(ProcessingDigit(current.Event.BACK_SPACE, current))
-            .add_transition(ProcessingDigit(current.Event.ENTER, current))
+            .add_transition(ProcessingDigit0(current.Event.DIGIT_0, current))
+            .add_transition(ProcessingDigit1(current.Event.DIGIT_1, current))
+            .add_transition(ProcessingDigit2(current.Event.DIGIT_2, current))
+            .add_transition(ProcessingDigit3(current.Event.DIGIT_3, current))
+            .add_transition(ProcessingDigit4(current.Event.DIGIT_4, current))
+            .add_transition(ProcessingDigit5(current.Event.DIGIT_5, current))
+            .add_transition(ProcessingDigit6(current.Event.DIGIT_6, current))
+            .add_transition(ProcessingDigit7(current.Event.DIGIT_7, current))
+            .add_transition(ProcessingDigit8(current.Event.DIGIT_8, current))
+            .add_transition(ProcessingDigit9(current.Event.DIGIT_9, current))
+            .add_transition(ProcessingDigitOk(current.Event.ENTER, current))
+            .add_transition(ProcessingDigitBackspace(
+                current.Event.BACK_SPACE,
+                current))
             .add_transition(ReturningTrue(
                 current.Event.JUMP_NEXT,
                 menu[State.SET_TIME]))
