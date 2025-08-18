@@ -71,7 +71,7 @@ class DetectingRc2(TransitionBase):
         if result is None:
             ctx.events.publish(SystemMessage.UiEventInfoTransitionLeaveMessage(
                 UiEventInfo(
-                    TransitionEvent.DETECTING_DEVICE_EX2_FAILED, False)))
+                    TransitionEvent.DETECTING_DEVICE_RC2_FAILED, False)))
             return False
 
         log.debug("Detected storage device '%s': %s",

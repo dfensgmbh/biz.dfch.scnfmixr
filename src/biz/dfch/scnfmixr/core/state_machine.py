@@ -480,6 +480,7 @@ class StateMachine:
         current: SetName = menu[State.SET_NAME]
         (
             current
+            .add_transition(ReturningTrue(current.Event.HELP, current))
             .add_transition(ProcessingDigit0(current.Event.DIGIT_0, current))
             .add_transition(ProcessingDigit1(current.Event.DIGIT_1, current))
             .add_transition(ProcessingDigit2(current.Event.DIGIT_2, current))
@@ -501,6 +502,7 @@ class StateMachine:
         current: SetTime = menu[State.SET_TIME]
         (
             current
+            .add_transition(ReturningTrue(current.Event.HELP, current))
             .add_transition(ProcessingDigit0(current.Event.DIGIT_0, current))
             .add_transition(ProcessingDigit1(current.Event.DIGIT_1, current))
             .add_transition(ProcessingDigit2(current.Event.DIGIT_2, current))
@@ -522,6 +524,7 @@ class StateMachine:
         current: SetDate = menu[State.SET_DATE]
         (
             current
+            .add_transition(ReturningTrue(current.Event.HELP, current))
             .add_transition(ProcessingDigit0(current.Event.DIGIT_0, current))
             .add_transition(ProcessingDigit1(current.Event.DIGIT_1, current))
             .add_transition(ProcessingDigit2(current.Event.DIGIT_2, current))
