@@ -31,68 +31,54 @@ class TransitionEvent(StrEnum):
     # Menu: Detect HID HI1.
     DETECTING_DEVICE_HI1_ENTER = auto()
     DETECTING_DEVICE_HI1_LEAVE = auto()
-    SKIPPING_DEVICE_HI1_ENTER = auto()
     SKIPPING_DEVICE_HI1_LEAVE = auto()
 
     # Menu: Detect HID HI2.
     DETECTING_DEVICE_HI2_ENTER = auto()
     DETECTING_DEVICE_HI2_LEAVE = auto()
-    SKIPPING_DEVICE_HI2_ENTER = auto()
     SKIPPING_DEVICE_HI2_LEAVE = auto()
 
     # Menu: Detect HID HI3.
     DETECTING_DEVICE_HI3_ENTER = auto()
     DETECTING_DEVICE_HI3_LEAVE = auto()
-    SKIPPING_DEVICE_HI3_ENTER = auto()
     SKIPPING_DEVICE_HI3_LEAVE = auto()
 
     # Menu: Detect Audio LCL.
     DETECTING_DEVICE_LCL_ENTER = auto()
     DETECTING_DEVICE_LCL_LEAVE = auto()
-    SKIPPING_DEVICE_LCL_ENTER = auto()
     SKIPPING_DEVICE_LCL_LEAVE = auto()
 
     # Menu: Detect Audio EX1.
     DETECTING_DEVICE_EX1_ENTER = auto()
     DETECTING_DEVICE_EX1_LEAVE = auto()
-    SKIPINNG_DEVICE_EX1_ENTER = auto()
-    SKIPINNG_DEVICE_EX1_LEAVE = auto()
+    DETECTING_DEVICE_EX1_FAILED = auto()
+    SKIPPING_DEVICE_EX1_LEAVE = auto()
 
     # Menu: Detect Audio EX2.
     DETECTING_DEVICE_EX2_ENTER = auto()
     DETECTING_DEVICE_EX2_LEAVE = auto()
-    SKIPINNG_DEVICE_EX2_ENTER = auto()
-    SKIPINNG_DEVICE_EX2_LEAVE = auto()
+    DETECTING_DEVICE_EX2_FAILED = auto()
+    SKIPPING_DEVICE_EX2_LEAVE = auto()
 
     # Menu: Detect storage RC1.
     DETECTING_DEVICE_RC1_ENTER = auto()
     DETECTING_DEVICE_RC1_LEAVE = auto()
-    SKIPPING_DEVICE_RC1_ENTER = auto()
+    DETECTING_DEVICE_RC1_FAILED = auto()
     SKIPPING_DEVICE_RC1_LEAVE = auto()
 
     # Menu: Detect storage RC2.
     DETECTING_DEVICE_RC2_ENTER = auto()
     DETECTING_DEVICE_RC2_LEAVE = auto()
-    SKIPPING_DEVICE_RC2_ENTER = auto()
+    DETECTING_DEVICE_RC2_FAILED = auto()
     SKIPPING_DEVICE_RC2_LEAVE = auto()
 
     # Menu: Clean storage RC1.
     CLEANING_DEVICE_RC1_ENTER = auto()
     CLEANING_DEVICE_RC1_LEAVE = auto()
 
-    # Menu: Clean storage RC1.
+    # Menu: Clean storage RC2.
     CLEANING_DEVICE_RC2_ENTER = auto()
     CLEANING_DEVICE_RC2_LEAVE = auto()
-
-    # Menu: Select language.
-    SELECTING_ENGLISH_ENTER = auto()
-    SELECTING_ENGLISH_LEAVE = auto()
-    SELECTING_GERMAN_ENTER = auto()
-    SELECTING_GERMAN_LEAVE = auto()
-    SELECTING_FRENCH_ENTER = auto()
-    SELECTING_FRENCH_LEAVE = auto()
-    SELECTING_ITALIAN_ENTER = auto()
-    SELECTING_ITALIAN_LEAVE = auto()
 
     # Menu: Initialise audio.
     INITIALISING_AUDIO_ENTER = auto()
@@ -101,8 +87,6 @@ class TransitionEvent(StrEnum):
     # Menu: Main.
     STARTING_RECORDING_ENTER = auto()
     STARTING_RECORDING_LEAVE = auto()
-    SETTING_DATE_ENTER = auto()
-    SETTING_DATE_LEAVE = auto()
 
     # Menu: System.
     MOUNTING_STORAGE_ENTER = auto()
@@ -112,42 +96,41 @@ class TransitionEvent(StrEnum):
     FORMATTING_STORAGE_ENTER = auto()
     FORMATTING_STORAGE_LEAVE = auto()
     STOPPING_SYSTEM_ENTER = auto()
-    STOPPING_SYSTEM_LEAVE = auto()
 
     # Menu: OnRecord.
     STOPPING_RECORDING_ENTER = auto()
     STOPPING_RECORDING_LEAVE = auto()
-    SETTING_CUEPOINT_ENTER = auto()
     SETTING_CUEPOINT_LEAVE = auto()
-    TOGGLING_MUTE_ENTER = auto()
     TOGGLING_MUTE_LEAVE = auto()
-    SHOWING_STATUS_ENTER = auto()
     SHOWING_STATUS_LEAVE = auto()
 
     # Menu: Date, Time, Name
-    PROCESSING_DIGIT_ENTER = auto()
     PROCESSING_DIGIT_LEAVE = auto()
+    PROCESSING_DIGIT0_LEAVE = auto()
+    PROCESSING_DIGIT1_LEAVE = auto()
+    PROCESSING_DIGIT2_LEAVE = auto()
+    PROCESSING_DIGIT3_LEAVE = auto()
+    PROCESSING_DIGIT4_LEAVE = auto()
+    PROCESSING_DIGIT5_LEAVE = auto()
+    PROCESSING_DIGIT6_LEAVE = auto()
+    PROCESSING_DIGIT7_LEAVE = auto()
+    PROCESSING_DIGIT8_LEAVE = auto()
+    PROCESSING_DIGIT9_LEAVE = auto()
+    PROCESSING_DIGIT_OK_LEAVE = auto()
+    PROCESSING_DIGIT_BACKSPACE_LEAVE = auto()
 
     # Menu: Playback
-    LEAVING_PLAYBACK_ENTER = auto()
     LEAVING_PLAYBACK_LEAVE = auto()
-    SELECTING_PAUSE_ENTER = auto()
     SELECTING_PAUSE_LEAVE = auto()
-    JUMPING_CLIP_END_ENTER = auto()
-    JUMPING_CLIP_END_LEAVE = auto()
-    JUMPING_CLIP_START_ENTER = auto()
-    JUMPING_CLIP_START_LEAVE = auto()
-    JUMPING_CLIP_NEXT_ENTER = auto()
-    JUMPING_CLIP_NEXT_LEAVE = auto()
-    JUMPING_CLIP_PREVIOUS_ENTER = auto()
-    JUMPING_CLIP_PREVIOUS_LEAVE = auto()
-    JUMPING_CUE_NEXT_ENTER = auto()
+    SELECTING_RESUME_LEAVE = auto()
     JUMPING_CUE_NEXT_LEAVE = auto()
-    JUMPING_CUE_PREVIOUS_ENTER = auto()
     JUMPING_CUE_PREVIOUS_LEAVE = auto()
-    SEEKING_NEXT_ENTER = auto()
     SEEKING_NEXT_LEAVE = auto()
-    SEEKING_PREVIOUS_ENTER = auto()
     SEEKING_PREVIOUS_LEAVE = auto()
-    HELPING_PLAYBACK_ENTER = auto()
     HELPING_PLAYBACK_LEAVE = auto()
+    JUMPING_CLIP_NEXT_LEAVE = auto()
+    JUMPING_CLIP_PREVIOUS_LEAVE = auto()
+
+    # No specific menu.
+    RETURNING_TRUE_LEAVE = auto()
+    RETURNING_FALSE_LEAVE = auto()

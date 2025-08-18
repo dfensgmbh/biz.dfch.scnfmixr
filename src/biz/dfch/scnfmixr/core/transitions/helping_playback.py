@@ -22,8 +22,8 @@
 
 """Module helping_playback."""
 
-from biz.dfch.scnfmixr.core.fsm import StateBase, TransitionBase, UiEventInfo
-from biz.dfch.scnfmixr.core.transition_event import TransitionEvent
+from ..fsm import StateBase, TransitionBase, UiEventInfo
+from ..transition_event import TransitionEvent
 
 
 class HelpingPlayback(TransitionBase):
@@ -37,8 +37,7 @@ class HelpingPlayback(TransitionBase):
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.HELPING_PLAYBACK_ENTER, False),
+            info_enter=None,
             info_leave=UiEventInfo(
                 TransitionEvent.HELPING_PLAYBACK_LEAVE, False),
             target_state=target)

@@ -290,9 +290,6 @@ class MediaPlayerClient(IAcquirable):
     def pause(self):
         """Transport control: pause."""
 
-        with self._sync_root:
-            self._is_paused = not self._is_paused
-
         cmd = [
             self._MPC_FULLNAME,
             MediaPlayerCommand.PAUSE,

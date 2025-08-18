@@ -45,8 +45,7 @@ class SettingCuePoint(TransitionBase):
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.SETTING_CUEPOINT_ENTER, False),
+            info_enter=None,
             info_leave=UiEventInfo(
                 TransitionEvent.SETTING_CUEPOINT_LEAVE, False),
             target_state=target)

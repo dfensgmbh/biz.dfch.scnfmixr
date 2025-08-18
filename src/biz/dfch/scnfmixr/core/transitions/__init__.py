@@ -93,7 +93,7 @@ from .setting_cuepoint import SettingCuePoint
 from .toggling_mute import TogglingMute
 from .showing_status import ShowingStatus
 
-from .selecting_pause import SelectingPause
+from .selecting_pause import SelectingPause, SelectingResume
 from .leaving_playback import LeavingPlayback
 from .jumping_clip_start import JumpingClipStart
 from .jumping_clip_end import JumpingClipEnd
@@ -142,8 +142,10 @@ __all__ = [
 
     "InitialisingAudio",
 
-    "starting_recording_mixes",
-    "SettingDate",
+    "StartingRecordingMx0",
+    "StartingRecordingMx1",
+    "StartingRecordingMx2",
+
     "MountingStorage",
     "DisconnectingStorage",
     "FormattingStorage",
@@ -174,6 +176,7 @@ __all__ = [
     "ProcessingDigitBackspace",
 
     "SelectingPause",
+    "SelectingResume",
     "LeavingPlayback",
     "JumpingClipStart",
     "JumpingClipEnd",

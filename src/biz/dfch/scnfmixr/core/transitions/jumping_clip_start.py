@@ -25,9 +25,7 @@
 from ...public.messages.audio_playback import AudioPlayback
 from ..fsm import TransitionBase
 from ..fsm import StateBase
-from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
-from ..transition_event import TransitionEvent
 
 __all__ = [
     "JumpingClipStart",
@@ -44,10 +42,8 @@ class JumpingClipStart(TransitionBase):  # pylint: disable=R0903
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.JUMPING_CLIP_START_ENTER, False),
-            info_leave=UiEventInfo(
-                TransitionEvent.JUMPING_CLIP_START_LEAVE, False),
+            info_enter=None,
+            info_leave=None,
             target_state=target)
 
     def invoke(self, ctx: ExecutionContext):

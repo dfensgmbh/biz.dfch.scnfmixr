@@ -39,8 +39,7 @@ class TogglingMute(TransitionBase):
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.TOGGLING_MUTE_ENTER, False),
+            info_enter=None,
             info_leave=UiEventInfo(
                 TransitionEvent.TOGGLING_MUTE_LEAVE, False),
             target_state=target)

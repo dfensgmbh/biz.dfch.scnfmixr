@@ -44,8 +44,7 @@ class SeekingPrevious(TransitionBase):  # pylint: disable=R0903
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.SEEKING_PREVIOUS_ENTER, False),
+            info_enter=None,
             info_leave=UiEventInfo(
                 TransitionEvent.SEEKING_PREVIOUS_LEAVE, False),
             target_state=target)

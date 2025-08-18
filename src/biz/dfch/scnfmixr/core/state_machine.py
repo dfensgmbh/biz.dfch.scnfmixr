@@ -98,9 +98,10 @@ from .states import OnRecord
 from .transitions import StoppingRecording, SettingCuePoint, TogglingMute, ShowingStatus \
     # pylint: disable=C0301  # noqa: E501
 
-from .states import Playback
+from .states import Playback, PlaybackPaused
 from .transitions import (
     SelectingPause,
+    SelectingResume,
     SeekingPrevious,
     SeekingNext,
     JumpingClipStart,
@@ -133,6 +134,7 @@ class State(Enum):
     MAIN = auto()
     ON_RECORD = auto()
     PLAYBACK = auto()
+    PLAYBACK_PAUSED = auto()
     STORAGE = auto()
     FINAL = auto()
 
@@ -347,6 +349,9 @@ class StateMachine:
 
         assert State.PLAYBACK not in menu
         menu[State.PLAYBACK] = Playback()
+
+        assert State.PLAYBACK_PAUSED not in menu
+        menu[State.PLAYBACK_PAUSED] = PlaybackPaused()
 
         assert State.SYSTEM not in menu
         menu[State.SYSTEM] = System()
@@ -644,6 +649,19 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_HI1]))
         )
+        current: PlaybackPaused = menu[State.PLAYBACK_PAUSED]
+        (
+            current
+            .add_transition(HelpingPlayback(
+                current.Event.HELP,
+                current))
+            .add_transition(SelectingResume(
+                current.Event.PAUSE_RESUME,
+                menu[State.PLAYBACK]))
+            .add_transition(LeavingPlayback(
+                current.Event.MENU,
+                menu[State.MAIN]))
+        )
         current: Playback = menu[State.PLAYBACK]
         (
             current
@@ -655,7 +673,7 @@ class StateMachine:
                 menu[State.MAIN]))
             .add_transition(SelectingPause(
                 current.Event.PAUSE_RESUME,
-                current))
+                menu[State.PLAYBACK_PAUSED]))
             .add_transition(SeekingPrevious(
                 current.Event.SEEK_PREVIOUS,
                 current))

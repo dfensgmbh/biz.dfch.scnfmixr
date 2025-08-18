@@ -31,11 +31,12 @@ from ..transition_event import TransitionEvent
 
 __all__ = [
     "SelectingPause",
+    "SelectingResume",
 ]
 
 
 class SelectingPause(TransitionBase):  # pylint: disable=R0903
-    """Selects playback pause/resume."""
+    """Selects playback pause."""
 
     def __init__(self, event: str, target: StateBase):
 
@@ -44,8 +45,31 @@ class SelectingPause(TransitionBase):  # pylint: disable=R0903
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.SELECTING_PAUSE_ENTER, False),
+            info_enter=None,
+            info_leave=UiEventInfo(
+                TransitionEvent.SELECTING_PAUSE_LEAVE, False),
+            target_state=target)
+
+    def invoke(self, ctx: ExecutionContext):
+
+        assert isinstance(ctx, ExecutionContext)
+
+        ctx.events.publish(AudioPlayback.PauseResumeCommand())
+
+        return True
+
+
+class SelectingResume(TransitionBase):  # pylint: disable=R0903
+    """Selects playback resume."""
+
+    def __init__(self, event: str, target: StateBase):
+
+        assert isinstance(event, str) and event.strip()
+        assert isinstance(target, StateBase)
+
+        super().__init__(
+            event,
+            info_enter=None,
             info_leave=UiEventInfo(
                 TransitionEvent.SELECTING_PAUSE_LEAVE, False),
             target_state=target)

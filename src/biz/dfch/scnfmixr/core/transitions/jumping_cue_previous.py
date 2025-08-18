@@ -44,8 +44,7 @@ class JumpingCuePrevious(TransitionBase):  # pylint: disable=R0903
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.JUMPING_CUE_PREVIOUS_ENTER, False),
+            info_enter=None,
             info_leave=UiEventInfo(
                 TransitionEvent.JUMPING_CUE_PREVIOUS_LEAVE, False),
             target_state=target)

@@ -38,8 +38,7 @@ class ShowingStatus(TransitionBase):
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.SHOWING_STATUS_ENTER, False),
+            info_enter=None,
             info_leave=UiEventInfo(
                 TransitionEvent.SHOWING_STATUS_LEAVE, False),
             target_state=target)

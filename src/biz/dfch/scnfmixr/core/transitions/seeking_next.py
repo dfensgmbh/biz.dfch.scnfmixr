@@ -44,8 +44,7 @@ class SeekingNext(TransitionBase):  # pylint: disable=R0903
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.SEEKING_NEXT_ENTER, False),
+            info_enter=None,
             info_leave=UiEventInfo(
                 TransitionEvent.SEEKING_NEXT_LEAVE, False),
             target_state=target)

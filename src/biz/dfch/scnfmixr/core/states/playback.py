@@ -30,6 +30,30 @@ from ...public.messages.audio_playback import AudioPlayback
 from ...playback.audio_playback import AudioPlayback as player
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
+from ..transitions import SelectingPause
+
+
+__all__ = [
+    "Playback",
+    "PlaybackPaused",
+]
+
+
+class PlaybackPaused(StateBase):
+    """Implements the playback menu when it is paused."""
+
+    class Event(StrEnum):
+        """Events for this state."""
+
+        HELP = InputEventMap.KEY_ASTERISK
+        PAUSE_RESUME = InputEventMap.KEY_0
+        MENU = InputEventMap.KEY_5
+
+    def __init__(self):
+        super().__init__(
+            info_enter=None,
+            info_leave=None,
+        )
 
 
 class Playback(StateBase):
@@ -65,8 +89,11 @@ class Playback(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        # Only initialise upon entering this state from another state.
+        # Do not initialise upon entering from self.
         if self == ctx.previous:
+            return
+        # Do not initialise upon transitioning from SelectingPause.
+        if SelectingPause.__name__ == ctx.source:
             return
 
         # get / acquire are idempotent - safe to call them multiple times.
