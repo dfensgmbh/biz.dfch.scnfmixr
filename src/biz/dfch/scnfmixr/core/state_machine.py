@@ -37,7 +37,6 @@ from ..ui import UserInteractionAudio
 from ..app import ApplicationContext
 from .fsm import ExecutionContext, Fsm, StateBase
 
-
 from .states import FinalState
 
 from .states import StorageManagement
@@ -45,7 +44,7 @@ from .transitions import FormattingStorageRc1, FormattingStorageRc2
 
 from .states import System
 from .transitions import ReturningTrue
-from .transitions import SettingDate, StoppingSystem, DisconnectingStorage
+from .transitions import StoppingSystem, DisconnectingStorage
 
 from .states import SelectLanguage
 from .transitions import SelectingEnglish, SelectingGerman, SelectingFrench, SelectingItalian \
@@ -383,7 +382,7 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.SELECT_STORAGE,
                 menu[State.STORAGE]))
-            .add_transition(SettingDate(
+            .add_transition(ReturningTrue(
                 current.Event.SET_DATE,
                 menu[State.SET_DATE]))
             .add_transition(ReturningTrue(
