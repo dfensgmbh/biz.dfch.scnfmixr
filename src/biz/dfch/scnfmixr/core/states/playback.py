@@ -30,7 +30,7 @@ from ...public.messages.audio_playback import AudioPlayback
 from ...playback.audio_playback import AudioPlayback as player
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
-from ..transitions import SelectingPause
+from ..transitions import SelectingResume
 
 
 __all__ = [
@@ -93,7 +93,7 @@ class Playback(StateBase):
         if self == ctx.previous:
             return
         # Do not initialise upon transitioning from SelectingPause.
-        if SelectingPause.__name__ == ctx.source:
+        if SelectingResume.__name__ == ctx.source:
             return
 
         # get / acquire are idempotent - safe to call them multiple times.

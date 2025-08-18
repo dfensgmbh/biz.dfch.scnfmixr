@@ -71,7 +71,7 @@ class SelectingResume(TransitionBase):  # pylint: disable=R0903
             event,
             info_enter=None,
             info_leave=UiEventInfo(
-                TransitionEvent.SELECTING_PAUSE_LEAVE, False),
+                TransitionEvent.SELECTING_RESUME_LEAVE, False),
             target_state=target)
 
     def invoke(self, ctx: ExecutionContext):
