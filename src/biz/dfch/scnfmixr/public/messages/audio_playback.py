@@ -98,9 +98,11 @@ class AudioPlayback:
     class SeekPreviousCommand(SeekRelativeCommand, IAudioPlaybackMessage):
         """SeekPreviousCommand"""
 
+        SEEK_VALUE: int = -10
+
         value: int
 
-        def __init__(self, value: int = -10):
+        def __init__(self, value: int = SEEK_VALUE):
             assert isinstance(value, int) and 0 > value
 
             super().__init__(value)
@@ -110,9 +112,11 @@ class AudioPlayback:
     class SeekNextCommand(SeekRelativeCommand, IAudioPlaybackMessage):
         """SeekNextCommand"""
 
+        SEEK_VALUE: int = 30
+
         value: int
 
-        def __init__(self, value: int = 10):
+        def __init__(self, value: int = SEEK_VALUE):
             assert isinstance(value, int) and 0 < value
 
             super().__init__(value)
