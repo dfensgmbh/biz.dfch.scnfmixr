@@ -39,8 +39,7 @@ class SkippingRc1(TransitionBase):
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.SKIPPING_DEVICE_RC1_ENTER, False),
+            info_enter=None,
             info_leave=UiEventInfo(
                 TransitionEvent.SKIPPING_DEVICE_RC1_LEAVE, False),
             target_state=target)

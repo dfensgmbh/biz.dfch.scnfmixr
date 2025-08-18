@@ -38,8 +38,7 @@ class SkippingLcl(TransitionBase):
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.SKIPPING_DEVICE_LCL_ENTER, False),
+            info_enter=None,
             info_leave=UiEventInfo(
                 TransitionEvent.SKIPPING_DEVICE_LCL_LEAVE, False),
             target_state=target)

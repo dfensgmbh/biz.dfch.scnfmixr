@@ -51,8 +51,7 @@ class InitialiseAudio(StateBase):
     def __init__(self):
 
         super().__init__(
-            info_enter=UiEventInfo(
-                StateEvent.INIT_AUDIO_ENTER, True),
+            info_enter=None,
             info_leave=UiEventInfo(
                 StateEvent.INIT_AUDIO_LEAVE, False)
         )

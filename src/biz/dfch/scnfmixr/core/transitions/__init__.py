@@ -57,7 +57,21 @@ from .cleaning_rc2 import CleaningRc2
 from .mounting_rc2 import MountingRc2
 from .unmounting_rc2 import UnmountingRc2
 
-from .processing_digit import ProcessingDigit
+from .processing_digit import (
+    ProcessingDigit,
+    ProcessingDigit0,
+    ProcessingDigit1,
+    ProcessingDigit2,
+    ProcessingDigit3,
+    ProcessingDigit4,
+    ProcessingDigit5,
+    ProcessingDigit6,
+    ProcessingDigit7,
+    ProcessingDigit8,
+    ProcessingDigit9,
+    ProcessingDigitOk,
+    ProcessingDigitBackspace,
+)
 
 from .initialising_audio import InitialisingAudio
 from .starting_recording_mixes import (
@@ -147,6 +161,18 @@ __all__ = [
     "ShowingStatus",
 
     "ProcessingDigit",
+    "ProcessingDigit0",
+    "ProcessingDigit1",
+    "ProcessingDigit2",
+    "ProcessingDigit3",
+    "ProcessingDigit4",
+    "ProcessingDigit5",
+    "ProcessingDigit6",
+    "ProcessingDigit7",
+    "ProcessingDigit8",
+    "ProcessingDigit9",
+    "ProcessingDigitOk",
+    "ProcessingDigitBackspace",
 
     "SelectingPause",
     "LeavingPlayback",

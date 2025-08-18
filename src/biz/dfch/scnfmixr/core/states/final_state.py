@@ -30,10 +30,8 @@ from biz.dfch.logging import log
 from ...app import ApplicationContext
 from ...public.input import InputEventMap
 from ...system import MessageQueue
-from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
-from ..state_event import StateEvent
 
 from ...public.system.messages import SystemMessage
 
@@ -50,8 +48,8 @@ class FinalState(StateBase):
     def __init__(self):
 
         super().__init__(
-            info_enter=UiEventInfo(StateEvent.FINAL_STATE_ENTER, True),
-            info_leave=UiEventInfo(StateEvent.FINAL_STATE_LEAVE, False)
+            info_enter=None,
+            info_leave=None,
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

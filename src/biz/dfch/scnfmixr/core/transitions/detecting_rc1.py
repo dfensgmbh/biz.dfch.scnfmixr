@@ -27,9 +27,11 @@ from biz.dfch.logging import log
 from ...app import ApplicationContext
 from ...devices.storage import DetectingRcWorker
 from ...public.storage import StorageDevice
+from ...public.system.messages import SystemMessage
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
+from ..fsm import ExecutionContext
 from ..transition_event import TransitionEvent
 
 
@@ -50,7 +52,9 @@ class DetectingRc1(TransitionBase):
                 TransitionEvent.DETECTING_DEVICE_RC1_LEAVE, False),
             target_state=target)
 
-    def invoke(self, _):
+    def invoke(self, ctx):
+
+        assert isinstance(ctx, ExecutionContext)
 
         device = StorageDevice.RC1
 
@@ -65,6 +69,9 @@ class DetectingRc1(TransitionBase):
         result = selector.select()
 
         if result is None:
+            ctx.events.publish(SystemMessage.UiEventInfoTransitionLeaveMessage(
+                UiEventInfo(
+                    TransitionEvent.DETECTING_DEVICE_EX2_FAILED, False)))
             return False
 
         log.debug("Detected storage device '%s': %s",

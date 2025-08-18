@@ -33,10 +33,12 @@ from ...public.audio import AudioDevice
 from ...public.mixer import AudioInput, AudioOutput
 from ...public.mixer import ConnectionPolicy
 from ...public.mixer import MixbusDevice
+from ...public.system.messages import SystemMessage
 from ...mixer import DeviceFactory
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
+from ..fsm import ExecutionContext
 from ..transition_event import TransitionEvent
 
 
@@ -57,7 +59,10 @@ class DetectingEx2(TransitionBase):
                 TransitionEvent.DETECTING_DEVICE_EX2_LEAVE, False),
             target_state=target)
 
-    def invoke(self, _):
+    def invoke(self, ctx):
+
+        assert isinstance(ctx, ExecutionContext)
+
         app_ctx = ApplicationContext.Factory.get()
 
         device = AudioDevice.EX2
@@ -96,6 +101,9 @@ class DetectingEx2(TransitionBase):
 
             log.error("Device detection '%s' FAILED. [%s]",
                       device.name, ex)
+            ctx.events.publish(SystemMessage.UiEventInfoTransitionLeaveMessage(
+                UiEventInfo(
+                    TransitionEvent.DETECTING_DEVICE_EX2_FAILED, False)))
 
             return False
 

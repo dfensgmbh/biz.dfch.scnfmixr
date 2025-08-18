@@ -53,8 +53,7 @@ class InitialiseEx1(StateBase):
         super().__init__(
             info_enter=UiEventInfo(
                 StateEvent.INITIALISE_EX1_ENTER, True),
-            info_leave=UiEventInfo(
-                StateEvent.INITIALISE_EX1_LEAVE, False)
+            info_leave=None,
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

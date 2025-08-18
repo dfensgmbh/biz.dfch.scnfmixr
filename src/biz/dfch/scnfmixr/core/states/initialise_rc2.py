@@ -59,7 +59,8 @@ class InitialiseRc2(StateBase):
         super().__init__(
             info_enter=UiEventInfo(
                 StateEvent.INITIALISE_RC2_ENTER, True),
-            info_leave=None,
+            info_leave=UiEventInfo(
+                StateEvent.SWALLOW_STATE_ENTER_LEAVE, True),
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

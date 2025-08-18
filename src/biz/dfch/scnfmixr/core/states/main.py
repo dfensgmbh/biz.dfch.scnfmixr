@@ -52,7 +52,8 @@ class Main(StateBase):
 
         super().__init__(
             info_enter=UiEventInfo(StateEvent.MAIN_ENTER, True),
-            info_leave=None
+            info_leave=UiEventInfo(
+                StateEvent.SWALLOW_STATE_ENTER_LEAVE, False),
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

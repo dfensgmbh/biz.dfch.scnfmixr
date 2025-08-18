@@ -43,10 +43,7 @@ class System(StateBase):
         SELECT_LANGUAGE = InputEventMap.KEY_2
         SELECT_STORAGE = InputEventMap.KEY_3
         SET_DATE = InputEventMap.KEY_4
-        SET_TIME = InputEventMap.KEY_5
-        SET_NAME = InputEventMap.KEY_6
-        DETECT_STORAGE = InputEventMap.KEY_7
-        DISCONNECT_STORAGE = InputEventMap.KEY_8
+        SET_TIME = InputEventMap.KEY_6
         STOP_SYSTEM = InputEventMap.KEY_9
 
     def __init__(self):
@@ -54,7 +51,8 @@ class System(StateBase):
 
         super().__init__(
             info_enter=UiEventInfo(StateEvent.SYSTEM_ENTER, True),
-            info_leave=UiEventInfo(StateEvent.SYSTEM_LEAVE, False)
+            info_leave=UiEventInfo(
+                StateEvent.SWALLOW_STATE_ENTER_LEAVE, False),
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

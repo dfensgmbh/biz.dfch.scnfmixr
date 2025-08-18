@@ -51,10 +51,8 @@ class InitialiseHi2(StateBase):
         """Default ctor."""
 
         super().__init__(
-            info_enter=UiEventInfo(
-                StateEvent.INITIALISE_HI2_ENTER, True),
-            info_leave=UiEventInfo(
-                StateEvent.INITIALISE_HI2_LEAVE, False)
+            info_enter=None,
+            info_leave=None,
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

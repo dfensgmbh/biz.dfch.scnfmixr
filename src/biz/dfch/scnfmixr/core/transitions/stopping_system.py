@@ -41,9 +41,9 @@ class StoppingSystem(TransitionBase):
 
         super().__init__(
             event,
-            info_enter=None,
-            info_leave=UiEventInfo(
-                TransitionEvent.STOPPING_SYSTEM_LEAVE, False),
+            info_enter=UiEventInfo(
+                TransitionEvent.STOPPING_SYSTEM_ENTER, False),
+            info_leave=None,
             target_state=target)
 
     def invoke(self, _):

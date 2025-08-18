@@ -39,8 +39,7 @@ class SkippingHi3(TransitionBase):
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.SKIPPING_DEVICE_HI3_ENTER, False),
+            info_enter=None,
             info_leave=UiEventInfo(
                 TransitionEvent.SKIPPING_DEVICE_HI3_LEAVE, False),
             target_state=target)

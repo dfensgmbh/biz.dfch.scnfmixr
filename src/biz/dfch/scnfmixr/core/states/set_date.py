@@ -63,8 +63,7 @@ class SetDate(StateBase):
         super().__init__(
             info_enter=UiEventInfo(
                 StateEvent.SET_DATE_ENTER, True),
-            info_leave=UiEventInfo(
-                StateEvent.SET_DATE_LEAVE, False)
+            info_leave=None,
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

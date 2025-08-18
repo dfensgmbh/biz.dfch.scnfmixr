@@ -38,10 +38,9 @@ class SkippingEx2(TransitionBase):
 
         super().__init__(
             event,
-            info_enter=UiEventInfo(
-                TransitionEvent.SKIPINNG_DEVICE_EX2_ENTER, False),
+            info_enter=None,
             info_leave=UiEventInfo(
-                TransitionEvent.SKIPINNG_DEVICE_EX2_LEAVE, False),
+                TransitionEvent.SKIPPING_DEVICE_EX2_LEAVE, False),
             target_state=target)
 
     def invoke(self, ctx):

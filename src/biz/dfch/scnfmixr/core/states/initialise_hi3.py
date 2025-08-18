@@ -51,10 +51,8 @@ class InitialiseHi3(StateBase):
         """Default ctor."""
 
         super().__init__(
-            info_enter=UiEventInfo(
-                StateEvent.INITIALISE_HI3_ENTER, True),
-            info_leave=UiEventInfo(
-                StateEvent.INITIALISE_HI3_LEAVE, False)
+            info_enter=None,
+            info_leave=None,
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

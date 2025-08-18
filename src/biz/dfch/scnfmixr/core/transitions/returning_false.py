@@ -22,7 +22,8 @@
 
 """Module returning_false."""
 
-from biz.dfch.scnfmixr.core.fsm import StateBase, TransitionBase
+from ..fsm import TransitionBase, UiEventInfo, StateBase
+from ..transition_event import TransitionEvent
 
 
 # pylint: disable=R0903
@@ -36,6 +37,9 @@ class ReturningFalse(TransitionBase):
 
         super().__init__(
             event,
+            info_enter=None,
+            info_leave=UiEventInfo(
+                TransitionEvent.RETURNING_FALSE_LEAVE, False),
             target_state=target)
 
     def invoke(self, _):

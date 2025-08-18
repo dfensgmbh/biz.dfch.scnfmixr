@@ -37,6 +37,7 @@ class StorageManagement(StateBase):
 
         HELP = InputEventMap.KEY_ASTERISK
         MENU = InputEventMap.KEY_5
+        DISCONNECT_STORAGE = InputEventMap.KEY_0
         DETECT_RC1 = InputEventMap.KEY_1
         DETECT_RC2 = InputEventMap.KEY_3
         FORMAT_RC1 = InputEventMap.KEY_4
@@ -49,7 +50,7 @@ class StorageManagement(StateBase):
 
         super().__init__(
             info_enter=UiEventInfo(StateEvent.STORAGE_MANAGEMENT_ENTER, True),
-            info_leave=UiEventInfo(StateEvent.STORAGE_MANAGEMENT_LEAVE, False)
+            info_leave=None,
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:

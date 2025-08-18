@@ -56,7 +56,7 @@ class SelectLanguage(StateBase):
             info_enter=UiEventInfo(
                 StateEvent.SELECT_LANGUAGE_ENTER, True),
             info_leave=UiEventInfo(
-                StateEvent.SELECT_LANGUAGE_LEAVE, False)
+                StateEvent.SWALLOW_STATE_ENTER_LEAVE, True),
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:
