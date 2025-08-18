@@ -171,7 +171,6 @@ class MediaPlayerClient(IAcquirable):
 
         cmd = [
             self._MPC_FULLNAME,
-            MediaPlayerOption.FORMAT_FILE,
             MediaPlayerCommand.STATUS,
         ]
         stdout, _ = self._invoke(cmd)
@@ -291,6 +290,9 @@ class MediaPlayerClient(IAcquirable):
     def pause(self):
         """Transport control: pause."""
 
+        with self._sync_root:
+            self._is_paused = not self._is_paused
+
         cmd = [
             self._MPC_FULLNAME,
             MediaPlayerCommand.PAUSE,
@@ -308,6 +310,7 @@ class MediaPlayerClient(IAcquirable):
 
     def seek_start(self):
         """Transport control: start of clip."""
+
         self.seek_absolute(0)
 
     def seek_end(self, value: int = 10):
