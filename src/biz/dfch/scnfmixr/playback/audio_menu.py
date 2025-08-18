@@ -45,7 +45,17 @@ __all__ = [
 
 
 class AudioMenu(IAcquirable):
-    """The audio menu player."""
+    """The audio menu player.
+
+    How does it work?
+
+    When the menu is running, new audio menu items to play are received via
+    `_on_message` (message of type `SystemMessage.UiEventInfoAudioMessage`).
+    These messages are then enqueued on an internal queue, a signal is set, and
+    the `_worker` thread will be woken up and process the messages.
+    Depending on message type (state enter, state leave, transition enter,
+    transition leave), a handler will be invoked synchronously.
+    """
 
     _WORKER_SIGNAL_WAIT_TIME_MS = 10000
     _EXCEPTION_TIMEOUT_MS = 1000
@@ -162,17 +172,17 @@ class AudioMenu(IAcquirable):
                         continue
 
                     log.debug(
-                        "_worker: Processing message '%s' [%s] ...",
-                        type(message).__name__,
-                        message.name)
+                        "_worker: Processing message '%s': '%s' ...",
+                        message.type.__name__,
+                        message.path)
 
                     handler(message)
                     self._current_message = message
 
                     log.info(
-                        "_worker: Processing message '%s' [%s] OK.",
-                        type(message).__name__,
-                        message.name)
+                        "_worker: Processing message '%s': '%s' OK.",
+                        message.type.__name__,
+                        message.path)
 
             except Exception as ex:  # pylint: disable=W0718
                 log.error("_worker: An error occurred: '%s'. Waiting %sms ...",
@@ -210,7 +220,13 @@ class AudioMenu(IAcquirable):
         assert isinstance(message, msgt.UiEventInfoAudioMessage)
         assert message.type is msgt.UiEventInfoStateEnterMessage
 
-        self._client.load_resource_queue(lambda e: e in message.path)
+        log.debug("_on_state_enter ...")
+        result = self._client.load_resource_queue(lambda e: e in message.path)
+        if 0 >= len(result):
+            log.warning("_on_state_enter: no file found.")
+            return
+
+        log.info("_on_state_enter [%s].", result)
         self._client.start()
 
     def get_fullname(self, value: str) -> str:
@@ -235,8 +251,14 @@ class AudioMenu(IAcquirable):
         assert isinstance(message, msgt.UiEventInfoAudioMessage)
         assert message.type is msgt.UiEventInfoStateLeaveMessage
 
+        log.debug("_on_state_leave ...")
         self._client.clear()
-        self._client.load_resource_queue(lambda e: e in message.path)
+        result = self._client.load_resource_queue(lambda e: e in message.path)
+        if 0 >= len(result):
+            log.warning("_on_state_leave: no file found.")
+            return
+
+        log.info("_on_state_leave [%s].", result)
         self._client.start()
 
     def _on_transition_enter(
@@ -248,7 +270,13 @@ class AudioMenu(IAcquirable):
         assert isinstance(message, msgt.UiEventInfoAudioMessage)
         assert message.type is msgt.UiEventInfoTransitionEnterMessage
 
-        self._client.load_resource_queue(lambda e: e in message.path)
+        log.debug("_on_transition_enter ...")
+        result = self._client.load_resource_queue(lambda e: e in message.path)
+        if 0 >= len(result):
+            log.warning("_on_transition_enter: no file found.")
+            return
+
+        log.info("_on_transition_enter [%s].", result)
         self._client.start()
 
     def _on_transition_leave(
@@ -260,8 +288,14 @@ class AudioMenu(IAcquirable):
         assert isinstance(message, msgt.UiEventInfoAudioMessage)
         assert message.type is msgt.UiEventInfoTransitionLeaveMessage
 
+        log.debug("_on_transition_leave ...")
         self._client.clear()
-        self._client.load_resource_queue(lambda e: e in message.path)
+        result = self._client.load_resource_queue(lambda e: e in message.path)
+        if 0 >= len(result):
+            log.warning("_on_transition_leave: no file found.")
+            return
+
+        log.info("_on_transition_leave [%s].", result)
         self._client.start()
 
     @property

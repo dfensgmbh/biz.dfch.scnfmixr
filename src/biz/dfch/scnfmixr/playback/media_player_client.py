@@ -391,7 +391,7 @@ class MediaPlayerClient(IAcquirable):
             if self._is_acquired:
                 return self
 
-            log.debug("Mpc: Acquiring resource ...")
+            log.debug("Mpc: Acquiring resource '%s' ...", self._type.name)
 
             cmd = [
                 self._MPC_FULLNAME,
@@ -407,7 +407,7 @@ class MediaPlayerClient(IAcquirable):
 
             self._is_acquired = True
 
-            log.info("Mpc: Acquiring resource OK.")
+            log.info("Mpc: Acquiring resource '%s' OK.", self._type.name)
 
             return self
 
