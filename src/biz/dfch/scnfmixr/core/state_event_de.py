@@ -26,7 +26,7 @@ from biz.dfch.scnfmixr.core.state_event import StateEvent
 
 
 class StateEventDe(dict[StateEvent, str]):
-    """Texts for DE state events messages."""
+    """Texts for DE state event messages."""
 
     StateEvent.INITIALISE_LCL_ENTER = """
 Menü zur "Initialisierung des lokalen Geräts"
@@ -188,8 +188,4 @@ Wählen Sie "STERN" um diese Nachricht zu wiederholen.
 
     StateEvent.INIT_AUDIO_LEAVE = """
 Das Audio-System wurde vollständig initialisiert.
-"""  # noqa: E501
-
-    StateEvent.FINAL_STATE_ENTER = """
-<<<no text message, only outro sound>>>
 """  # noqa: E501

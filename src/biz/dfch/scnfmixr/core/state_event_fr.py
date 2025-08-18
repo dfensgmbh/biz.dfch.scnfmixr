@@ -26,7 +26,7 @@ from .state_event import StateEvent
 
 
 class StateEventFr(dict[StateEvent, str]):
-    """Texts for FR state events messages."""
+    """Texts for FR state event messages."""
 
     StateEvent.INITIALISE_LCL_ENTER = """
 Menu "initialiser le périphérique local"
@@ -172,8 +172,4 @@ Sélectionnez "ASTÉRISQUE" pour répéter ce message.
 
     StateEvent.INIT_AUDIO_LEAVE = """
 Système audio entièrement initialisé.
-"""  # noqa: E501
-
-    StateEvent.FINAL_STATE_ENTER = """
-<<<no text message, only outro sound>>>
 """  # noqa: E501

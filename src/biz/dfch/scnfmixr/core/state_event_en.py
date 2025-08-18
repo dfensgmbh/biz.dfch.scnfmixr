@@ -26,7 +26,7 @@ from .state_event import StateEvent
 
 
 class StateEventEn(dict[StateEvent, str]):
-    """Texts for EN state events messages."""
+    """Texts for EN state event messages."""
 
     # OK
     StateEvent.INITIALISE_LCL_ENTER = """
@@ -200,8 +200,4 @@ Press "STAR" to repeat this message.
 
     StateEvent.INIT_AUDIO_LEAVE = """
 Audio system fully initialised.
-"""  # noqa: E501
-
-    StateEvent.FINAL_STATE_ENTER = """
-<<<no text message, only outro sound>>>
 """  # noqa: E501

@@ -55,9 +55,8 @@ class StateEvent(StrEnum):
     MAIN_ENTER = auto()
 
     SYSTEM_ENTER = auto()
-    SYSTEM_LEAVE = auto()
 
     STORAGE_MANAGEMENT_ENTER = auto()
-    STORAGE_MANAGEMENT_LEAVE = auto()
 
-    FINAL_STATE_ENTER = auto()
+    # No specific menu.
+    SWALLOW_STATE_ENTER_LEAVE = auto()
