@@ -95,8 +95,13 @@ from .transitions.starting_recording_mixes import (
 )
 
 from .states import OnRecord
-from .transitions import StoppingRecording, SettingCuePoint, TogglingMute, ShowingStatus \
-    # pylint: disable=C0301  # noqa: E501
+from .transitions import (
+    StoppingRecording,
+    SettingCuePoint,
+    TogglingMute,
+    ShowingStatus,
+    HelpingOnRecord,
+)
 
 from .states import Playback, PlaybackPaused
 from .transitions import (
@@ -400,7 +405,7 @@ class StateMachine:
         current: OnRecord = menu[State.ON_RECORD]
         (
             current
-            .add_transition(ReturningTrue(
+            .add_transition(HelpingOnRecord(
                 current.Event.HELP,
                 current))
             .add_transition(StoppingRecording(

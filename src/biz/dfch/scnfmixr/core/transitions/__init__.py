@@ -103,7 +103,7 @@ from .jumping_cue_previous import JumpingCuePrevious
 from .jumping_cue_next import JumpingCueNext
 from .seeking_previous import SeekingPrevious
 from .seeking_next import SeekingNext
-from .helping_playback import HelpingPlayback
+from .helping_menu import HelpingPlayback, HelpingOnRecord
 
 
 __all__ = [
@@ -160,6 +160,7 @@ __all__ = [
     "TogglingMute",
     "SettingCuePoint",
     "ShowingStatus",
+    "HelpingOnRecord",
 
     "ProcessingDigit",
     "ProcessingDigit0",

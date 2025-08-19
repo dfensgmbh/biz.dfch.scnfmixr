@@ -20,20 +20,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Module helping_playback."""
+"""Module helping_menu."""
 
 from ..fsm import StateBase, TransitionBase, UiEventInfo
 from ..transition_event import TransitionEvent
+
+
+__all__ = [
+    "HelpingPlayback",
+    "HelpingOnRecord",
+]
 
 
 class HelpingPlayback(TransitionBase):
     """Plays the help message of the Playback menu."""
 
     def __init__(self, event: str, target: StateBase):
-        """Default ctor."""
-
-        assert event and event.strip()
-        assert target
 
         super().__init__(
             event,
@@ -42,5 +44,15 @@ class HelpingPlayback(TransitionBase):
                 TransitionEvent.HELPING_PLAYBACK_LEAVE, False),
             target_state=target)
 
-    def invoke(self, _):
-        return True
+
+class HelpingOnRecord(TransitionBase):
+    """Plays the help message of the OnRecord menu."""
+
+    def __init__(self, event: str, target: StateBase):
+
+        super().__init__(
+            event,
+            info_enter=None,
+            info_leave=UiEventInfo(
+                TransitionEvent.HELPING_ONRECORD_LEAVE, False),
+            target_state=target)
