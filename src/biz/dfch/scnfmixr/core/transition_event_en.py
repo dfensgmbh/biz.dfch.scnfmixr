@@ -29,15 +29,19 @@ class TransitionEventEn(dict[TransitionEvent, str]):
     """Texts for EN transition event messages."""
 
     # Menu: Detect HID HI1.
+
+    #OK
     TransitionEvent.DETECTING_DEVICE_HI1_ENTER = """
 Trying to detect input device ONE.
 """  # noqa: E501
 
     TransitionEvent.DETECTING_DEVICE_HI1_LEAVE = """
-Detected input device ONE.
+<<<sound-intro.wav>>>
 """  # noqa: E501
 
+    # OK
     TransitionEvent.SKIPPING_DEVICE_HI1_LEAVE = """
+Skipped input device ONE.
 """  # noqa: E501
 
     # Menu: Detect HID HI2.
@@ -47,6 +51,7 @@ Detected input device ONE.
     # Menu: Detect Audio LCL.
 
     # Menu: Detect Audio EX1.
+
     # OK
     TransitionEvent.DETECTING_DEVICE_EX1_ENTER = """
 Trying to detect external device EX1.
@@ -162,6 +167,16 @@ This might take some seconds.
 Recording stopped.
 
 You can now go to the playback menu and listen to the recording or delete the recording.
+"""  # noqa: E501
+
+    # OK
+    TransitionEvent.HELPING_ONRECORD_LEAVE = """
+The "Recording" menu.
+
+Press "1" to stop recording.
+Press "2" to set a cue marker.
+Press "3" to mute the local device for the recording.
+Press "STAR" to repeat this message.
 """  # noqa: E501
 
     # Menu: Date, Time, Name

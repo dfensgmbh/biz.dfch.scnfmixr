@@ -98,6 +98,7 @@ class TransitionEvent(StrEnum):
     STOPPING_SYSTEM_ENTER = auto()
 
     # Menu: OnRecord.
+    HELPING_ONRECORD_LEAVE = auto()
     STOPPING_RECORDING_ENTER = auto()
     STOPPING_RECORDING_LEAVE = auto()
     SETTING_CUEPOINT_LEAVE = auto()

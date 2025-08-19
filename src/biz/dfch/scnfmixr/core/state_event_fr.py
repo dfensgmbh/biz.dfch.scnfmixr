@@ -44,6 +44,7 @@ Sélectionnez "2" pour ignorer la détection du périphérique.
 Sélectionnez "ASTÉRISQUE" pour répéter ce message.
 """  # noqa: E501
 
+    # OK
     StateEvent.SELECT_LANGUAGE_ENTER = """
 Menu "séléction de la langue"
 
