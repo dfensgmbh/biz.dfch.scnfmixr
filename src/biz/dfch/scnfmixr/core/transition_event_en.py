@@ -30,7 +30,7 @@ class TransitionEventEn(dict[TransitionEvent, str]):
 
     # Menu: Detect HID HI1.
 
-    #OK
+    # OK
     TransitionEvent.DETECTING_DEVICE_HI1_ENTER = """
 Trying to detect input device ONE.
 """  # noqa: E501

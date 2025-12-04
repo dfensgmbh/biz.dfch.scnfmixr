@@ -252,7 +252,7 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
             dest="allowed_usb_ids",
             default=["2009"],
             help=("RC Storage vendor id whitelist; e.g. '2009' [iStorage], "
-                  "'2009:7064' [iStorage datAshur Pro 64GB].")
+                  "'2009:7064' [iStorage datAshur Pro2 64GB].")
         )
 
         result = parser.parse_args()
