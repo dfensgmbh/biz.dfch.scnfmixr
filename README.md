@@ -1,3 +1,15 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=bugs)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=coverage)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
+
 # biz.dfch.PhoneTap
 PhoneTap running on Raspberry Pi OS (Pi 5)
 
