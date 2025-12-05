@@ -119,8 +119,8 @@ class BestAlsaJackAudioDevice(pt.ITerminalDevice):  # pylint: disable=R0901
 
         sources, sinks = self._ctrl.acquire()
 
-        assert sources and 0 <= len(sources)
-        assert sinks and 0 <= len(sinks)
+        assert sources and isinstance(sources, list)
+        assert sinks and isinstance(sinks, list)
 
         self._items.extend(sources)
         self._items.extend(sinks)
