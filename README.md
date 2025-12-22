@@ -468,6 +468,125 @@ Note: as mentioned above, the user id is hardcoded to `1000` (which is `admin`).
 
 Note: naming for the executable does not have to follow [SemVer](http://semver.org). To allow multiple installed versions the programme directory can be changed from `scnfmixr` to `scnfmixr-v{maj}.{min}.{rev}` and then the executable obviously can be named without version information (which is optional anyway). And there can be only one version of the programme running anyway.
 
+# Detecting the Elgato Streamdeck MK.2
+
+The system works with the Elgato Streamdeck MK.2 device. This device has 15 buttons. The button in the upper left corner has id 0 and the button in the lower right corner has id 14.
+
+* [HID API](https://docs.elgato.com/streamdeck/hid/)
+* [Stream Deck Module 15 and 32 Keys](https://docs.elgato.com/streamdeck/hid/module-15_32)
+
+The system uses `hexdump` to detect button presses. `Report` messages start with `0x01 0x00 0x0f 0x00`:
+
+* +00: 0x01 Report ID
+* +01: 0x00 Command
+* +02: 0x0f (0x00f0) The Streamdeck mkII has 15 keys
+* +03: 0x00 
+* +04: Payload
+
+The system is only interested in "key press" events, so only the first 4 + 15 bytes are interpreted.
+
+```sh
+admin@scnfmixr:~ $ hexdump -C /dev/hidraw1
+                                                        #11
+                      #0 #1 #2 #3  #4 #5 #6 #7 #8 #9 #10
+00000000  01 00 0f 00 01 00 00 00  00 00 00 00 00 00 00 00  |................|
+             #13
+          #12   #14
+00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+```
+
+```sh
+admin@scnfmixr:~ $ hexdump -C /dev/hidraw1
+00000000  01 00 0f 00 01 00 00 00  00 00 00 00 00 00 00 00  |................|
+00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00000200  01 00 0f 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00000210  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00000400  01 00 0f 00 00 01 00 00  00 00 00 00 00 00 00 00  |................|
+00000410  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00000600  01 00 0f 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00000610  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00000800  01 00 0f 00 00 00 01 00  00 00 00 00 00 00 00 00  |................|
+00000810  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00000a00  01 00 0f 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00000a10  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00000c00  01 00 0f 00 00 00 00 00  00 00 00 00 00 00 01 00  |................|
+00000c10  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00000e00  01 00 0f 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00000e10  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00001000  01 00 0f 00 00 00 00 00  00 00 00 00 00 00 00 01  |................|
+00001010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00001200  01 00 0f 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00001210  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00001400  01 00 0f 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00001410  01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00001420  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00001600  01 00 0f 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00001610  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00001800  01 00 0f 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00001810  00 01 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00001820  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00001a00  01 00 0f 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00001a10  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00001c00  01 00 0f 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00001c10  00 00 01 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00001c20  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00001e00  01 00 0f 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00001e10  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+```
+
+## Detecting the Elgato Streamdeck MK.2
+
+The device has the USB ids that follow:
+
+* vendor id:  0x0fd9
+* product id: 0x0080
+
+```sh
+admin@scnfmixr:~ $ lsusb
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 002: ID 2e8a:000e Raspberry Pi USB3 HUB
+Bus 003 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 002 Device 004: ID 0b0e:0422 GN Netcom Jabra SPEAK 510 USB
+Bus 002 Device 007: ID 0fd9:0080 Elgato Systems GmbH Stream Deck MK.2
+                       ^^^^ ^^^^
+Bus 002 Device 002: ID 2e8a:000d Raspberry Pi USB3 HUB
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+```
+
+The device will register as a `hidraw` device:
+
+```sh
+admin@scnfmixr:~ $ ls -ls /dev/hidraw*
+0 crw-rw----+ 1 root plugdev 242, 0 Jan 01 08:15 /dev/hidraw0
+0 crw-rw----+ 1 root plugdev 242, 1 Jan 01 08:15 /dev/hidraw1
+```
+
+The system queries the vendor id and the product id with `udevadm`. In addition to the vendor id and product id, the USB 2.0 path is known (here `2-1.2`):
+
+```sh
+admin@scnfmixr:~ $ udevadm info --no-pager /dev/hidraw1
+P: /devices/platform/axi/1000120000.pcie/1f00200000.usb/xhci-hcd.0/usb2/2-1/2-1.2/2-1.2:1.0/0003:0FD9:0080.0005/hidraw/hidraw1
+
+... (output omitted) ...
+
+```
+
 # Notes and Observations
 
 * Normally, when connecting a device to the "Icy Box IB-AC618", a blue LED turns on next to the connected device. However, when connecting a *UGREEN* USB audio adapter it only shows when there is a 3.5mm TRRS cable connected to its socket. (`12d1:0010 Huawei Technologies Co., Ltd. KT USB Audio`). The same happens with the *Atomos Connect 4K* when there is no HDMI cable connected.
