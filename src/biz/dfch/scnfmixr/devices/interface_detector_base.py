@@ -24,7 +24,7 @@
 
 from abc import ABC, abstractmethod
 
-# Move to separate package, as it is not specific to keybarod detection.
+# Move to separate package, as it is not specific to keyboard detection.
 
 
 class InterfaceDetectorBase(ABC):
