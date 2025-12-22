@@ -586,6 +586,27 @@ P: /devices/platform/axi/1000120000.pcie/1f00200000.usb/xhci-hcd.0/usb2/2-1/2-1.
 ... (output omitted) ...
 
 ```
+## Installing Python libraries
+
+The system uses the [python-elgato-streamdeck](https://github.com/abcminiuser/python-elgato-streamdeck) library from [abcminiuser](https://github.com/abcminiuser) (licensed under the [this license](https://github.com/abcminiuser/python-elgato-streamdeck/blob/master/LICENSE)).
+
+We need to install:
+
+* libhidapi-libusb0
+ ```sh
+ sudo apt-get install libhidapi-libusb0
+ ```
+
+* Streamdeck
+ ```sh
+pip install Streamdeck
+ ```
+
+* Pillow>=9.0.0
+ ```sh
+ # Pillow>=9.0.0
+ pip install -r requirements.txt
+ ```
 
 # Notes and Observations
 
