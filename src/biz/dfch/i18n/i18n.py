@@ -127,10 +127,16 @@ class I18n:
 
         return os.path.normpath(os.path.join(base_path, relative_path))
 
+    @staticmethod
+    def get_default_res_dirname() -> str:
+        """Returns the default resource directory name."""
+        return I18n._RES_PATH
+
     def get_resource_path(
             self,
             item: str,
-            code: LanguageCode | None = None
+            code: LanguageCode | None = None,
+            res: str = _RES_PATH
     ) -> str:
         """Returns the normalized resource path for an item.
 
@@ -150,11 +156,14 @@ class I18n:
 
         path = Path(item)
 
+        if not isinstance(res, str) or res is None:
+            res = I18n._RES_PATH
+
         if code is not None:
             if code is LanguageCode.DEFAULT:
                 code = LanguageCode.EN
-            result = os.path.join(I18n._RES_PATH, code.name, path)
+            result = os.path.join(res, code.name, path)
         else:
-            result = os.path.join(I18n._RES_PATH, path)
+            result = os.path.join(res, path)
 
         return self.get_runtime_path(result)

@@ -91,8 +91,8 @@ class KeyboardHandler(EventHandlerBase):
 
     def _worker(self) -> None:
 
-        log.debug("Initialisiung _worker ...")
-        log.info("Initialisiung _worker OK.")
+        log.debug("Initializing _worker ...")
+        log.info("Initializing _worker OK.")
 
         while not self.stop_processing.is_set():
 
