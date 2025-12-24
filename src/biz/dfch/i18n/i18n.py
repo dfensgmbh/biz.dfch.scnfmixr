@@ -26,7 +26,7 @@ from .language_code import LanguageCode
 
 
 class I18n:
-    """Internationalisation module."""
+    """Internationalization module."""
 
     _RES_PATH = "res"
 
@@ -132,7 +132,7 @@ class I18n:
             item: str,
             code: LanguageCode | None = None
     ) -> str:
-        """Returns the normalised resource path for an item.
+        """Returns the normalized resource path for an item.
 
         Args:
             item (str): The item to join with the _RES_PATH.
@@ -140,7 +140,7 @@ class I18n:
                 infixed as a sub directory under _RES_PATH
 
         Returns:
-            str: The normalised path (without resolving links).
+            str: The normalized path (without resolving links).
 
         Raises:
             AssertionError: If item is None or "".

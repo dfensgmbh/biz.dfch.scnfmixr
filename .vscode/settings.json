@@ -27,7 +27,11 @@
     "python.testing.unittestEnabled": true,
     "cSpell.words": [
         "dfch",
+        "direxists",
         "Elgato",
+        "FLAC",
+        "MEIPASS",
+        "onefile",
         "scnfmixr",
         "Streamdeck"
     ]
