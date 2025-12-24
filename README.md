@@ -616,7 +616,7 @@ We need to install:
 
 # License and Copyright
 
-Everything in this repository (unless otherwise noted) is licensed under the MIT license (see [LICENSE](./LICENSE)) and copyright of 
+Everything in this repository (unless otherwise noted) is licensed under the GPLv3 (see [LICENSE](./LICENSE)) and is copyright of: 
 
 **[d-fens GmbH](https://zefix.ch/en/search/entity/list/firm/989185)**
 
