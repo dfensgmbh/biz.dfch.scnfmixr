@@ -12,21 +12,3 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-"""Package input."""
-
-from __future__ import annotations
-
-from .input_device import InputDevice
-from .keyboard_event_map import KeyboardEventMap
-from .input_event_map import InputEventMap
-from .streamdeck_input import StreamdeckInput
-from .streamdeck_event_map import StreamdeckEventMap
-
-__all__ = [
-    "InputDevice",
-    "KeyboardEventMap",
-    "InputEventMap",
-    "StreamdeckInput",
-    "StreamdeckEventMap",
-]

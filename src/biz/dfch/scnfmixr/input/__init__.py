@@ -17,16 +17,8 @@
 
 from __future__ import annotations
 
-from .input_device import InputDevice
-from .keyboard_event_map import KeyboardEventMap
-from .input_event_map import InputEventMap
-from .streamdeck_input import StreamdeckInput
-from .streamdeck_event_map import StreamdeckEventMap
+from .streamdeck_input_resolver import StreamdeckInputResolver
 
 __all__ = [
-    "InputDevice",
-    "KeyboardEventMap",
-    "InputEventMap",
-    "StreamdeckInput",
-    "StreamdeckEventMap",
+    "StreamdeckInputResolver",
 ]
