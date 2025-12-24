@@ -26,12 +26,18 @@
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": true,
     "cSpell.words": [
+        "asyn",
+        "Deutsch",
         "dfch",
         "direxists",
         "Elgato",
+        "evtest",
         "FLAC",
+        "Français",
+        "Italiano",
         "MEIPASS",
         "onefile",
+        "rtype",
         "scnfmixr",
         "Streamdeck"
     ]
