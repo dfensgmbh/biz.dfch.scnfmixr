@@ -17,6 +17,11 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
+from ...i18n.i18n import I18n
+from ...i18n.language_code import LanguageCode
+
 from ..public.input.input_event_map import InputEventMap
 from ..public.input.streamdeck_input import StreamdeckInput
 from ..public.input.streamdeck_event_map import StreamdeckEventMap
@@ -26,6 +31,8 @@ class StreamdeckInputResolver:
     """
     Resolves a given Streamdeck key that is related to a state to an InputEvent.
     """
+
+    _RES_IMG_DIR: str = "img"
 
     def invoke(self, name: str, key: int) -> InputEventMap | None:
         """Resolves a given key to an InputEventMap.
@@ -66,5 +73,117 @@ class StreamdeckInputResolver:
             return result
 
         result = state[sd_input]
+
+        return result
+
+    def translate(
+            self,
+            event: InputEventMap,
+            code: LanguageCode = LanguageCode.DEFAULT
+    ) -> str:
+        """
+        Translates the text of the specified `event` into text for display on
+        the Streamdeck.
+
+        :param event: The event to translate.
+        :type event: InputEventMap
+        :return: The translated text.
+        :rtype: str
+        """
+
+        assert isinstance(event, InputEventMap)
+        assert isinstance(code, LanguageCode)
+
+        if LanguageCode.DEFAULT == code:
+            code = LanguageCode.EN
+
+        result: str = ""
+
+        match event.value:
+            case InputEventMap.KEY_ENTER:
+                result = "ENTER"
+            case InputEventMap.KEY_BACKSPACE:
+                result = "DELETE"
+            case InputEventMap.KEY_TAB:
+                result = "TAB"
+            case _:
+                result = event.value
+
+        return result
+
+    def get_input_event_image(
+        self,
+        name: str,
+        key: StreamdeckInput,
+        code: LanguageCode = LanguageCode.DEFAULT
+    ) -> str:
+        """
+        Returns a Path object with the image for the key.
+
+        :param name: The name of the state machine state.
+        :type name: str
+        :param key: The name of the input key.
+        :type key: StreamdeckInput
+        :param code: The language code.
+        :type code: LanguageCode
+        :return: Description
+        :rtype: Path
+        """
+
+        assert isinstance(name, str)
+        assert isinstance(key, StreamdeckInput)
+        assert isinstance(code, LanguageCode)
+
+        i18n = I18n.Factory.get()
+
+        result: Path = Path("")
+
+        # Get the resource path for image files.
+        res_name = i18n.get_default_res_dirname()
+        image_path = Path(res_name, type(self)._RES_IMG_DIR)
+
+        # Examine if name is a specified state in StreamdeckEventMap.
+        if name not in StreamdeckEventMap:
+            image_name = "default.png"
+            image_partial = i18n.get_resource_path(
+                image_name, code, str(image_path))
+            result = Path(image_partial)
+
+            return result
+
+        # Get specified keys for this state.
+        state = StreamdeckEventMap[name]
+
+        # Examine if key is a specified input for this state.
+        if key not in state:
+            image_name = f"{name}-default.png"
+            image_partial = i18n.get_resource_path(
+                image_name, code, str(image_path))
+            result = Path(image_partial)
+
+            return result
+
+        # Get the start of the image file name.
+        image_name = f"{name}-{key.name}"
+
+        # Get the partial image file path and name.
+        image_partial = i18n.get_resource_path(
+            image_name, code, str(image_path))
+        result = Path(image_partial)
+
+        parent = result.parent
+        wildcard = f"{result.name}*"
+
+        matches = list(parent.glob(wildcard))
+        if 0 == len(matches):
+            image_name = f"{name}-default.png"
+            image_partial = i18n.get_resource_path(
+                image_name, code, str(image_path))
+            result = Path(image_partial)
+
+            return result
+
+        if 1 == len(matches):
+            result = matches[0]
 
         return result
