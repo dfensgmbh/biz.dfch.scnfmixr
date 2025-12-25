@@ -44,7 +44,7 @@ class TestStateMachine(unittest.TestCase):
            new=MediaPlayerTypeMock)
     def test_if_state_machine_is_valid(self):
         """Tests if the state machine is valid and does not throw any
-        execptions during initialise."""
+        exceptions during initialize."""
 
         sut = StateMachine()
 

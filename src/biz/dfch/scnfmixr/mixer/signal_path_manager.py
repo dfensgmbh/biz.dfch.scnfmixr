@@ -89,7 +89,7 @@ class SignalPathManager:
         if not SignalPathManager.Factory._sync_root.locked():
             raise AssertionError("Private ctor. Use Factory instead.")
 
-        log.debug("Initialising ...")
+        log.debug("Initializing ...")
 
         self._sync_root = Lock()
         self._items = list[SignalPathManager.ConnectionInfo]()
@@ -107,7 +107,7 @@ class SignalPathManager:
         self._worker_thread = Thread(target=self._worker, daemon=True)
         self._worker_thread.start()
 
-        log.info("Initialising OK.")
+        log.info("Initializing OK.")
 
     def _on_message(self, message: MessageBase) -> None:
         """Message handler."""
@@ -139,13 +139,13 @@ class SignalPathManager:
     def _worker(self) -> None:
         """Worker continuously getting JACK connections."""
 
-        log.debug("_worker: Initialising ...")
+        log.debug("_worker: Initializing ...")
 
         previous: dict[tuple[str, bool], list[str]] = {}
         start = time.monotonic()
         log_filter = SignalPathManager.SuppressNoisyDebug()
 
-        log.info("_worker: Initialising OK.")
+        log.info("_worker: Initializing OK.")
 
         log.debug("_worker: Processing ...")
 

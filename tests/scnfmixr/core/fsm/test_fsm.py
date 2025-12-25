@@ -60,7 +60,7 @@ class TestFsm(unittest.TestCase):
             return True
 
     def test_initialising_succeeds(self):
-        """Initialising succeeds."""
+        """Initializing succeeds."""
 
         initial_state = TestFsm.ArbitraryState1(
             info_enter=None,

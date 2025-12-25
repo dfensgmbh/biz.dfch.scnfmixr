@@ -181,7 +181,7 @@ class AudioRecorder:
         if not AudioRecorder.Factory._sync_root.locked():
             raise RuntimeError("Private ctor. Use Factory instead.")
 
-        log.debug("Initialising ...")
+        log.debug("Initializing ...")
 
         self._message_queue = MessageQueue.Factory.get()
         self._sync_root = threading.Lock()
@@ -199,7 +199,7 @@ class AudioRecorder:
                     msgt.RecordingCuePointCommand,
                     SystemMessage)))
 
-        log.info("Initialising OK.")
+        log.info("Initializing OK.")
 
     def _set_state(self, value: AudioRecorder.Event) -> None:
         """Private: Sets the private field _state of the audio mixer."""

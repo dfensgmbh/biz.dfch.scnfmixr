@@ -32,7 +32,7 @@ __all__ = ["Process"]
 
 
 class Process:
-    """Starts and stops processes. Use `start()` to initialise this class."""
+    """Starts and stops processes. Use `start()` to initialize this class."""
 
     _MAX_QUEUE_SIZE = 4096
 
@@ -46,7 +46,7 @@ class Process:
     _stderr_thread: threading.Thread
 
     def __init__(self, popen: subprocess.Popen, encoding: str) -> None:
-        """Initialise a `Process` instance. Use `start` to initialise this
+        """Initialise a `Process` instance. Use `start` to initialize this
         class. Should not be called directly.
 
         Args:

@@ -96,7 +96,7 @@ class ApplicationContext:  # pylint: disable=R0903,R0902
         if not ApplicationContext.Factory._lock.locked():
             raise RuntimeError("Private ctor. Use Factory instead.")
 
-        log.debug("Initialising application context ...")
+        log.debug("Initializing application context ...")
 
         self.notification = AppNotification.Factory.get()
         self.ui_parameters = UiParameters()
@@ -110,7 +110,7 @@ class ApplicationContext:  # pylint: disable=R0903,R0902
         self.storage_parameters = StorageParameters()
         self.xputs = set()
 
-        log.info("Initialising application context OK. [%s]", self)
+        log.info("Initializing application context OK. [%s]", self)
 
     def __str__(self) -> str:
         result = {

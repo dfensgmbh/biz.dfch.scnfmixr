@@ -72,11 +72,11 @@ class RoutingMatrix:
         if not RoutingMatrix.Factory._sync_root.locked():
             raise RuntimeError("Private ctor. Use Factory instead.")
 
-        log.debug("Initialising RoutingMatrix ...")
+        log.debug("Initializing RoutingMatrix ...")
 
         object.__setattr__(self, "_mtx", {})
 
-        log.debug("Initialising RoutingMatrix OK. [%s]", self._mtx)
+        log.debug("Initializing RoutingMatrix OK. [%s]", self._mtx)
 
     def add_input(self) -> bool:
         """Adds an input"""
@@ -298,13 +298,13 @@ class AudioMixer:
         if not AudioMixer.Factory._sync_root.locked():
             raise RuntimeError("Private ctor. Use Factory instead.")
 
-        log.debug("Initialising ...")
+        log.debug("Initializing ...")
 
         self._sync_root = threading.Lock()
         self._callbacks = []
         self._cfg = None
 
-        # Set private field directly, as not everything is initialised yet.
+        # Set private field directly, as not everything is initialized yet.
         self._state = AudioMixerState.STOPPED
 
         self._routing_matrix = RoutingMatrix.Factory.get()
@@ -316,7 +316,7 @@ class AudioMixer:
 
         self._mix_bus = Mixbus()
 
-        log.info("Initialising OK.")
+        log.info("Initializing OK.")
 
     @property
     def mixbus(self) -> Mixbus:
@@ -337,16 +337,16 @@ class AudioMixer:
                 AudioMixerConfiguration.get_default()
             )
     ) -> bool:
-        """Initialise the audio mixer. If the mixer has already been
-        initialised, it will be re-initialised. Existing connections will be
+        """Initialize the audio mixer. If the mixer has already been
+        initialized, it will be re-initialized. Existing connections will be
         removed. Audio will temporarily stop.
 
         Args:
             cfg (AudioMixerConfiguration | None): The configuration to be
-                initialised.
+                initialized.
 
         Returns:
-            bool: True, if the configuration was successfully initialised; false
+            bool: True, if the configuration was successfully initialized; false
                 otherwise.
         """
 

@@ -71,7 +71,7 @@ class AudioPlayback(IAcquirable):
         if not AudioPlayback.Factory._sync_root.locked():
             raise AssertionError("Private ctor. Use Factory instead.")
 
-        log.debug("Initialising ...")
+        log.debug("Initializing ...")
 
         self._is_acquired = False
         self._sync_root = Lock()
@@ -98,7 +98,7 @@ class AudioPlayback(IAcquirable):
             msgt.SeekPreviousCommand: self._on_playback_seek_previous,
         }
 
-        log.info("Initialising OK.")
+        log.info("Initializing OK.")
 
     class Factory:  # pylint: disable=R0903
         """Factory class."""
@@ -131,13 +131,13 @@ class AudioPlayback(IAcquirable):
     def _worker(self) -> None:
         """Worker thread for processing messages."""
 
-        log.debug("_worker: Initialising ...")
+        log.debug("_worker: Initializing ...")
 
         signal_wait_time_s = self._WORKER_SIGNAL_WAIT_TIME_MS / 1000
 
         start = time.monotonic()
 
-        log.info("_worker: Initialising OK.")
+        log.info("_worker: Initializing OK.")
 
         log.debug("_worker: Executing ...")
 

@@ -28,8 +28,8 @@ from ..transition_event import TransitionEvent
 
 
 # pylint: disable=R0903
-class InitialisingAudio(TransitionBase):
-    """Initialising the audio system."""
+class InitializingAudio(TransitionBase):
+    """Initializing the audio system."""
 
     _app_ctx: ApplicationContext
 

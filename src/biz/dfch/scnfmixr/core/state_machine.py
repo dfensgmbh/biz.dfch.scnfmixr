@@ -78,7 +78,7 @@ from .transitions import ProcessingDigitOk
 from .transitions import ProcessingDigitBackspace
 
 from .states import InitialiseAudio
-from .transitions import InitialisingAudio
+from .transitions import InitializingAudio
 
 from .states import Main
 from .transitions.starting_recording_mixes import (
@@ -231,9 +231,9 @@ class StateMachine:
             None:
         """
 
-        log.debug("Initialising worker ...")
+        log.debug("Initializing worker ...")
 
-        log.info("Initialising worker OK.")
+        log.info("Initializing worker OK.")
 
         while True:
 
@@ -301,7 +301,7 @@ class StateMachine:
     def initialise(self) -> None:
         """Initialises the state machine."""
 
-        log.info("Initialising state machine ...")
+        log.info("Initializing state machine ...")
 
         # Define States
         menu = self._menu
@@ -470,9 +470,9 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.HELP,
                 current))
-            .add_transition(InitialisingAudio(current.Event.INIT_AUDIO,
+            .add_transition(InitializingAudio(current.Event.INIT_AUDIO,
                                               menu[State.MAIN]))
-            .add_transition(InitialisingAudio(current.Event.SKIP_AUDIO,
+            .add_transition(InitializingAudio(current.Event.SKIP_AUDIO,
                                               menu[State.SYSTEM]))
         )
         current: SetName = menu[State.SET_NAME]
@@ -709,4 +709,4 @@ class StateMachine:
         # for line in self._fsm.visualise():
         #     log.debug(line)
 
-        log.info("Initialising state machine OK.")
+        log.info("Initializing state machine OK.")

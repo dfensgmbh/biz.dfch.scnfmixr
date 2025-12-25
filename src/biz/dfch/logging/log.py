@@ -28,7 +28,7 @@ _LOGGER_FILE = "logging.conf"
 try:
     logging.config.fileConfig(I18n.Factory.get().get_runtime_path(_LOGGER_FILE))
     log = logging.getLogger(_LOGGER_NAME)
-    log.debug("Logging configuration initialised from '%s'.",
+    log.debug("Logging configuration initialized from '%s'.",
               _LOGGER_FILE)
 
 except Exception as ex:

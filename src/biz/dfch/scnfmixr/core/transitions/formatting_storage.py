@@ -27,7 +27,7 @@ from ..transition_event import TransitionEvent
 
 
 class FormattingStorage(TransitionBase):
-    """Initialising storage."""
+    """Initializing storage."""
 
     _device: StorageDevice
 

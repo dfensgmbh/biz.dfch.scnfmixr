@@ -58,13 +58,13 @@ class InitialiseAudio(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        # If state machine was just started, we loop until transistion succeeds.
+        # If state machine was just started, we loop until transition succeeds.
         if not ctx.error:
 
             # If detection failed, we wait before the next attempt.
             # DFTODO - ugly to hard code the class name; but importing it
             # fails, due to a circular reference.
-            if ctx.error == "InitialisingAudio":
+            if ctx.error == "InitializingAudio":
                 time.sleep(self._WAIT_TIMEOUT_MS / 1000)
 
             log.info("Enqueueing event: '%s' [%s].",

@@ -249,7 +249,7 @@ class TestJackAlsaDevice(unittest.TestCase):
         self.assertEqual(1, len(sut.sinks))
 
     def test_initialsing_with_deviceid1_throws(self):
-        """Initialising with device id !=1 throws."""
+        """Initializing with device id !=1 throws."""
 
         card_id = 2
         with self.assertRaises(AssertionError):
@@ -257,7 +257,7 @@ class TestJackAlsaDevice(unittest.TestCase):
                                MockAlsaStreamInfoParser(card_id))
 
     def test_initialsing_succeeds(self):
-        """Initialising with card and stream info succeeds."""
+        """Initializing with card and stream info succeeds."""
 
         card_id = 2
         sut = JackAlsaDevice("XYZ", card_id, 0,

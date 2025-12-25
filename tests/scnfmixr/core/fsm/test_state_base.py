@@ -41,7 +41,7 @@ class TestStateBase(unittest.TestCase):
         invoke.__doc__ = TransitionBase.invoke.__doc__
 
     def test_initialising_succeeds(self):
-        """Initialising succeeds."""
+        """Initializing succeeds."""
 
         arbitrary_state = TestStateBase.ArbitraryState(
             info_enter=None, info_leave=None)

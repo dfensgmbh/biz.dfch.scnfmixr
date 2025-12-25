@@ -66,7 +66,7 @@ from .processing_digit import (
     ProcessingDigitBackspace,
 )
 
-from .initialising_audio import InitialisingAudio
+from .initializing_audio import InitializingAudio
 from .starting_recording_mixes import (
     StartingRecordingMx0,
     StartingRecordingMx1,
@@ -133,7 +133,7 @@ __all__ = [
     "MountingRc2",
     "UnmountingRc2",
 
-    "InitialisingAudio",
+    "InitializingAudio",
 
     "StartingRecordingMx0",
     "StartingRecordingMx1",

@@ -57,7 +57,7 @@ class TestTransitionBase(unittest.TestCase):
             return False
 
     def test_initialising_succeeds(self):
-        """Initialising succeeds."""
+        """Initializing succeeds."""
 
         arbitrary_state = TestTransitionBase.ArbitraryState(
             info_enter=None, info_leave=None)

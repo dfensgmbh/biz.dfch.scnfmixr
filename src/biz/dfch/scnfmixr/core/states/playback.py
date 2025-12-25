@@ -82,10 +82,10 @@ class Playback(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        # Do not initialise upon entering from self.
+        # Do not initialize upon entering from self.
         if self == ctx.previous:
             return
-        # Do not initialise upon transitioning from SelectingPause.
+        # Do not initialize upon transitioning from SelectingPause.
         if SelectingResume.__name__ == ctx.source:
             return
 

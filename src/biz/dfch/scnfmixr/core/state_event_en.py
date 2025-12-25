@@ -192,5 +192,5 @@ Press "STAR" to repeat this message.
 """  # noqa: E501
 
     StateEvent.INIT_AUDIO_LEAVE = """
-Audio system fully initialised.
+Audio system fully initialized.
 """  # noqa: E501

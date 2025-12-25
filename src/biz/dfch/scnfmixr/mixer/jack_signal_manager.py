@@ -109,12 +109,12 @@ class JackSignalManager(AcquirableManagerMixin):
     def _worker(self) -> None:
         """Worker continuously getting JACK connections."""
 
-        log.debug("_worker: Initialising ...")
+        log.debug("_worker: Initializing ...")
 
         start = time.monotonic()
         log_filter = JackSignalManager.SuppressNoisyDebug()
 
-        log.info("_worker: Initialising OK.")
+        log.info("_worker: Initializing OK.")
 
         log.debug("_worker: Processing ...")
 

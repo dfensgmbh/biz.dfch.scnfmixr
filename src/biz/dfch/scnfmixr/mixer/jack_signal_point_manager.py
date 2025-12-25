@@ -116,13 +116,13 @@
 #     def _worker(self) -> None:
 #         """Worker continuously getting JACK topology."""
 
-#         log.debug("_worker: Initialising ...")
+#         log.debug("_worker: Initializing ...")
 
 #         previous: dict[tuple[str, bool], list[str]] = {}
 #         start = time.monotonic()
 #         log_filter = JackSignalPointManager.SuppressNoisyDebug()
 
-#         log.info("_worker: Initialising OK.")
+#         log.info("_worker: Initializing OK.")
 
 #         log.debug("_worker: Processing ...")
 
