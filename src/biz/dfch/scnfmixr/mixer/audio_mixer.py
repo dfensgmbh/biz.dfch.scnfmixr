@@ -177,7 +177,7 @@ class AudioMixerConfiguration:
         return result
 
     def add_xput(self, value: InputOrOutput) -> None:
-        """Adds an input or ouput object to the configuration set."""
+        """Adds an input or output object to the configuration set."""
 
         assert value is not None
         assert value.name and value.name.strip()
@@ -191,7 +191,7 @@ class AudioMixerConfiguration:
             "Adding object '%s' OK [%s].", value.name, len(self.xputs))
 
     def remove_xput(self, name: str) -> None:
-        """Removes an input or ouput object from the configuration set."""
+        """Removes an input or output object from the configuration set."""
 
         assert name and name.strip()
         assert any(e.name == name for e in self.xputs)

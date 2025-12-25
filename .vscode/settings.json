@@ -27,18 +27,25 @@
     "python.testing.unittestEnabled": true,
     "cSpell.words": [
         "asyn",
+        "cuepoint",
         "Deutsch",
         "dfch",
+        "DFTODO",
         "direxists",
         "Elgato",
         "evtest",
         "FLAC",
         "Français",
+        "getpreferredencoding",
         "Italiano",
         "MEIPASS",
+        "Mixbus",
+        "msgt",
         "onefile",
         "rtype",
         "scnfmixr",
-        "Streamdeck"
+        "Streamdeck",
+        "xput",
+        "xputs"
     ]
 }

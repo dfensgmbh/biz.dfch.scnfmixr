@@ -196,7 +196,7 @@ class Process:
 
         Args:
             cmd (list[str]): The command to execute with its arguments.
-            stind (list[str] | None): The input to be sent to stdin of the
+            stdin (list[str] | None): The input to be sent to stdin of the
                 process as list of strings or `None` (default)). For every item
                 in `stdin` a single line of text is sent to the process
                 (terminated with a line feed).
@@ -204,7 +204,7 @@ class Process:
                 the process to stop.
                 Note that, when the process does not stop within that timeout,
                 the process is stopped (which will take additional time).
-            encoding (str): The encding to be used ("utf-8" is default).
+            encoding (str): The encoding to be used ("utf-8" is default).
 
         Returns:
             (tuple[list[str], list[str]]): A 2-tuple that contains `stdout` and
@@ -269,7 +269,7 @@ class Process:
                         cmd[0])
                     process.send_signal(signal.SIGTERM)
                 except Exception:  # pylint: disable=W0718
-                    # Ingore exception.
+                    # Ignore exception.
                     pass
 
                 try:
