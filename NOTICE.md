@@ -1,6 +1,44 @@
 NOTICE: THIRD-PARTY NOTICES AND LICENSES
 
 ======================================================================
+Third-party Python packages
+======================================================================
+This program depends on various third-party Python packages, which are
+installed via `pip` from PyPI and are not redistributed as part of this
+source tree. Please consult each package’s own license for details.
+
+See `requirements.txt` for details.
+======================================================================
+
+
+======================================================================
+Fluent UI System Icons
+https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE
+======================================================================
+MIT License
+
+Copyright (c) 2020 Microsoft Corporation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+======================================================================
+
+======================================================================
 Roboto Fonts
 https://fonts.google.com/specimen/Roboto/license
 ======================================================================
@@ -44,88 +82,32 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
 ======================================================================
 
 ======================================================================
-argparse
-https://github.com/bewest/argparse/blob/master/LICENSE.txt
+flag-icons
+https://github.com/lipis/flag-icons/blob/main/LICENSE
 ======================================================================
-argparse is (c) 2006-2009 Steven J. Bethard <steven.bethard@gmail.com>.
+The MIT License (MIT)
 
-The argparse module was contributed to Python as of Python 2.7 and thus
-was licensed under the Python license. Same license applies to all files in
-the argparse package project.
+Copyright (c) 2013 Panayiotis Lipiridis
 
-For details about the Python License, please see doc/Python-License.txt.
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
 
-History
--------
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-Before (and including) argparse 1.1, the argparse package was licensed under
-Apache License v2.0.
-
-After argparse 1.1, all project files from the argparse project were deleted
-due to license compatibility issues between Apache License 2.0 and GNU GPL v2.
-
-The project repository then had a clean start with some files taken from
-Python 2.7.1, so definitely all files are under Python License now.
-======================================================================
-
-======================================================================
-Python Elgato Stream Deck Library
-https://github.com/abcminiuser/python-elgato-streamdeck/blob/master/LICENSE
-======================================================================
-Permission to use, copy, modify, and distribute this software
-and its documentation for any purpose is hereby granted without
-fee, provided that the above copyright notice appear in all
-copies and that both that the copyright notice and this
-permission notice and warranty disclaimer appear in supporting
-documentation, and that the name of the author not be used in
-advertising or publicity pertaining to distribution of the
-software without specific, written prior permission.
-
-The author disclaims all warranties with regard to this
-software, including all implied warranties of merchantability
-and fitness.  In no event shall the author be liable for any
-special, indirect or consequential damages or any damages
-whatsoever resulting from loss of use, data or profits, whether
-in an action of contract, negligence or other tortious action,
-arising out of or in connection with the use or performance of
-this software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 ======================================================================
 
-======================================================================
-The Python Imaging Library
-https://github.com/python-pillow/Pillow/blob/main/LICENSE
-======================================================================
-The Python Imaging Library (PIL) is
-
-    Copyright © 1997-2011 by Secret Labs AB
-    Copyright © 1995-2011 by Fredrik Lundh and contributors
-
-Pillow is the friendly PIL fork. It is
-
-    Copyright © 2010 by Jeffrey A. Clark and contributors
-
-Like PIL, Pillow is licensed under the open source MIT-CMU License:
-
-By obtaining, using, and/or copying this software and/or its associated
-documentation, you agree that you have read, understood, and will comply
-with the following terms and conditions:
-
-Permission to use, copy, modify and distribute this software and its
-documentation for any purpose and without fee is hereby granted,
-provided that the above copyright notice appears in all copies, and that
-both that copyright notice and this permission notice appear in supporting
-documentation, and that the name of Secret Labs AB or the author not be
-used in advertising or publicity pertaining to distribution of the software
-without specific, written prior permission.
-
-SECRET LABS AB AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.
-IN NO EVENT SHALL SECRET LABS AB OR THE AUTHOR BE LIABLE FOR ANY SPECIAL,
-INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
-OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-======================================================================
 
 ======================================================================
 ======================================================================
