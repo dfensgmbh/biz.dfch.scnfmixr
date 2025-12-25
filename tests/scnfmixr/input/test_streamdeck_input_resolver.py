@@ -24,6 +24,9 @@ from biz.dfch.i18n.language_code import LanguageCode
 from biz.dfch.scnfmixr.input.streamdeck_input_resolver import (
     StreamdeckInputResolver
 )
+from biz.dfch.scnfmixr.public.input.streamdeck_event_map import (
+    StreamdeckEventMap
+)
 from biz.dfch.scnfmixr.public.input.streamdeck_input import (
     StreamdeckInput
 )
@@ -35,22 +38,11 @@ from biz.dfch.scnfmixr.public.input.input_event_map import (
 class TestStreamdeckInputResolver(unittest.TestCase):
     """TestStreamdeckInputResolver"""
 
-    def test_resolve_valid_state_and_invalid_key_returns_none(self):
-
-        sut = StreamdeckInputResolver()
-
-        key = 29  # Invalid key.
-        name = "Main"
-
-        result = sut.invoke(name, key)
-
-        self.assertEqual(None, result)
-
     def test_resolve_invalid_state_and_key_returns_none(self):
 
         sut = StreamdeckInputResolver()
 
-        key = 1
+        key = StreamdeckInput(1)
         name = "invalid-state"
 
         result = sut.invoke(name, key)
@@ -61,7 +53,7 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
         sut = StreamdeckInputResolver()
 
-        key = 1
+        key = StreamdeckInput(1)
         name = "Main"
         expected = InputEventMap.KEY_1
 
@@ -162,11 +154,12 @@ class TestStreamdeckInputResolver(unittest.TestCase):
         sut = StreamdeckInputResolver()
 
         state = "Main"
-        key = StreamdeckInput.KEY_0F
+        key = StreamdeckInput.KEY_0E
         code = LanguageCode.IT
 
         expected = "res/img/IT/Main-default.png"
 
+        _ = StreamdeckEventMap["Main"].pop(StreamdeckInput.KEY_0E)
         result = sut.get_input_event_image(state, key, code)
 
         self.assertIsInstance(result, Path)

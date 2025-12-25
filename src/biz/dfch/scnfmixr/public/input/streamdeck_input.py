@@ -46,5 +46,3 @@ class StreamdeckInput(IntEnum):
     KEY_0C = 0x0C
     KEY_0D = 0x0D
     KEY_0E = 0x0E
-
-    KEY_0F = 0x0F

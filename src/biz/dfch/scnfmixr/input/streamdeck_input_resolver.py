@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Package input."""
+"""StreamdeckInputResolver class."""
 
 from __future__ import annotations
 
@@ -34,15 +34,14 @@ class StreamdeckInputResolver:
 
     _RES_IMG_DIR: str = "img"
 
-    def invoke(self, name: str, key: int) -> InputEventMap | None:
+    def invoke(self, name: str, key: StreamdeckInput) -> InputEventMap | None:
         """Resolves a given key to an InputEventMap.
 
         Args:
             name (str):
                 The state name to look up in StreamdeckEventMap.
-            key (int):
-                The integer value to convert to a StreamdeckInput enum
-                member.
+            key(StreamdeckInput):
+                The name of the input key.
 
         Returns:
             result(InputEventMap | None):
@@ -52,7 +51,7 @@ class StreamdeckInputResolver:
         """
 
         assert isinstance(name, str) and "" != name.strip()
-        assert isinstance(key, int)
+        assert isinstance(key, StreamdeckInput)
 
         result: InputEventMap | None = None
 
@@ -62,23 +61,17 @@ class StreamdeckInputResolver:
 
         state = StreamdeckEventMap[name]
 
-        # Examine if key is a specified StreamdeckInput.
-        try:
-            sd_input: StreamdeckInput = StreamdeckInput(key)
-        except ValueError:
-            return result
-
         # Examine if input_ is a specified input for this state.
-        if sd_input not in state:
+        if key not in state:
             return result
 
-        result = state[sd_input]
+        result = state[key]
 
         return result
 
     def translate(
             self,
-            event: InputEventMap,
+            input_event: InputEventMap,
             code: LanguageCode = LanguageCode.DEFAULT
     ) -> str:
         """
@@ -91,7 +84,7 @@ class StreamdeckInputResolver:
         :rtype: str
         """
 
-        assert isinstance(event, InputEventMap)
+        assert isinstance(input_event, InputEventMap)
         assert isinstance(code, LanguageCode)
 
         if LanguageCode.DEFAULT == code:
@@ -99,7 +92,7 @@ class StreamdeckInputResolver:
 
         result: str = ""
 
-        match event.value:
+        match input_event.value:
             case InputEventMap.KEY_ENTER:
                 result = "ENTER"
             case InputEventMap.KEY_BACKSPACE:
@@ -107,7 +100,7 @@ class StreamdeckInputResolver:
             case InputEventMap.KEY_TAB:
                 result = "TAB"
             case _:
-                result = event.value
+                result = input_event.value
 
         return result
 
