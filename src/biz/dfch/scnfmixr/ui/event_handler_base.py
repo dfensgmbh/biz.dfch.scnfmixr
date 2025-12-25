@@ -46,7 +46,7 @@ class EventHandlerBase(ABC):
         self._is_paused = False
 
     @abstractmethod
-    def start(self):
+    def start(self) -> bool:
         """Starts the handler.
 
         Return:
@@ -56,7 +56,7 @@ class EventHandlerBase(ABC):
         return False
 
     @abstractmethod
-    def stop(self):
+    def stop(self) -> bool:
         """Stops the handler.
 
         Return:
