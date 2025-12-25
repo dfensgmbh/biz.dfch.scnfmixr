@@ -625,3 +625,7 @@ Everything in this repository (unless otherwise noted) is licensed under the GPL
 **CH-6300 Zug**
 
 **SCHWEIZ**
+
+## Licenses of third-party components
+
+See [NOTICE](NOTICE.md) for license of third-party components.
