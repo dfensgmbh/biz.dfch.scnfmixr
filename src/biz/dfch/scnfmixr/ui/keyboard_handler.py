@@ -140,7 +140,7 @@ class KeyboardHandler(EventHandlerBase):
 
         return result
 
-    def start(self):
+    def start(self) -> bool:
         """Starts the keyboard handler."""
 
         with self.sync_root:
@@ -158,6 +158,8 @@ class KeyboardHandler(EventHandlerBase):
                 cmd, wait_on_completion=False, capture_stdout=True)
             self._thread.start()
 
+        return True
+
     def stop(self) -> None:
         """Stops the keyboard handler."""
 
@@ -165,3 +167,5 @@ class KeyboardHandler(EventHandlerBase):
             self.stop_processing.set()
             self._is_paused = False
             self._process.stop(force=True)
+
+        return True
