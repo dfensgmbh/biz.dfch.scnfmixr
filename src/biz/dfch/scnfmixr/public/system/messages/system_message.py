@@ -84,14 +84,14 @@ class SystemMessage:
             """
 
         class StateMachineTransitionEnter(NotificationMedium):
-            """StateMachine enters a transitition.
+            """StateMachine enters a transition.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
         class StateMachineTransitionLeave(NotificationMedium):
-            """StateMachine leaves a transitition.
+            """StateMachine leaves a transition.
 
             Attributes:
                 None: This message does not have any parameters.
