@@ -73,7 +73,7 @@ class TestStreamdeckImageLibrary(unittest.TestCase):
         with self.assertRaises(AttributeError) as exc:
             sut = StreamdeckImageLibrary.Factory.get(deck, code)
 
-            result = sut.get_key_information(state)
+            result = sut.get_key_images(state)
 
             # This statement will raise an `AttributeError`.
             # `Dummy` does not implement `.close()`.
@@ -85,7 +85,7 @@ class TestStreamdeckImageLibrary(unittest.TestCase):
         self.assertTrue((StreamdeckInput.KEY_00, True) in result)
 
         for key, value in StreamdeckEventMap.items():
-            result = sut.get_key_information(key)
+            result = sut.get_key_images(key)
 
             for input_ in value:
                 self.assertTrue((input_, True) in result)

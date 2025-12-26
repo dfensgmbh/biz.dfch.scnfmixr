@@ -111,7 +111,7 @@ class StreamdeckImageLibrary:
 
         return result
 
-    def get_key_information(
+    def get_key_images(
         self,
         state: str
     ) -> dict[tuple[StreamdeckInput, bool], bytes]:
@@ -119,7 +119,9 @@ class StreamdeckImageLibrary:
 
         assert isinstance(state, str) and state.strip()
 
-        return self._worker(state)
+        result = self._worker(state)
+
+        return result
 
     class Factory:  # pylint: disable=R0903
         """Factory."""
