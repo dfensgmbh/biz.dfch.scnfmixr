@@ -475,7 +475,7 @@ The system works with the Elgato Streamdeck MK.2 device (and only this device). 
 * [HID API](https://docs.elgato.com/streamdeck/hid/)
 * [Stream Deck Module 15 and 32 Keys](https://docs.elgato.com/streamdeck/hid/module-15_32)
 
-The system uses `hexdump` to detect button presses. `Report` messages start with `0x01 0x00 0x0f 0x00`:
+The system uses `hexdump` to detect button pushes. `Report` messages start with `0x01 0x00 0x0f 0x00`:
 
 * +00: 0x01 Report ID
 * +01: 0x00 Command
