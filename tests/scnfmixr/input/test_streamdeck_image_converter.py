@@ -72,7 +72,7 @@ class TestStreamdeckImageConverter(unittest.TestCase):
 
         self.assertEqual("close", exc.exception.name)
 
-    def test_get_image_pressed_and_get_hash_key_succeeds(self):
+    def test_get_image_pushed_and_get_hash_key_succeeds(self):
 
         name = "Test"
         key = StreamdeckInput.KEY_00
@@ -92,7 +92,7 @@ class TestStreamdeckImageConverter(unittest.TestCase):
 
             sut = StreamdeckImageConverter(deck, code)
 
-            image_bytes = sut.get_image_pressed(name, key)
+            image_bytes = sut.get_image_pushed(name, key)
             result = sut.get_hash_key(image_bytes)
 
             self.assertEqual(expected, result)
