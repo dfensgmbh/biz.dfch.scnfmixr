@@ -188,7 +188,11 @@ class TestStreamdeckInputResolver(unittest.TestCase):
         key = StreamdeckInput.KEY_00
         code = LanguageCode.EN
 
-        expected = "res/img/EN/Main-KEY_00-VolumeUpBlue.png"
+        expected = (
+            "res/img/EN/"
+            "Main-KEY_00-VolumeUpBlue"
+            ".png"
+        )
 
         result = sut.get_input_event_image(state, key, code)
 
