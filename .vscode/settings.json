@@ -29,6 +29,8 @@
         "asyn",
         "cuepoint",
         "Deutsch",
+        "DEVNAME",
+        "DEVPATH",
         "dfch",
         "DFTODO",
         "direxists",
@@ -47,6 +49,9 @@
         "rtype",
         "scnfmixr",
         "Streamdeck",
+        "Streamdecks",
+        "UDEVADM",
+        "xhci",
         "xput",
         "xputs"
     ]
