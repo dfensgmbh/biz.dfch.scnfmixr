@@ -34,63 +34,92 @@ class SystemMessage:
     class StateMachine:
         """StateMachine status messages."""
 
-        class StateMachineStarting(NotificationMedium):
+        class StateMachineMessageBase(NotificationMedium):
+            """StateMachine base message.
+
+            Attributes:
+                value (str): The event (state or transition).
+            """
+
+            value: str
+
+            def __init__(self, value: str):
+                super().__init__()
+
+                self.value = value
+
+        class StateMachineStarting(StateMachineMessageBase):
             """StateMachine is starting.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineStarted(NotificationMedium):
+            def __init__(self):
+                super().__init__("")
+
+        class StateMachineStarted(StateMachineMessageBase):
             """StateMachine is starting.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineStopping(NotificationMedium):
+            def __init__(self):
+                super().__init__("")
+
+        class StateMachineStopping(StateMachineMessageBase):
             """StateMachine is stopping.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineStopped(NotificationMedium):
+            def __init__(self):
+                super().__init__("")
+
+        class StateMachineStopped(StateMachineMessageBase):
             """StateMachine is stopped.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineError(NotificationMedium):
+            def __init__(self):
+                super().__init__("")
+
+        class StateMachineError(StateMachineMessageBase):
             """StateMachine is in an error state.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineStateEnter(NotificationMedium):
+            def __init__(self):
+                super().__init__("")
+
+        class StateMachineStateEnter(StateMachineMessageBase):
             """StateMachine enters a state.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineStateLeave(NotificationMedium):
+        class StateMachineStateLeave(StateMachineMessageBase):
             """StateMachine leaves a state.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineTransitionEnter(NotificationMedium):
+        class StateMachineTransitionEnter(StateMachineMessageBase):
             """StateMachine enters a transition.
 
             Attributes:
                 None: This message does not have any parameters.
             """
 
-        class StateMachineTransitionLeave(NotificationMedium):
+        class StateMachineTransitionLeave(StateMachineMessageBase):
             """StateMachine leaves a transition.
 
             Attributes:
