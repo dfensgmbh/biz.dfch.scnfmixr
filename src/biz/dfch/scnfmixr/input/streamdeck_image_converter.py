@@ -95,7 +95,7 @@ class StreamdeckImageConverter:
             margins=(0, 0, self.MARGIN_BOTTOM, 0),
         )
 
-    def get_image_pressed(
+    def get_image_pushed(
         self,
         state: str,
         key: StreamdeckInput,
@@ -103,7 +103,7 @@ class StreamdeckImageConverter:
         """
         The method does these steps. It:
             * Loads the image
-            * Scales the image to a "pressed" (smaller) size
+            * Scales the image to a "pushed" (smaller) size
             * Returns the image in `bytes`.
         """
 

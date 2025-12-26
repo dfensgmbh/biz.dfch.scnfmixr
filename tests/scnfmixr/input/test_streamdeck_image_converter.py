@@ -44,11 +44,11 @@ class TestStreamdeckImageConverter(unittest.TestCase):
     def test_get_image_and_get_hash_key_succeeds(self):
 
         state = "Test"
-        key = StreamdeckInput.KEY_01
+        key = StreamdeckInput.KEY_00
         code = LanguageCode.DEFAULT
         expected = (
-            "ca6c222dbea28664387b375ebfbe9e3f"
-            "d6c9e6580506b1e5cec152b1efdce0ba"
+            "9d3eb4213ad0af309239f0e8a081b5be"
+            "4fc3843b9169f589cae681d28d03f0b0"
         )
 
         # pylint: disable=W0212
@@ -70,10 +70,9 @@ class TestStreamdeckImageConverter(unittest.TestCase):
             # `Dummy` does not implement `.close()`.
             deck.close()
 
-        print(exc.exception)
         self.assertEqual("close", exc.exception.name)
 
-    def test_get_image_pressed_and_get_hash_key_succeeds(self):
+    def test_get_image_pushed_and_get_hash_key_succeeds(self):
 
         name = "Test"
         key = StreamdeckInput.KEY_00
@@ -93,7 +92,7 @@ class TestStreamdeckImageConverter(unittest.TestCase):
 
             sut = StreamdeckImageConverter(deck, code)
 
-            image_bytes = sut.get_image_pressed(name, key)
+            image_bytes = sut.get_image_pushed(name, key)
             result = sut.get_hash_key(image_bytes)
 
             self.assertEqual(expected, result)
@@ -102,5 +101,4 @@ class TestStreamdeckImageConverter(unittest.TestCase):
             # `Dummy` does not implement `.close()`.
             deck.close()
 
-        print(exc.exception)
         self.assertEqual("close", exc.exception.name)
