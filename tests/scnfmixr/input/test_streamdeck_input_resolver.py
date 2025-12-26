@@ -24,14 +24,15 @@ from biz.dfch.i18n.language_code import LanguageCode
 from biz.dfch.scnfmixr.input.streamdeck_input_resolver import (
     StreamdeckInputResolver
 )
-from biz.dfch.scnfmixr.public.input.streamdeck_event_map import (
-    StreamdeckEventMap
+from biz.dfch.scnfmixr.public.input.input_event_map import (
+    InputEventMap
 )
 from biz.dfch.scnfmixr.public.input.streamdeck_input import (
     StreamdeckInput
 )
-from biz.dfch.scnfmixr.public.input.input_event_map import (
-    InputEventMap
+from biz.dfch.scnfmixr.public.input.streamdeck_event_map import (
+    StreamdeckEventMap,
+    _streamdeck_event_map_default
 )
 
 
@@ -142,7 +143,11 @@ class TestStreamdeckInputResolver(unittest.TestCase):
         key = StreamdeckInput.KEY_00
         code = LanguageCode.FR
 
-        expected = "res/img/FR/default.png"
+        expected = (
+            f"res/img/{code.name}/"
+            f"default"
+            ".png"
+        )
 
         result = sut.get_input_event_image(state, key, code)
 
@@ -153,11 +158,18 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
         sut = StreamdeckInputResolver()
 
-        state = "Main"
+        state = "Test"
         key = StreamdeckInput.KEY_0E
         code = LanguageCode.IT
 
-        expected = "res/img/IT/Main-default.png"
+        # pylint: disable=W0212
+        StreamdeckEventMap[state] = _streamdeck_event_map_default
+
+        expected = (
+            f"res/img/{code.name}/"
+            f"{state}-default"
+            ".png"
+        )
 
         _ = StreamdeckEventMap["Main"].pop(StreamdeckInput.KEY_0E)
         result = sut.get_input_event_image(state, key, code)
@@ -169,11 +181,18 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
         sut = StreamdeckInputResolver()
 
-        state = "Main"
-        key = StreamdeckInput.KEY_01
+        state = "Test"
+        key = StreamdeckInput.KEY_02
         code = LanguageCode.EN
 
-        expected = "res/img/EN/Main-default.png"
+        # pylint: disable=W0212
+        StreamdeckEventMap[state] = _streamdeck_event_map_default
+
+        expected = (
+            f"res/img/{code.name}/"
+            f"{state}-default"
+            ".png"
+        )
 
         result = sut.get_input_event_image(state, key, code)
 
@@ -184,13 +203,16 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
         sut = StreamdeckInputResolver()
 
-        state = "Main"
+        state = "Test"
         key = StreamdeckInput.KEY_00
         code = LanguageCode.EN
 
+        # pylint: disable=W0212
+        StreamdeckEventMap[state] = _streamdeck_event_map_default
+
         expected = (
-            "res/img/EN/"
-            "Main-KEY_00-VolumeUpBlue"
+            f"res/img/{code.name}/"
+            f"{state}-{key.name}-VolumeUpBlue"
             ".png"
         )
 

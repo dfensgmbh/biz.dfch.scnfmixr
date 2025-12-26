@@ -24,12 +24,11 @@ from StreamDeck.Devices.StreamDeckOriginalV2 import (  # type: ignore
 from StreamDeck.Transport.Dummy import (  # type: ignore
     Dummy)
 
+from biz.dfch.i18n.language_code import LanguageCode
+
 from biz.dfch.scnfmixr.input.streamdeck_image_converter import (
     StreamdeckImageConverter
 )
-
-from biz.dfch.i18n.language_code import LanguageCode
-
 from biz.dfch.scnfmixr.public.input.streamdeck_event_map import (
     StreamdeckEventMap,
     _streamdeck_event_map_default
@@ -44,16 +43,16 @@ class TestStreamdeckImageConverter(unittest.TestCase):
 
     def test_get_image_and_get_hash_key_succeeds(self):
 
-        name = "Test"
-        key = StreamdeckInput.KEY_00
+        state = "Test"
+        key = StreamdeckInput.KEY_01
         code = LanguageCode.DEFAULT
         expected = (
-            "9d3eb4213ad0af309239f0e8a081b5be"
-            "4fc3843b9169f589cae681d28d03f0b0"
+            "ca6c222dbea28664387b375ebfbe9e3f"
+            "d6c9e6580506b1e5cec152b1efdce0ba"
         )
 
         # pylint: disable=W0212
-        StreamdeckEventMap[name] = _streamdeck_event_map_default
+        StreamdeckEventMap[state] = _streamdeck_event_map_default
 
         with self.assertRaises(AttributeError) as exc:
 
@@ -62,7 +61,7 @@ class TestStreamdeckImageConverter(unittest.TestCase):
 
             sut = StreamdeckImageConverter(deck, code)
 
-            image_bytes = sut.get_image(name, key)
+            image_bytes = sut.get_image(state, key)
             result = sut.get_hash_key(image_bytes)
 
             self.assertEqual(expected, result)
