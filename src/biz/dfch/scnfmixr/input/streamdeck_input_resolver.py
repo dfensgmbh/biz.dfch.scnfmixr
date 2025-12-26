@@ -119,7 +119,7 @@ class StreamdeckInputResolver:
         :type key: StreamdeckInput
         :param code: The language code.
         :type code: LanguageCode
-        :return: Description
+        :return: The Path to the image.
         :rtype: Path
         """
 
