@@ -470,7 +470,7 @@ Note: naming for the executable does not have to follow [SemVer](http://semver.o
 
 # Detecting the Elgato Streamdeck MK.2
 
-The system works with the Elgato Streamdeck MK.2 device. This device has 15 buttons. The button in the upper left corner has id 0 and the button in the lower right corner has id 14.
+The system works with the Elgato Streamdeck MK.2 device (and only this device). This device has 15 buttons. The button in the upper left corner has id 0 and the button in the lower right corner has id 14.
 
 * [HID API](https://docs.elgato.com/streamdeck/hid/)
 * [Stream Deck Module 15 and 32 Keys](https://docs.elgato.com/streamdeck/hid/module-15_32)
@@ -586,6 +586,19 @@ P: /devices/platform/axi/1000120000.pcie/1f00200000.usb/xhci-hcd.0/usb2/2-1/2-1.
 ... (output omitted) ...
 
 ```
+
+## Layout
+
+
+|  | **Column 1** | **Column 2** | **Column 3** | **Column 4** | **Column 5** |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Row 1** | 0<br />(0x00) | 1<br />(0x01) | 2<br />(0x02) | 3<br />(0x03) | 4<br />(0x04) |
+| **Row 2** | 5<br />(0x05) | 6<br />(0x06) | 7<br />(0x07) | 8<br />(0x08) | 9<br />(0x09) |
+| **Row 3** | 10<br />(0x0A) | 11<br />(0x0B) | 12<br />(0x0C) | 13<br />(0x0D) | 14<br />(0x0E) |
+
+![Keypad Keys Index Layout](https://docs.elgato.com/img/streamdeck/hid/sd-classic-buttons-layout.png)
+
+NOTE: See [Stream Deck Module 15 and 32 Keys](https://docs.elgato.com/streamdeck/hid/module-15_32) for further information.
 
 ## Installing Python libraries
 
