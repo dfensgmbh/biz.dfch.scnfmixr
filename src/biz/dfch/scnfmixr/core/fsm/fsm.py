@@ -187,8 +187,8 @@ class Fsm:
 
         return sorted(result)
 
-    def visualise(self) -> list[str]:
-        """Visualises the finite state machine.
+    def visualize(self) -> list[str]:
+        """Visualizes the finite state machine.
 
         Attributes:
             None.
@@ -466,7 +466,7 @@ class Fsm:
 
                     self.stop()
 
-                # Returh false here, not because fsm stopped, but because
+                # Return false here, not because fsm stopped, but because
                 # transition failed.
                 return False
 

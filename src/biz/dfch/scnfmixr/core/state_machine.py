@@ -147,7 +147,7 @@ class StateMachine:
     _app_ctx: ApplicationContext
     _signal_worker: threading.Event
     _event_queue: ConcurrentDoubleSideQueueT[str]
-    _messsage_queue: MessageQueue
+    _message_queue: MessageQueue
     _do_cancel_worker: bool
     _thread: threading.Thread
     _ctx: ExecutionContext
@@ -162,12 +162,12 @@ class StateMachine:
         self._app_ctx = ApplicationContext.Factory.get()
         self._signal_worker = threading.Event()
         self._event_queue = ConcurrentDoubleSideQueueT[str]()
-        self._messsage_queue = MessageQueue.Factory.get()
+        self._message_queue = MessageQueue.Factory.get()
         self._do_cancel_worker = False
         self._thread = threading.Thread(target=self._worker, daemon=True)
         self._ctx = None
         self._fsm = None
-        self._messsage_queue.register(self._on_message, lambda e: isinstance(
+        self._message_queue.register(self._on_message, lambda e: isinstance(
             e,
             (SystemMessage.InputEvent, SystemMessage.Shutdown)))
         self._menu = {}
@@ -299,7 +299,7 @@ class StateMachine:
         log.info("Stopping worker OK.")
 
     def initialise(self) -> None:
-        """Initialises the state machine."""
+        """Initializes the state machine."""
 
         log.info("Initializing state machine ...")
 
@@ -701,12 +701,12 @@ class StateMachine:
                 current))
         )
 
-        self._ctx = ExecutionContext(None, None, events=self._messsage_queue)
+        self._ctx = ExecutionContext(None, None, events=self._message_queue)
 
         self._fsm = Fsm(initial_state=menu[State.INIT_LCL], ctx=self._ctx)
         self._fsm.start()
 
-        # for line in self._fsm.visualise():
+        # for line in self._fsm.visualize():
         #     log.debug(line)
 
         log.info("Initializing state machine OK.")

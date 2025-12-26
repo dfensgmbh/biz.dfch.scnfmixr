@@ -130,7 +130,7 @@ class TestFsm(unittest.TestCase):
         self.assertTrue(result)
         self.assertEqual(TestFsm.ArbitraryState1, type(sut.current_state))
 
-        for line in sut.visualise():
+        for line in sut.visualize():
             print(line)
 
 
