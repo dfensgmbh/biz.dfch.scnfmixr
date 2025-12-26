@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Module signal_path_lazy_manager."""
+"""Module thread_pool."""
 
 from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
