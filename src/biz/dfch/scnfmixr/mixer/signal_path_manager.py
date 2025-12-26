@@ -123,7 +123,7 @@ class SignalPathManager:
             self._is_processing_paused = False
 
     class SuppressNoisyDebug(logging.Filter):
-        """Supress DEBUG level logging of module MultiLineTextParser
+        """Suppress DEBUG level logging of module MultiLineTextParser
         and process."""
 
         def filter(self, record) -> bool:
