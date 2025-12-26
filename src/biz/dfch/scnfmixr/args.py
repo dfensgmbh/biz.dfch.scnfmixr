@@ -227,7 +227,7 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
             "--input2", "-hi2",
             type=str,
             dest=InputDevice.HI2.name,
-            default="3-1.4",
+            default="4-1.4",
             help="Specifies USB port for Elgato Streamdeck."
         )
         parser.add_argument(
