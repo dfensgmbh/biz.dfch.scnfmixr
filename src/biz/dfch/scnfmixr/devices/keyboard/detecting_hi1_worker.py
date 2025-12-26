@@ -24,6 +24,7 @@ from .input_event_device_visitor import InputEventDeviceVisitor
 from ..interface_detector_base import InterfaceDetectorBase
 
 
+# pylint: disable=R0903
 class DetectingHi1Worker(InterfaceDetectorBase):
     """Implements the logic from `DetectingHi`."""
 
@@ -49,7 +50,7 @@ class DetectingHi1Worker(InterfaceDetectorBase):
     def select(self) -> str:
         """Selects a matching interface and returns it device path.
 
-        Returns
+        Returns:
             str: The device path of an HID input event device that matches the
                 value specified in the ctor call.
         """

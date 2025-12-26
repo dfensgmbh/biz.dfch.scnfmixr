@@ -21,6 +21,7 @@ from ..fsm import StateBase
 from ..transition_event import TransitionEvent
 
 
+# pylint: disable=R0903
 class DetectingHi3(TransitionBase):
     """Detecting device HI3."""
 
