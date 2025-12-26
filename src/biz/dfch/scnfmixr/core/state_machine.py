@@ -55,6 +55,9 @@ from .transitions import DetectingEx2, SkippingEx2
 from .states import InitialiseHi1
 from .transitions import DetectingHi1, SkippingHi1
 
+from .states import InitialiseHi2
+from .transitions import DetectingHi2, SkippingHi2
+
 from .states import InitialiseRc1
 from .transitions import DetectingRc1, SkippingRc1, CleaningRc1, MountingRc1, UnmountingRc1 \
     # pylint: disable=C0301  # noqa: E501
@@ -311,6 +314,9 @@ class StateMachine:
 
         assert State.INIT_HI1 not in menu
         menu[State.INIT_HI1] = InitialiseHi1()
+
+        assert State.INIT_HI2 not in menu
+        menu[State.INIT_HI2] = InitialiseHi2()
 
         assert State.INIT_EX1 not in menu
         menu[State.INIT_EX1] = InitialiseEx1()
@@ -624,6 +630,19 @@ class StateMachine:
                 current.Event.SELECT_ITALIAN,
                 menu[State.INIT_EX1]))
         )
+        current: InitialiseHi2 = menu[State.INIT_HI2]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(DetectingHi2(
+                current.Event.DETECT_DEVICE,
+                menu[State.LANGUAGE]))
+            .add_transition(SkippingHi2(
+                current.Event.SKIP_DEVICE,
+                menu[State.LANGUAGE]))
+        )
         current: InitialiseHi1 = menu[State.INIT_HI1]
         (
             current
@@ -632,10 +651,10 @@ class StateMachine:
                 current))
             .add_transition(DetectingHi1(
                 current.Event.DETECT_DEVICE,
-                menu[State.LANGUAGE]))
+                menu[State.INIT_HI2]))
             .add_transition(SkippingHi1(
                 current.Event.SKIP_DEVICE,
-                menu[State.LANGUAGE]))
+                menu[State.INIT_HI2]))
         )
         current: InitialiseLcl = menu[State.INIT_LCL]
         (

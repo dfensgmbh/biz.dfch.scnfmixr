@@ -34,11 +34,11 @@ class StreamdeckInputResolver:
 
     _RES_IMG_DIR: str = "img"
 
-    def invoke(self, name: str, key: StreamdeckInput) -> InputEventMap | None:
+    def invoke(self, state: str, key: StreamdeckInput) -> InputEventMap | None:
         """Resolves a given key to an InputEventMap.
 
         Args:
-            name (str):
+            state (str):
                 The state name to look up in StreamdeckEventMap.
             key(StreamdeckInput):
                 The name of the input key.
@@ -50,22 +50,22 @@ class StreamdeckInputResolver:
             StreamdeckInput, or the input is not mapped in that state.
         """
 
-        assert isinstance(name, str) and "" != name.strip()
+        assert isinstance(state, str) and "" != state.strip()
         assert isinstance(key, StreamdeckInput)
 
         result: InputEventMap | None = None
 
         # Examine if name is a specified state in StreamdeckEventMap.
-        if name not in StreamdeckEventMap:
+        if state not in StreamdeckEventMap:
             return result
 
-        state = StreamdeckEventMap[name]
+        sd_input_event_map = StreamdeckEventMap[state]
 
         # Examine if input_ is a specified input for this state.
-        if key not in state:
+        if key not in sd_input_event_map:
             return result
 
-        result = state[key]
+        result = sd_input_event_map[key]
 
         return result
 

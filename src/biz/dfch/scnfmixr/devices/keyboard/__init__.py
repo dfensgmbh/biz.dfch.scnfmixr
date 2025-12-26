@@ -16,9 +16,11 @@
 """Package keyboard."""
 
 from .detecting_hi1_worker import DetectingHi1Worker
+from .detecting_hi2_worker import DetectingHi2Worker
 from .input_event_device_info import InputEventDeviceInfo
 
 __all__ = [
     "DetectingHi1Worker",
+    "DetectingHi2Worker",
     "InputEventDeviceInfo",
 ]

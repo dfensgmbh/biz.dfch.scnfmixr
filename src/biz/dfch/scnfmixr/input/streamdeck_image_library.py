@@ -87,7 +87,7 @@ class StreamdeckImageLibrary:
 
             image_key_map: dict[tuple[StreamdeckInput, bool], str] = {}
 
-            for key in StreamdeckEventMap[state].keys():
+            for key in StreamdeckEventMap[state]:
                 log.debug("%s: [key %s]", state, key)
 
                 image_normal = self._converter.get_image(state, key)

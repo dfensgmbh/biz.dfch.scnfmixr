@@ -16,19 +16,25 @@
 """Module defining the class keyboard input handling."""
 
 from __future__ import annotations
-import re
-from threading import Thread
-import time
+from typing import cast
+
+from StreamDeck.DeviceManager import DeviceManager  # type: ignore
+from StreamDeck.Devices.StreamDeck import StreamDeck  # type: ignore
+from StreamDeck.Devices.StreamDeckOriginalV2 import (  # type: ignore
+    StreamDeckOriginalV2
+)
 
 from biz.dfch.logging import log
+from biz.dfch.i18n.language_code import LanguageCode
 
-from ..public.ui.streamdeck_type import StreamdeckType
-from ..public.input import KeyboardEventMap
-from .event_handler_base import EventHandlerBase
-
-from ..system import MessageQueue
+from ..public.input import StreamdeckInput
 from ..public.system import MessageBase
 from ..public.system.messages import SystemMessage
+from ..system import MessageQueue
+
+from .event_handler_base import EventHandlerBase
+
+from ..input.streamdeck_image_library import StreamdeckImageLibrary
 
 
 class StreamdeckHandler(EventHandlerBase):
@@ -37,19 +43,14 @@ class StreamdeckHandler(EventHandlerBase):
     """
 
     _WAIT_INTERVAL_MS: int = 500
-    _EVTEST_FULLNAME = "/usr/bin/evtest"
-    _EVTEST_OPTION_GRAB = "--grab"
-
-    _pattern = re.compile(
-        r"type 1 \(EV_KEY\), code ([^ ]+) \(([^)]+)\), value 1$"
-    )
+    _CODE: LanguageCode = LanguageCode.EN
 
     _is_disposed: bool
-    _is_paused: bool
-    _thread: Thread
 
-    _product_id: int
-    _device_id: str
+    _deck: StreamDeckOriginalV2
+    _library = StreamdeckImageLibrary
+
+    _current_state: str
 
     def _on_message(self, message: MessageBase) -> None:
         """This method processes messages."""
@@ -59,17 +60,36 @@ class StreamdeckHandler(EventHandlerBase):
 
         if isinstance(
                 message, SystemMessage.StateMachine.StateMachineStateEnter):
-            return self._on_state_enter(message)
+            self._on_state_enter(message)
+            return
 
         if isinstance(message, SystemMessage.Shutdown):
-            return self._on_shutdown(message)
+            self._on_shutdown(message)
+            return
 
     def _on_state_enter(self, message: MessageBase) -> None:
-        """State enter messages."""
+        """StateMachine enter messages."""
 
         if not isinstance(
                 message, SystemMessage.StateMachine.StateMachineStateEnter):
             return
+
+        message = cast(
+            SystemMessage.StateMachine.StateMachineStateEnter, message)
+        self._current_state = message.value
+        log.debug("_on_state_enter: '%s'.", self._current_state)
+
+        self._deck.reset()
+        # for key in StreamdeckInput:
+        #     self._deck.set_key_color(key, 0, 0, 0)
+
+        # Show all images of current screen.
+        key_image_map = self._library.get_key_images(self._current_state)
+        assert key_image_map is not None
+        for k, image_bytes in key_image_map.items():
+            key, state = k
+            if not state:
+                self._deck.set_key_image(key, image_bytes)
 
     def _on_shutdown(self, message: MessageBase) -> None:
         """SystemShutdown."""
@@ -83,27 +103,43 @@ class StreamdeckHandler(EventHandlerBase):
 
         log.debug("on_shutdown: Stopping COMPLETED.")
 
-    def __init__(self, type_: StreamdeckType, id_: str):
+    def __init__(self, index: str):
 
         super().__init__()
 
-        assert isinstance(type_, StreamdeckType)
-        # At this time, only ORIGINAL_MK2 is good.
-        assert StreamdeckType.ORIGINAL_MK2 == type_
-        assert id_ and id_.strip()
-
-        self._device_id = id_
-        self._product_id = type_.value
+        assert index and index.strip()
 
         self._is_disposed = False
-        self._is_paused = False
-        self._thread = Thread(target=self._worker, daemon=True)
 
+        # This is the initial state.
+        # DFTODO: Maybe we can leave it "", and wait for the first state
+        # change message.
+        self._current_state = "InitialiseLcl"
+
+        # Select the correct Streamdeck.
+        idx = int(index)
+        decks = DeviceManager().enumerate()
+        assert len(decks) > idx
+        self._deck = decks[idx]
+        # for i, deck in enumerate(decks):
+        #     if i != idx:
+        #         continue
+
+        #     self._deck = deck
+        #     break
+
+        assert isinstance(self._deck, StreamDeck)
+
+        # Subscribe to message queue.
         MessageQueue.Factory.get().register(
             self._on_message,
             lambda e: isinstance(e, (
                 SystemMessage.StateMachine.StateMachineStateEnter,
                 SystemMessage.Shutdown)))
+
+        # Initialize image library.
+        self._library = StreamdeckImageLibrary.Factory.get(
+            self._deck, self._CODE)
 
     def dispose(self):
         """Dispose method for stopping child process `evtest`."""
@@ -112,75 +148,67 @@ class StreamdeckHandler(EventHandlerBase):
 
         self.stop()
         self._is_disposed = True
-        self._device_id = ""
-        self._product_id = 0x0000
 
-    def _worker(self) -> None:
+    def _callback(
+        self,
+        deck: StreamDeck,
+        deck_key: int,
+        deck_key_state: bool
+    ) -> None:
 
-        log.debug("Initializing _worker ...")
-        log.info("Initializing _worker OK.")
+        log.debug("_callback: state: '%s'. key '%s'. key_state '%s'.",
+                  self._current_state, deck_key, deck_key_state)
 
-        while not self.stop_processing.is_set():
+        if deck is None or not isinstance(deck, StreamDeck):
+            log.warning("_callback: deck is invalid.")
+            return
 
-            try:
-                pass
+        if deck_key is None or not isinstance(deck_key, int):
+            log.warning("_callback: deck_key is invalid.")
+            return
 
-                # translated = self._translate(key)
+        try:
+            key = StreamdeckInput(deck_key)
+            key_image_map = self._library.get_key_images(
+                state=self._current_state)
+            assert key_image_map is not None
 
-                # log.debug("Code: '%s'. Key: '%s'. Translated: '%s'.",
-                #           code, key, translated)
+            dict_key = (key, deck_key_state)
+            image_bytes = key_image_map[dict_key]
+            assert image_bytes is not None and 0 < len(image_bytes)
 
-                # self.queue.publish(SystemMessage.InputEvent(translated))
+            self._deck.set_key_image(deck_key, image_bytes)
 
-            except Exception as ex:  # pylint: disable=W0718
-                log.error("An error occurred. [%s]", ex, exc_info=True)
-
-            finally:
-                time.sleep(self._WAIT_INTERVAL_MS / 1000)
-
-        log.info("Stopping worker OK.")
-
-    def _translate(self, key: str, default: str = "") -> str:
-
-        assert key and key.strip()
-
-        result = default
-
-        if key not in KeyboardEventMap.__members__:
-            return default
-
-        result = KeyboardEventMap[key].value
-
-        return result
+        except Exception as ex:  # pylint: disable=W0718
+            log.error("An error occurred. [%s]", ex, exc_info=True)
 
     def start(self) -> bool:
         """Starts the Streamdeck handler."""
 
-        with self.sync_root:
+        log.debug("%s: Try to start handler ...", type(self).__name__)
+        try:
+            with self.sync_root:
+                self._deck.open()
+                self._deck.reset()
+                self._deck.set_brightness(30)
+                self._deck.set_key_callback(self._callback)
 
-            self.stop_processing.clear()
-            self._is_paused = False
+            log.info("%s: Try to start handler SUCCEEDED.", type(self).__name__)
+            return True
 
-            # DFTODO: Add these steps:
-            # * Detect Streamdeck
-            # * Load images
-            # * Convert images
-
-            # cmd: list[str] = [
-            #     self._EVTEST_FULLNAME,
-            #     self._EVTEST_OPTION_GRAB,
-            #     self._device,
-            # ]
-
-            # self._process = Process.start(
-            #     cmd, wait_on_completion=False, capture_stdout=True)
-            # self._thread.start()
+        except Exception as ex:  # pylint: disable=W0718
+            log.error("An error occurred. [%s]", ex, exc_info=True)
+            return False
 
     def stop(self) -> bool:
         """Stops the Streamdeck handler."""
 
+        log.debug("%s: Try to stop handler ...", type(self).__name__)
         with self.sync_root:
-            self.stop_processing.set()
-            self._is_paused = False
 
+            with self._deck:
+                self._deck.reset()
+                self._deck.close()
+
+        log.info("%s: Try to stop handler SUCCEEDED.", type(self).__name__)
         return True

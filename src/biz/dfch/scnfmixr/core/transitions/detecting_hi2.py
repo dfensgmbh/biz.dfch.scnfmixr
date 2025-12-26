@@ -15,12 +15,21 @@
 
 """Module detecting_hi2."""
 
+from biz.dfch.logging import log
+
+from ...app import ApplicationContext
+from ...public.input import InputDevice
+
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
 from ..transition_event import TransitionEvent
 
+from ...devices.keyboard import DetectingHi2Worker
+from ...ui.streamdeck_handler import StreamdeckHandler
 
+
+# pylint: disable=R0903
 class DetectingHi2(TransitionBase):
     """Detecting device HI2."""
 
@@ -39,4 +48,19 @@ class DetectingHi2(TransitionBase):
             target_state=target)
 
     def invoke(self, ctx):
-        return True
+
+        app_ctx = ApplicationContext.Factory.get()
+
+        value = app_ctx.input_device_map[InputDevice.HI2]
+        worker = DetectingHi2Worker(value)
+        device = worker.select()
+
+        if device is None or "" == device.strip():
+            log.error("No input device detected at: '%s'", value)
+            return False
+
+        log.debug("Input device detected at: '%s'", device)
+
+        handler = StreamdeckHandler(device)
+        result = handler.start()
+        return result

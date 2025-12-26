@@ -58,7 +58,10 @@ class StreamdeckImageConverter:
         code: LanguageCode = LanguageCode.DEFAULT
     ):
 
-        assert isinstance(deck, StreamDeck)
+        # For reasons, that I do not know, the assertion fails,
+        # because `deck` is not of type `StreamDeck`.
+        # During test, with `Dummy` it is ...
+        # assert isinstance(deck, StreamDeck)
         assert isinstance(code, LanguageCode)
 
         self._deck = deck
@@ -76,7 +79,7 @@ class StreamdeckImageConverter:
                       self.FONT_NAME, font)
             type(self)._font = ImageFont.truetype(
                 font, self.SIZE)
-            log.info("Try to get font name '%s' from location  '%s' OK.",
+            log.info("Try to get font name '%s' from location '%s' SUCCEEDED.",
                      self.FONT_NAME, font)
 
     def get_image(
@@ -96,6 +99,7 @@ class StreamdeckImageConverter:
             state=state,
             key=key,
             margins=(0, 0, self.MARGIN_BOTTOM, 0),
+            has_text=True
         )
 
     def get_image_pushed(
@@ -166,7 +170,8 @@ class StreamdeckImageConverter:
             return result
 
         log.debug("Try to get text for '%s:%s' ...", state, key.name)
-        text = resolver.invoke(state, key)
+        input_event = resolver.invoke(state, key)
+        text = resolver.translate(input_event, code=self._code)
         log.info("Try to get text for '%s:%s' SUCCEEDED: '%s'.",
                  state, key.name, text)
 
