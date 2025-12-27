@@ -46,7 +46,7 @@ class TestStreamdeckInputResolver(unittest.TestCase):
         key = StreamdeckInput(1)
         name = "invalid-state"
 
-        result = sut.invoke(name, key)
+        result = sut.resolve(name, key)
 
         self.assertEqual(None, result)
 
@@ -58,82 +58,82 @@ class TestStreamdeckInputResolver(unittest.TestCase):
         name = "Main"
         expected = InputEventMap.KEY_1
 
-        result = sut.invoke(name, key)
+        result = sut.resolve(name, key)
 
         self.assertEqual(expected, result)
 
-    def test_translate_with_enter_succeeds(self):
+    def test_get_text_with_enter_succeeds(self):
 
         sut = StreamdeckInputResolver()
 
         event = InputEventMap.KEY_ENTER
         expected = "ENTER"
 
-        result = sut.translate(event)
+        result = sut.get_text(event)
 
         self.assertEqual(expected, result)
 
-    def test_translate_with_backspace_succeeds(self):
+    def test_get_text_with_backspace_succeeds(self):
 
         sut = StreamdeckInputResolver()
 
         event = InputEventMap.KEY_BACKSPACE
         expected = "DELETE"
 
-        result = sut.translate(event)
+        result = sut.get_text(event)
 
         self.assertEqual(expected, result)
 
-    def test_translate_with_tab_succeeds(self):
+    def test_get_text_with_tab_succeeds(self):
 
         sut = StreamdeckInputResolver()
 
         event = InputEventMap.KEY_TAB
         expected = "TAB"
 
-        result = sut.translate(event)
+        result = sut.get_text(event)
 
         self.assertEqual(expected, result)
 
-    def test_translate_with_1_succeeds(self):
+    def test_get_text_with_1_succeeds(self):
 
         sut = StreamdeckInputResolver()
 
         event = InputEventMap.KEY_1
         expected = "1"
 
-        result = sut.translate(event)
+        result = sut.get_text(event)
 
         self.assertEqual(expected, result)
 
-    def test_translate_with_asterisk_succeeds(self):
+    def test_get_text_with_asterisk_succeeds(self):
 
         sut = StreamdeckInputResolver()
 
         event = InputEventMap.KEY_ASTERISK
         expected = "*"
 
-        result = sut.translate(event)
+        result = sut.get_text(event)
 
         self.assertEqual(expected, result)
 
-    def test_translate_with_invalid_input_throws(self):
+    def test_get_text_with_invalid_input_throws(self):
 
         sut = StreamdeckInputResolver()
 
         event = "-1"  # invalid input event
 
         with self.assertRaises(AssertionError):
-            _ = sut.translate(event)
+            _ = sut.get_text(event)
 
-    def test_translate_with_none_input_throws(self):
+    def test_get_text_with_none_input_throws(self):
 
         sut = StreamdeckInputResolver()
 
         event = None  # invalid input event
 
         with self.assertRaises(AssertionError):
-            _ = sut.translate(event)
+            _ = sut.get_text(event)
 
     def test_invalid_state_returns_default(self):
 

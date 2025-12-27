@@ -58,10 +58,7 @@ class StreamdeckImageConverter:
         code: LanguageCode = LanguageCode.DEFAULT
     ):
 
-        # For reasons, that I do not know, the assertion fails,
-        # because `deck` is not of type `StreamDeck`.
-        # During test, with `Dummy` it is ...
-        # assert isinstance(deck, StreamDeck)
+        assert isinstance(deck, StreamDeck)
         assert isinstance(code, LanguageCode)
 
         self._deck = deck
@@ -170,8 +167,8 @@ class StreamdeckImageConverter:
             return result
 
         log.debug("Try to get text for '%s:%s' ...", state, key.name)
-        input_event = resolver.invoke(state, key)
-        text = resolver.translate(input_event, code=self._code)
+        input_event = resolver.resolve(state, key)
+        text = resolver.get_text(input_event, code=self._code)
         log.info("Try to get text for '%s:%s' SUCCEEDED: '%s'.",
                  state, key.name, text)
 

@@ -34,7 +34,11 @@ class StreamdeckInputResolver:
 
     _RES_IMG_DIR: str = "img"
 
-    def invoke(self, state: str, key: StreamdeckInput) -> InputEventMap | None:
+    def resolve(
+        self,
+        state: str,
+        key: StreamdeckInput
+    ) -> InputEventMap | None:
         """Resolves a given key to an InputEventMap.
 
         Args:
@@ -69,7 +73,7 @@ class StreamdeckInputResolver:
 
         return result
 
-    def translate(
+    def get_text(
             self,
             input_event: InputEventMap,
             code: LanguageCode = LanguageCode.DEFAULT
