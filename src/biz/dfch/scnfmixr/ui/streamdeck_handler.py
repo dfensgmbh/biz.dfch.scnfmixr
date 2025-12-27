@@ -35,6 +35,7 @@ from ..system import MessageQueue
 from .event_handler_base import EventHandlerBase
 
 from ..input.streamdeck_image_library import StreamdeckImageLibrary
+from ..input.streamdeck_input_resolver import StreamdeckInputResolver
 
 
 class StreamdeckHandler(EventHandlerBase):
@@ -47,7 +48,9 @@ class StreamdeckHandler(EventHandlerBase):
 
     _is_disposed: bool
 
+    _mq: MessageQueue
     _deck: StreamDeckOriginalV2
+    _resolver: StreamdeckInputResolver
     _library = StreamdeckImageLibrary
 
     _current_state: str
@@ -79,9 +82,10 @@ class StreamdeckHandler(EventHandlerBase):
         self._current_state = message.value
         log.debug("_on_state_enter: '%s'.", self._current_state)
 
+        # When we try to set all images to black with "set_key_color()", 
+        # not all images will be set to black. We do not know why.
+        # Thus, we "reset()" the deck. This shows the boot screen momentarily.
         self._deck.reset()
-        # for key in StreamdeckInput:
-        #     self._deck.set_key_color(key, 0, 0, 0)
 
         # Show all images of current screen.
         key_image_map = self._library.get_key_images(self._current_state)
@@ -111,33 +115,28 @@ class StreamdeckHandler(EventHandlerBase):
 
         self._is_disposed = False
 
-        # This is the initial state.
-        # DFTODO: Maybe we can leave it "", and wait for the first state
-        # change message.
-        self._current_state = "InitialiseLcl"
+        # We start with an empty initial state and
+        # wait for the first update event.
+        self._current_state = ""
 
         # Select the correct Streamdeck.
         idx = int(index)
         decks = DeviceManager().enumerate()
         assert len(decks) > idx
         self._deck = decks[idx]
-        # for i, deck in enumerate(decks):
-        #     if i != idx:
-        #         continue
-
-        #     self._deck = deck
-        #     break
 
         assert isinstance(self._deck, StreamDeck)
 
         # Subscribe to message queue.
-        MessageQueue.Factory.get().register(
+        self._mq = MessageQueue.Factory.get()
+        self._mq.register(
             self._on_message,
             lambda e: isinstance(e, (
                 SystemMessage.StateMachine.StateMachineStateEnter,
                 SystemMessage.Shutdown)))
 
-        # Initialize image library.
+        # Initialize image library and resolver.
+        self._resolver = StreamdeckInputResolver()
         self._library = StreamdeckImageLibrary.Factory.get(
             self._deck, self._CODE)
 
@@ -159,6 +158,10 @@ class StreamdeckHandler(EventHandlerBase):
         log.debug("_callback: state: '%s'. key '%s'. key_state '%s'.",
                   self._current_state, deck_key, deck_key_state)
 
+        if not self._current_state.strip():
+            log.warning("_callback: _current_state is invalid.")
+            return
+
         if deck is None or not isinstance(deck, StreamDeck):
             log.warning("_callback: deck is invalid.")
             return
@@ -171,13 +174,38 @@ class StreamdeckHandler(EventHandlerBase):
             key = StreamdeckInput(deck_key)
             key_image_map = self._library.get_key_images(
                 state=self._current_state)
-            assert key_image_map is not None
+            if key_image_map is None:
+                log.warning(
+                    "_callback: No key_image_map for state '%s' found.",
+                    self._current_state)
+                return
 
-            dict_key = (key, deck_key_state)
-            image_bytes = key_image_map[dict_key]
-            assert image_bytes is not None and 0 < len(image_bytes)
+            mapping_key = (key, deck_key_state)
+            image_bytes = key_image_map.get(mapping_key)
+            if image_bytes is None:
+                log.warning(
+                    "_callback: No image for state '%s' "
+                    "and key '%s' [state: %s] found.",
+                    self._current_state,
+                    key,
+                    deck_key_state)
+                return
 
             self._deck.set_key_image(deck_key, image_bytes)
+
+            # Only process key presses for key up events.
+            if deck_key_state:
+                return
+
+            # Translate streamdeck key to input event.
+            input_event = self._resolver.resolve(self._current_state, key)
+            translated = input_event.value
+            log.debug(
+                "State: '%s'. Key: '%s'. Translated: '%s'.",
+                self._current_state,
+                key,
+                translated)
+            self._mq.publish(SystemMessage.InputEvent(translated))
 
         except Exception as ex:  # pylint: disable=W0718
             log.error("An error occurred. [%s]", ex, exc_info=True)
