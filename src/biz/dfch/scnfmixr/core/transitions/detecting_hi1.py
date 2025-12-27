@@ -62,7 +62,10 @@ class DetectingHi1(TransitionBase):
 
         self._handler = KeyboardHandler(device)
         log.debug("Starting keyboard processing ...")
-        self._handler.start()
-        log.info("Starting keyboard processing OK.")
+        result = self._handler.start()
+        if result:
+            log.info("Starting keyboard processing SUCCEEDED.")
+        else:
+            log.error("Starting keyboard processing FAILED.")
 
-        return True
+        return result

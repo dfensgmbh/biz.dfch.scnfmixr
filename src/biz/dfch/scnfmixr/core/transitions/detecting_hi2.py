@@ -63,4 +63,9 @@ class DetectingHi2(TransitionBase):
 
         handler = StreamdeckHandler(device)
         result = handler.start()
+        if result:
+            log.info("Starting Streamdeck processing SUCCEEDED.")
+        else:
+            log.error("Starting Streamdeck processing FAILED.")
+
         return result
