@@ -305,7 +305,7 @@ sudo tee /etc/security/limits.d/audio.conf > /dev/null <<EOF
 EOF
 
 # Packages to be installed:
-sudo apt-get -y install pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber zita-ajbridge flac sndfile-tools ecasound jackd2 jack-tools exfat-fuse exfatprogs jack-capture lv2-dev lilv-utils x42-plugins zam-plugins calf-plugins lsp-plugins mpd mpc
+sudo apt-get -y install pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber zita-ajbridge flac sndfile-tools ecasound jackd2 exfat-fuse exfatprogs lv2-dev lilv-utils x42-plugins zam-plugins calf-plugins lsp-plugins mpd mpc
 ```
 
 #### Fix missing jack-capture on Debian Trixie
