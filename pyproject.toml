@@ -1,0 +1,58 @@
+# Copyright (c) 2024, 2025 d-fens GmbH, http://d-fens.ch
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scnfmixr"
+# Note: also adjust in app.py
+version = "3.0.0"
+description = "Secure Conference Mixer and Recorder running on Raspberry Pi OS (Pi 5)"
+authors = [
+    { name = "Ronald Rink, d-fens GmbH" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "build>=1.2.2.post1",
+# <3.7    "dataclasses>=0.6",
+    "iniconfig>=2.1.0",
+    "packaging>=25.0",
+    "pluggy>=1.6.0",
+    "pyproject_hooks==1.2.0",
+# <3.5    "typing==3.7.4.3"
+]
+
+# PEP 621
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "flake8>=5.0.0",
+    "mypy>=1.0.0",
+    "black>=23.0.0"
+]
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["*"]

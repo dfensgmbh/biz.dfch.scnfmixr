@@ -1,0 +1,731 @@
+# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+"""Module state_machine."""
+
+from __future__ import annotations
+from enum import Enum, auto
+import threading
+from typing import cast
+
+from biz.dfch.logging import log
+from biz.dfch.asyn import ConcurrentDoubleSideQueueT
+
+from ..public.system import MessageBase
+from ..public.system.messages import SystemMessage
+from ..system import MessageQueue
+from ..ui import UserInteractionAudio
+from ..app import ApplicationContext
+from .fsm import ExecutionContext, Fsm, StateBase
+
+from .states import FinalState
+
+from .states import StorageManagement
+from .transitions import FormattingStorageRc1, FormattingStorageRc2
+
+from .states import System
+from .transitions import ReturningTrue
+from .transitions import StoppingSystem, DisconnectingStorage
+
+from .states import SelectLanguage
+from .transitions import SelectingEnglish, SelectingGerman, SelectingFrench, SelectingItalian \
+    # pylint: disable=C0301  # noqa: E501
+
+from .states import InitialiseLcl
+from .transitions import DetectingLcl, SkippingLcl
+
+from .states import InitialiseEx1
+from .transitions import DetectingEx1, SkippingEx1
+
+from .states import InitialiseEx2
+from .transitions import DetectingEx2, SkippingEx2
+
+from .states import InitialiseHi1
+from .transitions import DetectingHi1, SkippingHi1
+
+from .states import InitialiseHi2
+from .transitions import DetectingHi2, SkippingHi2
+
+from .states import InitialiseRc1
+from .transitions import DetectingRc1, SkippingRc1, CleaningRc1, MountingRc1, UnmountingRc1 \
+    # pylint: disable=C0301  # noqa: E501
+
+from .states import InitialiseRc2
+from .transitions import DetectingRc2, SkippingRc2, CleaningRc2, MountingRc2, UnmountingRc2 \
+    # pylint: disable=C0301  # noqa: E501
+
+from .states import SetDate, SetTime, SetName
+from .transitions import ProcessingDigit0
+from .transitions import ProcessingDigit1
+from .transitions import ProcessingDigit2
+from .transitions import ProcessingDigit3
+from .transitions import ProcessingDigit4
+from .transitions import ProcessingDigit5
+from .transitions import ProcessingDigit6
+from .transitions import ProcessingDigit7
+from .transitions import ProcessingDigit8
+from .transitions import ProcessingDigit9
+from .transitions import ProcessingDigitOk
+from .transitions import ProcessingDigitBackspace
+
+from .states import InitialiseAudio
+from .transitions import InitializingAudio
+
+from .states import Main
+from .transitions.starting_recording_mixes import (
+    StartingRecordingMx0,
+    StartingRecordingMx1,
+    StartingRecordingMx2,
+)
+
+from .states import OnRecord
+from .transitions import (
+    StoppingRecording,
+    SettingCuePoint,
+    TogglingMute,
+    ShowingStatus,
+    HelpingOnRecord,
+)
+
+from .states import Playback, PlaybackPaused
+from .transitions import (
+    SelectingPause,
+    SelectingResume,
+    SeekingPrevious,
+    SeekingNext,
+    JumpingClipStart,
+    JumpingClipEnd,
+    JumpingClipPrevious,
+    JumpingClipNext,
+    JumpingCuePrevious,
+    JumpingCueNext,
+    LeavingPlayback,
+    HelpingPlayback,
+)
+
+
+class State(Enum):
+    """Names for state menu map."""
+    INIT_LCL = auto()
+    INIT_EX1 = auto()
+    INIT_EX2 = auto()
+    INIT_HI1 = auto()
+    INIT_HI2 = auto()
+    INIT_HI3 = auto()
+    INIT_RC1 = auto()
+    INIT_RC2 = auto()
+    LANGUAGE = auto()
+    SET_DATE = auto()
+    SET_TIME = auto()
+    SET_NAME = auto()
+    INIT_AUDIO = auto()
+    SYSTEM = auto()
+    MAIN = auto()
+    ON_RECORD = auto()
+    PLAYBACK = auto()
+    PLAYBACK_PAUSED = auto()
+    STORAGE = auto()
+    FINAL = auto()
+
+
+class StateMachine:
+    """StateMachine of the application."""
+
+    WAIT_INTERVAL_MS: int = 250
+    _BLOCK_INTERVAL_MS: int = 5000
+
+    _ui: UserInteractionAudio
+    _app_ctx: ApplicationContext
+    _signal_worker: threading.Event
+    _event_queue: ConcurrentDoubleSideQueueT[str]
+    _message_queue: MessageQueue
+    _do_cancel_worker: bool
+    _thread: threading.Thread
+    _ctx: ExecutionContext
+    _fsm: Fsm
+    _menu: dict[State, StateBase]
+
+    def __init__(self):
+
+        # DFTODO - adjust to something dynamic.
+        self._ui = UserInteractionAudio("system")
+
+        self._app_ctx = ApplicationContext.Factory.get()
+        self._signal_worker = threading.Event()
+        self._event_queue = ConcurrentDoubleSideQueueT[str]()
+        self._message_queue = MessageQueue.Factory.get()
+        self._do_cancel_worker = False
+        self._thread = threading.Thread(target=self._worker, daemon=True)
+        self._ctx = None
+        self._fsm = None
+        self._message_queue.register(self._on_message, lambda e: isinstance(
+            e,
+            (SystemMessage.InputEvent, SystemMessage.Shutdown)))
+        self._menu = {}
+
+    def start(self) -> None:
+        "Starts the state machine."
+
+        self.initialise()
+        self._thread.start()
+
+    @property
+    def is_started(self) -> bool:
+        """Determines whether the state machine is started or not.
+
+        Returns:
+            bool: True, if the state machine is started; false otherwise.
+        """
+        return self._fsm.is_started
+
+    def _on_message(self, message: MessageBase) -> None:
+        """Process: SystemMessage.InputEvent"""
+
+        if not isinstance(
+                message,
+                (SystemMessage.InputEvent, SystemMessage.Shutdown)):
+            return
+
+        if isinstance(message, SystemMessage.Shutdown):
+            self._do_cancel_worker = True
+            self._signal_worker.set()
+            return
+
+        event = cast(SystemMessage.InputEvent, message)
+        log.debug("Received message with input event: '%s' [%s]",
+                  event.value,
+                  event.name)
+
+        if isinstance(event, SystemMessage.InputEventClear):
+            self._event_queue.clear()
+            self._event_queue.enqueue_first(event.value)
+
+        elif isinstance(event, SystemMessage.InputEventFirst):
+            self._event_queue.enqueue_first(event.value)
+
+        elif isinstance(event, SystemMessage.InputEvent):
+            self._event_queue.enqueue(event.value)
+
+        else:
+            log.warning("Unsupported type: '%s'.", event.name)
+            return
+
+        self._signal_worker.set()
+
+    def _worker(self) -> None:
+        """The worker thread that dequeues and processes state machine events.
+
+        Args:
+            None:
+
+        Returns:
+            None:
+        """
+
+        log.debug("Initializing worker ...")
+
+        log.info("Initializing worker OK.")
+
+        while True:
+
+            try:
+
+                log.debug("Waiting for event ...")
+
+                result = False
+
+                if self._event_queue.is_empty():
+
+                    result = self._signal_worker.wait(
+                        self._BLOCK_INTERVAL_MS / 1000)
+                    self._signal_worker.clear()
+
+                    if self._do_cancel_worker:
+
+                        log.debug("Stopping worker ...")
+                        break
+
+                    if not result:
+                        continue
+
+                event = self._event_queue.dequeue()
+                if event is None:
+                    continue
+
+                log.debug("Invocation of event '%s' ... [is_started=%s]",
+                          event,
+                          self._fsm.is_started)
+
+                try:
+
+                    result = self._fsm.invoke(event)
+
+                    if result:
+                        log.info(
+                            "Invocation of event '%s' OK. [is_started=%s]",  # noqa: E501  # pylint: disable=C0301
+                            event,
+                            self._fsm.is_started)
+                    else:
+                        log.warning(
+                            "Invocation of event '%s' FAILED. [is_started=%s]",
+                            event,
+                            self._fsm.is_started)
+
+                except Exception as ex:
+                    log.error(
+                        "Invocation of event '%s' FAILED. [is_started=%s] [%s]",
+                        event,
+                        self._fsm.is_started,
+                        ex,
+                        exc_info=True)
+                    raise
+
+            except Exception as ex:  # pylint: disable=W0718
+
+                log.error(
+                    "An exception occurred inside the worker thread: '%s'.",
+                    ex,
+                    exc_info=True)
+
+        log.info("Stopping worker OK.")
+
+    def initialise(self) -> None:
+        """Initializes the state machine."""
+
+        log.info("Initializing state machine ...")
+
+        # Define States
+        menu = self._menu
+
+        assert State.INIT_LCL not in menu
+        menu[State.INIT_LCL] = InitialiseLcl()
+
+        assert State.INIT_HI1 not in menu
+        menu[State.INIT_HI1] = InitialiseHi1()
+
+        assert State.INIT_HI2 not in menu
+        menu[State.INIT_HI2] = InitialiseHi2()
+
+        assert State.INIT_EX1 not in menu
+        menu[State.INIT_EX1] = InitialiseEx1()
+
+        assert State.INIT_EX2 not in menu
+        menu[State.INIT_EX2] = InitialiseEx2()
+
+        assert State.LANGUAGE not in menu
+        menu[State.LANGUAGE] = SelectLanguage()
+
+        assert State.INIT_RC1 not in menu
+        menu[State.INIT_RC1] = InitialiseRc1()
+
+        assert State.INIT_RC2 not in menu
+        menu[State.INIT_RC2] = InitialiseRc2()
+
+        assert State.SET_DATE not in menu
+        menu[State.SET_DATE] = SetDate()
+
+        assert State.SET_TIME not in menu
+        menu[State.SET_TIME] = SetTime()
+
+        assert State.SET_NAME not in menu
+        menu[State.SET_NAME] = SetName()
+
+        assert State.MAIN not in menu
+        menu[State.MAIN] = Main()
+
+        assert State.ON_RECORD not in menu
+        menu[State.ON_RECORD] = OnRecord()
+
+        assert State.INIT_AUDIO not in menu
+        menu[State.INIT_AUDIO] = InitialiseAudio()
+
+        assert State.PLAYBACK not in menu
+        menu[State.PLAYBACK] = Playback()
+
+        assert State.PLAYBACK_PAUSED not in menu
+        menu[State.PLAYBACK_PAUSED] = PlaybackPaused()
+
+        assert State.SYSTEM not in menu
+        menu[State.SYSTEM] = System()
+
+        assert State.STORAGE not in menu
+        menu[State.STORAGE] = StorageManagement()
+
+        assert State.FINAL not in menu
+        menu[State.FINAL] = FinalState()
+
+        # Define Transitions
+        current: FinalState = menu[State.FINAL]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(ReturningTrue(current.Event.MENU,
+                                          current))
+        )
+        current: System = menu[State.SYSTEM]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(ReturningTrue(
+                current.Event.SELECT_MAIN,
+                menu[State.MAIN]))
+            .add_transition(ReturningTrue(
+                current.Event.SELECT_LANGUAGE,
+                menu[State.LANGUAGE]))
+            .add_transition(ReturningTrue(
+                current.Event.SELECT_STORAGE,
+                menu[State.STORAGE]))
+            .add_transition(ReturningTrue(
+                current.Event.SET_DATE,
+                menu[State.SET_DATE]))
+            .add_transition(ReturningTrue(
+                current.Event.SET_TIME,
+                menu[State.SET_TIME]))
+            .add_transition(StoppingSystem(
+                current.Event.STOP_SYSTEM,
+                menu[State.FINAL]))
+        )
+        current: OnRecord = menu[State.ON_RECORD]
+        (
+            current
+            .add_transition(HelpingOnRecord(
+                current.Event.HELP,
+                current))
+            .add_transition(StoppingRecording(
+                current.Event.STOP_RECORDING,
+                menu[State.MAIN]))
+            .add_transition(SettingCuePoint(
+                current.Event.SET_CUE,
+                current))
+            .add_transition(TogglingMute(
+                current.Event.TOGGLE_MUTE,
+                current))
+            .add_transition(ShowingStatus(
+                current.Event.SHOW_STATUS,
+                current))
+        )
+        current: StorageManagement = menu[State.STORAGE]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(ReturningTrue(
+                current.Event.MENU,
+                menu[State.SYSTEM]))
+            .add_transition(DisconnectingStorage(
+                current.Event.DISCONNECT_STORAGE,
+                current))
+            .add_transition(FormattingStorageRc1(
+                current.Event.FORMAT_RC1,
+                current))
+            .add_transition(FormattingStorageRc2(
+                current.Event.FORMAT_RC2,
+                current))
+            .add_transition(DetectingRc1(
+                current.Event.DETECT_RC1,
+                current))
+            .add_transition(DetectingRc2(
+                current.Event.DETECT_RC2,
+                current))
+        )
+        current: Main = menu[State.MAIN]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(ReturningTrue(
+                current.Event.MENU,
+                menu[State.SYSTEM]))
+            .add_transition(StartingRecordingMx0(
+                current.Event.START_RECORDING_MX0,
+                menu[State.ON_RECORD]))
+            .add_transition(StartingRecordingMx1(
+                current.Event.START_RECORDING_MX1,
+                menu[State.ON_RECORD]))
+            .add_transition(StartingRecordingMx2(
+                current.Event.START_RECORDING_MX2,
+                menu[State.ON_RECORD]))
+            .add_transition(ReturningTrue(
+                current.Event.START_PLAYBACK,
+                menu[State.PLAYBACK]))
+            .add_transition(StoppingSystem(
+                current.Event.STOP_SYSTEM,
+                menu[State.FINAL]))
+        )
+        current: InitialiseAudio = menu[State.INIT_AUDIO]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(InitializingAudio(current.Event.INIT_AUDIO,
+                                              menu[State.MAIN]))
+            .add_transition(InitializingAudio(current.Event.SKIP_AUDIO,
+                                              menu[State.SYSTEM]))
+        )
+        current: SetName = menu[State.SET_NAME]
+        (
+            current
+            .add_transition(ReturningTrue(current.Event.HELP, current))
+            .add_transition(ProcessingDigit0(current.Event.DIGIT_0, current))
+            .add_transition(ProcessingDigit1(current.Event.DIGIT_1, current))
+            .add_transition(ProcessingDigit2(current.Event.DIGIT_2, current))
+            .add_transition(ProcessingDigit3(current.Event.DIGIT_3, current))
+            .add_transition(ProcessingDigit4(current.Event.DIGIT_4, current))
+            .add_transition(ProcessingDigit5(current.Event.DIGIT_5, current))
+            .add_transition(ProcessingDigit6(current.Event.DIGIT_6, current))
+            .add_transition(ProcessingDigit7(current.Event.DIGIT_7, current))
+            .add_transition(ProcessingDigit8(current.Event.DIGIT_8, current))
+            .add_transition(ProcessingDigit9(current.Event.DIGIT_9, current))
+            .add_transition(ProcessingDigitOk(current.Event.ENTER, current))
+            .add_transition(ProcessingDigitBackspace(
+                current.Event.BACK_SPACE,
+                current))
+            .add_transition(ReturningTrue(
+                current.Event.JUMP_NEXT,
+                menu[State.INIT_AUDIO]))
+        )
+        current: SetTime = menu[State.SET_TIME]
+        (
+            current
+            .add_transition(ReturningTrue(current.Event.HELP, current))
+            .add_transition(ProcessingDigit0(current.Event.DIGIT_0, current))
+            .add_transition(ProcessingDigit1(current.Event.DIGIT_1, current))
+            .add_transition(ProcessingDigit2(current.Event.DIGIT_2, current))
+            .add_transition(ProcessingDigit3(current.Event.DIGIT_3, current))
+            .add_transition(ProcessingDigit4(current.Event.DIGIT_4, current))
+            .add_transition(ProcessingDigit5(current.Event.DIGIT_5, current))
+            .add_transition(ProcessingDigit6(current.Event.DIGIT_6, current))
+            .add_transition(ProcessingDigit7(current.Event.DIGIT_7, current))
+            .add_transition(ProcessingDigit8(current.Event.DIGIT_8, current))
+            .add_transition(ProcessingDigit9(current.Event.DIGIT_9, current))
+            .add_transition(ProcessingDigitOk(current.Event.ENTER, current))
+            .add_transition(ProcessingDigitBackspace(
+                current.Event.BACK_SPACE,
+                current))
+            .add_transition(ReturningTrue(
+                current.Event.JUMP_NEXT,
+                menu[State.SET_NAME]))
+        )
+        current: SetDate = menu[State.SET_DATE]
+        (
+            current
+            .add_transition(ReturningTrue(current.Event.HELP, current))
+            .add_transition(ProcessingDigit0(current.Event.DIGIT_0, current))
+            .add_transition(ProcessingDigit1(current.Event.DIGIT_1, current))
+            .add_transition(ProcessingDigit2(current.Event.DIGIT_2, current))
+            .add_transition(ProcessingDigit3(current.Event.DIGIT_3, current))
+            .add_transition(ProcessingDigit4(current.Event.DIGIT_4, current))
+            .add_transition(ProcessingDigit5(current.Event.DIGIT_5, current))
+            .add_transition(ProcessingDigit6(current.Event.DIGIT_6, current))
+            .add_transition(ProcessingDigit7(current.Event.DIGIT_7, current))
+            .add_transition(ProcessingDigit8(current.Event.DIGIT_8, current))
+            .add_transition(ProcessingDigit9(current.Event.DIGIT_9, current))
+            .add_transition(ProcessingDigitOk(current.Event.ENTER, current))
+            .add_transition(ProcessingDigitBackspace(
+                current.Event.BACK_SPACE,
+                current))
+            .add_transition(ReturningTrue(
+                current.Event.JUMP_NEXT,
+                menu[State.SET_TIME]))
+        )
+        current: InitialiseRc2 = menu[State.INIT_RC2]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(DetectingRc2(
+                current.Event.DETECT_DEVICE,
+                menu[State.SET_DATE]))
+            .add_transition(SkippingRc2(
+                current.Event.SKIP_DEVICE,
+                menu[State.SET_DATE]))
+            .add_transition(CleaningRc2(
+                current.Event.CLEAN_DEVICE,
+                current))
+            .add_transition(MountingRc2(
+                current.Event.MOUNT_DEVICE,
+                current))
+            .add_transition(UnmountingRc2(
+                current.Event.UNMOUNT_DEVICE,
+                current))
+        )
+        current: InitialiseRc1 = menu[State.INIT_RC1]
+        (
+            current
+            .add_transition(ReturningTrue(current.Event.HELP,
+                                          current))
+            .add_transition(DetectingRc1(current.Event.DETECT_DEVICE,
+                                         menu[State.INIT_RC2]))
+            .add_transition(SkippingRc1(current.Event.SKIP_DEVICE,
+                                        menu[State.INIT_RC2]))
+            .add_transition(CleaningRc1(current.Event.CLEAN_DEVICE,
+                                        current))
+            .add_transition(MountingRc1(current.Event.MOUNT_DEVICE,
+                                        current))
+            .add_transition(UnmountingRc1(current.Event.UNMOUNT_DEVICE,
+                                          current))
+        )
+        current: InitialiseEx2 = menu[State.INIT_EX2]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(DetectingEx2(
+                current.Event.DETECT_DEVICE,
+                menu[State.INIT_RC1]))
+            .add_transition(SkippingEx2(
+                current.Event.SKIP_DEVICE,
+                menu[State.INIT_RC1]))
+        )
+        current: InitialiseEx1 = menu[State.INIT_EX1]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(DetectingEx1(
+                current.Event.DETECT_DEVICE,
+                menu[State.INIT_EX2]))
+            .add_transition(SkippingEx1(
+                current.Event.SKIP_DEVICE,
+                menu[State.INIT_EX2]))
+        )
+        current: SelectLanguage = menu[State.LANGUAGE]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(SelectingEnglish(
+                current.Event.SELECT_ENGLISH,
+                menu[State.INIT_EX1]))
+            .add_transition(SelectingGerman(
+                current.Event.SELECT_GERMAN,
+                menu[State.INIT_EX1]))
+            .add_transition(SelectingFrench(
+                current.Event.SELECT_FRENCH,
+                menu[State.INIT_EX1]))
+            .add_transition(SelectingItalian(
+                current.Event.SELECT_ITALIAN,
+                menu[State.INIT_EX1]))
+        )
+        current: InitialiseHi2 = menu[State.INIT_HI2]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(DetectingHi2(
+                current.Event.DETECT_DEVICE,
+                menu[State.LANGUAGE]))
+            .add_transition(SkippingHi2(
+                current.Event.SKIP_DEVICE,
+                menu[State.LANGUAGE]))
+        )
+        current: InitialiseHi1 = menu[State.INIT_HI1]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(DetectingHi1(
+                current.Event.DETECT_DEVICE,
+                menu[State.INIT_HI2]))
+            .add_transition(SkippingHi1(
+                current.Event.SKIP_DEVICE,
+                menu[State.INIT_HI2]))
+        )
+        current: InitialiseLcl = menu[State.INIT_LCL]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(DetectingLcl(
+                current.Event.DETECT_DEVICE,
+                menu[State.INIT_HI1]))
+            .add_transition(SkippingLcl(
+                current.Event.SKIP_DEVICE,
+                menu[State.INIT_HI1]))
+        )
+        current: PlaybackPaused = menu[State.PLAYBACK_PAUSED]
+        (
+            current
+            .add_transition(HelpingPlayback(
+                current.Event.HELP,
+                current))
+            .add_transition(SelectingResume(
+                current.Event.PAUSE_RESUME,
+                menu[State.PLAYBACK]))
+            .add_transition(LeavingPlayback(
+                current.Event.MENU,
+                menu[State.MAIN]))
+        )
+        current: Playback = menu[State.PLAYBACK]
+        (
+            current
+            .add_transition(HelpingPlayback(
+                current.Event.HELP,
+                current))
+            .add_transition(LeavingPlayback(
+                current.Event.MENU,
+                menu[State.MAIN]))
+            .add_transition(SelectingPause(
+                current.Event.PAUSE_RESUME,
+                menu[State.PLAYBACK_PAUSED]))
+            .add_transition(SeekingPrevious(
+                current.Event.SEEK_PREVIOUS,
+                current))
+            .add_transition(SeekingNext(
+                current.Event.SEEK_NEXT,
+                current))
+            .add_transition(JumpingClipStart(
+                current.Event.JUMP_CLIP_START,
+                current))
+            .add_transition(JumpingClipEnd(
+                current.Event.JUMP_CLIP_END,
+                current))
+            .add_transition(JumpingClipPrevious(
+                current.Event.JUMP_CLIP_PREVIOUS,
+                current))
+            .add_transition(JumpingClipNext(
+                current.Event.JUMP_CLIP_NEXT,
+                current))
+            .add_transition(JumpingCuePrevious(
+                current.Event.JUMP_CUE_PREVIOUS,
+                current))
+            .add_transition(JumpingCueNext(
+                current.Event.JUMP_CUE_NEXT,
+                current))
+        )
+
+        self._ctx = ExecutionContext(None, None, events=self._message_queue)
+
+        self._fsm = Fsm(initial_state=menu[State.INIT_LCL], ctx=self._ctx)
+        self._fsm.start()
+
+        # for line in self._fsm.visualize():
+        #     log.debug(line)
+
+        log.info("Initializing state machine OK.")
