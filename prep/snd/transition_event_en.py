@@ -148,6 +148,13 @@ Recording started.
 
     # Menu: System.
 
+    TransitionEvent.FORMATTING_STORAGE_ENTER: """
+""",  # noqa: E501
+
+    TransitionEvent.FORMATTING_STORAGE_LEAVE: """
+""",  # noqa: E501
+
+
     # Menu: OnRecord.
     # OK
     TransitionEvent.STOPPING_RECORDING_ENTER: """
