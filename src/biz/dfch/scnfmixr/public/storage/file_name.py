@@ -16,8 +16,11 @@
 """Module file_name."""
 
 from __future__ import annotations
-import os
 from datetime import datetime
+import os
+import re
+
+from ..audio import FileFormat
 
 
 __all__ = [
@@ -29,6 +32,14 @@ class FileName:  # pylint: disable=R0903
     """Represents a file name."""
 
     _EXTENSION_DOT = '.'
+    _FILENAME_PATTERN = (
+        r'^(?P<basename>\d{8})\-\-\-'
+        r'(?P<date>\d{4}\-\d{2}\-\d{2})\-\-\-'
+        r'(?P<time>\d{2}\-\d{2}\-\d{2})\-\-\-'
+        r'(?P<suf>[a-zA-Z0-9]{3})\.'
+        r'(?P<ext>\w+)$'
+    )
+
     _value: str
 
     def __init__(
@@ -37,8 +48,9 @@ class FileName:  # pylint: disable=R0903
             base_name: str,
             dt: datetime,
             suffix: str,
-            separator: str = "--",
-            extension: str = "flac"
+            dash: str = "-",
+            separator: str = "---",
+            extension: str = FileFormat.FLAC.value
     ) -> None:
         """Creates an instance of the object."""
 
@@ -47,10 +59,24 @@ class FileName:  # pylint: disable=R0903
         assert suffix and suffix.strip()
         assert dt and isinstance(dt, datetime)
 
+        # format:  basename---yyyy-MM-dd---HH-mm-ss---suf.ext
+        # example: 01234567---1927-03-27---08-15-42---MX0.flac
         file_name = (
             f"{base_name}"
             f"{separator}"
-            f"{dt.strftime('%Y-%m-%d---%H-%M-%S')}"
+            # format:  yyyy-MM-dd---HH-mm-ss
+            # example: 1927-03-27---08-15-42
+            f"{dt.strftime('%Y')}"
+            f"{dash}"
+            f"{dt.strftime('%m')}"
+            f"{dash}"
+            f"{dt.strftime('%d')}"
+            f"{separator}"
+            f"{dt.strftime('%H')}"
+            f"{dash}"
+            f"{dt.strftime('%M')}"
+            f"{dash}"
+            f"{dt.strftime('%S')}"
             f"{separator}"
             f"{suffix}"
             f"{self._EXTENSION_DOT}"
@@ -100,12 +126,40 @@ class FileName:  # pylint: disable=R0903
 
         return self._value
 
+    @staticmethod
+    def is_valid_filename(value: str) -> bool:
+        """Determines whether a given value matches the file format.
+
+        Args:
+            value (str):
+
+        Returns:
+            bool: True, if the specified value matches the file format; false,
+            otherwise.
+
+        Raises:
+            AssertionError: If the specified value is empty or null.
+        """
+
+        assert isinstance(value, str) and value.strip()
+
+        match = re.match(FileName._FILENAME_PATTERN, value)
+        if not match:
+            return False
+
+        parts = match.groupdict()
+        ext = parts['ext']
+        if ext not in [format.value for format in FileFormat]:
+            return False
+
+        return True
+
     def delete(self) -> bool:
         """Removes an existing file.
 
         Raises:
             FileNotFoundError: If the file does not exist.
-            Exception: Any other execption raised by `os.remove`.
+            Exception: Any other exception raised by `os.remove`.
         """
 
         if not self.exists:
