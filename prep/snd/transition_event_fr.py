@@ -89,6 +89,12 @@ Détection appareil externe 1 entrer
 Détection appareil externe 1 quitter
 """,  # noqa: E501
 
+    TransitionEvent.DETECTING_DEVICE_EX1_FAILED: """
+""",  # noqa: E501
+
+    TransitionEvent.SKIPPING_DEVICE_EX1_LEAVE: """
+""",  # noqa: E501
+
     # Menu: Detect Audio EX2.
 
     TransitionEvent.DETECTING_DEVICE_EX2_ENTER: """
@@ -97,6 +103,12 @@ Détection appareil externe 2 entrer
 
     TransitionEvent.DETECTING_DEVICE_EX2_LEAVE: """
 Détection appareil externe 2 quitter
+""",  # noqa: E501
+
+    TransitionEvent.DETECTING_DEVICE_EX2_FAILED: """
+""",  # noqa: E501
+
+    TransitionEvent.SKIPPING_DEVICE_EX2_LEAVE: """
 """,  # noqa: E501
 
     # Menu: Detect storage RC1.
@@ -113,6 +125,9 @@ Détection appareil clé 1 quitter
 Sauter appareil clé 1 quitter
 """,  # noqa: E501
 
+    TransitionEvent.DETECTING_DEVICE_RC1_FAILED: """
+""",  # noqa: E501
+
     # Menu: Detect storage RC2.
 
     TransitionEvent.DETECTING_DEVICE_RC2_ENTER: """
@@ -125,6 +140,9 @@ Détection appareil clé 2 quitter
 
     TransitionEvent.SKIPPING_DEVICE_RC2_LEAVE: """
 Sauter appareil clé 2 quitter
+""",  # noqa: E501
+
+    TransitionEvent.DETECTING_DEVICE_RC2_FAILED: """
 """,  # noqa: E501
 
     # Menu: Clean storage RC1.
@@ -199,6 +217,12 @@ Démarrage enregistrement entrer
 
     TransitionEvent.STARTING_RECORDING_LEAVE: """
 Démarrage enregistrement quitter
+""",  # noqa: E501
+
+    TransitionEvent.DELETING_LAST_TAKE_ENTER: """
+""",  # noqa: E501
+
+    TransitionEvent.DELETING_LAST_TAKE_LEAVE: """
 """,  # noqa: E501
 
     # Menu: System.
