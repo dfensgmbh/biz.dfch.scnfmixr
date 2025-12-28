@@ -15,7 +15,9 @@
 
 """Module state_event_fr."""
 
-from .state_event import StateEvent
+# mypy: disable-error-code=assignment
+
+from biz.dfch.scnfmixr.core.state_event import StateEvent
 
 
 class StateEventFr(dict[StateEvent, str]):

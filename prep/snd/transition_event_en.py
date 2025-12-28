@@ -15,7 +15,7 @@
 
 """Module transition_event_en."""
 
-from .transition_event import TransitionEvent
+from .transition_event_en import TransitionEvent
 
 
 class TransitionEventEn(dict[TransitionEvent, str]):

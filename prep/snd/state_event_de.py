@@ -15,6 +15,8 @@
 
 """Module state_event_de."""
 
+# mypy: disable-error-code=assignment
+
 from biz.dfch.scnfmixr.core.state_event import StateEvent
 
 
