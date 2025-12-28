@@ -308,6 +308,20 @@ EOF
 sudo apt-get -y install pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber zita-ajbridge flac sndfile-tools ecasound jackd2 jack-tools exfat-fuse exfatprogs jack-capture lv2-dev lilv-utils x42-plugins zam-plugins calf-plugins lsp-plugins mpd mpc
 ```
 
+#### Fix missing jack-capture on Debian Trixie
+
+```sh
+cd ~  
+wget http://deb.debian.org/debian/pool/main/j/jack-capture/jack-capture_0.9.73-3_arm64.deb  
+sudo apt -y install ./jack-capture_0.9.73-3_arm64.deb
+```
+
+**Ignore this NOTICE:**
+
+```
+Notice: Download is performed unsandboxed as root as file '/home/admin/jack-capture_0.9.73-3_arm64.deb' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)
+```
+
 ### jackd.service
 
 As `admin` create with `nano ~/.config/systemd/user/jackd.service`:
