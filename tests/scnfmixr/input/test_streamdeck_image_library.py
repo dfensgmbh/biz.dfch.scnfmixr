@@ -81,8 +81,8 @@ class TestStreamdeckImageLibrary(unittest.TestCase):
 
         self.assertEqual("close", exc.exception.name)
 
-        self.assertTrue((StreamdeckInput.KEY_00, False) in result)
-        self.assertTrue((StreamdeckInput.KEY_00, True) in result)
+        self.assertIn((StreamdeckInput.KEY_00, False), result)
+        self.assertIn((StreamdeckInput.KEY_00, True), result)
 
         for key, value in StreamdeckEventMap.items():
             result = sut.get_key_images(key)
