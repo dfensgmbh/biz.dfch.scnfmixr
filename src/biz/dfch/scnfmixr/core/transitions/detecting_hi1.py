@@ -18,12 +18,13 @@
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
-from ...public.input import InputDevice
-from ..fsm import UiEventInfo
-from ..fsm import TransitionBase
-from ..fsm import StateBase
 from ...devices.keyboard import DetectingHi1Worker
+from ...public.input import InputDevice
 from ...ui import KeyboardHandler
+
+from ..fsm import UiEventInfo
+from ..fsm import StateBase
+from ..fsm import TransitionBase
 from ..transition_event import TransitionEvent
 
 
@@ -35,6 +36,9 @@ class DetectingHi1(TransitionBase):
 
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""
+
+        assert event and event.strip()
+        assert target
 
         super().__init__(
             event,
@@ -55,7 +59,7 @@ class DetectingHi1(TransitionBase):
         device = worker.select()
 
         if device is None or "" == device.strip():
-            log.error("No input device detected at: '%s'", value)
+            log.error("No input device detected at: '%s'.", value)
             return False
 
         log.debug("Input device detected at: '%s'", device)

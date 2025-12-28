@@ -18,20 +18,21 @@
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
+from ...devices.keyboard import DetectingHi2Worker
 from ...public.input import InputDevice
+from ...ui import StreamdeckHandler
 
 from ..fsm import UiEventInfo
-from ..fsm import TransitionBase
 from ..fsm import StateBase
+from ..fsm import TransitionBase
 from ..transition_event import TransitionEvent
-
-from ...devices.keyboard import DetectingHi2Worker
-from ...ui.streamdeck_handler import StreamdeckHandler
 
 
 # pylint: disable=R0903
 class DetectingHi2(TransitionBase):
     """Detecting device HI2."""
+
+    _handler: StreamdeckHandler
 
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""
@@ -47,6 +48,8 @@ class DetectingHi2(TransitionBase):
                 TransitionEvent.DETECTING_DEVICE_HI2_LEAVE, False),
             target_state=target)
 
+        self._handler = None
+
     def invoke(self, ctx):
 
         app_ctx = ApplicationContext.Factory.get()
@@ -56,13 +59,14 @@ class DetectingHi2(TransitionBase):
         device = worker.select()
 
         if device is None or "" == device.strip():
-            log.error("No input device detected at: '%s'", value)
+            log.error("No input device detected at: '%s'.", value)
             return False
 
         log.debug("Input device detected at: '%s'", device)
 
-        handler = StreamdeckHandler(device)
-        result = handler.start()
+        self._handler = StreamdeckHandler(device)
+        log.debug("Starting Streamdeck processing ...")
+        result = self._handler.start()
         if result:
             log.info("Starting Streamdeck processing SUCCEEDED.")
         else:

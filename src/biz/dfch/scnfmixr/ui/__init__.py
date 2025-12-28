@@ -20,9 +20,11 @@ from __future__ import annotations
 from .user_interaction_audio import UserInteractionAudio
 from .keyboard_handler import KeyboardHandler
 from .event_handler_base import EventHandlerBase
+from .streamdeck_handler import StreamdeckHandler
 
 __all__ = [
     "EventHandlerBase",
     "KeyboardHandler",
+    "StreamdeckHandler",
     "UserInteractionAudio",
 ]
