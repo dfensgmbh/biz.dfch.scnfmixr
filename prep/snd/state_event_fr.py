@@ -28,7 +28,7 @@ Menu "initialiser le périphérique local"
 
 Appuyez sur "1" pour lancer la détection des périphériques.
 Appuyez sur "2" pour ignorer la détection des périphériques.
-Appuyez sur "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     # OK
@@ -39,7 +39,7 @@ Menu "initialisation du périphérique d'entrée numéro 1"
 
 Appuyez sur "1" pour lancer la détection du périphérique.
 Appuyez sur "2" pour ignorer la détection du périphérique.
-Appuyez sur "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     # OK
@@ -56,6 +56,7 @@ Scegliere "4" per italiano.
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
+    # OK
     StateEvent.INITIALISE_EX1_ENTER: """
 Menu "initialiser le périphérique externe numéro 1"
 
@@ -64,6 +65,7 @@ Appuyez sur "2" pour ignorer la détection du périphérique.
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
+    # OK
     StateEvent.INITIALISE_EX2_ENTER: """
 Menu "initialiser le périphérique externe numéro 2"
 
@@ -72,6 +74,7 @@ Appuyez sur "2" pour ignorer la détection du périphérique.
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
+    # OK
     StateEvent.INITIALISE_RC1_ENTER: """
 Menu "initialiser le périphérique de mémoire numéro 1"
 
@@ -84,6 +87,7 @@ Appuyez sur "9" pour effacer le périphérique.
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
+    # OK
     StateEvent.INITIALISE_RC2_ENTER: """
 Menu "initialiser le périphérique de mémoire numéro 2"
 
@@ -96,6 +100,7 @@ Appuyez sur "9" pour effacer le périphérique.
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
+    # OK
     StateEvent.SET_DATE_ENTER: """
 Menu "Date"
 
@@ -113,6 +118,7 @@ zéro-trois-deux-sept pour le 27 mars 1927.
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
+    # OK
     StateEvent.SET_TIME_ENTER: """
 Menu "Heure"
 
@@ -123,7 +129,7 @@ Lorsque vous avez terminé de saisir la valeur ou pour recommencer depuis le dé
 
 Exemple :
 
-un-quatre-zéro-trois pour 4 heures et 3 minutes de l'après-midi.
+un-quatre-zéro-trois pour 2 heures et 3 minutes de l'après-midi.
 
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
@@ -146,6 +152,7 @@ cinq-six-quatre-deux pour zéro-huit 15 56 42.
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
+    # OK
     StateEvent.MAIN_ENTER: """
 Menu "Principal"
 
@@ -160,6 +167,7 @@ Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 
 """,  # noqa: E501
 
+    # OK
     StateEvent.SYSTEM_ENTER: """
 Menu "Système"
 
@@ -176,6 +184,7 @@ Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
     StateEvent.STORAGE_MANAGEMENT_ENTER: """
 """,  # noqa: E501
 
+    # OK
     StateEvent.INIT_AUDIO_LEAVE: """
 Le système audio est entièrement initialisé.
 """,  # noqa: E501

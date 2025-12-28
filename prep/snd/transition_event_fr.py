@@ -237,23 +237,29 @@ Arrêt système entrer
 """,  # noqa: E501
 
     TransitionEvent.STOPPING_RECORDING_ENTER: """
+Arrêt enregistrement entrer
 """,  # noqa: E501
 
     TransitionEvent.STOPPING_RECORDING_LEAVE: """
+Arrêt enregistrement quitter
 """,  # noqa: E501
 
     TransitionEvent.SETTING_CUEPOINT_LEAVE: """
+Définition marqueur quitter
 """,  # noqa: E501
 
     TransitionEvent.TOGGLING_MUTE_LEAVE: """
+Alternation muet quitter
 """,  # noqa: E501
 
     TransitionEvent.SHOWING_STATUS_LEAVE: """
+Afficher statut quitter
 """,  # noqa: E501
 
     # Menu: Date, Time, Name
 
     TransitionEvent.PROCESSING_DIGIT_LEAVE: """
+Traitement chiffre quitter
 """,  # noqa: E501
 
     TransitionEvent.PROCESSING_DIGIT0_LEAVE: """
