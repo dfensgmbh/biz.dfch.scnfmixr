@@ -162,6 +162,7 @@ Appuyez sur "3" pour démarrer un enregistrement "wet iso", un enregistrement "d
 Appuyez sur "4" pour démarrer la lecture.
 Appuyez sur "5" pour accéder au menu "Système".
 Appuyez sur "6" pour attribuer un nouveau nom à votre prochain enregistrement.
+Appuyez sur "7" pour supprimer le dernier enregistrement.
 Appuyez sur "9" pour arrêter l'appareil.
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 
