@@ -89,6 +89,7 @@ from .transitions.starting_recording_mixes import (
     StartingRecordingMx1,
     StartingRecordingMx2,
 )
+from .transitions.deleting_last_take import DeletingLastTake
 
 from .states import OnRecord
 from .transitions import (
@@ -463,6 +464,9 @@ class StateMachine:
             .add_transition(StartingRecordingMx2(
                 current.Event.START_RECORDING_MX2,
                 menu[State.ON_RECORD]))
+            .add_transition(DeletingLastTake(
+                current.Event.DELETE_LAST_TAKE,
+                current))
             .add_transition(ReturningTrue(
                 current.Event.START_PLAYBACK,
                 menu[State.PLAYBACK]))

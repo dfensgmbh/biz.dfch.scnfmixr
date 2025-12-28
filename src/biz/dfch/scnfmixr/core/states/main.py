@@ -38,6 +38,7 @@ class Main(StateBase):
         START_PLAYBACK = InputEventMap.KEY_4
         MENU = InputEventMap.KEY_5
         SET_NAME = InputEventMap.KEY_6
+        DELETE_LAST_TAKE = InputEventMap.KEY_7
         STOP_SYSTEM = InputEventMap.KEY_9
 
     def __init__(self):
