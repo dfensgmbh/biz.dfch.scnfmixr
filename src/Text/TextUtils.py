@@ -24,7 +24,8 @@ class TextUtils:
     """Class for reading from text files."""
 
     def read_first_line(self, file_path: str) -> str:
-        """Reads the first text line of the specified file and returns it. File is opened ReadOnly. \
+        """Reads the first text line of the specified file and returns it.
+        File is opened ReadOnly.
         If file_path is not a file, a `FileNotFoundError` is raised.
 
         Args:
@@ -34,7 +35,8 @@ class TextUtils:
             str: The first line read from the specified file.
 
         Raises:
-            FileNotFoundException: An an exception is raised, if the specified file is not found.
+            FileNotFoundException: An an exception is raised, if the specified
+                file is not found.
         """
 
         assert file_path is not None and "" != file_path.strip()
@@ -46,14 +48,16 @@ class TextUtils:
             return file.readline().strip()
 
     def try_read_first_line(self, file_path: str) -> str | None:
-        """Reads the first text line of the specified file and returns it. File is opened ReadOnly.
+        """Reads the first text line of the specified file and returns it.
+        File is opened ReadOnly.
         If file_path is not a file or cannot be read, `None` is returned.
 
         Args:
             file_path (str): File to read from in ReadOnly mode.
 
         Returns:
-            str: The first line read from the specified file or `None` if file not found or cannot be read.
+            str: The first line read from the specified file or `None` if file
+                not found or cannot be read.
         """
 
         assert file_path is not None and "" != file_path.strip()
@@ -65,7 +69,8 @@ class TextUtils:
             return None
 
     def read_all_lines(self, file_path: str) -> list[str]:
-        """Reads all lines of the specified file as text and returns it as a list. File is opened ReadOnly.
+        """Reads all lines of the specified file as text and returns it as a
+        list. File is opened ReadOnly.
         If file_path is not a file, a `FileNotFoundError` is thrown.
 
         Args:

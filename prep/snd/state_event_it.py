@@ -26,17 +26,15 @@ StateEventIt: dict[StateEvent, str] = {
     StateEvent.INITIALISE_LCL_ENTER: """
 """,  # noqa: E501
 
-    # This will be the welcome sound.
-    StateEvent.INITIALISE_LCL_LEAVE: """
-""",  # noqa: E501
+    # OK
+    StateEvent.INITIALISE_LCL_LEAVE: """""",  # noqa: E501
 
     # Detection of input device.
     StateEvent.INITIALISE_HI1_ENTER: """
 """,  # noqa: E501
 
-    # This will be the welcome sound.
-    StateEvent.INITIALISE_HI1_LEAVE: """
-""",  # noqa: E501
+    # OK
+    StateEvent.INITIALISE_HI1_LEAVE: """""",  # noqa: E501
 
     StateEvent.SELECT_LANGUAGE_ENTER: """
 """,  # noqa: E501
@@ -74,7 +72,6 @@ StateEventIt: dict[StateEvent, str] = {
     StateEvent.STORAGE_MANAGEMENT_ENTER: """
 """,  # noqa: E501
 
-    # No specific menu.
-    StateEvent.SWALLOW_STATE_ENTER_LEAVE: """
-""",  # noqa: E501
+    # OK
+    StateEvent.SWALLOW_STATE_ENTER_LEAVE: """""",  # noqa: E501
 }

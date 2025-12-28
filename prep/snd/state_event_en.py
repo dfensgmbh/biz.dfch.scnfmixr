@@ -32,6 +32,9 @@ Press "STAR" to repeat this message.
 """,  # noqa: E501
 
     # OK
+    StateEvent.INITIALISE_LCL_LEAVE: """""",  # noqa: E501
+
+    # OK
     StateEvent.INITIALISE_HI1_ENTER: """
 The "Initialise Input Device One" menu
 
@@ -39,6 +42,9 @@ Press "1" for device detection.
 Press "2" to skip device detection.
 Press "STAR" to repeat this message.
 """,  # noqa: E501
+
+    # OK
+    StateEvent.INITIALISE_HI1_LEAVE: """""",  # noqa: E501
 
     # OK
     StateEvent.SELECT_LANGUAGE_ENTER: """
@@ -196,4 +202,5 @@ Press "STAR" to repeat this message.
 Audio system fully initialized.
 """,  # noqa: E501
 
+    StateEvent.SWALLOW_STATE_ENTER_LEAVE: """""",  # noqa: E501
 }
