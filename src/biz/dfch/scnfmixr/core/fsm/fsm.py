@@ -246,26 +246,10 @@ class Fsm:
             self._current_state = self._initial_state
             self._previous_state = None
 
-            log.debug("Invoking 'on_enter' for '%s' ...",
-                      type(self._current_state).__name__)
-
-            if self._current_state.info_enter:
-                self._message_queue.publish(
-                    SystemMessage.StateMachine.StateMachineStateEnter(
-                        self.current_state.__class__.__name__))
-                self._message_queue.publish(
-                    SystemMessage.UiEventInfoStateEnterMessage(
-                        self.current_state.info_enter))
-
-            ctx = ExecutionContext(
+            ctx = self.process_invoke_enter(
                 source=None,
                 error=None,
-                previous=self._previous_state,
-                events=self._initial_context.events)
-            self._current_state.on_enter(ctx)
-
-            log.info("Invoking 'on_enter' for '%s' OK.",
-                     type(self._current_state).__name__)
+            )
 
         self._message_queue.publish(
             SystemMessage.StateMachine.StateMachineStarted())
@@ -342,6 +326,36 @@ class Fsm:
         log.info("Restarting state machine OK.")
 
         return result
+
+    def process_invoke_enter(
+            self,
+            source: str,
+            error: str
+    ) -> ExecutionContext:
+        """Process log and message notification for StateMachineEnter."""
+
+        log.debug("Invoking 'on_enter' for '%s' ...",
+                  type(self._current_state).__name__)
+
+        if self._current_state.info_enter:
+            self._message_queue.publish(
+                SystemMessage.StateMachine.StateMachineStateEnter(
+                    self.current_state.__class__.__name__))
+            self._message_queue.publish(
+                SystemMessage.UiEventInfoStateEnterMessage(
+                    self.current_state.info_enter))
+
+        ctx = ExecutionContext(
+            source=source,
+            error=error,
+            previous=self._previous_state,
+            events=self._initial_context.events)
+        self._current_state.on_enter(ctx)
+
+        log.info("Invoking 'on_enter' for '%s' OK.",
+                 type(self._current_state).__name__)
+
+        return ctx
 
     # pylint: disable=R0911
     def invoke(self, event: str) -> bool:
@@ -445,26 +459,10 @@ class Fsm:
                           type(transition).__name__,
                           type(self._current_state).__name__)
 
-                log.debug("Invoking 'on_enter' for '%s' ...",
-                          type(self._current_state).__name__)
-
-                if self._current_state.info_enter:
-                    self._message_queue.publish(
-                        SystemMessage.StateMachine.StateMachineStateEnter(
-                            self.current_state.__class__.__name__))
-                    self._message_queue.publish(
-                        SystemMessage.UiEventInfoStateEnterMessage(
-                            self.current_state.info_enter))
-
-                ctx = ExecutionContext(
+                ctx = self.process_invoke_enter(
                     source=type(self._current_state).__name__,
-                    error=type(transition).__name__,
-                    previous=self._previous_state,
-                    events=self._initial_context.events)
-                self._current_state.on_enter(ctx)
-
-                log.info("Invoking 'on_enter' for '%s' OK.",
-                         type(self._current_state).__name__)
+                    error=type(transition).__name__
+                )
 
                 if ctx.signal_stop.is_set():
                     ctx.signal_stop.clear()
@@ -499,25 +497,10 @@ class Fsm:
                 # Do not return False here, as the transition itself succeeded.
                 return True
 
-            log.debug("Invoking 'on_enter' for '%s' ...",
-                      type(self._current_state).__name__)
-
-            if self._current_state.info_enter:
-                self._message_queue.publish(
-                    SystemMessage.StateMachine.StateMachineStateEnter(
-                        self.current_state.__class__.__name__))
-                self._message_queue.publish(
-                    SystemMessage.UiEventInfoStateEnterMessage(
-                        self.current_state.info_enter))
-
-            ctx = ExecutionContext(
+            ctx = self.process_invoke_enter(
                 source=type(transition).__name__,
                 error=None,
-                previous=self._previous_state,
-                events=self._initial_context.events)
-            self._current_state.on_enter(ctx)
-            log.info("Invoking 'on_enter' for '%s' OK.",
-                     type(self._current_state).__name__)
+            )
 
             if ctx.signal_stop.is_set():
                 ctx.signal_stop.clear()

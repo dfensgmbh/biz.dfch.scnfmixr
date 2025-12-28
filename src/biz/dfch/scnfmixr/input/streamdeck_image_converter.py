@@ -70,7 +70,7 @@ class StreamdeckImageConverter:
             log.debug("Try to get location of font name '%s' ...",
                       self.FONT_NAME)
             font = Path(I18n.Factory.get().get_resource_path(self.FONT_NAME))
-            assert isinstance(font, Path) and font.exists()
+            assert font.exists()
 
             log.debug("Try to get font name '%s' from location '%s' ...",
                       self.FONT_NAME, font)

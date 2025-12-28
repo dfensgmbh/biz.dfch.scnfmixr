@@ -20,7 +20,6 @@ import sys
 from biz.dfch.i18n import LanguageCode
 from biz.dfch.logging import log
 from biz.dfch.version import Version
-# from biz.dfch.diagnostics import SchedulingInfo
 
 from .application_context import ApplicationContext
 from .args import Arguments
@@ -54,10 +53,6 @@ class App:  # pylint: disable=R0903
         Version().ensure_minimum_version(
             self._VERSION_REQUIRED_MAJOR,
             self._VERSION_REQUIRED_MINOR)
-
-        # log.info("SchedulingInfo: '%s'", SchedulingInfo())
-
-        # self._signal_handler = SignalHandler()
 
     def invoke(self) -> None:
         """Main entry point for this class."""

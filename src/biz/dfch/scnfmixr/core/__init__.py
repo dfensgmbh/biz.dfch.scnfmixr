@@ -15,8 +15,6 @@
 
 """Module core."""
 
-# from ..ui.user_interacton_base import UserInteractionBase
-
 from .state_event import StateEvent
 from .state_machine import StateMachine
 from .transition_event import TransitionEvent
