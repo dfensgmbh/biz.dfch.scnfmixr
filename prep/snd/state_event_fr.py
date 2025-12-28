@@ -26,9 +26,9 @@ StateEventFr: dict[StateEvent, str] = {
     StateEvent.INITIALISE_LCL_ENTER: """
 Menu "initialiser le périphérique local"
 
-Sélectionnez "1" pour la détection des périphériques.
-Sélectionnez "2" pour ignorer la détection des périphériques.
-Sélectionnez "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur "1" pour lancer la détection des périphériques.
+Appuyez sur "2" pour ignorer la détection des périphériques.
+Appuyez sur "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     # OK
@@ -37,9 +37,9 @@ Sélectionnez "ASTÉRISQUE" pour répéter ce message.
     StateEvent.INITIALISE_HI1_ENTER: """
 Menu "initialisation du périphérique d'entrée numéro 1"
 
-Sélectionnez "1" pour lancer la détection du périphérique.
-Sélectionnez "2" pour ignorer la détection du périphérique.
-Sélectionnez "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur "1" pour lancer la détection du périphérique.
+Appuyez sur "2" pour ignorer la détection du périphérique.
+Appuyez sur "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     # OK
@@ -47,62 +47,62 @@ Sélectionnez "ASTÉRISQUE" pour répéter ce message.
 
     # OK
     StateEvent.SELECT_LANGUAGE_ENTER: """
-Menu "séléction de la langue"
+Menu "sélection de la langue"
 
 Press "1" for english.
 Wählen Sie "2" für deutsch.
-Sélectionnez "3" pour le français.
-Scegliere "4" por italiano.
-Sélectionnez "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur "3" pour le français.
+Scegliere "4" per italiano.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     StateEvent.INITIALISE_EX1_ENTER: """
-Menu "initialisier le périférique externe numéro 1"
+Menu "initialiser le périphérique externe numéro 1"
 
-Sélectionnez "1" pour lancer la détection du périphérique.
-Sélectionnez "2" pour ignorer la détection du périphérique.
-Sélectionnez "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur "1" pour lancer la détection du périphérique.
+Appuyez sur "2" pour ignorer la détection du périphérique.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     StateEvent.INITIALISE_EX2_ENTER: """
-Menu "initialisier le périphérique externe numéro 2"
+Menu "initialiser le périphérique externe numéro 2"
 
-Sélectionnez "1" pour lancer la détection du périphérique.
-Sélectionnez "2" pour ignorer la détection du périphérique.
-Sélectionnez "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur "1" pour lancer la détection du périphérique.
+Appuyez sur "2" pour ignorer la détection du périphérique.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     StateEvent.INITIALISE_RC1_ENTER: """
 Menu "initialiser le périphérique de mémoire numéro 1"
 
-Sélectionnez "1" pour détecter le périphérique.
-Sélectionnez "2" pour ignorer la détection du périphérique.
-Sélectionnez "6" pour formater le périphérique.
-Sélectionnez "7" pour connecter le périphérique
-Sélectionnez "8" pour déconnecter le périphérique.
-Sélectionnez "9" pour effacer le périphérique.
-Sélectionnez "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur "1" pour détecter le périphérique.
+Appuyez sur "2" pour ignorer la détection du périphérique.
+Appuyez sur "6" pour formater le périphérique.
+Appuyez sur "7" pour connecter le périphérique.
+Appuyez sur "8" pour déconnecter le périphérique.
+Appuyez sur "9" pour effacer le périphérique.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     StateEvent.INITIALISE_RC2_ENTER: """
 Menu "initialiser le périphérique de mémoire numéro 2"
 
-Sélectionnez "1" pour détecter le périphérique.
-Sélectionnez "2" pour ignorer la détection du périphérique.
-Sélectionnez "6" pour formater le périphérique.
-Sélectionnez "7" pour connecter le périphérique.
-Sélectionnez "8" pour déconnecter le périphérique.
-Sélectionnez "9" pour effacer le périphérique.
-Sélectionnez "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur "1" pour détecter le périphérique.
+Appuyez sur "2" pour ignorer la détection du périphérique.
+Appuyez sur "6" pour formater le périphérique.
+Appuyez sur "7" pour connecter le périphérique.
+Appuyez sur "8" pour déconnecter le périphérique.
+Appuyez sur "9" pour effacer le périphérique.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     StateEvent.SET_DATE_ENTER: """
-Le menu "Date"
+Menu "Date"
 
 Entrez une date à 8 chiffres en commençant par les 4 chiffres de l'année, suivis des 2 chiffres du mois et des 2 chiffres du jour.
 
-Pour supprimer un chiffre, Sélectionnez la touche "BACK-SPACE" ou "RETOUR ARRIÈRE".
-Lorsque vous avez terminé de saisir la valeur ou pour recommencer depuis le début, Sélectionnez la touche "ENTER" ou "ENTRÉE".
+Pour supprimer un chiffre, appuyez sur la touche "BACK-SPACE" ou "RETOUR ARRIÈRE".
+Lorsque vous avez terminé de saisir la valeur, ou pour recommencer depuis le début, appuyez sur la touche "ENTER" ou "ENTRÉE".
 
 Exemple :
 
@@ -110,32 +110,32 @@ un-neuf-deux-sept
 
 zéro-trois-deux-sept pour le 27 mars 1927.
 
-Sélectionnez "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     StateEvent.SET_TIME_ENTER: """
-Le menu "Heure"
+Menu "Heure"
 
 Entrez une heure à 4 chiffres en commençant par les 2 chiffres des heures, suivis des 2 chiffres des minutes.
 
-Pour supprimer un chiffre, Sélectionnez la touche "BACK-SPACE" ou "RETOUR ARRIÈRE".
-Lorsque vous avez terminé de saisir la valeur ou pour recommencer depuis le début, Sélectionnez la touche "ENTER" ou "ENTRÉE".
+Pour supprimer un chiffre, appuyez sur la touche "BACK-SPACE" ou "RETOUR ARRIÈRE".
+Lorsque vous avez terminé de saisir la valeur ou pour recommencer depuis le début, appuyez sur la touche "ENTER" ou "ENTRÉE".
 
 Exemple :
 
-un-quatre-zéro-trois pour 2 heures et 3 minutes de l'après-midi.
+un-quatre-zéro-trois pour 4 heures et 3 minutes de l'après-midi.
 
-Sélectionnez "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     # OK
     StateEvent.SET_NAME_ENTER: """
-Le menu "Nom"
+Menu "Nom"
 
-Entrez un nom à 8 chiffres qui servira de nom unique dans votre enregistrement.
+Entrez un nom à 8 chiffres qui servira de nom unique pour votre enregistrement.
 
-Pour supprimer un chiffre, Sélectionnez la touche "BACK-SPACE" ou "RETOUR ARRIÈRE".
-Lorsque vous avez terminé de saisir la valeur ou pour recommencer depuis le début, Sélectionnez la touche "ENTER" ou "ENTRÉE".
+Pour supprimer un chiffre, Appuyez sur la touche "BACK-SPACE" ou "RETOUR ARRIÈRE".
+Lorsque vous avez terminé de saisir la valeur ou pour recommencer depuis le début, Appuyez sur la touche "ENTER" ou "ENTRÉE".
 
 Exemple :
 
@@ -143,33 +143,33 @@ zéro-huit-un-cinq
 
 cinq-six-quatre-deux pour zéro-huit 15 56 42.
 
-Sélectionnez "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     StateEvent.MAIN_ENTER: """
-Le menu "Principal"
+Menu "Principal"
 
-Sélectionnez "1" pour démarrer un enregistrement stéréo.
-Sélectionnez "2" pour démarrer un enregistrement "dry iso" et un enregistrement stéréo.
-Sélectionnez "3" pour démarrer un enregistrement "wet iso", un enregistrement "dry iso" et un enregistrement stéréo.
-Sélectionnez "4" pour démarrer la lecture.
-Sélectionnez "5" pour accéder au menu "Système".
-Sélectionnez "6" pour attribuer un nouveau nom à votre prochain enregistrement.
-Sélectionnez "9" pour arrêter l'appareil.
-Sélectionnez "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur "1" pour démarrer un enregistrement stéréo.
+Appuyez sur "2" pour démarrer un enregistrement "dry iso" et un enregistrement stéréo.
+Appuyez sur "3" pour démarrer un enregistrement "wet iso", un enregistrement "dry iso" et un enregistrement stéréo.
+Appuyez sur "4" pour démarrer la lecture.
+Appuyez sur "5" pour accéder au menu "Système".
+Appuyez sur "6" pour attribuer un nouveau nom à votre prochain enregistrement.
+Appuyez sur "9" pour arrêter l'appareil.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 
 """,  # noqa: E501
 
     StateEvent.SYSTEM_ENTER: """
-Le menu "Système"
+Menu "Système"
 
-Sélectionnez "1" pour accéder au menu "Principal".
-Sélectionnez "2" pour sélectionner la langue.
-Sélectionnez "3" pour accéder au menu "Mémoire".
-Sélectionnez "4" pour sélectionner la date.
-Sélectionnez "5" pour sélectionner l'heure.
-Sélectionnez "9" pour arrêter l'appareil.
-Sélectionnez "ASTÉRISQUE" pour répéter ce message.
+Appuyez sur "1" pour accéder au menu "Principal".
+Appuyez sur "2" pour sélectionner la langue.
+Appuyez sur "3" pour accéder au menu "Mémoire".
+Appuyez sur "4" pour sélectionner la date.
+Appuyez sur "5" pour sélectionner l'heure.
+Appuyez sur "9" pour arrêter l'appareil.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     # OK
@@ -177,7 +177,7 @@ Sélectionnez "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
     StateEvent.INIT_AUDIO_LEAVE: """
-Système audio entièrement initialisé.
+Le système audio est entièrement initialisé.
 """,  # noqa: E501
 
     # OK
