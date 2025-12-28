@@ -21,10 +21,8 @@ from enum import StrEnum
 from biz.dfch.logging import log
 from ...public.input import InputEventMap
 from ...public.system.messages import SystemMessage
-# from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
-# from ..state_event import StateEvent
 
 
 class InitialiseHi2(StateBase):
