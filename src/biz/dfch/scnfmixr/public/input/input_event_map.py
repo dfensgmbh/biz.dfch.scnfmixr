@@ -40,8 +40,3 @@ class InputEventMap(StrEnum):
     KEY_ENTER = "!"
     KEY_BACKSPACE = "£"
     KEY_TAB = "$"
-
-    # KEY_ENTER = "⏎"  # \u23ce
-    # KEY_ENTER = "↵"  # \u21b5
-    # KEY_BACKSPACE = "⌫"  # \u232b
-    # KEY_TAB = "⇥"  # \u21e4

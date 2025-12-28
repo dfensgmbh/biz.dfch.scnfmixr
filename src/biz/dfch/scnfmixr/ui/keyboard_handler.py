@@ -130,11 +130,12 @@ class KeyboardHandler(EventHandlerBase):
     def _translate(self, key: str, default: str = "") -> str:
 
         assert key and key.strip()
+        assert isinstance(default, str)
 
         result = default
 
         if key not in KeyboardEventMap.__members__:
-            return default
+            return result
 
         result = KeyboardEventMap[key].value
 
@@ -160,7 +161,7 @@ class KeyboardHandler(EventHandlerBase):
 
         return True
 
-    def stop(self) -> None:
+    def stop(self) -> bool:
         """Stops the keyboard handler."""
 
         with self.sync_root:

@@ -68,7 +68,7 @@ class StreamdeckHandler(EventHandlerBase):
 
         if isinstance(message, SystemMessage.Shutdown):
             self._on_shutdown(message)
-            return
+            return  # NOSONAR python:S3626
 
     def _on_state_enter(self, message: MessageBase) -> None:
         """StateMachine enter messages."""
@@ -82,7 +82,7 @@ class StreamdeckHandler(EventHandlerBase):
         self._current_state = message.value
         log.debug("_on_state_enter: '%s'.", self._current_state)
 
-        # When we try to set all images to black with "set_key_color()", 
+        # When we try to set all images to black with "set_key_color()",
         # not all images will be set to black. We do not know why.
         # Thus, we "reset()" the deck. This shows the boot screen momentarily.
         self._deck.reset()
