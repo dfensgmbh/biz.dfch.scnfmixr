@@ -49,7 +49,7 @@ Menü "Sprachauswahl"
 Press "1" for english.
 Wählen Sie "2" für deutsch.
 Selectionner "3" pour français.
-Scegliere "4" por italiano.
+Scegliere "4" per italiano.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 """,  # noqa: E501
 

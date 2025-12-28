@@ -53,7 +53,7 @@ The "Language Selection" menu
 Press "1" for english.
 Wählen Sie "2" für deutsch.
 Selectionner "3" pour français.
-Scegliere "4" por italiano.
+Scegliere "4" per italiano.
 Press "STAR" to repeat this message.
 """,  # noqa: E501
 
