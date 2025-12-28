@@ -13,33 +13,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Module state_event_de."""
+"""Texts for DE state event messages."""
 
-# mypy: disable-error-code=assignment
+# cSpell:disable
 
 from biz.dfch.scnfmixr.core.state_event import StateEvent
 
+StateEventDe: dict[StateEvent, str] = {
 
-class StateEventDe(dict[StateEvent, str]):
-    """Texts for DE state event messages."""
-
-    StateEvent.INITIALISE_LCL_ENTER = """
+    StateEvent.INITIALISE_LCL_ENTER: """
 Menü zur "Initialisierung des lokalen Geräts"
 
 Wählen Sie "1" für die Geräteerkennung.
 Wählen Sie "2", um die Geräteerkennung zu überspringen.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
-"""  # noqa: E501
+""",  # noqa: E501
 
-    StateEvent.INITIALISE_HI1_ENTER = """
+    StateEvent.INITIALISE_HI1_ENTER: """
 Menü zur "Initialisierung des lokalen Eingabegeräts EINS"
 
 Wählen Sie "1" für die Geräteerkennung.
 Wählen Sie "2", um die Geräteerkennung zu überspringen.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
-"""  # noqa: E501
+""",  # noqa: E501
 
-    StateEvent.SELECT_LANGUAGE_ENTER = """
+    StateEvent.SELECT_LANGUAGE_ENTER: """
 Menü "Sprachauswahl"
 
 Press "1" for english.
@@ -47,25 +45,25 @@ Wählen Sie "2" für deutsch.
 Selectionner "3" pour français.
 Scegliere "4" por italiano.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
-"""  # noqa: E501
+""",  # noqa: E501
 
-    StateEvent.INITIALISE_EX1_ENTER = """
+    StateEvent.INITIALISE_EX1_ENTER: """
 Menü zur "Initialisierung des externen Geräts EINS"
 
 Wählen Sie "1" für die Geräteerkennung.
 Wählen Sie "2", um die Geräteerkennung zu überspringen.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
-"""  # noqa: E501
+""",  # noqa: E501
 
-    StateEvent.INITIALISE_EX2_ENTER = """
+    StateEvent.INITIALISE_EX2_ENTER: """
 Menü zur "Initialisierung des Externen Geräts ZWEI"
 
 Wählen Sie "1" für die Geräteerkennung.
 Wählen Sie "2", um die Geräteerkennung zu überspringen.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
-"""  # noqa: E501
+""",  # noqa: E501
 
-    StateEvent.INITIALISE_RC1_ENTER = """
+    StateEvent.INITIALISE_RC1_ENTER: """
 Menü zur "Initialisierung des Speichergeräts EINS"
 
 Wählen Sie "1" für die Geräteerkennung.
@@ -75,9 +73,9 @@ Wählen Sie "7", um das Gerät zu verbinden.
 Wählen Sie "8", um das Gerät zu trennen.
 Wählen Sie "9", um das Gerät zu säubern.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
-"""  # noqa: E501
+""",  # noqa: E501
 
-    StateEvent.INITIALISE_RC2_ENTER = """
+    StateEvent.INITIALISE_RC2_ENTER: """
 Menü zur "Initialisierung des Speichergeräts ZWEI"
 
 Wählen Sie "1" für die Geräteerkennung.
@@ -87,10 +85,10 @@ Wählen Sie "7", um das Gerät zu verbinden.
 Wählen Sie "8", um das Gerät zu trennen.
 Wählen Sie "9", um das Gerät zu säubern.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
-"""  # noqa: E501
+""",  # noqa: E501
 
     # OK
-    StateEvent.SET_DATE_ENTER = """
+    StateEvent.SET_DATE_ENTER: """
 Menü "Datum"
 
 Geben Sie ein achtstelliges Datum ein, beginnend mit den 4 Ziffern des Jahres, gefolgt von den 2 Ziffern des Monats und den 2 Ziffern des Tages.
@@ -105,9 +103,9 @@ Eins-Neun-Zwei-Sieben
 Null-Drei-Zwei-Sieben für den Siebenundzwanzigsten März 19 27.
 
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
-"""  # noqa: E501
+""",  # noqa: E501
 
-    StateEvent.SET_TIME_ENTER = """
+    StateEvent.SET_TIME_ENTER: """
 Menü "Uhrzeit"
 
 Geben Sie eine vierstellige Uhrzeit ein, beginnend mit den 2 Ziffern im 24 Stundenformat, gefolgt von den 2 Ziffern für die Minuten.
@@ -121,9 +119,9 @@ Beispiel:
 Eins-Vier-Null-Drei für 14 Uhr und 3 Minuten.
 
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
-"""  # noqa: E501
+""",  # noqa: E501
 
-    StateEvent.SET_NAME_ENTER = """
+    StateEvent.SET_NAME_ENTER: """
 Menü "Dateiname"
 
 Geben Sie einen achtstelligen Namen ein, der als eindeutiger Name in Ihrer Aufzeichnung verwendet wird.
@@ -138,9 +136,9 @@ Null-Acht-Eins-Fünf
 Fünf-Sechs-Vier-Zwei für Null-Acht 15 56 42.
 
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
-"""  # noqa: E501
+""",  # noqa: E501
 
-    StateEvent.MAIN_ENTER = """
+    StateEvent.MAIN_ENTER: """
 "Hauptmenü"
 
 Wählen Sie "1", um eine Stereoaufnahme zu starten.
@@ -151,9 +149,9 @@ Wählen Sie "5", um zum "System-Menü" zu gelangen.
 Wählen Sie "6", um einen neuen Namen für Ihre nächste Aufnahme festzulegen.
 Wählen Sie "9", um das Gerät zu stoppen.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
-"""  # noqa: E501
+""",  # noqa: E501
 
-    StateEvent.SYSTEM_ENTER = """
+    StateEvent.SYSTEM_ENTER: """
 Menü "System"
 
 Wählen Sie "1", um zum "Hauptmenü" zu gelangen.
@@ -164,9 +162,9 @@ Wählen Sie "6", um eine Uhrzeit einzugeben.
 Wählen Sie "9", um das Gerät zu stoppen.
 
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
-"""  # noqa: E501
+""",  # noqa: E501
 
-    StateEvent.STORAGE_MANAGEMENT_ENTER = """
+    StateEvent.STORAGE_MANAGEMENT_ENTER: """
 Menü für "Speichergeräte"
 
 Wählen Sie "0", um alle Speichergeräte zu trennen.
@@ -179,8 +177,10 @@ Wählen Sie "7", um "Speichergerät EINS" zu säubern.
 Wählen Sie "9", um "Speichergerät ZWEI" zu säubern.
 
 Wählen Sie "STERN" um diese Nachricht zu wiederholen.
-"""  # noqa: E501
+""",  # noqa: E501
 
-    StateEvent.INIT_AUDIO_LEAVE = """
+    StateEvent.INIT_AUDIO_LEAVE: """
 Das Audio-System wurde vollständig initialisiert.
-"""  # noqa: E501
+""",  # noqa: E501
+
+}

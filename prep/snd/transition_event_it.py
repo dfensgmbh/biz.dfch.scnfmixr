@@ -13,14 +13,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Texts for FR transition event messages."""
+"""Texts for IT transition event messages."""
 
 # cSpell:disable
 
 from biz.dfch.scnfmixr.core.transition_event import TransitionEvent
 
 
-TransitionEventFr: dict[TransitionEvent, str] = {
+TransitionEventIt: dict[TransitionEvent, str] = {
 
     # Menu: Detect HID HI1.
     TransitionEvent.DETECTING_DEVICE_HI1_ENTER: """
