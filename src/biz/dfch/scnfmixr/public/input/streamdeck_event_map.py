@@ -169,6 +169,7 @@ StreamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_0A: InputEventMap.KEY_4,
         StreamdeckInput.KEY_09: InputEventMap.KEY_5,
         StreamdeckInput.KEY_0B: InputEventMap.KEY_6,
+        StreamdeckInput.KEY_0C: InputEventMap.KEY_7,
         StreamdeckInput.KEY_0E: InputEventMap.KEY_9,
     },
     "OnRecord": {
