@@ -182,5 +182,4 @@ Wählen Sie "STERN" um diese Nachricht zu wiederholen.
     StateEvent.INIT_AUDIO_LEAVE: """
 Das Audio-System wurde vollständig initialisiert.
 """,  # noqa: E501
-
 }

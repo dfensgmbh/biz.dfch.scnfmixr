@@ -147,77 +147,88 @@ Effacer appareil clé 2 entrer
 Effacer appareil clé 2 quitter
 """,  # noqa: E501
 
-# Menu: Select language.
+    # Menu: Select language.
 
-#     TransitionEvent.SELECTING_ENGLISH_ENTER: """
-# Selection anglais entrer
-# """,  # noqa: E501
+    #     TransitionEvent.SELECTING_ENGLISH_ENTER: """
+    # Selection anglais entrer
+    # """,  # noqa: E501
 
-#     TransitionEvent.SELECTING_ENGLISH_LEAVE: """
-# Selection anglais quitter
-# """,  # noqa: E501
+    #     TransitionEvent.SELECTING_ENGLISH_LEAVE: """
+    # Selection anglais quitter
+    # """,  # noqa: E501
 
-#     TransitionEvent.SELECTING_GERMAN_ENTER: """
-# Selection allemand entrer
-# """,  # noqa: E501
+    #     TransitionEvent.SELECTING_GERMAN_ENTER: """
+    # Selection allemand entrer
+    # """,  # noqa: E501
 
-#     TransitionEvent.SELECTING_GERMAN_LEAVE: """
-# Selection allemand quitter
-# """,  # noqa: E501
+    #     TransitionEvent.SELECTING_GERMAN_LEAVE: """
+    # Selection allemand quitter
+    # """,  # noqa: E501
 
-#     TransitionEvent.SELECTING_FRENCH_ENTER: """
-# Selection français entrer
-# """,  # noqa: E501
+    #     TransitionEvent.SELECTING_FRENCH_ENTER: """
+    # Selection français entrer
+    # """,  # noqa: E501
 
-#     TransitionEvent.SELECTING_FRENCH_LEAVE: """
-# Selection français quitter
-# """,  # noqa: E501
+    #     TransitionEvent.SELECTING_FRENCH_LEAVE: """
+    # Selection français quitter
+    # """,  # noqa: E501
 
-#     TransitionEvent.SELECTING_ITALIAN_ENTER: """
-# Selection italien entrer
-# """,  # noqa: E501
+    #     TransitionEvent.SELECTING_ITALIAN_ENTER: """
+    # Selection italien entrer
+    # """,  # noqa: E501
 
-#     TransitionEvent.SELECTING_ITALIAN_LEAVE: """
-# Selection italien quitter
-# """,  # noqa: E501
+    #     TransitionEvent.SELECTING_ITALIAN_LEAVE: """
+    # Selection italien quitter
+    # """,  # noqa: E501
 
     # Menu: Initialise audio.
 
     TransitionEvent.INITIALISING_AUDIO_ENTER: """
+Initialisation audio entrer
 """,  # noqa: E501
 
     TransitionEvent.INITIALISING_AUDIO_LEAVE: """
+Initialisation audio quitter
 """,  # noqa: E501
 
     # Menu: Main.
 
     TransitionEvent.STARTING_RECORDING_ENTER: """
+Démarrage enregistrement entrer
 """,  # noqa: E501
 
     TransitionEvent.STARTING_RECORDING_LEAVE: """
+Démarrage enregistrement quitter
 """,  # noqa: E501
 
     # Menu: System.
 
     TransitionEvent.MOUNTING_STORAGE_ENTER: """
+Montage mémoire entrer
 """,  # noqa: E501
 
     TransitionEvent.MOUNTING_STORAGE_LEAVE: """
+Montage mémoire quitter
 """,  # noqa: E501
 
     TransitionEvent.DISCONNECTING_STORAGE_ENTER: """
+Déconnexion mémoire entrer
 """,  # noqa: E501
 
     TransitionEvent.DISCONNECTING_STORAGE_LEAVE: """
+Déconnexion mémoire quitter
 """,  # noqa: E501
 
     TransitionEvent.FORMATTING_STORAGE_ENTER: """
+Formater mémoire entrer
 """,  # noqa: E501
 
     TransitionEvent.FORMATTING_STORAGE_LEAVE: """
+Formater mémoire quitter
 """,  # noqa: E501
 
     TransitionEvent.STOPPING_SYSTEM_ENTER: """
+Arrêt système entrer
 """,  # noqa: E501
 
     # Menu: OnRecord.
