@@ -82,8 +82,10 @@ class StreamdeckInputResolver:
         Translates the text of the specified `event` into text for display on
         the Streamdeck.
 
-        :param event: The event to translate.
-        :type event: InputEventMap
+        :param input_event: The event to translate.
+        :type input_event: InputEventMap
+        :param code: The LanguageCode (this is currently not used).
+        :type code: LanguageCode
         :return: The translated text.
         :rtype: str
         """
@@ -91,16 +93,13 @@ class StreamdeckInputResolver:
         assert isinstance(input_event, InputEventMap)
         assert isinstance(code, LanguageCode)
 
-        if LanguageCode.DEFAULT == code:
-            code = LanguageCode.EN
-
         result: str = ""
 
         match input_event.value:
             case InputEventMap.KEY_ENTER:
                 result = "ENTER"
             case InputEventMap.KEY_BACKSPACE:
-                result = "DELETE"
+                result = "BACKSPACE"
             case InputEventMap.KEY_TAB:
                 result = "TAB"
             case _:
