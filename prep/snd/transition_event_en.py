@@ -146,6 +146,12 @@ Preparing for recording.
 Recording started.
 """,  # noqa: E501
 
+    TransitionEvent.DELETING_LAST_TAKE_ENTER: """
+""",  # noqa: E501
+
+    TransitionEvent.DELETING_LAST_TAKE_LEAVE: """
+""",  # noqa: E501
+
     # Menu: System.
 
     TransitionEvent.FORMATTING_STORAGE_ENTER: """

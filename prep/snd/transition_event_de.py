@@ -143,6 +143,12 @@ TransitionEventDe: dict[TransitionEvent, str] = {
     TransitionEvent.STARTING_RECORDING_LEAVE: """
 """,  # noqa: E501
 
+    TransitionEvent.DELETING_LAST_TAKE_ENTER: """
+""",  # noqa: E501
+
+    TransitionEvent.DELETING_LAST_TAKE_LEAVE: """
+""",  # noqa: E501
+
     # Menu: System.
     TransitionEvent.MOUNTING_STORAGE_ENTER: """
 """,  # noqa: E501
