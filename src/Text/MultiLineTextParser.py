@@ -56,9 +56,9 @@ class MultiLineTextParser:
         indent: str,
         length: int,
         dic: MultiLineTextParserMap,
-        default: MultiLineTextParserFunc = None,
+        default: MultiLineTextParserFunc | None = None,
     ) -> None:
-        """Initialises an ALSA stream info parser.
+        """Initializes an ALSA stream info parser.
         Args:
             indent (str): The indentation character.
             length (int): The indentation per hierarchy level.
@@ -76,32 +76,6 @@ class MultiLineTextParser:
         self.length = length
         self.dic = dic
         self.default = default
-
-    # # DFTODO - must be moved out of this class.
-    # @staticmethod
-    # def get_stream_info_data(idx: int) -> list[str]:
-    #     """Reads stream data from `stream0` for a given ALSA card id and
-    #     returns an array of strings.
-
-    #     Args:
-    #         idx (int): The ALSA card id.
-
-    #     Returns:
-    #         Returns stream info as a list of strings.
-
-    #     Raises:
-    #         Exception: Throws an exception if `stream0` does not exist.
-    #     """
-
-    #     assert idx >= 0
-
-    #     PROC_ASOUND_BASEPATH = "/proc/asound/"
-    #     STREAM_FILE = "stream0"
-
-    #     card_path = f"{PROC_ASOUND_BASEPATH}card{idx}"
-    #     card_stream_file = os.path.join(card_path, STREAM_FILE)
-
-    #     return TextUtils().read_all_lines(card_stream_file)
 
     def parse(self, value: list[str], is_regex: bool = False) -> None:
         """Parses specified stream info data.
@@ -130,7 +104,7 @@ class MultiLineTextParser:
             leading_indent = len(line) - len(line.lstrip(self.indent))
             assert 0 == leading_indent % self.length
 
-            # Upate indentation.
+            # Update indentation.
             ctx.level_previous = ctx.level
             ctx.level = int(leading_indent / self.length)
 
@@ -139,6 +113,7 @@ class MultiLineTextParser:
 
             # Find function to call on keyword.
             func = None
+            # TODO: fix incompatible assignment.
             ctx.keyword = None
             for key in sorted(self.dic.keys(), key=len, reverse=True):
 

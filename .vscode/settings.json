@@ -26,6 +26,7 @@
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": true,
     "cSpell.words": [
+        "ALSA",
         "asyn",
         "cuepoint",
         "Deutsch",
