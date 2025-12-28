@@ -29,6 +29,9 @@ Wählen Sie "2", um die Geräteerkennung zu überspringen.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 """,  # noqa: E501
 
+    # OK
+    StateEvent.INITIALISE_LCL_LEAVE: """""",  # noqa: E501
+
     StateEvent.INITIALISE_HI1_ENTER: """
 Menü zur "Initialisierung des lokalen Eingabegeräts EINS"
 
@@ -36,6 +39,9 @@ Wählen Sie "1" für die Geräteerkennung.
 Wählen Sie "2", um die Geräteerkennung zu überspringen.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 """,  # noqa: E501
+
+    # OK
+    StateEvent.INITIALISE_HI1_LEAVE: """""",  # noqa: E501
 
     StateEvent.SELECT_LANGUAGE_ENTER: """
 Menü "Sprachauswahl"
@@ -182,4 +188,7 @@ Wählen Sie "STERN" um diese Nachricht zu wiederholen.
     StateEvent.INIT_AUDIO_LEAVE: """
 Das Audio-System wurde vollständig initialisiert.
 """,  # noqa: E501
+
+    # OK
+    StateEvent.SWALLOW_STATE_ENTER_LEAVE: """""",  # noqa: E501
 }

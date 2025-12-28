@@ -31,6 +31,9 @@ Sélectionnez "2" pour ignorer la détection des périphériques.
 Sélectionnez "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
+    # OK
+    StateEvent.INITIALISE_LCL_LEAVE: """""",  # noqa: E501
+
     StateEvent.INITIALISE_HI1_ENTER: """
 Menu "initialisation du périphérique d'entrée numéro 1"
 
@@ -38,6 +41,9 @@ Sélectionnez "1" pour lancer la détection du périphérique.
 Sélectionnez "2" pour ignorer la détection du périphérique.
 Sélectionnez "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
+
+    # OK
+    StateEvent.INITIALISE_HI1_LEAVE: """""",  # noqa: E501
 
     # OK
     StateEvent.SELECT_LANGUAGE_ENTER: """
@@ -166,8 +172,14 @@ Sélectionnez "9" pour arrêter l'appareil.
 Sélectionnez "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
+    # OK
+    StateEvent.STORAGE_MANAGEMENT_ENTER: """
+""",  # noqa: E501
+
     StateEvent.INIT_AUDIO_LEAVE: """
 Système audio entièrement initialisé.
 """,  # noqa: E501
 
+    # OK
+    StateEvent.SWALLOW_STATE_ENTER_LEAVE: """""",  # noqa: E501
 }
