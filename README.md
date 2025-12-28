@@ -314,6 +314,7 @@ sudo apt-get -y install pipewire pipewire-alsa pipewire-pulse pipewire-jack wire
 cd ~  
 wget http://deb.debian.org/debian/pool/main/j/jack-capture/jack-capture_0.9.73-3_arm64.deb  
 sudo apt -y install ./jack-capture_0.9.73-3_arm64.deb
+rm ./jack-capture_0.9.73-3_arm64.deb
 ```
 
 **Ignore this NOTICE:**
