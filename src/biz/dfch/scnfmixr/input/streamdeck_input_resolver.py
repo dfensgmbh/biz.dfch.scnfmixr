@@ -113,7 +113,7 @@ class StreamdeckInputResolver:
         name: str,
         key: StreamdeckInput,
         code: LanguageCode = LanguageCode.DEFAULT
-    ) -> str:
+    ) -> Path:
         """
         Returns a Path object with the image for the key.
 
