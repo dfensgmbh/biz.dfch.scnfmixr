@@ -140,8 +140,8 @@ Menu "Nom"
 
 Entrez un nom à 8 chiffres qui servira de nom unique pour votre enregistrement.
 
-Pour supprimer un chiffre, Appuyez sur la touche "BACK-SPACE" ou "RETOUR ARRIÈRE".
-Lorsque vous avez terminé de saisir la valeur ou pour recommencer depuis le début, Appuyez sur la touche "ENTER" ou "ENTRÉE".
+Pour supprimer un chiffre, appuyez sur la touche "BACK-SPACE" ou "RETOUR ARRIÈRE".
+Lorsque vous avez terminé de saisir la valeur ou pour recommencer depuis le début, appuyez sur la touche "ENTER" ou "ENTRÉE".
 
 Exemple :
 
