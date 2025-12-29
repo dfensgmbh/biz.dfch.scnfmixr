@@ -25,8 +25,6 @@ from StreamDeck.Devices.StreamDeck import StreamDeck  # type: ignore
 from biz.dfch.i18n.language_code import LanguageCode
 from biz.dfch.logging.log import log
 
-from ...asyn.thread_pool import ThreadPool
-
 from ..public.input.streamdeck_input import StreamdeckInput
 from .streamdeck_image_converter import StreamdeckImageConverter
 from ..public.input.streamdeck_event_map import StreamdeckEventMap
