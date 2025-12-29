@@ -62,11 +62,6 @@ class StreamdeckImageLibrary:
 
         self._converter = StreamdeckImageConverter(deck, code)
 
-        tp = ThreadPool.Factory.get()
-        for state in StreamdeckEventMap:
-            log.debug("Try to enqueue worker for '%s' ...", state)
-            tp.invoke(self._worker, state)
-
     def _worker(self, state: str) -> dict[tuple[StreamdeckInput, bool], bytes]:
         """Retrieves all images for a given state."""
 
