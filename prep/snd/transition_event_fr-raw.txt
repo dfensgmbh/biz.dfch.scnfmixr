@@ -150,9 +150,7 @@ MixPre-002.WAV
 
  
 
-Initialisation audio entrer
 
-Initialisation audio quitter
 
  
 
@@ -180,31 +178,6 @@ Initialisation audio quitter
 
  
 
-Démarrage enregistrement entrer
-
-Démarrage enregistrement quitter
-
-Sélection date entrer
-
-Sélection date quitter
-
-Montage mémoire entrer
-
-Montage mémoire quitter
-
-Déconnexion mémoire entrer
-
-Déconnexion mémoire quitter
-
-Arrêt système entrer
-
-Arrêt système quitter
-
- 
-
- 
-
- 
 
     # Menu: OnRecord.
 
@@ -226,21 +199,15 @@ Arrêt système quitter
 
  
 
-Arrêt enregistrement entrer
 
-Arrêt enregistrement quitter
 
-Définition marqueur entrer
 
-Définition marqueur quitter
 
 Alternation muet entrer
 
-Alternation muet quitter
 
 Afficher statut entrer
 
-Afficher statut quitter
 
  
 
@@ -258,7 +225,6 @@ Afficher statut quitter
 
 Traitement chiffre entrer
 
-Traitement chiffre quitter
 
  
 
