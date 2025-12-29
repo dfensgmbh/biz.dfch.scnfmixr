@@ -50,7 +50,6 @@ class AlsaStreamInfoParser(MultiLineTextParser):
         self._indent = " "
         self._spacing = 2
 
-        assert value
         assert isinstance(value, (int, list))
 
         self.interface_id = 0
