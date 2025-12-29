@@ -25,11 +25,11 @@ PhoneTap running on Raspberry Pi OS (Pi 5)
 # Installation
 
 ```sh
-admin@raspberrypi:~ $ pwd
+admin@scnfmixr:~ $ pwd
 /home/admin
 
 # Install Python, PIP
-sudo apt install python3 python3-pip
+sudo apt-get install python3 python3-pip
 
 # Create virtual environment
 cd ~/scnfmixr
@@ -78,23 +78,23 @@ sudo systemctl status scnfmixr.service
 
 # Testing
 ```sh
-admin@raspberrypi:~ $ pwd
+admin@scnfmixr:~ $ pwd
 /home/admin
-admin@raspberrypi:~ $ cd ~/scnfmixr
-admin@raspberrypi:~ $ python -m unittest discover
-admin@raspberrypi:~ $ python -m unittest discover -s tests -t . -p test_*.py
-admin@raspberrypi:~ $ python -m unittest discover -v -s <package-path> -t . -p test_*.py
+admin@scnfmixr:~ $ cd ~/scnfmixr
+admin@scnfmixr:~ $ python -m unittest discover
+admin@scnfmixr:~ $ python -m unittest discover -s tests -t . -p test_*.py
+admin@scnfmixr:~ $ python -m unittest discover -v -s <package-path> -t . -p test_*.py
 # Example: Test single package.
-admin@raspberrypi:~ $ python -m unittest discover -v -s tests/my_package -t . -p test_*.py
+admin@scnfmixr:~ $ python -m unittest discover -v -s tests/my_package -t . -p test_*.py
 # Example: Test single module.
-admin@raspberrypi:~ $ python -m unittest discover -v -s tests -t . -p test_MyModule.py
+admin@scnfmixr:~ $ python -m unittest discover -v -s tests -t . -p test_MyModule.py
 ```
 
 # Hardware and Software Requirements
 
 The programme is intended to run on a Raspberry Pi 5 with a Raspberry Pi OS '[Bookworm](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/)'. It is tested under the following version:
 
-`Linux raspberrypi 6.12.25+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.25-1+rpt1 (2025-04-30) aarch64 GNU/Linux`
+`Linux scnfmixr 6.12.25+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.25-1+rpt1 (2025-04-30) aarch64 GNU/Linux`
 
 ## Packages
 
@@ -110,7 +110,7 @@ sudo reboot
 ## Hardware
 
 * The OS is running on a [Raspberry Pi 5 8GB](https://www.raspberrypi.com/products/raspberry-pi-5/?variant=raspberry-pi-5-8gb) with its original power supply.
-* The board is mounted in a aluminium case with passive cooling, such as [Ridged Armour Case for Raspberry Pi 5](https://thepihut.com/products/ridged-armour-case-for-raspberry-pi-5).
+* The board is mounted in a aluminum case with passive cooling, such as [Ridged Armour Case for Raspberry Pi 5](https://thepihut.com/products/ridged-armour-case-for-raspberry-pi-5).
 * Additional USB ports are made available via an [ICY BOX IB-AC618 7-port USB 3.0 powered USB adapter (gen1)](https://icybox.de/product/hubs/IB-AC618) (USB-A to USB-B, power supply `12V @3A`).
 
 ### Pi USB Port Layout
@@ -124,7 +124,7 @@ The internal USB ports of the Pi 5 have the following numbering:
 | Top Right     | USB 2.0  | `1-2`  | `/sys/bus/usb/devices/1-2/  `  | to the right of "Top left"      |
 | Bottom Right  | USB 2.0  | `3-2`  | `/sys/bus/usb/devices/3-2/  `  | to the right of "Bottom left"   |
 
-Note: the USB identification shown via `/proc/asound/cards` do not match the `device` numbering, eg. a device connected to `/sys/bus/usb/devices/1-2/` shows up as `usb-xhci-hcd.0-2`. Further note, that the `device` (`Dev`) numbering changes and increments with disconnects and connects even on the same phyiscal port (eg. in the output below the connected device is shown as `Dev 30` but was previously before reconnect shown as `Dev 29`). This number corresponds to `devnum` under `/sys/bus/usb/devices/<usbid>/devnum`. In ALSA this is reflected in ` /proc/asound/card<id>/usbbus` (last part of `001/030`).
+Note: the USB identification shown via `/proc/asound/cards` do not match the `device` numbering, eg. a device connected to `/sys/bus/usb/devices/1-2/` shows up as `usb-xhci-hcd.0-2`. Further note, that the `device` (`Dev`) numbering changes and increments with disconnects and connects even on the same physical port (eg. in the output below the connected device is shown as `Dev 30` but was previously before reconnect shown as `Dev 29`). This number corresponds to `devnum` under `/sys/bus/usb/devices/<usbid>/devnum`. In ALSA this is reflected in ` /proc/asound/card<id>/usbbus` (last part of `001/030`).
 
 ```
 $ lsusb -t
@@ -217,7 +217,7 @@ Note2: The hub the following internal port numbering, from left to the right (wh
 
 ## TRRS plug to TRS socket "headphones splitter"
 
-This is the typical contact layout for a (OMTP) TRRS adaptetr that splits the TRRS signal into headphones and mic signal.
+This is the typical contact layout for a (OMTP) TRRS adapter that splits the TRRS signal into headphones and mic signal.
 
 *tbd*
 
@@ -313,7 +313,7 @@ sudo apt-get -y install pipewire pipewire-alsa pipewire-pulse pipewire-jack wire
 ```sh
 cd ~  
 wget http://deb.debian.org/debian/pool/main/j/jack-capture/jack-capture_0.9.73-3_arm64.deb  
-sudo apt -y install ./jack-capture_0.9.73-3_arm64.deb
+sudo apt-get -y install ./jack-capture_0.9.73-3_arm64.deb
 rm ./jack-capture_0.9.73-3_arm64.deb
 ```
 
@@ -412,17 +412,19 @@ WantedBy=default.target
 Note: The configuration files are defined for user `admin` with `uid` `1000`.
 
 ```
-# Create links for 
-mkdir ~/MpdMusic
-mkdir ~/MpdMusic/playback
-ln ~/MpdMusic/playback/EN ~/PhoneTap/src/biz/dfch/scnfmixr/res/EN/
-ln ~/MpdMusic/playback/DE ~/PhoneTap/src/biz/dfch/scnfmixr/res/DE/
-ln ~/MpdMusic/playback/FR ~/PhoneTap/src/biz/dfch/scnfmixr/res/FR/
-ln ~/MpdMusic/playback/IT ~/PhoneTap/src/biz/dfch/scnfmixr/res/IT/
+# Create links for menu
+mkdir -p ~/MpdMusic/menu
+ln -s ~/biz.dfch.scnfmixr/src/biz/dfch/scnfmixr/res/EN ~/MpdMusic/menu/EN
+ln -s ~/biz.dfch.scnfmixr/src/biz/dfch/scnfmixr/res/DE ~/MpdMusic/menu/DE
+ln -s ~/biz.dfch.scnfmixr/src/biz/dfch/scnfmixr/res/FR ~/MpdMusic/menu/FR
+ln -s ~/biz.dfch.scnfmixr/src/biz/dfch/scnfmixr/res/IT ~/MpdMusic/menu/IT
 
-mkdir ~/MpdMusic/menu
-ln ~/MpdMusic/menu/rc1 ~/mnt/rc1/
-ln ~/MpdMusic/menu/rc2 ~/mnt/rc2/
+# Create links for playback
+mkdir -p ~/MpdMusic/playback
+sudo mkdir -p /mnt/rc1/
+sudo mkdir -p /mnt/rc2/
+ln -s /mnt/rc1 ~/MpdMusic/playback/rc1
+ln -s /mnt/rc2 ~/MpdMusic/playback/rc2
 ```
 
 ```
