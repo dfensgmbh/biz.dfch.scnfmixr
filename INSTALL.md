@@ -280,7 +280,7 @@ pip install -r requirements.txt
 mkdir -p ~/biz.dfch.scnfmixr/src
 ```
 
-1.  Make a local copy of the files from [biz.dfch.scnfmixr](https://github.com/dfensgmbh/biz.dfch.PhoneTap.git).
+1.  Make a local copy of the files from [biz.dfch.scnfmixr](https://github.com/dfensgmbh/biz.dfch.scnfmixr.git).
 
 ```
 # Do this on the installation computer.
