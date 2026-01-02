@@ -1,4 +1,4 @@
-# Copyright (c) 2024, 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2024 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@ Description=scnfmixr (Secure Conference Mixer and Recorder)
 After=sound.target
 
 [Service]
-#ExecStart=/home/admin/PhoneTap/venvpi/bin/python3 -m biz -s -l EN --allowed-storage-usb-ids 2009 058f:6387 --use-current-date --use-current-time --use-random-name
-ExecStart=/home/admin/PhoneTap/venvpi/bin/python3 -m biz -s --allowed-storage-usb-ids 2009 058f:6387
-WorkingDirectory=/home/admin/PhoneTap/src
+#ExecStart=/home/admin/scnfmixr/venvpi/bin/python3 -m biz -s -l EN --allowed-storage-usb-ids 2009 058f:6387 --use-current-date --use-current-time --use-random-name
+ExecStart=/home/admin/scnfmixr/venvpi/bin/python3 -m biz -s --allowed-storage-usb-ids 2009 058f:6387
+WorkingDirectory=/home/admin/scnfmixr/src
 StandardOutput=journal
 StandardError=journal
 LimitRTPRIO=95
