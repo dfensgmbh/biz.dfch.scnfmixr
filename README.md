@@ -210,7 +210,7 @@ The USB ports of the Icy Box IB-AC618 have the following numbering (when connect
 | Port 3  | USB 3.0  | `1-1.3`  | `/sys/bus/usb/devices/1-1.3/`  | 4th from the cable, connected Bottom Left  |
 | Port 4  | USB 3.0  | `1-1.4`  | `/sys/bus/usb/devices/1-1.4/`  | next to the cable, connected Bottom Left  |
 
-Note1: If a high speed USB3 device is connected (shown as `5000M` in `lusub -t`), then the bus number will change from **`3`** to **`4`**.
+Note1: If a high speed USB3 device is connected (shown as `5000M` in `lsusb -t`), then the bus number will change from **`3`** to **`4`**.
 Note2: The hub the following internal port numbering, from left to the right (where the cable is): **3-2-1-4**. So, port 4 is the port directly next to the cable; port 3 is on the opposite end.
 
 # Pin Layout
