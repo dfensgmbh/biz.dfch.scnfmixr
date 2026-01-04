@@ -20,6 +20,7 @@ from dataclasses import dataclass
 import re
 
 from biz.dfch.i18n import LanguageCode
+from .public import SKIP_USB_PORT
 from .public.audio import FileFormat, Format, SampleRate, AudioDevice
 from .public.system import UsbPort
 from .public.storage import StorageDevice
@@ -220,21 +221,21 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
             "--input1", "-hi1",
             type=str,
             dest=InputDevice.HI1.name,
-            default="3-1.4",
+            default=SKIP_USB_PORT,
             help="Specifies USB port for keyboard."
         )
         parser.add_argument(
             "--input2", "-hi2",
             type=str,
             dest=InputDevice.HI2.name,
-            default="4-1.4",
+            default=SKIP_USB_PORT,
             help="Specifies USB port for Elgato Streamdeck."
         )
         parser.add_argument(
             "--input3", "-hi3",
             type=str,
             dest=InputDevice.HI3.name,
-            default="3-1.4",
+            default=SKIP_USB_PORT,
             help="Specifies USB port for MorningStar MIDI controller."
         )
         parser.add_argument(

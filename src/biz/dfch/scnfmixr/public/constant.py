@@ -13,11 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Package public."""
+"""Public constants."""
 
 from __future__ import annotations
 
-from .constant import SKIP_USB_PORT
-__all__ = [
-    "SKIP_USB_PORT"
-]
+SKIP_USB_PORT = "0-0.0"
