@@ -24,11 +24,11 @@ from biz.dfch.asyn import Process
 from biz.dfch.logging import log
 
 from ..public.input import KeyboardEventMap
-from .event_handler_base import EventHandlerBase
-
-from ..system import MessageQueue
 from ..public.system import MessageBase
 from ..public.system.messages import SystemMessage
+from ..system import MessageQueue
+
+from .event_handler_base import EventHandlerBase
 
 
 class KeyboardHandler(EventHandlerBase):
