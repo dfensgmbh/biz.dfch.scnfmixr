@@ -108,7 +108,7 @@ class AlsaStreamInfoVisitor:
         )
         self._current_interfaces.append(self._current_interface)
 
-        log.info("#%s [%s>%s] %s Prcessing interface ...",
+        log.info("#%s [%s>%s] %s Processing interface ...",
                  ctx.line, ctx.level_previous, ctx.level, ctx.keyword)
 
         return True
