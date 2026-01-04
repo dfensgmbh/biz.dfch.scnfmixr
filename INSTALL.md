@@ -121,6 +121,10 @@ sudo apt-get -y install ccze
 # evtest - tool to monitor and debug Linux input events
 sudo apt-get -y install evtest
 
+# dphys-swapfile - tool to deactivate the swap file
+sudo apt-get -y install dphys-swapfile
+sudo apt -y remove systemd-zram-generator
+
 # MPD - Music Player Daemon (headless music player)
 sudo apt-get -y install mpd
 
@@ -166,6 +170,20 @@ rm ./jack-capture_0.9.73-3_arm64.deb
 ```
 Notice: Download is performed unsandboxed as root as file '/home/admin/jack-capture_0.9.73-3_arm64.deb' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)
 ```
+
+## Disable swap file
+
+```
+sudo dphys-swapfile swapoff
+```
+
+
+## Auto remove not needed packages after installation
+
+```
+sudo apt-get -y autoremove
+```
+
 
 ## Installation of the service "jackd.service"
 

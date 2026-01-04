@@ -45,6 +45,7 @@
         "dfch",
         "DFTODO",
         "direxists",
+        "dphys",
         "ecasound",
         "Elgato",
         "evtest",
@@ -103,6 +104,8 @@
         "Strasse",
         "Streamdeck",
         "Streamdecks",
+        "swapfile",
+        "swapoff",
         "Trixie",
         "TRRS",
         "UDEVADM",
@@ -121,7 +124,8 @@
         "xhci",
         "xput",
         "xputs",
-        "zita"
+        "zita",
+        "zram"
     ],
     "sonarlint.connectedMode.project": {
         "connectionId": "dfensgmbh",
