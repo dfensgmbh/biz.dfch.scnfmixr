@@ -16,6 +16,7 @@
 """Texts for DE transition event messages."""
 
 # cSpell:disable
+# sonar.issue.ignore.multicriteria
 
 from biz.dfch.scnfmixr.core.transition_event import TransitionEvent
 
