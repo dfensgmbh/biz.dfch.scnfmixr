@@ -79,7 +79,7 @@ class FormattingStorage(TransitionBase):
             log.info("Unmounting storage device '%s' OK.",
                      self._device.name)
 
-        result = op.format_disk(self._device.name)
+        result = op.initialize_disk(self._device.name)
         if not result:
             log.error("Formatting storage device '%s' FAILED.",
                       self._device.name)

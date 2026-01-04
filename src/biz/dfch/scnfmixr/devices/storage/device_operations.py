@@ -162,12 +162,7 @@ class DeviceOperations:
 
         return 0 == process.exit_code
 
-    def format(self) -> bool:
-        """Formats a partition."""
-
-        raise NotImplementedError("Not yet implemented.")
-
-    def format_disk(self, name: str) -> bool:
+    def initialize_disk(self, name: str) -> bool:
         """Removes all partitions and creates a new single partition with ExFAT
         file system."""
 
