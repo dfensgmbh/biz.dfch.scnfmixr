@@ -157,6 +157,7 @@ guid:20c2b945-4caf-49af-bfc2-36f62b81597c
 """,
 
     # Menu: Clean storage RC2.
+
     TransitionEvent.CLEANING_DEVICE_RC2_ENTER: """
 guid:3280d525-f2cb-480b-b2e1-d98ef5e603d8
 """,

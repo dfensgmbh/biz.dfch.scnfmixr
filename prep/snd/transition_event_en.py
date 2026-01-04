@@ -41,24 +41,24 @@ Skipped input device ONE.
 
     # Menu: Detect HID HI2.
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.DETECTING_DEVICE_HI2_ENTER: """
 Trying to detect input device TWO.
 """,
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.SKIPPING_DEVICE_HI2_LEAVE: """
 Skipped input device TWO.
 """,
 
     # Menu: Detect HID HI3.
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.DETECTING_DEVICE_HI3_ENTER: """
 Trying to detect input device THREE.
 """,
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.SKIPPING_DEVICE_HI3_LEAVE: """
 Skipped input device THREE.
 """,
@@ -181,13 +181,13 @@ Trying to delete last recording succeeded.
 
     # Menu: System.
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.FORMATTING_STORAGE_ENTER: """
 Trying to format storage device.
 All data on this storage device will be deleted.
 """,
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.FORMATTING_STORAGE_LEAVE: """
 Trying to format storage device succeeded.
 """,
@@ -224,12 +224,12 @@ Press "STAR" to repeat this message.
 
     # No specific menu.
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.DETECTING_DEVICE_HI2_LEAVE: """
 <<<sound-intro.wav>>>
 """,
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.DETECTING_DEVICE_HI3_LEAVE: """
 <<<sound-intro.wav>>>
 """,
@@ -240,22 +240,22 @@ Press "STAR" to repeat this message.
     # OK. No audio menu necessary.
     TransitionEvent.SKIPPING_DEVICE_LCL_LEAVE: """""",
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.CLEANING_DEVICE_RC1_ENTER: """
 Trying to clean recordings from storage device RC1.
 """,
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.CLEANING_DEVICE_RC1_LEAVE: """
 Trying to clean recordings from storage device RC1 succeeded.
 """,
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.CLEANING_DEVICE_RC2_ENTER: """
 Trying to clean recordings from storage device RC2.
 """,
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.CLEANING_DEVICE_RC2_LEAVE: """
 Trying to clean recordings from storage device RC2 succeeded.
 """,
@@ -266,22 +266,22 @@ Trying to clean recordings from storage device RC2 succeeded.
     # OK. No audio menu necessary.
     TransitionEvent.INITIALISING_AUDIO_LEAVE: """""",
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.MOUNTING_STORAGE_ENTER: """
 Trying to mount storage device RC1.
 """,
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.MOUNTING_STORAGE_LEAVE: """
 Trying to mount storage device RC1 succeeded.
 """,
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.DISCONNECTING_STORAGE_ENTER: """
 Trying to mount storage device RC2.
 """,
 
-    # TODO: No audio menu.
+    # DFTODO: No audio menu.
     TransitionEvent.DISCONNECTING_STORAGE_LEAVE: """
 Trying to mount storage device RC2 succeeded.
 """,
