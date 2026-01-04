@@ -143,7 +143,7 @@ class MediaPlayerClient(IAcquirable):
         ]
         files, _ = self._invoke(cmd)
 
-        for file in files:
+        for file in sorted(files, reverse=True):
             if not predicate(file):
                 continue
 

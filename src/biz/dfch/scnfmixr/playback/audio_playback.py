@@ -234,7 +234,7 @@ class AudioPlayback(IAcquirable):
 
             fullname = self.get_fullname(item)
 
-            log.debug(fullname)
+            log.debug("Try to get cue points in file: '%s' ...", fullname)
 
             seek_points = self.get_seekpoints(fullname)
 
