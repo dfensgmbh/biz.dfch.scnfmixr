@@ -64,6 +64,7 @@
         "Jabra",
         "jackd",
         "journalctl",
+        "ktmicro",
         "LADSPA",
         "levelno",
         "libhidapi",
@@ -113,5 +114,9 @@
         "xput",
         "xputs",
         "zita"
-    ]
+    ],
+    "sonarlint.connectedMode.project": {
+        "connectionId": "dfensgmbh",
+        "projectKey": "dfensgmbh_biz.dfch.PhoneTap"
+    }
 }

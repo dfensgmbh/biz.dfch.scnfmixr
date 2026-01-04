@@ -173,7 +173,7 @@ class TestAlsaStreamInfoVisitor(unittest.TestCase):
         log.info("best_capture: '%s'", best_capture)
 
     def test_parsing_stream_data_sound_devices_succeeds(self):
-        """Sound Deivces MixPre-6 II."""
+        """Sound Devices MixPre-6 II."""
 
         # Arrange
         alsa_stream_parser = AlsaStreamInfoVisitor()
