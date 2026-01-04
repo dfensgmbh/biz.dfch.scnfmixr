@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Module initialising_storage."""
+"""Module initializing_storage."""
 
 from biz.dfch.logging import log
 

@@ -29,7 +29,14 @@ class ZitaBridgeBase:
     _JACK_CONNECT_FULLNAME = "/bin/jack_connect"
     _SAMPLING_BASERATE = 16000
 
-    def __init__(self, cmd: str, name: str, device: str, channel_count: int, sampling_rate: int):
+    def __init__(
+        self,
+        cmd: str,
+        name: str,
+        device: str,
+        channel_count: int,
+        sampling_rate: int,
+    ):
 
         assert cmd is not None and "" != cmd.strip()
         assert name is not None and "" != name.strip()
@@ -49,7 +56,8 @@ class ZitaBridgeBase:
                 "-c", self._channel_count, "-r", self._sampling_rate]
 
         log.debug(
-            "Creating JACK client '%s' for device '%s' [channel_count: '%s', sampling_rate: '%s'] ...",
+            "Creating JACK client '%s' for device '%s' "
+            "[channel_count: '%s', sampling_rate: '%s'] ...",
             self._name,
             self._device,
             self._channel_count,
@@ -57,14 +65,18 @@ class ZitaBridgeBase:
         )
 
         self._process = Process.start(
-            args, wait_on_completion=False, capture_stdout=False, capture_stderr=True)
+            args,
+            wait_on_completion=False,
+            capture_stdout=False,
+            capture_stderr=True)
 
         assert self._process.is_running
         stderr = self._process.stderr
         assert 0 == len(stderr)
 
         log.info(
-            "Created JACK '%s' for device '%s' with PID [%s] [channel_count: '%s', sampling_rate: '%s'].",
+            "Created JACK '%s' for device '%s' with PID [%s] "
+            "[channel_count: '%s', sampling_rate: '%s'].",
             self._name,
             self._device,
             self._process.pid,
