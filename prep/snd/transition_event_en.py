@@ -15,7 +15,7 @@
 
 """Texts for EN transition event messages."""
 
-# noqa: E501
+# noqa: E501  # NOSONAR  python:S125
 # cSpell:disable
 
 from biz.dfch.scnfmixr.core.transition_event import TransitionEvent
@@ -114,6 +114,7 @@ Skipped external device EX2.
 """,
 
     # Menu: Storage RC1.
+
     # OK
     TransitionEvent.DETECTING_DEVICE_RC1_ENTER: """
 Trying to detect storage device RC1.
@@ -205,7 +206,7 @@ This might take some seconds.
 Recording stopped.
 
 You can now go to the playback menu and listen to the recording or delete the recording.
-""",
+""",  # noqa: E501
 
     # OK
     TransitionEvent.HELPING_ONRECORD_LEAVE: """

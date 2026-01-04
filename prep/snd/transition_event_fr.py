@@ -15,7 +15,7 @@
 
 """Texts for FR transition event messages."""
 
-# noqa: E501
+# noqa: E501  # NOSONAR  python:S125
 # cSpell:disable
 
 from biz.dfch.scnfmixr.core.transition_event import TransitionEvent
