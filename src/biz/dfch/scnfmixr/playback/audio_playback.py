@@ -219,12 +219,12 @@ class AudioPlayback(IAcquirable):
 
         # Load audio files from only the first available storage device (RC1 or
         # RC2).
-        _queued_items = self._client.load_queue(
+        _queued_items = self._client.load_playback_queue(
             lambda e: e.lower().startswith(MountPoint.RC1.name.lower()))
         assert isinstance(_queued_items, list)
 
         if 0 == len(_queued_items):
-            _queued_items = self._client.load_queue(
+            _queued_items = self._client.load_playback_queue(
                 lambda e: e.lower().startswith(MountPoint.RC2.name.lower()))
         assert isinstance(_queued_items, list)
 
