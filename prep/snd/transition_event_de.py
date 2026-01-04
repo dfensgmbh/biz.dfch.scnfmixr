@@ -180,90 +180,93 @@ TransitionEventDe: dict[TransitionEvent, str] = {
     TransitionEvent.STOPPING_RECORDING_LEAVE: """
 """,  # noqa: E501  # NOSONAR
 
-    TransitionEvent.SETTING_CUEPOINT_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.SETTING_CUEPOINT_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.TOGGLING_MUTE_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.TOGGLING_MUTE_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.SHOWING_STATUS_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.SHOWING_STATUS_LEAVE: """""",  # noqa: E501  # NOSONAR
 
     # Menu: Date, Time, Name
-    TransitionEvent.PROCESSING_DIGIT_LEAVE: """
-""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.PROCESSING_DIGIT0_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.PROCESSING_DIGIT_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.PROCESSING_DIGIT1_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.PROCESSING_DIGIT0_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.PROCESSING_DIGIT2_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.PROCESSING_DIGIT1_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.PROCESSING_DIGIT3_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.PROCESSING_DIGIT2_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.PROCESSING_DIGIT4_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.PROCESSING_DIGIT3_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.PROCESSING_DIGIT5_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.PROCESSING_DIGIT4_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.PROCESSING_DIGIT6_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.PROCESSING_DIGIT5_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.PROCESSING_DIGIT7_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.PROCESSING_DIGIT6_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.PROCESSING_DIGIT8_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.PROCESSING_DIGIT7_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.PROCESSING_DIGIT9_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.PROCESSING_DIGIT8_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.PROCESSING_DIGIT_OK_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.PROCESSING_DIGIT9_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.PROCESSING_DIGIT_BACKSPACE_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.PROCESSING_DIGIT_OK_LEAVE: """""",  # noqa: E501  # NOSONAR
+
+    # No audio menu necessary.
+    TransitionEvent.PROCESSING_DIGIT_BACKSPACE_LEAVE: """""",  # noqa: E501  # NOSONAR
 
     # Menu: Playback
-    TransitionEvent.LEAVING_PLAYBACK_LEAVE: """
-""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.SELECTING_PAUSE_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.LEAVING_PLAYBACK_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.SELECTING_RESUME_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.SELECTING_PAUSE_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.JUMPING_CUE_NEXT_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.SELECTING_RESUME_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.JUMPING_CUE_PREVIOUS_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.JUMPING_CUE_NEXT_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.SEEKING_NEXT_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.JUMPING_CUE_PREVIOUS_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.SEEKING_PREVIOUS_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.SEEKING_NEXT_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.HELPING_PLAYBACK_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.SEEKING_PREVIOUS_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.JUMPING_CLIP_NEXT_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.HELPING_PLAYBACK_LEAVE: """""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.JUMPING_CLIP_PREVIOUS_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.JUMPING_CLIP_NEXT_LEAVE: """""",  # noqa: E501  # NOSONAR
+
+    # No audio menu necessary.
+    TransitionEvent.JUMPING_CLIP_PREVIOUS_LEAVE: """""",  # noqa: E501  # NOSONAR
 
     # No specific menu.
-    TransitionEvent.RETURNING_TRUE_LEAVE: """
-""",  # noqa: E501  # NOSONAR
 
-    TransitionEvent.RETURNING_FALSE_LEAVE: """
-""",  # noqa: E501  # NOSONAR
+    # No audio menu necessary.
+    TransitionEvent.RETURNING_TRUE_LEAVE: """""",  # noqa: E501  # NOSONAR
+
+    # No audio menu necessary.
+    TransitionEvent.RETURNING_FALSE_LEAVE: """""",  # noqa: E501  # NOSONAR
 }
