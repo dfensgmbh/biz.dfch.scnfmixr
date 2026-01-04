@@ -80,7 +80,7 @@ class DeviceOperations:
     _device_info: StorageDeviceInfo
 
     def __init__(self, value: StorageDeviceInfo):
-        """Initialises an instance of the object.
+        """Initializes an instance of the object.
 
         Args:
             value (StorageDeviceInfo): The storage device to manipulate.
