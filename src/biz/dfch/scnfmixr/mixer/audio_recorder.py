@@ -122,7 +122,7 @@ class AudioRecorder:
 
         if not isinstance(
                 message,
-                (IAudioRecorderMessage, SystemMessage)):
+                (IAudioRecorderMessage, SystemMessage.Shutdown)):
             return
 
         if isinstance(message, SystemMessage.Shutdown):
@@ -197,7 +197,7 @@ class AudioRecorder:
                 e, (msgt.RecordingStartCommand,
                     msgt.RecordingStopCommand,
                     msgt.RecordingCuePointCommand,
-                    SystemMessage)))
+                    SystemMessage.Shutdown)))
 
         log.info("Initializing OK.")
 
