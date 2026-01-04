@@ -59,7 +59,7 @@ class TestTransitionEventDe(unittest.TestCase):
         # Check if all keys are present in localized version.
         for key, value in TransitionEventDe.items():
 
-            if 1 == len(value):
+            if 1 == len(value) or "guid:" in value:
                 result.append(key.name)
 
         self.assertEqual(0, len(result), result)
