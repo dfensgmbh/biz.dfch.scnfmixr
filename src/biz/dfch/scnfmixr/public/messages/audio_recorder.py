@@ -79,6 +79,9 @@ class AudioRecorder:
 
             self.value = value
 
+    class DeleteLastRecordingCommand(CommandMedium, IAudioRecorderMessage):
+        """Delete the last recording."""
+
     class RecordingStopCommand(CommandMedium, IAudioRecorderMessage):
         """Stop recording."""
 
