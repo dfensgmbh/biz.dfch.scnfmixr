@@ -44,7 +44,6 @@ class FinalState(StateBase):
         """Events for this state."""
 
         HELP = InputEventMap.KEY_ASTERISK
-        MENU = InputEventMap.KEY_5
 
     def __init__(self):
 

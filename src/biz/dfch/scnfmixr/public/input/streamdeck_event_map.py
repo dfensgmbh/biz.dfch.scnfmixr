@@ -227,6 +227,8 @@ StreamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
     "FinalState": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
         StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
-        StreamdeckInput.KEY_09: InputEventMap.KEY_5,
+        StreamdeckInput.KEY_06: InputEventMap.KEY_ASTERISK,
+        StreamdeckInput.KEY_07: InputEventMap.KEY_ASTERISK,
+        StreamdeckInput.KEY_08: InputEventMap.KEY_ASTERISK,
     },
 }
