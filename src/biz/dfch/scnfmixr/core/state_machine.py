@@ -374,8 +374,6 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.HELP,
                 current))
-            .add_transition(ReturningTrue(current.Event.MENU,
-                                          current))
         )
         current: System = menu[State.SYSTEM]
         (
