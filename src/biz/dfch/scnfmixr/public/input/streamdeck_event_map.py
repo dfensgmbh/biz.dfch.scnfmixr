@@ -199,7 +199,7 @@ StreamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
     "PlaybackPaused": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
         StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
-        StreamdeckInput.KEY_05: InputEventMap.KEY_0,
+        StreamdeckInput.KEY_07: InputEventMap.KEY_0,
         StreamdeckInput.KEY_09: InputEventMap.KEY_5,
     },
     "System": {
