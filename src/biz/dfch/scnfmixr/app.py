@@ -43,7 +43,7 @@ class App:  # pylint: disable=R0903
     _VERSION_REQUIRED_MINOR = 11
 
     # Note: also adjust in pyproject.toml
-    _VERSION = "3.0.0"
+    _VERSION = "4.0.0"
     _PROG_NAME = "scnfmixr"
 
     _signal_handler: SignalHandler
