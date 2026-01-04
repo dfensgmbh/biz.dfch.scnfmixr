@@ -159,7 +159,7 @@ class AudioMenu(IAcquirable):
 
                     handler = self._message_handler.get(message.type)
                     if handler is None:
-                        log.warning("_worker: Unrecognised message: '%s' [%s].",
+                        log.warning("_worker: Unrecognized message: '%s' [%s].",
                                     type(message).__name__,
                                     message.name)
                         continue
@@ -200,7 +200,7 @@ class AudioMenu(IAcquirable):
             self._signal.set()
             return
 
-        log.warning("Unrecognised message received: '%s' [%s].",
+        log.warning("Unrecognized message received: '%s' [%s].",
                     type(message).__name__,
                     message.name)
 

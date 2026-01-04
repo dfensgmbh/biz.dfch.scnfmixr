@@ -108,7 +108,10 @@ class AudioPlayback(IAcquirable):
 
         @staticmethod
         def get() -> AudioPlayback:
-            """Creates or gets the instance of the audio playback player."""
+            """Creates or gets the instance of the audio playback player.
+
+            After the call returns, the instance is acquired.
+            """
 
             if AudioPlayback.Factory.__instance is not None:
                 return AudioPlayback.Factory.__instance
@@ -121,7 +124,7 @@ class AudioPlayback(IAcquirable):
                 AudioPlayback.Factory.__instance = AudioPlayback()
 
             # Note: here we acquire the class directly after creating the
-            # singleton, which might not be totally intuitive! On the other
+            # singleton, which might not be totally intuitive! On the other hand
             # it does not make sense to get the singleton and acquire each time
             # after it.
             AudioPlayback.Factory.__instance.acquire()
@@ -161,7 +164,7 @@ class AudioPlayback(IAcquirable):
 
                     handler = self._message_handler.get(type(message))
                     if handler is None:
-                        log.warning("_worker: Unrecognised message: '%s' [%s].",
+                        log.warning("_worker: Unrecognized message: '%s' [%s].",
                                     type(message).__name__,
                                     message.name)
                         continue
@@ -201,7 +204,7 @@ class AudioPlayback(IAcquirable):
             self._signal.set()
             return
 
-        log.warning("Unrecognised message received: '%s' [%s].",
+        log.warning("Unrecognized message received: '%s' [%s].",
                     type(message).__name__,
                     message.name)
 
