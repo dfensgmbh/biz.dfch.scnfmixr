@@ -138,7 +138,7 @@ class App:  # pylint: disable=R0903
                 mx.acquire()
                 mixer.mixbus.add_device(mx)
 
-            log.warning("Device names [%s]", [
+            log.info("Device names [%s]", [
                 e.name for e in mixer.mixbus.devices])
             log.debug("Device source points [%s]", [
                       e.name for e in mixer.mixbus.sources])
