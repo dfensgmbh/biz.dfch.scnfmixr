@@ -175,6 +175,7 @@ Notice: Download is performed unsandboxed as root as file '/home/admin/jack-capt
 
 ```
 sudo dphys-swapfile swapoff
+sudo dphys-swapfile uninstall
 ```
 
 
