@@ -57,7 +57,7 @@ class ApplicationContext:  # pylint: disable=R0903,R0902
         audio_configuration_map (dict[AudioDevices, SetupDevice]): Contains
             configuration parameters of audio devices.
         storage_configuration_map (dict[RcDevices, BlockDeviceType]): Contains
-            configuratoin parameters of storage devices.
+            configuration parameters of storage devices.
     """
 
     class Keys(StrEnum):
