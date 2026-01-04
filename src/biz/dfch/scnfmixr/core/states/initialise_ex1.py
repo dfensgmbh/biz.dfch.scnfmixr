@@ -30,7 +30,7 @@ from ..state_event import StateEvent
 class InitialiseEx1(StateBase):
     """External Phone EX1 Detection.
 
-    Detects the external input/ouput (phone 1).
+    Detects the external input/output (phone 1).
     """
 
     class Event(StrEnum):

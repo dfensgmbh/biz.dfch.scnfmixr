@@ -1,4 +1,4 @@
-# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025-2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -73,13 +73,13 @@ class Arguments():
         """Returns an instance to the argument parser.
 
         Returns:
-            argparse.Namspace: The namespace of the parsed argumentt.
+            argparse.Namespace: The namespace of the parsed arguments.
         """
 
         # pylint: disable=C0301
         description = f"""%(prog)s (Secure Conference Mixer and Recorder), v{self.version}
 
-Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
+Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
 """  # noqa: E501
 
         # Process command line arguments.
