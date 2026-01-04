@@ -18,11 +18,11 @@
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
-from ...public.storage import StorageDevice
-from ..fsm import UiEventInfo
-from ..fsm import TransitionBase
-from ..fsm import StateBase
 from ...devices.storage import DeviceOperations
+from ...public.storage import StorageDevice
+from ..fsm import StateBase
+from ..fsm import TransitionBase
+from ..fsm import UiEventInfo
 from ..transition_event import TransitionEvent
 
 
