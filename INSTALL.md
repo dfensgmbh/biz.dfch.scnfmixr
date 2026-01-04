@@ -121,10 +121,6 @@ sudo apt-get -y install ccze
 # evtest - tool to monitor and debug Linux input events
 sudo apt-get -y install evtest
 
-# dphys-swapfile - tool to deactivate the swap file
-sudo apt-get -y install dphys-swapfile
-sudo apt -y remove systemd-zram-generator
-
 # MPD - Music Player Daemon (headless music player)
 sudo apt-get -y install mpd
 
@@ -173,9 +169,17 @@ Notice: Download is performed unsandboxed as root as file '/home/admin/jack-capt
 
 ## Disable swap file
 
+
+```
+sudo swapoff -a
+```
+
+(In a previous version we used `dphys-swapfile`. This is not needed.)
 ```
 sudo dphys-swapfile swapoff
 sudo dphys-swapfile uninstall
+sudo systemctl disable dphys-swapfile
+sudo apt purge dphys-swapfile
 ```
 
 
