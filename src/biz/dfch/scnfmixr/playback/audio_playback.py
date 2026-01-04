@@ -17,6 +17,7 @@
 
 from __future__ import annotations
 import bisect
+import os
 from threading import Event, Lock, Thread
 import time
 from typing import ClassVar, Callable, Any
@@ -26,12 +27,13 @@ from biz.dfch.asyn import ConcurrentDoubleSideQueueT, Process
 
 from text import MultiLineTextParser
 
-from ..system import MessageQueue
-from ..public.mixer import IAcquirable
-from ..public.storage import MountPoint
 from ..public.messages import MessageBase, SystemMessage
 from ..public.messages.audio_playback import IAudioPlaybackMessage
 from ..public.messages.audio_playback import AudioPlayback as msgt
+from ..public.mixer import IAcquirable
+from ..public.storage import FileName
+from ..public.storage import MountPoint
+from ..system import MessageQueue
 
 from .metaflac_visitor import MetaflacVisitor
 from .media_player_type import MediaPlayerType
@@ -220,12 +222,16 @@ class AudioPlayback(IAcquirable):
         # Load audio files from only the first available storage device (RC1 or
         # RC2).
         _queued_items = self._client.load_playback_queue(
-            lambda e: e.lower().startswith(MountPoint.RC1.name.lower()))
+            lambda e: e.lower().startswith(MountPoint.RC1.name.lower()) and
+            FileName.is_valid_filename(e.removeprefix(
+                MountPoint.RC1.name.lower()).strip(os.sep)))
         assert isinstance(_queued_items, list)
 
         if 0 == len(_queued_items):
             _queued_items = self._client.load_playback_queue(
-                lambda e: e.lower().startswith(MountPoint.RC2.name.lower()))
+                lambda e: e.lower().startswith(MountPoint.RC2.name.lower()) and
+                FileName.is_valid_filename(e.removeprefix(
+                    MountPoint.RC2.lower()).strip(os.sep)))
         assert isinstance(_queued_items, list)
 
         log.debug("Currently queued items: [%s]", _queued_items)
