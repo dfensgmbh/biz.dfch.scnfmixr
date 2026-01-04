@@ -445,6 +445,12 @@ class StateMachine:
             .add_transition(DetectingRc2(
                 current.Event.DETECT_RC2,
                 current))
+            .add_transition(CleaningRc1(
+                current.Event.CLEAN_RC1,
+                current))
+            .add_transition(CleaningRc2(
+                current.Event.CLEAN_RC2,
+                current))
         )
         current: Main = menu[State.MAIN]
         (
