@@ -33,7 +33,7 @@ guid:521f357c-58ad-4b43-b9d8-bd983cfc8def
 """,
 
     TransitionEvent.SKIPPING_DEVICE_HI1_LEAVE: """
-guid:5caf2b51-a921-4c2f-95e9-43fc75a74590
+Eingabegerät H I EINS übersprungen.
 """,
 
     # Menu: Detect HID HI2.
@@ -41,12 +41,11 @@ guid:5caf2b51-a921-4c2f-95e9-43fc75a74590
 guid:beb5c507-6a5f-4520-a5f3-20c056ed3d59
 """,
 
-    TransitionEvent.DETECTING_DEVICE_HI2_LEAVE: """
-guid:ce598696-3994-4966-9016-a17dd934c378
-""",
+    # DFTODO: Duplicate intro sound from HI1.
+    TransitionEvent.DETECTING_DEVICE_HI2_LEAVE: """""",
 
     TransitionEvent.SKIPPING_DEVICE_HI2_LEAVE: """
-guid:adefaa59-069b-4987-9074-640733cd2dcb
+Eingabegerät H I ZWEI übersprungen.
 """,
 
     # Menu: Detect HID HI3.
@@ -55,12 +54,11 @@ guid:adefaa59-069b-4987-9074-640733cd2dcb
 guid:b1f37144-ba69-49e6-a0cc-dd7e15769d30
 """,
 
-    TransitionEvent.DETECTING_DEVICE_HI3_LEAVE: """
-guid:54363a35-235c-4c1d-ae74-0d796ddbbd61
-""",
+    # DFTODO: Duplicate intro sound from HI1.
+    TransitionEvent.DETECTING_DEVICE_HI3_LEAVE: """""",
 
     TransitionEvent.SKIPPING_DEVICE_HI3_LEAVE: """
-guid:6ff5555c-410d-459f-8392-d6da70955592
+Eingabegerät H I DREI übersprungen.
 """,
 
     # Menu: Detect Audio LCL.

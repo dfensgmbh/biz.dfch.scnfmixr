@@ -224,15 +224,11 @@ Press "STAR" to repeat this message.
 
     # No specific menu.
 
-    # DFTODO: No audio menu.
-    TransitionEvent.DETECTING_DEVICE_HI2_LEAVE: """
-<<<sound-intro.wav>>>
-""",
+    # DFTODO: Duplicate intro sound from HI1.
+    TransitionEvent.DETECTING_DEVICE_HI2_LEAVE: """""",
 
-    # DFTODO: No audio menu.
-    TransitionEvent.DETECTING_DEVICE_HI3_LEAVE: """
-<<<sound-intro.wav>>>
-""",
+    # DFTODO: Duplicate intro sound from HI1.
+    TransitionEvent.DETECTING_DEVICE_HI3_LEAVE: """""",
 
     # OK. No audio menu necessary.
     TransitionEvent.DETECTING_DEVICE_LCL_LEAVE: """""",
