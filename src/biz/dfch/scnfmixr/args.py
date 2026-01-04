@@ -159,11 +159,15 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
         parser.add_argument(
             "--bit-depth", "-b",
             type=int,
+            # DFTODO - we have a bug here.
+            # Function indicates to return int, but does return Enum.
             choices=[
-                Format.S16_LE.get_bit_depth(),
-                Format.S24_3LE.get_bit_depth(),
-                Format.S32_LE.get_bit_depth()],
-            default=Format.DEFAULT.get_bit_depth(),
+                Format.S16_LE.get_bit_depth().value,  # pylint: disable:E1101
+                Format.S24_3LE.get_bit_depth().value,  # pylint: disable:E1101
+                Format.S32_LE.get_bit_depth().value,  # pylint: disable:E1101
+            ],
+            default=Format.DEFAULT.get_bit_depth()
+            .value,  # pylint: disable:E1101
             help="Select the bit depth of the recording."
         )
 
