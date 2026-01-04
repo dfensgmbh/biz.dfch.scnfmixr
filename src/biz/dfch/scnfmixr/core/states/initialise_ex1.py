@@ -58,13 +58,15 @@ class InitialiseEx1(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        if not ctx.error:
-            log.info("Enqueueing event: '%s' [%s].",
-                     InitialiseEx1.Event.DETECT_DEVICE.name,
-                     InitialiseEx1.Event.DETECT_DEVICE.value)
+        if ctx.error:
+            return
 
-            msg = SystemMessage.InputEvent(InitialiseEx1.Event.DETECT_DEVICE)
-            ctx.events.publish_first(msg)
+        log.info("Enqueueing event: '%s' [%s].",
+                 InitialiseEx1.Event.DETECT_DEVICE.name,
+                 InitialiseEx1.Event.DETECT_DEVICE.value)
+
+        msg = SystemMessage.InputEvent(InitialiseEx1.Event.DETECT_DEVICE)
+        ctx.events.publish_first(msg)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

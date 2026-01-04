@@ -21,10 +21,8 @@ from enum import StrEnum
 from biz.dfch.logging import log
 from ...public.input import InputEventMap
 from ...public.system.messages import SystemMessage
-from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
-from ..state_event import StateEvent
 
 
 class InitialiseHi3(StateBase):
@@ -57,13 +55,15 @@ class InitialiseHi3(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        if not ctx.error:
-            log.info("Enqueueing event: '%s' [%s].",
-                     InitialiseHi3.Event.DETECT_DEVICE.name,
-                     InitialiseHi3.Event.DETECT_DEVICE.value)
+        if ctx.error:
+            return
 
-            msg = SystemMessage.InputEvent(InitialiseHi3.Event.DETECT_DEVICE)
-            ctx.events.publish_first(msg)
+        log.info("Enqueueing event: '%s' [%s].",
+                 InitialiseHi3.Event.DETECT_DEVICE.name,
+                 InitialiseHi3.Event.DETECT_DEVICE.value)
+
+        msg = SystemMessage.InputEvent(InitialiseHi3.Event.DETECT_DEVICE)
+        ctx.events.publish_first(msg)
 
         raise NotImplementedError
 

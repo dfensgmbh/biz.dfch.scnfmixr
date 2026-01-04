@@ -55,13 +55,15 @@ class InitialiseHi2(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        if not ctx.error:
-            log.info("Enqueueing event: '%s' [%s].",
-                     InitialiseHi2.Event.DETECT_DEVICE.name,
-                     InitialiseHi2.Event.DETECT_DEVICE.value)
+        if ctx.error:
+            return
 
-            msg = SystemMessage.InputEvent(InitialiseHi2.Event.DETECT_DEVICE)
-            ctx.events.publish_first(msg)
+        log.info("Enqueueing event: '%s' [%s].",
+                 InitialiseHi2.Event.DETECT_DEVICE.name,
+                 InitialiseHi2.Event.DETECT_DEVICE.value)
+
+        msg = SystemMessage.InputEvent(InitialiseHi2.Event.DETECT_DEVICE)
+        ctx.events.publish_first(msg)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

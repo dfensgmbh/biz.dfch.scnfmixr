@@ -59,6 +59,9 @@ class InitialiseHi1(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
+        if ctx.error:
+            return
+
         # Always run detection. We cannot continue w/o.
         log.info("Enqueueing event: '%s' [%s].",
                  InitialiseHi1.Event.DETECT_DEVICE.name,
