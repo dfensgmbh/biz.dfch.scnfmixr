@@ -28,6 +28,8 @@ scnfmixr running on Raspberry Pi OS (Pi 5)
 
 # Installation
 
+For detailed information about the installation of the system see [INSTALL](./INSTALL.md).
+
 ```sh
 admin@scnfmixr:~ $ pwd
 /home/admin
@@ -51,33 +53,21 @@ pip install typing
 # Save requirements
 pip freeze > requirements.txt
 
-# Create script
-nano ~/scnfmixr/src/__main__.py
-
-# Make script executable
-chmod +x ~/scnfmixr/src/__main__.py
-
-# Create log file and set permissions
-sudo touch ~/scnfmixr/app.log
-sudo chown admin:root ~/scnfmixr/app.log
-sudo chmod 660 ~/scnfmixr/app.log
-
 # Create service descriptor
-nano ~/scnfmixr/src/app.service
+nano ~/.config/systemd/user/scnfmixr.service
 
 # Activate and start service
-sudo ln -fs ~/scnfmixr/src/app.service /etc/systemd/system/scnfmixr.service
-sudo systemctl enable scnfmixr.service
-sudo systemctl daemon-reload
-sudo systemctl start scnfmixr.service
-sudo systemctl status scnfmixr.service
+systemctl --user enable scnfmixr.service
+systemctl --user daemon-reload
+systemctl --user start scnfmixr.service
+systemctl --user status scnfmixr.service
 journalctl -u scnfmixr.service
 # tail -f app.log
 
 # Deactivate service
-sudo systemctl disable scnfmixr.service
-sudo systemctl stop scnfmixr.service
-sudo systemctl status scnfmixr.service
+systemctl --user disable scnfmixr.service
+systemctl --user stop scnfmixr.service
+systemctl --user status scnfmixr.service
 ```
 
 # Testing
