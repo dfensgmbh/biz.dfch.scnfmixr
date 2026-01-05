@@ -733,7 +733,4 @@ class StateMachine:
         self._fsm = Fsm(initial_state=menu[State.INIT_LCL], ctx=self._ctx)
         self._fsm.start()
 
-        # for line in self._fsm.visualize():
-        #     log.debug(line)
-
         log.info("Initializing state machine OK.")
