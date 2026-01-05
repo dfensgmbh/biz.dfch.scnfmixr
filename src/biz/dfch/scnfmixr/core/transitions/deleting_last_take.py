@@ -15,6 +15,13 @@
 
 """Module deleting_last_take."""
 
+from typing import cast
+
+from biz.dfch.logging import log
+
+from ...public.messages.audio_recorder import AudioRecorder as msgt
+from ...system import FuncExecutor
+
 from ..fsm import TransitionBase, UiEventInfo, StateBase
 from ..transition_event import TransitionEvent
 
@@ -39,5 +46,21 @@ class DeletingLastTake(TransitionBase):
                 TransitionEvent.DELETING_LAST_TAKE_LEAVE, False),
             target_state=target)
 
-    def invoke(self, _):
+    def invoke(self, ctx):
+
+        log.debug("Waiting for deletion of last take ...")
+
+        with FuncExecutor(
+            lambda e: cast(msgt.DeleteLastRecordingNotification, e).value,
+            lambda e: isinstance(e, msgt.DeleteLastRecordingNotification)
+        ) as sync:
+            result = sync.invoke(
+                msgt.DeleteLastRecordingCommand(),
+                10)
+
+        if result:
+            log.info("Waiting for deletion of last take OK.")
+        else:
+            log.error("Waiting for deletion of last take FAILED.")
+
         return True
