@@ -131,15 +131,30 @@ class DateTimeNameInput():
         """Determines whether the name is a valid name."""
         return bool(self._name)
 
+    def clear_date(self) -> None:
+        """Clears the date."""
+
+        self._date_string = ""
+        self._date = None
+
+    def clear_time(self) -> None:
+        """Clears the time."""
+
+        self._time_string = ""
+        self._time = None
+
+    def clear_name(self) -> None:
+        """Clears the name."""
+
+        self._name_string = ""
+        self._name = None
+
     def reset(self) -> None:
         """Resets all data."""
 
-        self._date = None
-        self._time = None
-        self._name = None
-        self._date_string = ""
-        self._time_string = ""
-        self._name_string = ""
+        self.clear_date()
+        self.clear_time()
+        self.clear_name()
 
     def _validate_date(self, value: str) -> datetime.date | None:
         try:

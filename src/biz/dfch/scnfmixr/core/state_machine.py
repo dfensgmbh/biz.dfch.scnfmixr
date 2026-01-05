@@ -116,6 +116,10 @@ from .transitions import (
     HelpingPlayback,
 )
 
+from .transitions.clear_date_time_name import SystemClearDate
+from .transitions.clear_date_time_name import SystemClearTime
+from .transitions.clear_date_time_name import SystemClearName
+
 
 class State(Enum):
     """Names for state menu map."""
@@ -390,10 +394,10 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.SELECT_STORAGE,
                 menu[State.STORAGE]))
-            .add_transition(ReturningTrue(
+            .add_transition(SystemClearDate(
                 current.Event.SET_DATE,
                 menu[State.SET_DATE]))
-            .add_transition(ReturningTrue(
+            .add_transition(SystemClearTime(
                 current.Event.SET_TIME,
                 menu[State.SET_TIME]))
             .add_transition(StoppingSystem(
@@ -474,6 +478,9 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.START_PLAYBACK,
                 menu[State.PLAYBACK]))
+            .add_transition(SystemClearName(
+                current.Event.SET_NAME,
+                menu[State.SET_NAME]))
             .add_transition(StoppingSystem(
                 current.Event.STOP_SYSTEM,
                 menu[State.FINAL]))
