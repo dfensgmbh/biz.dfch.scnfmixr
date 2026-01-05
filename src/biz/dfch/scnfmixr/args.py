@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Module Arguments."""
+"""Module args."""
 
 import argparse
 from dataclasses import dataclass
@@ -21,10 +21,12 @@ import re
 
 from biz.dfch.i18n import LanguageCode
 from .public import SKIP_USB_PORT
-from .public.audio import FileFormat, Format, SampleRate, AudioDevice
-from .public.system import UsbPort
-from .public.storage import StorageDevice
+from .public.audio import AudioDevice
+from .public.audio import FileFormat
+from .public.audio import Format
+from .public.audio import SampleRate
 from .public.input import InputDevice
+from .public.storage import StorageDevice
 
 
 __all__ = [
@@ -125,7 +127,7 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
         parser.add_argument(
             "--use-random-name", "-rn",
             action="store_true",
-            help="Use random name."
+            help="Use pseudo-random name."
         )
 
         # Audio format and audio parameters.
@@ -176,21 +178,21 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
             "--local", "-lcl",
             type=str,
             dest=AudioDevice.LCL.name,
-            default=UsbPort.BOTTOM_LEFT.value,
+            default=SKIP_USB_PORT,
             help="Specifies USB port for local audio device."
         )
         parser.add_argument(
             "--external1", "-ex1",
             type=str,
             dest=AudioDevice.EX1.name,
-            default=UsbPort.TOP_RIGHT.value,
+            default=SKIP_USB_PORT,
             help="Specifies USB port for external audio device 1."
         )
         parser.add_argument(
             "--external2", "-ex2",
             type=str,
             dest=AudioDevice.EX2.name,
-            default=UsbPort.BOTTOM_RIGHT.value,
+            default=SKIP_USB_PORT,
             help="Specifies USB port for external audio device 2."
         )
 

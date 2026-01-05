@@ -17,9 +17,6 @@
 
 from .system_time import SystemTime
 
-# DFTODO - what is this module doing here in public.system?
-from .usb_port import UsbPort
-
 from .message_base import (
     IMessage,
     MessageBase,
@@ -62,5 +59,4 @@ __all__ = [
     "NotificationLow",
     "MessagePriority",
     "SystemTime",
-    "UsbPort",
 ]

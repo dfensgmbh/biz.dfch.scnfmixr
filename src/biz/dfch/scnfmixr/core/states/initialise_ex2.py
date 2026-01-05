@@ -19,6 +19,10 @@ from __future__ import annotations
 from enum import StrEnum
 
 from biz.dfch.logging import log
+
+from ...app import ApplicationContext
+from ...public import SKIP_USB_PORT
+from ...public.audio import AudioDevice
 from ...public.input import InputEventMap
 from ...public.system.messages import SystemMessage
 from ..fsm import UiEventInfo
@@ -59,6 +63,14 @@ class InitialiseEx2(StateBase):
         assert ctx and isinstance(ctx, ExecutionContext)
 
         if ctx.error:
+            return
+
+        app_ctx = ApplicationContext.Factory.get()
+        value = app_ctx.audio_device_map[AudioDevice.EX2]
+        if SKIP_USB_PORT == value:
+            log.info("Skipping device '%s' ...", AudioDevice.EX2.name)
+            msg = SystemMessage.InputEvent(InitialiseEx2.Event.SKIP_DEVICE)
+            ctx.events.publish_first(msg)
             return
 
         log.info("Enqueueing event: '%s' [%s].",
