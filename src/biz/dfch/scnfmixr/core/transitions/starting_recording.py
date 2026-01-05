@@ -81,7 +81,7 @@ class StartingRecording(TransitionBase):
                     suffix=suffix
                 )
 
-                log.debug("[%s] Filename '%s' [path: %s] [file: %s]",
+                log.debug("[%s] Filename '%s' [path: %s] [exists: %s]",
                           device.name,
                           file.fullname,
                           file.direxists,
