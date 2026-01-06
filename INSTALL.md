@@ -541,6 +541,254 @@ MPD_HOST=/run/user/1000/mpd.playback.socket mpc status
 
 Note: as mentioned above, the user id is hardcoded to `1000` (which is `admin`).
 
+# Hardening
+
+These are the steps for "Hardening" the system:
+
+## Boot order
+
+Make sure, that the system only starts from internal eMMC.
+
+NOTE: This is a CM5 "Lite" Compute Module. This Compute Module has integrated eMMC. The external SD card will not operate.
+
+```sh
+$ sudo rpi-eeprom-config --edit
+
+[all]  
+BOOT_ORDER=0xf1
+```
+
+## `pi` user account
+
+Make sure, that there is no `pi` user account.
+
+```sh
+id pi
+```
+
+If there is a `pi` user account, remove the user account.
+
+## `root` user account
+
+Make sure, that the `root` account is not active and that the account cannot login.
+
+```sh
+$ sudo passwd -l root
+$ sudo vipw
+
+root:x:0:0:root:/root:/bin/bash
+```
+
+Make sure, that the `root` user account has no password.
+
+```sh
+$ sudo cat /etc/shadow | grep -i root
+root:!*:19747:0:99999:7:::
+     ^
+$ sudo passwd -S root
+
+root L 2025-01-01 0 99999 7 -1
+     ^
+```
+
+## `admin` user account
+
+Make sure, that the `admin` user account has a strong password.
+
+## Disable automatic mount of storage
+
+```sh
+$ sudo systemctl disable --now systemd-udev-trigger
+```
+
+NOTE: USB storage devices load with `noexec,nodev,nosuid`
+
+## Disable wired network connection `eth0`
+
+```sh
+$ sudo nano /etc/systemd/system/disable-eth0.service
+
+[Unit]
+Description=Disable eth0 at boot
+After=network-pre.target
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/ip link set dev eth0 down
+
+[Install]
+WantedBy=multi-user.target
+
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable disable-eth0.service
+
+$ sudo systemctl disable --now NetworkManager.service 2>/dev/null || true
+$ sudo systemctl disable --now systemd-networkd.service 2>/dev/null || true
+```
+
+Also make sure, that the "SSH Server" is set to OFF.
+
+```sh
+$ sudo systemctl disable --now NetworkManager.service
+```
+
+## Allow only specific USB devices
+
+### USB network device blacklist
+
+```sh
+sudo nano /etc/udev/rules.d/10-usb-network-blacklist.rules
+```
+
+```sh
+# 10-usb-network-blacklist.rules
+# Block any USB device exposing a network-related interface (CDC / wireless).
+
+# Match USB interfaces with Communication (0x02) class
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", ATTR{bInterfaceClass}=="02", RUN+="/bin/sh -c 'echo -n %k > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-net-deny \"BLOCKED USB network-like interface: %k (class=02)\"'"
+
+# Match USB interfaces with Wireless Controller (0x0e) class
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", ATTR{bInterfaceClass}=="0e", RUN+="/bin/sh -c 'echo -n %k > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-net-deny \"BLOCKED USB network-like interface: %k (class=0e)\"'"
+
+```
+
+### USB device whitelist
+
+```sh
+$ sudo nano /etc/udev/rules.d/20-usb-device-whitelist.rules
+```
+
+```sh
+# 20-usb-device-whitelist.rules
+# Allow only the USB devices that are listed below are allowed.
+# Any other USB device is immediately unbound from the kernel driver.
+
+# ----------------------------
+# 1. Allowlist (by VID:PID)
+# ----------------------------
+
+# Linux Foundation root hubs
+SUBSYSTEM=="usb", ATTR{idVendor}=="1d6b", ATTR{idProduct}=="0002", GOTO="usb_whitelist_end"
+SUBSYSTEM=="usb", ATTR{idVendor}=="1d6b", ATTR{idProduct}=="0003", GOTO="usb_whitelist_end"
+
+# Raspberry Pi USB3 HUBs
+SUBSYSTEM=="usb", ATTR{idVendor}=="2e8a", ATTR{idProduct}=="000d", GOTO="usb_whitelist_end"
+SUBSYSTEM=="usb", ATTR{idVendor}=="2e8a", ATTR{idProduct}=="000e", GOTO="usb_whitelist_end"
+
+# EPOS EXPAND 40T (DSEA A/S), LCL
+SUBSYSTEM=="usb", ATTR{idVendor}=="1395", ATTR{idProduct}=="0386", GOTO="usb_whitelist_end"
+
+# Homertech USB Keyboard, HI1
+SUBSYSTEM=="usb", ATTR{idVendor}=="276d", ATTR{idProduct}=="ffe3", GOTO="usb_whitelist_end"
+
+# Elgato Stream Deck MK.2, HI2
+SUBSYSTEM=="usb", ATTR{idVendor}=="0fd9", ATTR{idProduct}=="0080", GOTO="usb_whitelist_end"
+
+# iStorage datAshur PRO2, RC1, RC2
+SUBSYSTEM=="usb", ATTR{idVendor}=="2d9b", ATTR{idProduct}=="8064", GOTO="usb_whitelist_end"
+
+# C-Media Audio Adapter (Unitek Y-247A), EX1, EX2
+SUBSYSTEM=="usb", ATTR{idVendor}=="0d8c", ATTR{idProduct}=="0014", GOTO="usb_whitelist_end"
+
+# Genesys Logic Hub (part of Pi Keyboard)
+SUBSYSTEM=="usb", ATTR{idVendor}=="05e3", ATTR{idProduct}=="0610", GOTO="usb_whitelist_end"
+
+# Holtek RPI Wired Keyboard 5
+SUBSYSTEM=="usb", ATTR{idVendor}=="04d9", ATTR{idProduct}=="0006", GOTO="usb_whitelist_end"
+
+#  PI Engineering, Inc. XK-24 HID
+SUBSYSTEM=="usb", ATTR{idVendor}=="05f3", ATTR{idProduct}=="0405", GOTO="usb_whitelist_end"
+
+# ---------------------------------
+# 2. Default DENY: unbind everything else
+# ---------------------------------
+# For any USB *device* (not interface) that reaches here (i.e. not whitelisted),
+# unbind it from the USB core driver and log the event.
+
+SUBSYSTEM=="usb", DEVTYPE=="usb_device", ACTION=="add", \
+  RUN+="/bin/sh -c 'echo -n %k > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-whitelist \"BLOCKED USB device: %k VID=%s{idVendor} PID=%s{idProduct}\"'"
+
+LABEL="usb_whitelist_end"
+
+```
+
+### USB class blacklist
+
+```sh
+sudo nano /etc/udev/rules.d/15-usb-class-blacklist.rules
+```
+
+```sh
+# 15-usb-class-blacklist.rules
+# Block any USB device that exposes an interface class OTHER than:
+#   01 (Audio), 03 (HID), 08 (Mass Storage), 09 (Hub)
+
+# Allow hubs (class 09) at device level - they are infrastructure
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{bDeviceClass}=="09", GOTO="usb_class_deny_end"
+
+# For interfaces: allow only 01, 03, 08, 09
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", ATTR{bInterfaceClass}!="01", ATTR{bInterfaceClass}!="03", ATTR{bInterfaceClass}!="08", ATTR{bInterfaceClass}!="09", RUN+="/bin/sh -c 'echo -n %k > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-class-deny \"BLOCKED USB device with disallowed interface class: %k\"'"
+
+LABEL="usb_class_deny_end"
+
+```
+
+### Activate rules
+
+```sh
+$ sudo udevadm control --reload
+$ sudo udevadm trigger
+```
+
+### Test rules
+
+```sh
+# Test 20 rule with a device on 4-1.4
+sudo udevadm test /sys/bus/usb/devices/4-1.4 2>&1 | grep -E '20-usb-device-whitelist|RUN'
+sudo journalctl -t usb-whitelist --since -2m
+```
+
+## Prepare for golden image
+
+```sh
+systemctl --user stop scnfmixr.service &
+
+systemctl --user stop mpd@playback.service
+systemctl --user stop mpd@menu.service
+rm ~/.config/mpd/menu/database
+rm ~/.config/mpd/playback/database
+
+systemctl --user stop jackd.service
+rm ~/biz.dfch.scnfmixr/src/app.log
+```
+
+## Clean the logs
+
+```sh
+sudo truncate -s 0 /var/log/auth.log
+sudo truncate -s 0 /var/log/syslog
+
+sudo truncate -s 0 /var/log/btmp
+sudo truncate -s 0 /var/log/wtmp
+sudo truncate -s 0 /var/log/lastlog
+
+sudo journalctl --vacuum-time=1s
+
+history -c
+history -w
+```
+
+## Enable filesystem overlay
+
+```sh
+sudo raspi-config
+
+# In "Performance" options, enable the file system overlay.
+# Make sure, that the "boot partition" is read-only.
+sudo reboot
+```
+
 
 # Prerequisites
 
