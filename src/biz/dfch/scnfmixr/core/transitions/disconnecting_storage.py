@@ -44,6 +44,13 @@ class DisconnectingStorage(TransitionBase):
             target_state=target)
 
     def invoke(self, _) -> bool:
+        result = DisconnectingStorage.disconnect()
+
+        return result
+
+    @staticmethod
+    def disconnect() -> bool:
+        """Disconnects and powers off any connected storage devices."""
 
         result = True
 

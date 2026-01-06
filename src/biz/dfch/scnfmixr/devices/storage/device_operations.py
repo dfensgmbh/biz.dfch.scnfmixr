@@ -23,6 +23,7 @@ from biz.dfch.asyn import Process
 from text import TextUtils
 
 from ...public.storage import StorageDeviceInfo
+from ...public.storage import FileName
 
 
 __all__ = [
@@ -72,6 +73,12 @@ class DeviceOperations:
     _MOUNT_FULLNAME = "/usr/bin/mount"
     _MOUNT_OPTION_OWNER = "-o"
     _MOUNT_OPTION_OWNER_VALUE = "uid=%s,gid=%s"
+    _MOUNT_OPTION_OWNER_VALUE = (
+        "rw,noexec,nosuid,nodev,"
+        "uid=%s,gid=%s,"
+        "fmask=0022,dmask=0022,iocharset=utf8,"
+        "errors=remount-ro"
+    )
     _UMOUNT_FULLNAME = "/usr/bin/umount"
 
     _uid: str
@@ -80,7 +87,7 @@ class DeviceOperations:
     _device_info: StorageDeviceInfo
 
     def __init__(self, value: StorageDeviceInfo):
-        """Initialises an instance of the object.
+        """Initializes an instance of the object.
 
         Args:
             value (StorageDeviceInfo): The storage device to manipulate.
@@ -124,6 +131,43 @@ class DeviceOperations:
 
         return 0 == process.exit_code
 
+    def clean(self) -> bool:
+        """Cleans a device.
+
+        Returns:
+            bool: True, if operation was successful; false, otherwise.
+        """
+
+        if not self.is_mounted:
+            log.error("The device '%s' is not mounted.",
+                      self._device_info.full_name)
+            return False
+
+        log.debug("Try to retrieve files from '%s' [%s] ...",
+                  self._device_info.full_name,
+                  self._device_info.mount_point)
+
+        for name in os.listdir(self._device_info.mount_point):
+            full_name = os.path.join(self._device_info.mount_point, name)
+            if not os.path.isfile(full_name):
+                continue
+
+            is_valid = FileName.is_valid_filename(name)
+            if not is_valid:
+                continue
+            log.debug("Found valid file '%s'.", full_name)
+
+            filename = FileName.from_full_name(full_name)
+            log.debug("Try to clean '%s' ...", filename.fullname)
+
+            result = filename.delete()
+            if result:
+                log.info("Try to clean '%s' SUCCEEDED.", full_name)
+            else:
+                log.error("Try to clean '%s' FAILED.", full_name)
+
+        return True
+
     def unmount(self) -> bool:
         """Unmounts a device.
 
@@ -162,12 +206,7 @@ class DeviceOperations:
 
         return 0 == process.exit_code
 
-    def format(self) -> bool:
-        """Formats a partition."""
-
-        raise NotImplementedError("Not yet implemented.")
-
-    def format_disk(self, name: str) -> bool:
+    def initialize_disk(self, name: str) -> bool:
         """Removes all partitions and creates a new single partition with ExFAT
         file system."""
 

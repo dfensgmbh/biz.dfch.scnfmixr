@@ -75,6 +75,10 @@ class AudioRecorder:
     _sync_root: threading.Lock
     _callbacks: list[Callable[[threading.Event], None]]
     _processes: list[Process]
+
+    _recordings: list[list[FileName]]
+    _recordings_lock: threading.Lock
+
     state: AudioRecorder.Event
 
     items: dict[str, list[FileName]]
@@ -122,15 +126,15 @@ class AudioRecorder:
 
         if not isinstance(
                 message,
-                (IAudioRecorderMessage, SystemMessage)):
+                (IAudioRecorderMessage, SystemMessage.Shutdown)):
             return
 
         if isinstance(message, SystemMessage.Shutdown):
 
             log.info("%s: Stopping ...", type(message).__qualname__)
-            result = self.stop()
+            is_deleted = self.stop()
             log.info("%s: Stopping result: %s", type(
-                message).__qualname__, result)
+                message).__qualname__, is_deleted)
 
             return
 
@@ -176,6 +180,45 @@ class AudioRecorder:
 
             return
 
+        if isinstance(message, msgt.DeleteLastRecordingCommand):
+
+            log.debug("DeleteLastRecordingCommand")
+
+            with self._recordings_lock:
+                if self._recordings:
+                    items = self._recordings.pop()
+                else:
+                    log.error("No recordings.")
+                    self._message_queue.publish(
+                        msgt.DeleteLastRecordingNotification(False))
+                    return
+
+            result = True
+            log.debug("Try to delete last take ...")
+            for item in items:
+                log.debug("Try to delete last take ['%s'] ...", item.fullname)
+                is_deleted = item.delete()
+                result &= is_deleted
+                if is_deleted:
+                    log.info(
+                        "Try to delete last take ['%s'] SUCCEEDED.",
+                        item.fullname)
+                else:
+                    log.error(
+                        "Try to delete last take ['%s'] FAILED.",
+                        item.fullname)
+
+            if result:
+                log.info("Try to delete last take SUCCEEDED.")
+            else:
+                log.error("Try to delete last take FAILED.")
+            self._message_queue.publish(
+                msgt.DeleteLastRecordingNotification(result))
+
+            return
+
+        log.warning("Unrecognized message: '%s'", message.id)
+
     def __init__(self):
 
         if not AudioRecorder.Factory._sync_root.locked():
@@ -187,6 +230,8 @@ class AudioRecorder:
         self._sync_root = threading.Lock()
         self._callbacks = []
         self._processes = []
+        self._recordings = []
+        self._recordings_lock = threading.Lock()
         self.state = AudioRecorder.Event.STOPPED
         self.items = []
         self._cue_points_times = []
@@ -197,7 +242,8 @@ class AudioRecorder:
                 e, (msgt.RecordingStartCommand,
                     msgt.RecordingStopCommand,
                     msgt.RecordingCuePointCommand,
-                    SystemMessage)))
+                    msgt.DeleteLastRecordingCommand,
+                    SystemMessage.Shutdown)))
 
         log.info("Initializing OK.")
 
@@ -305,6 +351,11 @@ class AudioRecorder:
         JackTransport().start()
 
         for mixbus_device_name, filenames in items.items():
+            # Add the list of filenames to the recordings stacks used to delete
+            # last recordings.
+            with self._recordings_lock:
+                self._recordings.append(filenames)
+
             log.info("Starting recording OK. [%s]", [
                 e.fullname for e in filenames])
         self._set_state(AudioRecorder.Event.STARTED)

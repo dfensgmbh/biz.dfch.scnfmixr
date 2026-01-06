@@ -159,7 +159,7 @@ class AudioMenu(IAcquirable):
 
                     handler = self._message_handler.get(message.type)
                     if handler is None:
-                        log.warning("_worker: Unrecognised message: '%s' [%s].",
+                        log.warning("_worker: Unrecognized message: '%s' [%s].",
                                     type(message).__name__,
                                     message.name)
                         continue
@@ -200,7 +200,7 @@ class AudioMenu(IAcquirable):
             self._signal.set()
             return
 
-        log.warning("Unrecognised message received: '%s' [%s].",
+        log.warning("Unrecognized message received: '%s' [%s].",
                     type(message).__name__,
                     message.name)
 
@@ -214,7 +214,7 @@ class AudioMenu(IAcquirable):
         assert message.type is msgt.UiEventInfoStateEnterMessage
 
         log.debug("_on_state_enter ...")
-        result = self._client.load_resource_queue(lambda e: e in message.path)
+        result = self._client.load_menu_queue(lambda e: e in message.path)
         if 0 >= len(result):
             log.warning("_on_state_enter: no file found.")
             return
@@ -246,7 +246,7 @@ class AudioMenu(IAcquirable):
 
         log.debug("_on_state_leave ...")
         self._client.clear()
-        result = self._client.load_resource_queue(lambda e: e in message.path)
+        result = self._client.load_menu_queue(lambda e: e in message.path)
         if 0 >= len(result):
             log.warning("_on_state_leave: no file found.")
             return
@@ -264,7 +264,7 @@ class AudioMenu(IAcquirable):
         assert message.type is msgt.UiEventInfoTransitionEnterMessage
 
         log.debug("_on_transition_enter ...")
-        result = self._client.load_resource_queue(lambda e: e in message.path)
+        result = self._client.load_menu_queue(lambda e: e in message.path)
         if 0 >= len(result):
             log.warning("_on_transition_enter: no file found.")
             return
@@ -283,7 +283,7 @@ class AudioMenu(IAcquirable):
 
         log.debug("_on_transition_leave ...")
         self._client.clear()
-        result = self._client.load_resource_queue(lambda e: e in message.path)
+        result = self._client.load_menu_queue(lambda e: e in message.path)
         if 0 >= len(result):
             log.warning("_on_transition_leave: no file found.")
             return

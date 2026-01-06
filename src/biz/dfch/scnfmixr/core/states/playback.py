@@ -20,7 +20,7 @@ from enum import StrEnum
 
 from ...public.input import InputEventMap
 from ...public.messages.audio_playback import AudioPlayback
-from ...playback.audio_playback import AudioPlayback as player
+from ...playback.audio_playback import AudioPlayback as AudioPlayer
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
 from ..transitions import SelectingResume
@@ -90,7 +90,7 @@ class Playback(StateBase):
             return
 
         # get / acquire are idempotent - safe to call them multiple times.
-        player.Factory.get()
+        AudioPlayer.Factory.get()
 
         # The start message shall be sent nevertheless.
         ctx.events.publish(AudioPlayback.PlaybackStartCommand())

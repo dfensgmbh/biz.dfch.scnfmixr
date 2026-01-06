@@ -33,21 +33,26 @@ from .alsa_stream0 import Capture44100
 class TestAlsaStreamInfoVisitor(unittest.TestCase):
     """Class for testing sound card stream info."""
 
+    def setUp(self):
+        self._alsa_stream_info = AlsaStreamInfoVisitor()
+        self._dic = {
+            "Playback:": self._alsa_stream_info.process_playback,
+            "Capture:": self._alsa_stream_info.process_capture,
+            "Interface ": self._alsa_stream_info.process_interface,
+            "Format:": self._alsa_stream_info.process_format,
+            "Channels:": self._alsa_stream_info.process_channels,
+            "Rates:": self._alsa_stream_info.process_rates,
+            "Bits:": self._alsa_stream_info.process_bits,
+            "Channel map:": self._alsa_stream_info.process_map,
+        }
+        return super().setUp()
+
     def test_parsing_stream_data_atomos_returns_single_capture_interface(self):
         """Atomos has a 'continuous' interface rate."""
 
         # Arrange
-        alsa_stream_info = AlsaStreamInfoVisitor()
-        dic = {
-            "Playback:": alsa_stream_info.process_playback,
-            "Capture:": alsa_stream_info.process_capture,
-            "Interface ": alsa_stream_info.process_interface,
-            "Format:": alsa_stream_info.process_format,
-            "Channels:": alsa_stream_info.process_channels,
-            "Rates:": alsa_stream_info.process_rates,
-            "Bits:": alsa_stream_info.process_bits,
-            "Channel map:": alsa_stream_info.process_map,
-        }
+        alsa_stream_info = self._alsa_stream_info
+        dic = self._dic
 
         parser = MultiLineTextParser(indent=" ", length=2, dic=dic)
 
@@ -76,17 +81,8 @@ class TestAlsaStreamInfoVisitor(unittest.TestCase):
         """Atomos has a 'continuous' interface rate."""
 
         # Arrange
-        alsa_stream_info = AlsaStreamInfoVisitor()
-        dic = {
-            "Playback:": alsa_stream_info.process_playback,
-            "Capture:": alsa_stream_info.process_capture,
-            "Interface ": alsa_stream_info.process_interface,
-            "Format:": alsa_stream_info.process_format,
-            "Channels:": alsa_stream_info.process_channels,
-            "Rates:": alsa_stream_info.process_rates,
-            "Bits:": alsa_stream_info.process_bits,
-            "Channel map:": alsa_stream_info.process_map,
-        }
+        alsa_stream_info = self._alsa_stream_info
+        dic = self._dic
 
         parser = MultiLineTextParser(indent=" ", length=2, dic=dic)
 
@@ -122,17 +118,8 @@ class TestAlsaStreamInfoVisitor(unittest.TestCase):
 
             return True
 
-        alsa_stream_parser = AlsaStreamInfoVisitor()
-        dic = {
-            "Playback:": alsa_stream_parser.process_playback,
-            "Capture:": alsa_stream_parser.process_capture,
-            "Interface ": alsa_stream_parser.process_interface,
-            "Format:": alsa_stream_parser.process_format,
-            "Channels:": alsa_stream_parser.process_channels,
-            "Rates:": alsa_stream_parser.process_rates,
-            "Bits:": alsa_stream_parser.process_bits,
-            "Channel map:": alsa_stream_parser.process_map,
-        }
+        alsa_stream_info = self._alsa_stream_info
+        dic = self._dic
 
         parser = MultiLineTextParser(indent=" ",
                                      length=2,
@@ -143,15 +130,15 @@ class TestAlsaStreamInfoVisitor(unittest.TestCase):
         parser.parse(UgreenKtMicro)
 
         # Assert
-        self.assertEqual(len(alsa_stream_parser.get_playback_interfaces()), 2)
-        self.assertEqual(len(alsa_stream_parser.get_capture_interfaces()), 1)
+        self.assertEqual(len(alsa_stream_info.get_playback_interfaces()), 2)
+        self.assertEqual(len(alsa_stream_info.get_capture_interfaces()), 1)
 
-        for interface in alsa_stream_parser.get_interfaces():
+        for interface in alsa_stream_info.get_interfaces():
             log.info(interface.to_dict())
 
         filtered = [
             interface
-            for interface in alsa_stream_parser.get_interfaces()
+            for interface in alsa_stream_info.get_interfaces()
             if interface.state == AlsaStreamInfoVisitorState.PLAYBACK
             and (interface.bit_depth in (16, 24))
             and 48000 in interface.rates
@@ -163,7 +150,7 @@ class TestAlsaStreamInfoVisitor(unittest.TestCase):
 
         filtered = [
             interface
-            for interface in alsa_stream_parser.get_interfaces()
+            for interface in alsa_stream_info.get_interfaces()
             if interface.state == AlsaStreamInfoVisitorState.CAPTURE
             and (interface.bit_depth in (16, 24))
             and 48000 in interface.rates
@@ -173,20 +160,11 @@ class TestAlsaStreamInfoVisitor(unittest.TestCase):
         log.info("best_capture: '%s'", best_capture)
 
     def test_parsing_stream_data_sound_devices_succeeds(self):
-        """Sound Deivces MixPre-6 II."""
+        """Sound Devices MixPre-6 II."""
 
         # Arrange
-        alsa_stream_parser = AlsaStreamInfoVisitor()
-        dic = {
-            "Playback:": alsa_stream_parser.process_playback,
-            "Capture:": alsa_stream_parser.process_capture,
-            "Interface ": alsa_stream_parser.process_interface,
-            "Format:": alsa_stream_parser.process_format,
-            "Channels:": alsa_stream_parser.process_channels,
-            "Rates:": alsa_stream_parser.process_rates,
-            "Bits:": alsa_stream_parser.process_bits,
-            "Channel map:": alsa_stream_parser.process_map,
-        }
+        alsa_stream_info = self._alsa_stream_info
+        dic = self._dic
 
         parser = MultiLineTextParser(" ", 2, dic)
 
@@ -194,15 +172,15 @@ class TestAlsaStreamInfoVisitor(unittest.TestCase):
         parser.parse(MixPre6II)
 
         # Assert
-        self.assertEqual(len(alsa_stream_parser.get_playback_interfaces()), 2)
-        self.assertEqual(len(alsa_stream_parser.get_capture_interfaces()), 2)
+        self.assertEqual(len(alsa_stream_info.get_playback_interfaces()), 2)
+        self.assertEqual(len(alsa_stream_info.get_capture_interfaces()), 2)
 
-        for interface in alsa_stream_parser.get_interfaces():
+        for interface in alsa_stream_info.get_interfaces():
             log.info(interface.to_dict())
 
         filtered = [
             interface
-            for interface in alsa_stream_parser.get_interfaces()
+            for interface in alsa_stream_info.get_interfaces()
             if interface.state == AlsaStreamInfoVisitorState.PLAYBACK
             and (interface.bit_depth in (16, 24))
             and 48000 in interface.rates
@@ -214,7 +192,7 @@ class TestAlsaStreamInfoVisitor(unittest.TestCase):
 
         filtered = [
             interface
-            for interface in alsa_stream_parser.get_interfaces()
+            for interface in alsa_stream_info.get_interfaces()
             if interface.state == AlsaStreamInfoVisitorState.CAPTURE
             and (interface.bit_depth == 16 or interface.bit_depth == 24)
             and 48000 in interface.rates

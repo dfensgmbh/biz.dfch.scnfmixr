@@ -79,6 +79,22 @@ class AudioRecorder:
 
             self.value = value
 
+    class DeleteLastRecordingNotification(NotificationMedium,
+                                          IAudioRecorderMessage):
+        """Notification result of the DeleteLastRecording command."""
+
+        value: bool
+
+        def __init__(self, value: bool):
+            super().__init__()
+
+            assert isinstance(value, bool)
+
+            self.value = value
+
+    class DeleteLastRecordingCommand(CommandMedium, IAudioRecorderMessage):
+        """Delete the last recording."""
+
     class RecordingStopCommand(CommandMedium, IAudioRecorderMessage):
         """Stop recording."""
 

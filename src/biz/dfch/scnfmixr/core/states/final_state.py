@@ -17,7 +17,10 @@
 
 from __future__ import annotations
 from enum import StrEnum
+import time
 
+from biz.dfch.asyn import Process
+from biz.dfch.asyn import ThreadPool
 from biz.dfch.logging import log
 
 from ...app import ApplicationContext
@@ -25,6 +28,7 @@ from ...public.input import InputEventMap
 from ...system import MessageQueue
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
+from ..transitions.disconnecting_storage import DisconnectingStorage
 
 from ...public.system.messages import SystemMessage
 
@@ -32,11 +36,15 @@ from ...public.system.messages import SystemMessage
 class FinalState(StateBase):
     """Implements FinalState of the application."""
 
+    _SUDO_FULLNAME = "/usr/bin/sudo"
+    _SHUTDOWN_FULLNAME = "/usr/sbin/shutdown"
+    _SHUTDOWN_OPT_HALT = "-h"
+    _SHUTDOWN_OPT_NOW = "now"
+
     class Event(StrEnum):
         """Events for this state."""
 
         HELP = InputEventMap.KEY_ASTERISK
-        MENU = InputEventMap.KEY_5
 
     def __init__(self):
 
@@ -71,9 +79,30 @@ class FinalState(StateBase):
 
         log.info("Application context: '%s'.", app_ctx)
 
+        DisconnectingStorage.disconnect()
+
+        tp = ThreadPool.Factory.get(self.__class__.__name__, 1)
+        tp.invoke(self._shutdown)
+
         log.info("Initiating application termination COMPLETED.")
 
-        return True
+    def _shutdown(self, wait_time_ms: int = 10000) -> None:
+        """Stop the system."""
+
+        log.debug("Try to stop the system. Waiting '%s' ms ...", wait_time_ms)
+
+        time.sleep(wait_time_ms / 1000)
+
+        log.debug("Try to stop the system now.")
+        cmd: list[str] = [
+            self._SUDO_FULLNAME,
+            self._SHUTDOWN_FULLNAME,
+            self._SHUTDOWN_OPT_HALT,
+            self._SHUTDOWN_OPT_NOW,
+        ]
+        log.info("Try to stop the system now. Pending ...")
+
+        Process.start(cmd, wait_on_completion=True)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

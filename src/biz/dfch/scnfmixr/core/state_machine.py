@@ -89,6 +89,7 @@ from .transitions.starting_recording_mixes import (
     StartingRecordingMx1,
     StartingRecordingMx2,
 )
+from .transitions.deleting_last_take import DeletingLastTake
 
 from .states import OnRecord
 from .transitions import (
@@ -114,6 +115,10 @@ from .transitions import (
     LeavingPlayback,
     HelpingPlayback,
 )
+
+from .transitions.clear_date_time_name import SystemClearDate
+from .transitions.clear_date_time_name import SystemClearTime
+from .transitions.clear_date_time_name import SystemClearName
 
 
 class State(Enum):
@@ -373,8 +378,6 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.HELP,
                 current))
-            .add_transition(ReturningTrue(current.Event.MENU,
-                                          current))
         )
         current: System = menu[State.SYSTEM]
         (
@@ -391,10 +394,10 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.SELECT_STORAGE,
                 menu[State.STORAGE]))
-            .add_transition(ReturningTrue(
+            .add_transition(SystemClearDate(
                 current.Event.SET_DATE,
                 menu[State.SET_DATE]))
-            .add_transition(ReturningTrue(
+            .add_transition(SystemClearTime(
                 current.Event.SET_TIME,
                 menu[State.SET_TIME]))
             .add_transition(StoppingSystem(
@@ -444,6 +447,12 @@ class StateMachine:
             .add_transition(DetectingRc2(
                 current.Event.DETECT_RC2,
                 current))
+            .add_transition(CleaningRc1(
+                current.Event.CLEAN_RC1,
+                current))
+            .add_transition(CleaningRc2(
+                current.Event.CLEAN_RC2,
+                current))
         )
         current: Main = menu[State.MAIN]
         (
@@ -463,9 +472,15 @@ class StateMachine:
             .add_transition(StartingRecordingMx2(
                 current.Event.START_RECORDING_MX2,
                 menu[State.ON_RECORD]))
+            .add_transition(DeletingLastTake(
+                current.Event.DELETE_LAST_TAKE,
+                current))
             .add_transition(ReturningTrue(
                 current.Event.START_PLAYBACK,
                 menu[State.PLAYBACK]))
+            .add_transition(SystemClearName(
+                current.Event.SET_NAME,
+                menu[State.SET_NAME]))
             .add_transition(StoppingSystem(
                 current.Event.STOP_SYSTEM,
                 menu[State.FINAL]))
@@ -724,8 +739,5 @@ class StateMachine:
 
         self._fsm = Fsm(initial_state=menu[State.INIT_LCL], ctx=self._ctx)
         self._fsm.start()
-
-        # for line in self._fsm.visualize():
-        #     log.debug(line)
 
         log.info("Initializing state machine OK.")

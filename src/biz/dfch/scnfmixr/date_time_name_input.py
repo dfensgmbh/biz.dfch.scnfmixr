@@ -38,18 +38,18 @@ class DateTimeNameInput():
     _is_valid_date: bool
     _is_valid_time: bool
     _is_valid_name: bool
-    _datestring: str
-    _timestring: str
-    _namestring: str
+    _date_string: str
+    _time_string: str
+    _name_string: str
 
     def __init__(self):
 
         self._date = None
         self._time = None
         self._name = None
-        self._datestring = ""
-        self._timestring = ""
-        self._namestring = ""
+        self._date_string = ""
+        self._time_string = ""
+        self._name_string = ""
 
         self.reset()
 
@@ -75,7 +75,7 @@ class DateTimeNameInput():
 
         assert value is not None and isinstance(value, datetime.date)
 
-        self._datestring = ""
+        self._date_string = ""
         self._date = value
 
         st = SystemTime.Factory.get()
@@ -90,7 +90,7 @@ class DateTimeNameInput():
 
         assert value is not None and isinstance(value, datetime.time)
 
-        self._timestring = ""
+        self._time_string = ""
         self._time = value
 
         st = SystemTime.Factory.get()
@@ -105,13 +105,13 @@ class DateTimeNameInput():
 
         assert value and value.strip()
 
-        self._namestring = ""
+        self._name_string = ""
         self._name = value
 
     def set_pseudo_random_name(self) -> None:
         """Sets a pseudo random name."""
 
-        pool = string.ascii_lowercase + string.digits
+        pool = string.digits
         value = ''.join(random.choices(pool, k=8))
 
         self._name = value
@@ -131,15 +131,30 @@ class DateTimeNameInput():
         """Determines whether the name is a valid name."""
         return bool(self._name)
 
+    def clear_date(self) -> None:
+        """Clears the date."""
+
+        self._date_string = ""
+        self._date = None
+
+    def clear_time(self) -> None:
+        """Clears the time."""
+
+        self._time_string = ""
+        self._time = None
+
+    def clear_name(self) -> None:
+        """Clears the name."""
+
+        self._name_string = ""
+        self._name = None
+
     def reset(self) -> None:
         """Resets all data."""
 
-        self._date = None
-        self._time = None
-        self._name = None
-        self._datestring = ""
-        self._timestring = ""
-        self._namestring = ""
+        self.clear_date()
+        self.clear_time()
+        self.clear_name()
 
     def _validate_date(self, value: str) -> datetime.date | None:
         try:
@@ -186,13 +201,13 @@ class DateTimeNameInput():
             self._EVENT_BACKSPACE, self._EVENT_ENTER)
 
         if self._EVENT_BACKSPACE == value:
-            if self._datestring is not None and self._datestring.strip():
-                self._datestring = self._datestring[:-1]
+            if self._date_string is not None and self._date_string.strip():
+                self._date_string = self._date_string[:-1]
             return True
 
         if self._EVENT_ENTER == value:
-            result = self._validate_date(self._datestring)
-            self._datestring = ""
+            result = self._validate_date(self._date_string)
+            self._date_string = ""
             if result is None:
                 return True
 
@@ -200,7 +215,7 @@ class DateTimeNameInput():
             return True
 
         digit = int(value)
-        self._datestring = f"{self._datestring}{digit}"
+        self._date_string = f"{self._date_string}{digit}"
         self._date = None
 
         return True
@@ -215,13 +230,13 @@ class DateTimeNameInput():
             self._EVENT_BACKSPACE, self._EVENT_ENTER)
 
         if self._EVENT_BACKSPACE == value:
-            if self._timestring is not None and self._timestring.strip():
-                self._timestring = self._timestring[:-1]
+            if self._time_string is not None and self._time_string.strip():
+                self._time_string = self._time_string[:-1]
             return True
 
         if self._EVENT_ENTER == value:
-            result = self._validate_time(self._timestring)
-            self._timestring = ""
+            result = self._validate_time(self._time_string)
+            self._time_string = ""
             if result is None:
                 return True
 
@@ -229,7 +244,7 @@ class DateTimeNameInput():
             return True
 
         digit = int(value)
-        self._timestring = f"{self._timestring}{digit}"
+        self._time_string = f"{self._time_string}{digit}"
         self._time = None
 
         return True
@@ -244,13 +259,13 @@ class DateTimeNameInput():
             self._EVENT_BACKSPACE, self._EVENT_ENTER)
 
         if self._EVENT_BACKSPACE == value:
-            if self._namestring is not None and self._namestring.strip():
-                self._namestring = self._namestring[:-1]
+            if self._name_string is not None and self._name_string.strip():
+                self._name_string = self._name_string[:-1]
             return True
 
         if self._EVENT_ENTER == value:
-            result = self._validate_name(self._namestring)
-            self._namestring = ""
+            result = self._validate_name(self._name_string)
+            self._name_string = ""
             if result is None:
                 return True
 
@@ -258,7 +273,7 @@ class DateTimeNameInput():
             return True
 
         digit = int(value)
-        self._namestring = f"{self._namestring}{digit}"
+        self._name_string = f"{self._name_string}{digit}"
         self._name = None
 
         return True

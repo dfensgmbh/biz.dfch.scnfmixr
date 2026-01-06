@@ -21,7 +21,7 @@ def main():
 
     # DFTODO: Currently, we define the relative part hard coded. It is
     # important that we create the I18n instance before any imports to log.
-    # Maye we find a better solution for this in some time.
+    # Maybe we find a better solution for this in some time.
     from biz.dfch.i18n import I18n  # pylint: disable=C0415
     I18n.Factory.create("biz/dfch/scnfmixr")
 

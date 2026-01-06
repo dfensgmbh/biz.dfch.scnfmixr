@@ -31,6 +31,8 @@ class Format(StrEnum):
     FLOAT_LE = "FLOAT_LE"
     DEFAULT = S24_3LE
 
+    # DFTODO - we have a bug here.
+    # Function indicates to return int, but does return Enum.
     def get_bit_depth(self) -> int:
         """Returns the bit depth of a format."""
 

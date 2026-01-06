@@ -17,5 +17,7 @@
 
 from __future__ import annotations
 
+from .constant import SKIP_USB_PORT
 __all__ = [
+    "SKIP_USB_PORT"
 ]

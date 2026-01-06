@@ -43,7 +43,7 @@ class App:  # pylint: disable=R0903
     _VERSION_REQUIRED_MINOR = 11
 
     # Note: also adjust in pyproject.toml
-    _VERSION = "3.0.0"
+    _VERSION = "4.0.0"
     _PROG_NAME = "scnfmixr"
 
     _signal_handler: SignalHandler
@@ -56,6 +56,8 @@ class App:  # pylint: disable=R0903
 
     def invoke(self) -> None:
         """Main entry point for this class."""
+
+        self._signal_handler = SignalHandler()
 
         args = Arguments(prog_name=self._PROG_NAME, version=self._VERSION).get()
 
@@ -138,7 +140,7 @@ class App:  # pylint: disable=R0903
                 mx.acquire()
                 mixer.mixbus.add_device(mx)
 
-            log.warning("Device names [%s]", [
+            log.info("Device names [%s]", [
                 e.name for e in mixer.mixbus.devices])
             log.debug("Device source points [%s]", [
                       e.name for e in mixer.mixbus.sources])

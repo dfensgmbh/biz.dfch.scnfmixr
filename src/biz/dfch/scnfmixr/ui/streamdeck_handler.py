@@ -27,15 +27,14 @@ from StreamDeck.Devices.StreamDeckOriginalV2 import (  # type: ignore
 from biz.dfch.logging import log
 from biz.dfch.i18n.language_code import LanguageCode
 
+from ..input.streamdeck_image_library import StreamdeckImageLibrary
+from ..input.streamdeck_input_resolver import StreamdeckInputResolver
 from ..public.input import StreamdeckInput
 from ..public.system import MessageBase
 from ..public.system.messages import SystemMessage
 from ..system import MessageQueue
 
 from .event_handler_base import EventHandlerBase
-
-from ..input.streamdeck_image_library import StreamdeckImageLibrary
-from ..input.streamdeck_input_resolver import StreamdeckInputResolver
 
 
 class StreamdeckHandler(EventHandlerBase):

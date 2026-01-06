@@ -19,6 +19,10 @@ from __future__ import annotations
 from enum import StrEnum
 
 from biz.dfch.logging import log
+
+from ...app import ApplicationContext
+from ...public import SKIP_USB_PORT
+from ...public.audio import AudioDevice
 from ...public.input import InputEventMap
 from ...public.system.messages import SystemMessage
 from ..fsm import UiEventInfo
@@ -30,7 +34,7 @@ from ..state_event import StateEvent
 class InitialiseEx2(StateBase):
     """External Phone EX2 Detection.
 
-    Detects the external input/ouput (phone 2).
+    Detects the external input/output (phone 2).
     """
 
     class Event(StrEnum):
@@ -58,13 +62,23 @@ class InitialiseEx2(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        if not ctx.error:
-            log.info("Enqueueing event: '%s' [%s].",
-                     InitialiseEx2.Event.DETECT_DEVICE.name,
-                     InitialiseEx2.Event.DETECT_DEVICE.value)
+        if ctx.error:
+            return
 
-            msg = SystemMessage.InputEvent(InitialiseEx2.Event.DETECT_DEVICE)
+        app_ctx = ApplicationContext.Factory.get()
+        value = app_ctx.audio_device_map[AudioDevice.EX2]
+        if SKIP_USB_PORT == value:
+            log.info("Skipping device '%s' ...", AudioDevice.EX2.name)
+            msg = SystemMessage.InputEvent(InitialiseEx2.Event.SKIP_DEVICE)
             ctx.events.publish_first(msg)
+            return
+
+        log.info("Enqueueing event: '%s' [%s].",
+                 InitialiseEx2.Event.DETECT_DEVICE.name,
+                 InitialiseEx2.Event.DETECT_DEVICE.value)
+
+        msg = SystemMessage.InputEvent(InitialiseEx2.Event.DETECT_DEVICE)
+        ctx.events.publish_first(msg)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

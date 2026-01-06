@@ -154,18 +154,34 @@ class FileName:  # pylint: disable=R0903
 
         return True
 
+    @classmethod
+    def from_full_name(cls, value: str) -> FileName:
+        """Parses a given filename."""
+
+        assert isinstance(value, str) and value.strip()
+
+        instance = cls.__new__(cls)
+        instance._value = value
+
+        return instance
+
     def delete(self) -> bool:
         """Removes an existing file.
 
-        Raises:
-            FileNotFoundError: If the file does not exist.
-            Exception: Any other exception raised by `os.remove`.
+        Returns:
+            out[bool]:
+                True, if delete is successful. 
+                False, if file does not exist or if the file cannot be deleted.
         """
 
         if not self.exists:
-            raise FileNotFoundError(self._value)
+            return False
 
-        os.remove(self._value)
+        try:
+            os.remove(self._value)
+            return True
+        except Exception:  # pylint: disable=W0718
+            return False
 
     def __str__(self):
         return self._value

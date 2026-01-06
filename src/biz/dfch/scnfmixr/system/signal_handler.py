@@ -17,6 +17,8 @@
 
 import signal
 
+from biz.dfch.logging import log
+
 from ..public.messages import SystemMessage
 from .message_queue import MessageQueue
 
@@ -26,15 +28,11 @@ __all__ = [
 
 
 class SignalHandler:
-    """Handles SIGINT und SIGTERM events."""
-
-    _mq: MessageQueue
+    """Handles SIGTERM events."""
 
     def __init__(self):
 
-        self._mq = MessageQueue.Factory.get()
-
-        signal.signal(signal.SIGINT, self._on_signal)
+        signal.signal(signal.SIGTERM, self._on_signal)
 
     def _on_signal(self, signum, frame):
         """Message handler for SIGINT and SIGTERM."""
@@ -42,4 +40,7 @@ class SignalHandler:
         _ = signum
         _ = frame
 
-        self._mq.publish(SystemMessage.Shutdown())
+        log.info("SIGTERM '%s' [%s] detected. Shutting down.", signum, frame)
+
+        _mq = MessageQueue.Factory.get()
+        _mq.publish(SystemMessage.Shutdown())

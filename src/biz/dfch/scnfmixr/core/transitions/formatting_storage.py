@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Module initialising_storage."""
+"""Module initializing_storage."""
 
 from biz.dfch.logging import log
 
@@ -79,7 +79,7 @@ class FormattingStorage(TransitionBase):
             log.info("Unmounting storage device '%s' OK.",
                      self._device.name)
 
-        result = op.format_disk(self._device.name)
+        result = op.initialize_disk(self._device.name)
         if not result:
             log.error("Formatting storage device '%s' FAILED.",
                       self._device.name)

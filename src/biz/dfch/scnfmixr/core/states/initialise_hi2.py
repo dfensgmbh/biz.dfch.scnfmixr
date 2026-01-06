@@ -19,7 +19,9 @@ from __future__ import annotations
 from enum import StrEnum
 
 from biz.dfch.logging import log
-from ...public.input import InputEventMap
+from ...app import ApplicationContext
+from ...public import SKIP_USB_PORT
+from ...public.input import InputDevice, InputEventMap
 from ...public.system.messages import SystemMessage
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
@@ -55,13 +57,23 @@ class InitialiseHi2(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        if not ctx.error:
-            log.info("Enqueueing event: '%s' [%s].",
-                     InitialiseHi2.Event.DETECT_DEVICE.name,
-                     InitialiseHi2.Event.DETECT_DEVICE.value)
+        if ctx.error:
+            return
 
-            msg = SystemMessage.InputEvent(InitialiseHi2.Event.DETECT_DEVICE)
+        app_ctx = ApplicationContext.Factory.get()
+        value = app_ctx.input_device_map[InputDevice.HI2]
+        if SKIP_USB_PORT == value:
+            log.info("Skipping device '%s' ...", InputDevice.HI2.name)
+            msg = SystemMessage.InputEvent(InitialiseHi2.Event.SKIP_DEVICE)
             ctx.events.publish_first(msg)
+            return
+
+        log.info("Enqueueing event: '%s' [%s].",
+                 InitialiseHi2.Event.DETECT_DEVICE.name,
+                 InitialiseHi2.Event.DETECT_DEVICE.value)
+
+        msg = SystemMessage.InputEvent(InitialiseHi2.Event.DETECT_DEVICE)
+        ctx.events.publish_first(msg)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

@@ -25,8 +25,6 @@ from StreamDeck.Devices.StreamDeck import StreamDeck  # type: ignore
 from biz.dfch.i18n.language_code import LanguageCode
 from biz.dfch.logging.log import log
 
-from ...asyn.thread_pool import ThreadPool
-
 from ..public.input.streamdeck_input import StreamdeckInput
 from .streamdeck_image_converter import StreamdeckImageConverter
 from ..public.input.streamdeck_event_map import StreamdeckEventMap
@@ -61,11 +59,6 @@ class StreamdeckImageLibrary:
         self._sync_root = Lock()
 
         self._converter = StreamdeckImageConverter(deck, code)
-
-        tp = ThreadPool.Factory.get()
-        for state in StreamdeckEventMap:
-            log.debug("Try to enqueue worker for '%s' ...", state)
-            tp.invoke(self._worker, state)
 
     def _worker(self, state: str) -> dict[tuple[StreamdeckInput, bool], bytes]:
         """Retrieves all images for a given state."""

@@ -29,7 +29,7 @@ class TestTransitionBase(unittest.TestCase):
 
     class TransitionInfoEnter(Enum):
         """Test events.
-        True: The audio will be played continously in a loop.
+        True: The audio will be played continuously in a loop.
         False: The audio will be play once (one-shot).
         """
 
@@ -37,7 +37,7 @@ class TestTransitionBase(unittest.TestCase):
 
     class TransitionInfoLeave(Enum):
         """Test events.
-        True: The audio will be played continously in a loop.
+        True: The audio will be played continuously in a loop.
         False: The audio will be play once (one-shot).
         """
 
@@ -56,7 +56,7 @@ class TestTransitionBase(unittest.TestCase):
 
             return False
 
-    def test_initialising_succeeds(self):
+    def test_initializing_succeeds(self):
         """Initializing succeeds."""
 
         arbitrary_state = TestTransitionBase.ArbitraryState(
@@ -73,7 +73,7 @@ class TestTransitionBase(unittest.TestCase):
 
         assert sut is not None
 
-    def test_initialising_target_state_none_throws(self):
+    def test_initializing_target_state_none_throws(self):
         """`target_state` must not be `None`."""
 
         with self.assertRaises(AssertionError):
@@ -84,7 +84,7 @@ class TestTransitionBase(unittest.TestCase):
                 target_state=None
             )
 
-    def test_initialising_event_containing_multiple_characters_throws(self):
+    def test_initializing_event_containing_multiple_characters_throws(self):
         """`event` must not contain more than a single character."""
 
         arbitrary_state = TestTransitionBase.ArbitraryState(
@@ -98,7 +98,7 @@ class TestTransitionBase(unittest.TestCase):
                 target_state=arbitrary_state
             )
 
-    def test_initialising_empty_event_throws(self):
+    def test_initializing_empty_event_throws(self):
         """`event` must not contain more than a single character."""
 
         arbitrary_state = TestTransitionBase.ArbitraryState(

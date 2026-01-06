@@ -92,11 +92,11 @@ class MediaPlayerClient(IAcquirable):
 
         return self._resource_files
 
-    def load_resource_queue(
+    def load_menu_queue(
             self,
             predicate: Callable[[str], bool] | None = None
     ) -> list[str]:
-        """Loads the current based on the result of the predicate."""
+        """Loads the menu queue based on the result of the predicate."""
 
         assert predicate is None or predicate and callable(predicate)
 
@@ -121,11 +121,11 @@ class MediaPlayerClient(IAcquirable):
 
         return result
 
-    def load_queue(
+    def load_playback_queue(
             self,
             predicate: Callable[[str], bool] | None = None
     ) -> list[str]:
-        """Loads the current based on the result of the predicate."""
+        """Loads the playback queue based on the result of the predicate."""
 
         assert predicate is None or predicate and callable(predicate)
 
@@ -133,11 +133,17 @@ class MediaPlayerClient(IAcquirable):
 
         cmd = [
             self._MPC_FULLNAME,
+            MediaPlayerCommand.UPDATE,
+        ]
+        self._invoke(cmd)
+
+        cmd = [
+            self._MPC_FULLNAME,
             MediaPlayerCommand.LIST_AUDIO,
         ]
         files, _ = self._invoke(cmd)
 
-        for file in files:
+        for file in sorted(files, reverse=True):
             if not predicate(file):
                 continue
 
@@ -215,7 +221,7 @@ class MediaPlayerClient(IAcquirable):
         return None
 
     def set_repeat(self, value: bool) -> None:
-        """Sets or unsets the 'repeat' setting of the queue."""
+        """Sets or un-sets the 'repeat' setting of the queue."""
 
         assert isinstance(value, bool)
 
@@ -227,7 +233,7 @@ class MediaPlayerClient(IAcquirable):
         self._invoke(cmd)
 
     def set_random(self, value: bool) -> None:
-        """Sets or unsets the 'random' setting of the queue."""
+        """Sets or un-sets the 'random' setting of the queue."""
 
         assert isinstance(value, bool)
 
@@ -239,7 +245,7 @@ class MediaPlayerClient(IAcquirable):
         self._invoke(cmd)
 
     def set_consume(self, value: bool) -> None:
-        """Sets or unsets the 'consume' setting of the queue."""
+        """Sets or un-sets the 'consume' setting of the queue."""
 
         assert isinstance(value, bool)
 
@@ -251,7 +257,7 @@ class MediaPlayerClient(IAcquirable):
         self._invoke(cmd)
 
     def set_single(self, value: bool) -> None:
-        """Sets or unsets the 'single' setting of the queue."""
+        """Sets or un-sets the 'single' setting of the queue."""
 
         assert isinstance(value, bool)
 

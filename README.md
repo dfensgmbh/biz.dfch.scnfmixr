@@ -1,3 +1,7 @@
+[![scnfmixr: v4.0.0](https://img.shields.io/badge/scnfmixr-v4.0.0-blue.svg)](https://github.com/dfensgmbh/biz.dfch.scnfmixr/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue.svg)
+
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=bugs)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
@@ -10,8 +14,8 @@
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
 
-# biz.dfch.PhoneTap
-PhoneTap running on Raspberry Pi OS (Pi 5)
+# biz.dfch.scnfmixr
+scnfmixr running on Raspberry Pi OS (Pi 5)
 
 # TOC
 
@@ -24,12 +28,14 @@ PhoneTap running on Raspberry Pi OS (Pi 5)
 
 # Installation
 
+For detailed information about the installation of the system see [INSTALL](./INSTALL.md).
+
 ```sh
-admin@raspberrypi:~ $ pwd
+admin@scnfmixr:~ $ pwd
 /home/admin
 
 # Install Python, PIP
-sudo apt install python3 python3-pip
+sudo apt-get install python3 python3-pip
 
 # Create virtual environment
 cd ~/scnfmixr
@@ -47,54 +53,42 @@ pip install typing
 # Save requirements
 pip freeze > requirements.txt
 
-# Create script
-nano ~/scnfmixr/src/__main__.py
-
-# Make script executable
-chmod +x ~/scnfmixr/src/__main__.py
-
-# Create log file and set permissions
-sudo touch ~/scnfmixr/app.log
-sudo chown admin:root ~/scnfmixr/app.log
-sudo chmod 660 ~/scnfmixr/app.log
-
 # Create service descriptor
-nano ~/scnfmixr/src/app.service
+nano ~/.config/systemd/user/scnfmixr.service
 
 # Activate and start service
-sudo ln -fs ~/scnfmixr/src/app.service /etc/systemd/system/scnfmixr.service
-sudo systemctl enable scnfmixr.service
-sudo systemctl daemon-reload
-sudo systemctl start scnfmixr.service
-sudo systemctl status scnfmixr.service
+systemctl --user enable scnfmixr.service
+systemctl --user daemon-reload
+systemctl --user start scnfmixr.service
+systemctl --user status scnfmixr.service
 journalctl -u scnfmixr.service
 # tail -f app.log
 
 # Deactivate service
-sudo systemctl disable scnfmixr.service
-sudo systemctl stop scnfmixr.service
-sudo systemctl status scnfmixr.service
+systemctl --user disable scnfmixr.service
+systemctl --user stop scnfmixr.service
+systemctl --user status scnfmixr.service
 ```
 
 # Testing
 ```sh
-admin@raspberrypi:~ $ pwd
+admin@scnfmixr:~ $ pwd
 /home/admin
-admin@raspberrypi:~ $ cd ~/scnfmixr
-admin@raspberrypi:~ $ python -m unittest discover
-admin@raspberrypi:~ $ python -m unittest discover -s tests -t . -p test_*.py
-admin@raspberrypi:~ $ python -m unittest discover -v -s <package-path> -t . -p test_*.py
+admin@scnfmixr:~ $ cd ~/scnfmixr
+admin@scnfmixr:~ $ python -m unittest discover
+admin@scnfmixr:~ $ python -m unittest discover -s tests -t . -p test_*.py
+admin@scnfmixr:~ $ python -m unittest discover -v -s <package-path> -t . -p test_*.py
 # Example: Test single package.
-admin@raspberrypi:~ $ python -m unittest discover -v -s tests/my_package -t . -p test_*.py
+admin@scnfmixr:~ $ python -m unittest discover -v -s tests/my_package -t . -p test_*.py
 # Example: Test single module.
-admin@raspberrypi:~ $ python -m unittest discover -v -s tests -t . -p test_MyModule.py
+admin@scnfmixr:~ $ python -m unittest discover -v -s tests -t . -p test_MyModule.py
 ```
 
 # Hardware and Software Requirements
 
 The programme is intended to run on a Raspberry Pi 5 with a Raspberry Pi OS '[Bookworm](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/)'. It is tested under the following version:
 
-`Linux raspberrypi 6.12.25+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.25-1+rpt1 (2025-04-30) aarch64 GNU/Linux`
+`Linux scnfmixr 6.12.25+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.25-1+rpt1 (2025-04-30) aarch64 GNU/Linux`
 
 ## Packages
 
@@ -110,7 +104,7 @@ sudo reboot
 ## Hardware
 
 * The OS is running on a [Raspberry Pi 5 8GB](https://www.raspberrypi.com/products/raspberry-pi-5/?variant=raspberry-pi-5-8gb) with its original power supply.
-* The board is mounted in a aluminium case with passive cooling, such as [Ridged Armour Case for Raspberry Pi 5](https://thepihut.com/products/ridged-armour-case-for-raspberry-pi-5).
+* The board is mounted in a aluminum case with passive cooling, such as [Ridged Armour Case for Raspberry Pi 5](https://thepihut.com/products/ridged-armour-case-for-raspberry-pi-5).
 * Additional USB ports are made available via an [ICY BOX IB-AC618 7-port USB 3.0 powered USB adapter (gen1)](https://icybox.de/product/hubs/IB-AC618) (USB-A to USB-B, power supply `12V @3A`).
 
 ### Pi USB Port Layout
@@ -124,7 +118,7 @@ The internal USB ports of the Pi 5 have the following numbering:
 | Top Right     | USB 2.0  | `1-2`  | `/sys/bus/usb/devices/1-2/  `  | to the right of "Top left"      |
 | Bottom Right  | USB 2.0  | `3-2`  | `/sys/bus/usb/devices/3-2/  `  | to the right of "Bottom left"   |
 
-Note: the USB identification shown via `/proc/asound/cards` do not match the `device` numbering, eg. a device connected to `/sys/bus/usb/devices/1-2/` shows up as `usb-xhci-hcd.0-2`. Further note, that the `device` (`Dev`) numbering changes and increments with disconnects and connects even on the same phyiscal port (eg. in the output below the connected device is shown as `Dev 30` but was previously before reconnect shown as `Dev 29`). This number corresponds to `devnum` under `/sys/bus/usb/devices/<usbid>/devnum`. In ALSA this is reflected in ` /proc/asound/card<id>/usbbus` (last part of `001/030`).
+Note: the USB identification shown via `/proc/asound/cards` do not match the `device` numbering, eg. a device connected to `/sys/bus/usb/devices/1-2/` shows up as `usb-xhci-hcd.0-2`. Further note, that the `device` (`Dev`) numbering changes and increments with disconnects and connects even on the same physical port (eg. in the output below the connected device is shown as `Dev 30` but was previously before reconnect shown as `Dev 29`). This number corresponds to `devnum` under `/sys/bus/usb/devices/<usbid>/devnum`. In ALSA this is reflected in ` /proc/asound/card<id>/usbbus` (last part of `001/030`).
 
 ```
 $ lsusb -t
@@ -210,14 +204,14 @@ The USB ports of the Icy Box IB-AC618 have the following numbering (when connect
 | Port 3  | USB 3.0  | `1-1.3`  | `/sys/bus/usb/devices/1-1.3/`  | 4th from the cable, connected Bottom Left  |
 | Port 4  | USB 3.0  | `1-1.4`  | `/sys/bus/usb/devices/1-1.4/`  | next to the cable, connected Bottom Left  |
 
-Note1: If a high speed USB3 device is connected (shown as `5000M` in `lusub -t`), then the bus number will change from **`3`** to **`4`**.
+Note1: If a high speed USB3 device is connected (shown as `5000M` in `lsusb -t`), then the bus number will change from **`3`** to **`4`**.
 Note2: The hub the following internal port numbering, from left to the right (where the cable is): **3-2-1-4**. So, port 4 is the port directly next to the cable; port 3 is on the opposite end.
 
 # Pin Layout
 
 ## TRRS plug to TRS socket "headphones splitter"
 
-This is the typical contact layout for a (OMTP) TRRS adaptetr that splits the TRRS signal into headphones and mic signal.
+This is the typical contact layout for a (OMTP) TRRS adapter that splits the TRRS signal into headphones and mic signal.
 
 *tbd*
 
@@ -305,7 +299,22 @@ sudo tee /etc/security/limits.d/audio.conf > /dev/null <<EOF
 EOF
 
 # Packages to be installed:
-sudo apt-get -y install pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber zita-ajbridge flac sndfile-tools ecasound jackd2 jack-tools exfat-fuse exfatprogs jack-capture lv2-dev lilv-utils x42-plugins zam-plugins calf-plugins lsp-plugins mpd mpc
+sudo apt-get -y install pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber zita-ajbridge flac sndfile-tools ecasound jackd2 exfat-fuse exfatprogs lv2-dev lilv-utils x42-plugins zam-plugins calf-plugins lsp-plugins mpd mpc
+```
+
+#### Fix missing jack-capture on Debian Trixie
+
+```sh
+cd ~  
+wget http://deb.debian.org/debian/pool/main/j/jack-capture/jack-capture_0.9.73-3_arm64.deb  
+sudo apt-get -y install ./jack-capture_0.9.73-3_arm64.deb
+rm ./jack-capture_0.9.73-3_arm64.deb
+```
+
+**Ignore this NOTICE:**
+
+```
+Notice: Download is performed unsandboxed as root as file '/home/admin/jack-capture_0.9.73-3_arm64.deb' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)
 ```
 
 ### jackd.service
@@ -397,17 +406,19 @@ WantedBy=default.target
 Note: The configuration files are defined for user `admin` with `uid` `1000`.
 
 ```
-# Create links for 
-mkdir ~/MpdMusic
-mkdir ~/MpdMusic/playback
-ln ~/MpdMusic/playback/EN ~/PhoneTap/src/biz/dfch/scnfmixr/res/EN/
-ln ~/MpdMusic/playback/DE ~/PhoneTap/src/biz/dfch/scnfmixr/res/DE/
-ln ~/MpdMusic/playback/FR ~/PhoneTap/src/biz/dfch/scnfmixr/res/FR/
-ln ~/MpdMusic/playback/IT ~/PhoneTap/src/biz/dfch/scnfmixr/res/IT/
+# Create links for menu
+mkdir -p ~/MpdMusic/menu
+ln -s ~/biz.dfch.scnfmixr/src/biz/dfch/scnfmixr/res/EN ~/MpdMusic/menu/EN
+ln -s ~/biz.dfch.scnfmixr/src/biz/dfch/scnfmixr/res/DE ~/MpdMusic/menu/DE
+ln -s ~/biz.dfch.scnfmixr/src/biz/dfch/scnfmixr/res/FR ~/MpdMusic/menu/FR
+ln -s ~/biz.dfch.scnfmixr/src/biz/dfch/scnfmixr/res/IT ~/MpdMusic/menu/IT
 
-mkdir ~/MpdMusic/menu
-ln ~/MpdMusic/menu/rc1 ~/mnt/rc1/
-ln ~/MpdMusic/menu/rc2 ~/mnt/rc2/
+# Create links for playback
+mkdir -p ~/MpdMusic/playback
+sudo mkdir -p /mnt/rc1/
+sudo mkdir -p /mnt/rc2/
+ln -s /mnt/rc1 ~/MpdMusic/playback/rc1
+ln -s /mnt/rc2 ~/MpdMusic/playback/rc2
 ```
 
 ```

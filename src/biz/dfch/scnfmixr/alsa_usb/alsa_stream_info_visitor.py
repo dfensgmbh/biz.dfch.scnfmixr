@@ -87,7 +87,7 @@ class AlsaStreamInfoVisitor:
 
         return True
 
-    def process_interface(self, ctx: MultiLineTextParserContext) -> bool:
+    def process_interface(self, ctx: MultiLineTextParserContext) -> bool:  # noqa: E501  # pylint: disable=C0301  # NOSONAR python:S3516
         """Callback processing `Interface` section.
 
         Args:
@@ -108,7 +108,7 @@ class AlsaStreamInfoVisitor:
         )
         self._current_interfaces.append(self._current_interface)
 
-        log.info("#%s [%s>%s] %s Prcessing interface ...",
+        log.info("#%s [%s>%s] %s Processing interface ...",
                  ctx.line, ctx.level_previous, ctx.level, ctx.keyword)
 
         return True

@@ -48,7 +48,7 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
         result = sut.resolve(name, key)
 
-        self.assertEqual(None, result)
+        self.assertIsNone(result)
 
     def test_resolve_valid_state_and_key_returns_valid_input_event_map(self):
 

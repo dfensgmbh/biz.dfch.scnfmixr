@@ -19,7 +19,9 @@ from __future__ import annotations
 from enum import StrEnum
 
 from biz.dfch.logging import log
-from ...public.input import InputEventMap
+from ...app import ApplicationContext
+from ...public import SKIP_USB_PORT
+from ...public.input import InputDevice, InputEventMap
 from ...public.system.messages import SystemMessage
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
@@ -59,7 +61,17 @@ class InitialiseHi1(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        # Always run detection. We cannot continue w/o.
+        if ctx.error:
+            return
+
+        app_ctx = ApplicationContext.Factory.get()
+        value = app_ctx.input_device_map[InputDevice.HI1]
+        if SKIP_USB_PORT == value:
+            log.info("Skipping device '%s' ...", InputDevice.HI1.name)
+            msg = SystemMessage.InputEvent(InitialiseHi1.Event.SKIP_DEVICE)
+            ctx.events.publish_first(msg)
+            return
+
         log.info("Enqueueing event: '%s' [%s].",
                  InitialiseHi1.Event.DETECT_DEVICE.name,
                  InitialiseHi1.Event.DETECT_DEVICE.value)

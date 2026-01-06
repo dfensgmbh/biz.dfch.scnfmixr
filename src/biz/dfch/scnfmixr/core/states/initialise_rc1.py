@@ -72,13 +72,15 @@ class InitialiseRc1(StateBase):
             ctx.events.publish_first(msg)
             return
 
-        if not ctx.error:
-            log.info("Enqueueing event: '%s' [%s].",
-                     InitialiseRc1.Event.DETECT_DEVICE.name,
-                     InitialiseRc1.Event.DETECT_DEVICE.value)
+        if ctx.error:
+            return
 
-            msg = SystemMessage.InputEvent(InitialiseRc1.Event.DETECT_DEVICE)
-            ctx.events.publish_first(msg)
+        log.info("Enqueueing event: '%s' [%s].",
+                 InitialiseRc1.Event.DETECT_DEVICE.name,
+                 InitialiseRc1.Event.DETECT_DEVICE.value)
+
+        msg = SystemMessage.InputEvent(InitialiseRc1.Event.DETECT_DEVICE)
+        ctx.events.publish_first(msg)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

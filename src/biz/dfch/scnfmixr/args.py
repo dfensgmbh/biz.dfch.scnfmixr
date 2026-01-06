@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025-2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,17 +13,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Module Arguments."""
+"""Module args."""
 
 import argparse
 from dataclasses import dataclass
 import re
 
 from biz.dfch.i18n import LanguageCode
-from .public.audio import FileFormat, Format, SampleRate, AudioDevice
-from .public.system import UsbPort
-from .public.storage import StorageDevice
+from .public import SKIP_USB_PORT
+from .public.audio import AudioDevice
+from .public.audio import FileFormat
+from .public.audio import Format
+from .public.audio import SampleRate
 from .public.input import InputDevice
+from .public.storage import StorageDevice
 
 
 __all__ = [
@@ -73,13 +76,13 @@ class Arguments():
         """Returns an instance to the argument parser.
 
         Returns:
-            argparse.Namspace: The namespace of the parsed argumentt.
+            argparse.Namespace: The namespace of the parsed arguments.
         """
 
         # pylint: disable=C0301
         description = f"""%(prog)s (Secure Conference Mixer and Recorder), v{self.version}
 
-Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
+Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
 """  # noqa: E501
 
         # Process command line arguments.
@@ -88,7 +91,7 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
             description=description,
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog=("For more information see "
-                    "https://github.com/dfensgmbh/biz.dfch.PhoneTap/.")
+                    "https://github.com/dfensgmbh/biz.dfch.scnfmixr/.")
         )
 
         parser.add_argument(
@@ -124,7 +127,7 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
         parser.add_argument(
             "--use-random-name", "-rn",
             action="store_true",
-            help="Use random name."
+            help="Use pseudo-random name."
         )
 
         # Audio format and audio parameters.
@@ -158,11 +161,15 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
         parser.add_argument(
             "--bit-depth", "-b",
             type=int,
+            # DFTODO - we have a bug here.
+            # Function indicates to return int, but does return Enum.
             choices=[
-                Format.S16_LE.get_bit_depth(),
-                Format.S24_3LE.get_bit_depth(),
-                Format.S32_LE.get_bit_depth()],
-            default=Format.DEFAULT.get_bit_depth(),
+                Format.S16_LE.get_bit_depth().value,  # pylint: disable:E1101
+                Format.S24_3LE.get_bit_depth().value,  # pylint: disable:E1101
+                Format.S32_LE.get_bit_depth().value,  # pylint: disable:E1101
+            ],
+            default=Format.DEFAULT.get_bit_depth()
+            .value,  # pylint: disable:E1101
             help="Select the bit depth of the recording."
         )
 
@@ -171,21 +178,21 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
             "--local", "-lcl",
             type=str,
             dest=AudioDevice.LCL.name,
-            default=UsbPort.BOTTOM_LEFT.value,
+            default=SKIP_USB_PORT,
             help="Specifies USB port for local audio device."
         )
         parser.add_argument(
             "--external1", "-ex1",
             type=str,
             dest=AudioDevice.EX1.name,
-            default=UsbPort.TOP_RIGHT.value,
+            default=SKIP_USB_PORT,
             help="Specifies USB port for external audio device 1."
         )
         parser.add_argument(
             "--external2", "-ex2",
             type=str,
             dest=AudioDevice.EX2.name,
-            default=UsbPort.BOTTOM_RIGHT.value,
+            default=SKIP_USB_PORT,
             help="Specifies USB port for external audio device 2."
         )
 
@@ -220,21 +227,21 @@ Copyright 2024, 2025 d-fens GmbH. Licensed unter MIT license.
             "--input1", "-hi1",
             type=str,
             dest=InputDevice.HI1.name,
-            default="3-1.4",
+            default=SKIP_USB_PORT,
             help="Specifies USB port for keyboard."
         )
         parser.add_argument(
             "--input2", "-hi2",
             type=str,
             dest=InputDevice.HI2.name,
-            default="4-1.4",
+            default=SKIP_USB_PORT,
             help="Specifies USB port for Elgato Streamdeck."
         )
         parser.add_argument(
             "--input3", "-hi3",
             type=str,
             dest=InputDevice.HI3.name,
-            default="3-1.4",
+            default=SKIP_USB_PORT,
             help="Specifies USB port for MorningStar MIDI controller."
         )
         parser.add_argument(

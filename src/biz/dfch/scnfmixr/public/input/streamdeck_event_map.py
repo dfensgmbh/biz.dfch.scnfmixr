@@ -122,9 +122,8 @@ StreamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_01: InputEventMap.KEY_7,
         StreamdeckInput.KEY_02: InputEventMap.KEY_8,
         StreamdeckInput.KEY_03: InputEventMap.KEY_9,
-        StreamdeckInput.KEY_05: InputEventMap.KEY_BACKSPACE,
         StreamdeckInput.KEY_0E: InputEventMap.KEY_ENTER,
-        StreamdeckInput.KEY_09: InputEventMap.KEY_TAB,
+        StreamdeckInput.KEY_09: InputEventMap.KEY_BACKSPACE,
     },
     "SetTime": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
@@ -139,9 +138,8 @@ StreamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_01: InputEventMap.KEY_7,
         StreamdeckInput.KEY_02: InputEventMap.KEY_8,
         StreamdeckInput.KEY_03: InputEventMap.KEY_9,
-        StreamdeckInput.KEY_05: InputEventMap.KEY_BACKSPACE,
         StreamdeckInput.KEY_0E: InputEventMap.KEY_ENTER,
-        StreamdeckInput.KEY_09: InputEventMap.KEY_TAB,
+        StreamdeckInput.KEY_09: InputEventMap.KEY_BACKSPACE,
     },
     "SetName": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
@@ -156,9 +154,8 @@ StreamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_01: InputEventMap.KEY_7,
         StreamdeckInput.KEY_02: InputEventMap.KEY_8,
         StreamdeckInput.KEY_03: InputEventMap.KEY_9,
-        StreamdeckInput.KEY_05: InputEventMap.KEY_BACKSPACE,
         StreamdeckInput.KEY_0E: InputEventMap.KEY_ENTER,
-        StreamdeckInput.KEY_09: InputEventMap.KEY_TAB,
+        StreamdeckInput.KEY_09: InputEventMap.KEY_BACKSPACE,
     },
     "Main": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
@@ -169,6 +166,7 @@ StreamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_0A: InputEventMap.KEY_4,
         StreamdeckInput.KEY_09: InputEventMap.KEY_5,
         StreamdeckInput.KEY_0B: InputEventMap.KEY_6,
+        StreamdeckInput.KEY_0C: InputEventMap.KEY_7,
         StreamdeckInput.KEY_0E: InputEventMap.KEY_9,
     },
     "OnRecord": {
@@ -176,7 +174,6 @@ StreamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
         StreamdeckInput.KEY_06: InputEventMap.KEY_1,
         StreamdeckInput.KEY_05: InputEventMap.KEY_2,
-        StreamdeckInput.KEY_07: InputEventMap.KEY_3,
         StreamdeckInput.KEY_0A: InputEventMap.KEY_4,
     },
     "InitialiseAudio": {
@@ -202,7 +199,7 @@ StreamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
     "PlaybackPaused": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
         StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
-        StreamdeckInput.KEY_05: InputEventMap.KEY_0,
+        StreamdeckInput.KEY_07: InputEventMap.KEY_0,
         StreamdeckInput.KEY_09: InputEventMap.KEY_5,
     },
     "System": {
@@ -220,8 +217,8 @@ StreamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
         StreamdeckInput.KEY_09: InputEventMap.KEY_5,
         StreamdeckInput.KEY_05: InputEventMap.KEY_0,
-        StreamdeckInput.KEY_02: InputEventMap.KEY_1,
-        StreamdeckInput.KEY_03: InputEventMap.KEY_3,
+        StreamdeckInput.KEY_01: InputEventMap.KEY_1,
+        StreamdeckInput.KEY_02: InputEventMap.KEY_3,
         StreamdeckInput.KEY_06: InputEventMap.KEY_4,
         StreamdeckInput.KEY_07: InputEventMap.KEY_6,
         StreamdeckInput.KEY_0B: InputEventMap.KEY_7,
@@ -230,6 +227,8 @@ StreamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
     "FinalState": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
         StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
-        StreamdeckInput.KEY_09: InputEventMap.KEY_5,
+        StreamdeckInput.KEY_06: InputEventMap.KEY_ASTERISK,
+        StreamdeckInput.KEY_07: InputEventMap.KEY_ASTERISK,
+        StreamdeckInput.KEY_08: InputEventMap.KEY_ASTERISK,
     },
 }

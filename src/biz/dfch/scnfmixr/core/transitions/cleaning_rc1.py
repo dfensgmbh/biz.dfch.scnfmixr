@@ -15,6 +15,11 @@
 
 """Module cleaning_rc1."""
 
+from biz.dfch.logging import log
+
+from ...app import ApplicationContext
+from ...devices.storage import DeviceOperations
+from ...public.storage import StorageDevice
 from ..fsm import UiEventInfo
 from ..fsm import TransitionBase
 from ..fsm import StateBase
@@ -39,4 +44,27 @@ class CleaningRc1(TransitionBase):
             target_state=target)
 
     def invoke(self, _):
-        raise NotImplementedError("Not yet implemented.")
+
+        device = StorageDevice.RC1
+
+        app_ctx = ApplicationContext.Factory.get()
+
+        value = app_ctx.storage_device_map[device]
+
+        log.debug("Cleaning storage device '%s' at '%s'...",
+                  device.name, value)
+
+        device_info = app_ctx.storage_configuration_map.get(
+            device, None)
+
+        result = False if device_info is None else DeviceOperations(
+            device_info).clean()
+
+        if result:
+            log.info("Cleaning storage device '%s' OK.",
+                     device.name)
+        else:
+            log.error("Cleaning storage device '%s' FAILED.",
+                      device.name)
+
+        return result

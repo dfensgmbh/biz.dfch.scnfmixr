@@ -49,7 +49,7 @@ Menü "Sprachauswahl"
 Press "1" for english.
 Wählen Sie "2" für deutsch.
 Selectionner "3" pour français.
-Scegliere "4" por italiano.
+Scegliere "4" per italiano.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 """,  # noqa: E501
 
@@ -153,6 +153,7 @@ Wählen Sie "3", um "wet iso"-Aufnahme und eine "dry iso"-Aufnahme mit einer zus
 Wählen Sie "4", um die Wiedergabe zu starten.
 Wählen Sie "5", um zum "System-Menü" zu gelangen.
 Wählen Sie "6", um einen neuen Namen für Ihre nächste Aufnahme festzulegen.
+Wählen Sie "7", um die letzte Aufnahme zu löschen.
 Wählen Sie "9", um das Gerät zu stoppen.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 """,  # noqa: E501

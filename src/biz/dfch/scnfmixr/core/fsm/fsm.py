@@ -337,10 +337,10 @@ class Fsm:
         log.debug("Invoking 'on_enter' for '%s' ...",
                   type(self._current_state).__name__)
 
+        self._message_queue.publish(
+            SystemMessage.StateMachine.StateMachineStateEnter(
+                self.current_state.__class__.__name__))
         if self._current_state.info_enter:
-            self._message_queue.publish(
-                SystemMessage.StateMachine.StateMachineStateEnter(
-                    self.current_state.__class__.__name__))
             self._message_queue.publish(
                 SystemMessage.UiEventInfoStateEnterMessage(
                     self.current_state.info_enter))
