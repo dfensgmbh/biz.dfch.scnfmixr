@@ -124,6 +124,7 @@
         "POWEROFF",
         "pyinstaller",
         "qjackctl",
+        "raspi",
         "reexec",
         "Roboto",
         "rpiboot",
