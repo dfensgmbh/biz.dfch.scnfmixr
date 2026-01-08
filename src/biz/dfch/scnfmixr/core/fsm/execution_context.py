@@ -26,7 +26,7 @@ class ExecutionContext:
     """Defines the execution context of the finite state machine.
 
     Attributes:
-        source (str | None): The transition or state which lead to the curent
+        source (str | None): The transition or state which lead to the current
             invocation.
         error (str | None): Not None if an error led to the current invocation.
             Can contain the failed transition name or state name.

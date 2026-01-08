@@ -81,6 +81,10 @@ class DeviceOperations:
     )
     _UMOUNT_FULLNAME = "/usr/bin/umount"
 
+    _MESSAGE_OK_2 = "'%s' OK: [%s]"
+    _MESSAGE_FAILED_2 = "'%s' FAILED: [%s]"
+    _MESSAGE_RETURNED_2 = "'%s' RETURNED: [%s]"
+
     _uid: str
     _gid: str
 
@@ -225,10 +229,10 @@ class DeviceOperations:
 
         stdout, stderr = Process.communicate(cmd)
         if 0 < len(stderr):
-            log.warning("'%s' FAILED: [%s]", self._SPACE.join(cmd), stderr)
+            log.warning(self._MESSAGE_FAILED_2, self._SPACE.join(cmd), stderr)
             return False
         if 0 < len(stdout):
-            log.debug("'%s' OK: [%s]", self._SPACE.join(cmd), stdout)
+            log.debug(self._MESSAGE_OK_2, self._SPACE.join(cmd), stdout)
 
         cmd: list[str] = [
             self._SUDO_FULLNAME,
@@ -240,11 +244,11 @@ class DeviceOperations:
 
         stdout, stderr = Process.communicate(cmd)
         if 0 < len(stderr):
-            log.warning("'%s' RETURNED: [%s]", self._SPACE.join(cmd), stderr)
+            log.warning(self._MESSAGE_RETURNED_2, self._SPACE.join(cmd), stderr)
             if not stderr[0].startswith(self._PARTED_STDERR_INFO_PREFIX):
                 return False
         if 0 < len(stdout):
-            log.debug("'%s' OK: [%s]", self._SPACE.join(cmd), stdout)
+            log.debug(self._MESSAGE_OK_2, self._SPACE.join(cmd), stdout)
 
         cmd: list[str] = [
             self._SUDO_FULLNAME,
@@ -260,11 +264,11 @@ class DeviceOperations:
 
         stdout, stderr = Process.communicate(cmd)
         if 0 < len(stderr):
-            log.warning("'%s' RETURNED: [%s]", self._SPACE.join(cmd), stderr)
+            log.warning(self._MESSAGE_RETURNED_2, self._SPACE.join(cmd), stderr)
             if not stderr[0].startswith(self._PARTED_STDERR_INFO_PREFIX):
                 return False
         if 0 < len(stdout):
-            log.debug("'%s' OK: [%s]", self._SPACE.join(cmd), stdout)
+            log.debug(self._MESSAGE_OK_2, self._SPACE.join(cmd), stdout)
 
         if self._device_info.full_name[-1].isdigit():
             partition_device = self._device_info.full_name
@@ -283,9 +287,9 @@ class DeviceOperations:
 
         stdout, stderr = Process.communicate(cmd)
         if 0 < len(stderr):
-            log.warning("'%s' FAILED: [%s]", self._SPACE.join(cmd), stderr)
+            log.warning(self._MESSAGE_FAILED_2, self._SPACE.join(cmd), stderr)
             return False
         if 0 < len(stdout):
-            log.debug("'%s' OK: [%s]", self._SPACE.join(cmd), stdout)
+            log.debug(self._MESSAGE_OK_2, self._SPACE.join(cmd), stdout)
 
         return True

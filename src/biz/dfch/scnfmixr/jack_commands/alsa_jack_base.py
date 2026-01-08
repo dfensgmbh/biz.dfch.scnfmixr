@@ -30,7 +30,7 @@ class AlsaJackBase(ABC):
 
         Attributes:
             name (str): The name of the JACK source or sink client.
-            device (str): The name of the ALSA plaback device.
+            device (str): The name of the ALSA playback device.
             channels (int): The number of channels of the ALSA device.
             rate (int): The rate in Hz of the ALSA device.
     """
@@ -94,24 +94,6 @@ class AlsaJackBase(ABC):
                  self._process.pid,
                  self._process.is_running)
 
-        # jack_base_name = f"{self.name}" \
-        #     f"{self._JACK_PORT_INFIX}" \
-        #     f"{self._suffix}"
-
-        # while True:
-        #     time.sleep(0.5)
-        #     result = JackConnection.get_ports(jack_base_name)
-
-        #     if result is None or self.channels != len(result):
-        #         continue
-
-        #     for port in result:
-        #         jack_port = JackPort(port)
-        #         self._ports.append(jack_port)
-
-        #     log.info("Jack ports for '%s': %s", jack_base_name, result)
-        #     break
-
     @property
     def is_started(self) -> bool:
         """Determines whether the process is started or not."""
@@ -143,11 +125,6 @@ class AlsaJackBase(ABC):
             break
 
         return self._ports
-
-    # def get_ports(self) -> list[JackPort]:
-    #     """Retrieves all JACK ports for this bridge."""
-
-    #     return self._ports
 
     def get_port_names(self) -> list[str]:
         """Retrieves all JACK port names.
