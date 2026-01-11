@@ -181,7 +181,7 @@ class StateMachine:
         self._menu = {}
 
     def start(self) -> None:
-        "Starts the state machine."
+        """Starts the state machine."""
 
         self.initialise()
         self._thread.start()
