@@ -36,6 +36,7 @@
         "BASERATE",
         "bitdepth",
         "blockdevice",
+        "blockdevices",
         "btmp",
         "busnum",
         "ccze",

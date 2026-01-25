@@ -168,7 +168,7 @@ class DetectingRcWorker(InterfaceDetectorBase):
         """Selects a matching interface and returns it device path.
 
         Returns
-            str: The device path of an storqage device that matches the
+            str: The device path of an storage device that matches the
                 value specified in the ctor call.
         """
 

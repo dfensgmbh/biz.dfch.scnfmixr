@@ -108,6 +108,7 @@ class App:  # pylint: disable=R0903
         # Note: Use name from StorageParameters.allowed_usb_ids.
         usb_ids = args.allowed_usb_ids
         if usb_ids:
+            pair = (None, None)
             for usb_id in usb_ids:
                 # Format of usb_id: 'abcd:1234'.
                 segments = usb_id.split(':')
