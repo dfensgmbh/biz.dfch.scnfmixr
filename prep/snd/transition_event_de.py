@@ -167,6 +167,53 @@ guid:d2896326-bd8f-4755-a297-92ba458e9e66
 guid:ce9e7a9a-e6b5-4906-8af2-fe6b8e04908c
 """,
 
+
+    # Menu: Detect IN1.
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN1_ENTER: """
+Versuche Effektgerät 1 zu erkennen.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN1_LEAVE: """
+Effektgerät 1 erfolgreich erkannt.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN1_FAILED: """
+Erkennung des Effektgeräts 1 war nicht erfolgreich.
+
+Überprüfen Sie die Kabel und den Anschluss.
+""",
+
+    # OK
+    TransitionEvent.SKIPPING_DEVICE_IN1_LEAVE: """
+Effektgerät 1 wurde übersprungen.
+""",
+
+    # Menu: Detect IN2.
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN2_ENTER: """
+Versuche Effektgerät 2 zu erkennen.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN2_LEAVE: """
+Effektgerät 2 erfolgreich erkannt.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN2_FAILED: """
+Erkennung des Effektgeräts 2 war nicht erfolgreich.
+
+Überprüfen Sie die Kabel und den Anschluss.
+""",
+
+    # OK
+    TransitionEvent.SKIPPING_DEVICE_IN2_LEAVE: """
+Effektgerät 2 wurde übersprungen.
+""",
+
     # Menu: Initialise audio.
 
     TransitionEvent.INITIALISING_AUDIO_ENTER: """

@@ -166,6 +166,53 @@ guid:3280d525-f2cb-480b-b2e1-d98ef5e603d8
 guid:980bd868-340a-4d2f-a032-3e1803d2749c
 """,
 
+    # Menu: Detect IN1.
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN1_ENTER: """
+Tentativo di rilevamento del dispositivo effetti 1.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN1_LEAVE: """
+Dispositivo effetti 1 rilevato con successo.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN1_FAILED: """
+Il rilevamento del dispositivo effetti 1 non è riuscito.
+
+Controllare i cavi e la porta di connessione.
+""",
+
+    # OK
+    TransitionEvent.SKIPPING_DEVICE_IN1_LEAVE: """
+Il dispositivo effetti 1 è stato omesso.
+""",
+
+    # Menu: Detect IN2.
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN2_ENTER: """
+Tentativo di rilevamento del dispositivo effetti 2.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN2_LEAVE: """
+Dispositivo effetti 2 rilevato con successo.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN2_FAILED: """
+Il rilevamento del dispositivo effetti 2 non è riuscito.
+
+Controllare i cavi e la porta di connessione.
+""",
+
+    # OK
+    TransitionEvent.SKIPPING_DEVICE_IN2_LEAVE: """
+Il dispositivo effetti 2 è stato omesso.
+""",
+
+
     # Menu: Initialise audio.
 
     TransitionEvent.INITIALISING_AUDIO_ENTER: """

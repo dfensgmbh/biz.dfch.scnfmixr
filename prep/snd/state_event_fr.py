@@ -34,6 +34,7 @@ Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
     # OK
     StateEvent.INITIALISE_LCL_LEAVE: """""",  # noqa: E501
 
+   # OK
     StateEvent.INITIALISE_HI1_ENTER: """
 Menu "initialisation du périphérique d'entrée numéro 1"
 
@@ -73,6 +74,22 @@ Appuyez sur "1" pour lancer la détection du périphérique.
 Appuyez sur "2" pour ignorer la détection du périphérique.
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
+
+    # OK
+    StateEvent.INITIALISE_IN1_ENTER: """
+Menu « initialiser le périphérique d’effet numéro UN »
+
+Appuyez sur "1" pour lancer la détection du périphérique.
+Appuyez sur "2" pour ignorer la détection du périphérique.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.""",  # noqa: E501
+
+    # OK
+    StateEvent.INITIALISE_IN2_ENTER: """
+Menu « initialiser le périphérique d’effet numéro DEUX »
+
+Appuyez sur "1" pour lancer la détection du périphérique.
+Appuyez sur "2" pour ignorer la détection du périphérique.
+Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.""",  # noqa: E501
 
     # OK
     StateEvent.INITIALISE_RC1_ENTER: """
@@ -183,7 +200,18 @@ Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 
     # OK
     StateEvent.STORAGE_MANAGEMENT_ENTER: """
-""",  # noqa: E501
+Menu « Périphériques de mémoire »
+
+Sélectionnez « 0 » pour déconnecter tous les périphériques de mémoire.
+Sélectionnez « 1 » pour détecter « Périphérique de mémoire UN ».
+Sélectionnez « 3 » pour détecter « Périphérique de mémoire DEUX ».
+Sélectionnez « 4 » pour formater « Périphérique de mémoire UN ».
+Sélectionnez « 5 » pour accéder au « Menu système ».
+Sélectionnez « 6 » pour formater « Périphérique de mémoire DEUX ».
+Sélectionnez « 7 » pour nettoyer « Périphérique de mémoire UN ».
+Sélectionnez « 9 » pour nettoyer « Périphérique de mémoire DEUX ».
+
+Sélectionnez « ASTÉRISQUE » pour répéter ce message.""",  # noqa: E501
 
     # OK
     StateEvent.INIT_AUDIO_LEAVE: """
