@@ -113,6 +113,7 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
                   self.name, self._device_name)
 
         iface = parser.get_best_capture_interface()
+        assert iface is not None
         log.debug("Selected capture interface. [%s]", iface)
 
         self._best_source_interface = AlsaInterfaceInfo(
@@ -127,6 +128,7 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
                   self._best_source_interface)
 
         iface = parser.get_best_playback_interface()
+        assert iface is not None
         log.debug("Selected playback interface. [%s]", iface)
 
         self._best_sink_interface = AlsaInterfaceInfo(

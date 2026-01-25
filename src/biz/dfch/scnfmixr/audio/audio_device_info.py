@@ -128,8 +128,10 @@ class AudioDeviceInfo:  # pylint: disable=R0903
 
         # Get USB device names for ALSA USB devices.
         usb_name_alsa_device_map = Usb.get_alsa_usb_device_map(alsa_devices)
-        self.actual_usb_id = Usb.get_best_device_name(
+        __actual_usb_id = Usb.get_best_device_name(
             self.requested_usb_id, usb_name_alsa_device_map)
+        assert __actual_usb_id is not None
+        self.actual_usb_id = __actual_usb_id
 
         if self.actual_usb_id is None:
             message = f"Requested USB id '{self.requested_usb_id} not found."
@@ -144,12 +146,15 @@ class AudioDeviceInfo:  # pylint: disable=R0903
         self.device_info = Usb.get_usb_device_info(self.actual_usb_id)
         log.info("[usb_device_info '%s']: [%s]",
                  self.actual_usb_id, self.device_info)
-        self.asound_info = Asound.get_info(self.device_info)
+        __asound_info = Asound.get_info(self.device_info)
+        assert __asound_info is not None
+        self.asound_info = __asound_info
         log.info("[asound_card_info '%s']: [%s]",
                  self.actual_usb_id, self.asound_info)
 
         parser = AlsaStreamInfoParser(self.asound_info.card_id)
         capture_interface = parser.get_best_capture_interface()
+        assert capture_interface is not None
         log.debug(capture_interface)
         self.source = AlsaInterfaceInfo(
             card_id=self.asound_info.card_id,
@@ -160,6 +165,7 @@ class AudioDeviceInfo:  # pylint: disable=R0903
             sample_rate=SampleRate(capture_interface.get_best_rate()),
         )
         playback_interface = parser.get_best_playback_interface()
+        assert playback_interface is not None
         self.sink = AlsaInterfaceInfo(
             card_id=self.asound_info.card_id,
             interface_id=parser.interface_id,
