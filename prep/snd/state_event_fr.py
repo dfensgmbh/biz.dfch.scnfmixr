@@ -34,7 +34,7 @@ Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
     # OK
     StateEvent.INITIALISE_LCL_LEAVE: """""",  # noqa: E501
 
-   # OK
+    # OK
     StateEvent.INITIALISE_HI1_ENTER: """
 Menu "initialisation du périphérique d'entrée numéro 1"
 
