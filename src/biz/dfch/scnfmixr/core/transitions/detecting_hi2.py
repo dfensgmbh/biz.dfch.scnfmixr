@@ -64,7 +64,12 @@ class DetectingHi2(TransitionBase):
 
         log.debug("Input device detected at: '%s'", device)
 
-        self._handler = StreamdeckHandler(device)
+        event_map_type = app_ctx.ui_parameters.menu_profile.get_event_map(
+            InputDevice.HI2)
+        assert event_map_type is not None
+        event_map = event_map_type()
+
+        self._handler = StreamdeckHandler(device, event_map)
         log.debug("Starting Streamdeck processing ...")
         result = self._handler.start()
         if result:

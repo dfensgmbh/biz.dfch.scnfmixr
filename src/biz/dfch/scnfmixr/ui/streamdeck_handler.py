@@ -55,7 +55,7 @@ class StreamdeckHandler(EventHandlerBase):
     _mq: MessageQueue
     _deck: StreamDeckOriginalV2
     _resolver: StreamdeckInputResolver
-    _library = StreamdeckImageLibrary
+    _library: StreamdeckImageLibrary
 
     _current_state: str
 
@@ -154,7 +154,8 @@ class StreamdeckHandler(EventHandlerBase):
         self._library = StreamdeckImageLibrary.Factory.get(
             self._deck,
             self._CODE,
-            self._event_map_values
+            self._event_map_values,
+            self._event_map_image_path,
         )
 
     def dispose(self):
