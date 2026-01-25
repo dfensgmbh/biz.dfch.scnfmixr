@@ -164,12 +164,11 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
             # DFTODO - we have a bug here.
             # Function indicates to return int, but does return Enum.
             choices=[
-                Format.S16_LE.get_bit_depth().value,  # pylint: disable:E1101
-                Format.S24_3LE.get_bit_depth().value,  # pylint: disable:E1101
-                Format.S32_LE.get_bit_depth().value,  # pylint: disable:E1101
+                Format.S16_LE.get_bit_depth().value,
+                Format.S24_3LE.get_bit_depth().value,
+                Format.S32_LE.get_bit_depth().value,
             ],
-            default=Format.DEFAULT.get_bit_depth()
-            .value,  # pylint: disable:E1101
+            default=Format.DEFAULT.get_bit_depth().value,
             help="Select the bit depth of the recording."
         )
 
