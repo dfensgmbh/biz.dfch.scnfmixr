@@ -23,3 +23,5 @@ class AudioDevice(StrEnum):
     LCL = "Alsa:LCL"
     EX1 = "Alsa:EX1"
     EX2 = "Alsa:EX2"
+    IN1 = "Alsa:IN1"
+    IN2 = "Alsa:IN2"

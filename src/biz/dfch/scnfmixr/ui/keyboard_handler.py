@@ -16,14 +16,17 @@
 """Module defining the class keyboard input handling."""
 
 from __future__ import annotations
+
+from enum import StrEnum
 import re
 from threading import Thread
+from typing import cast
 import time
 
 from biz.dfch.asyn import Process
 from biz.dfch.logging import log
 
-from ..public.input import KeyboardEventMap
+from ..public.input import EventMapBase
 from ..public.system import MessageBase
 from ..public.system.messages import SystemMessage
 from ..system import MessageQueue
@@ -46,6 +49,8 @@ class KeyboardHandler(EventHandlerBase):
         r"type 1 \(EV_KEY\), code ([^ ]+) \(([^)]+)\), value 1$"
     )
 
+    _event_map_values: type[StrEnum]
+
     _is_disposed: bool
     _is_paused: bool
     _device: str
@@ -64,11 +69,14 @@ class KeyboardHandler(EventHandlerBase):
 
         log.debug("on_shutdown: Stopping COMPLETED.")
 
-    def __init__(self, device: str):
+    def __init__(self, device: str, event_map: EventMapBase):
 
-        super().__init__()
+        super().__init__(event_map)
 
         assert device and device.strip()
+        assert isinstance(event_map, EventMapBase)
+
+        self._event_map_values = cast(type[StrEnum], event_map.get_values())
 
         self._is_disposed = False
         self._is_paused = False
@@ -134,10 +142,10 @@ class KeyboardHandler(EventHandlerBase):
 
         result = default
 
-        if key not in KeyboardEventMap.__members__:
+        if key not in self._event_map_values.__members__:
             return result
 
-        result = KeyboardEventMap[key].value
+        result = self._event_map_values[key].value
 
         return result
 

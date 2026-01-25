@@ -84,6 +84,7 @@ class BestAlsaJackAudioDevice(pt.ITerminalDevice):  # pylint: disable=R0901
             parser = AlsaStreamInfoParser(self._card_id)
 
         capture_interface = parser.get_best_capture_interface()
+        assert capture_interface is not None
         log.debug(capture_interface)
 
         source = AlsaInterfaceInfo(
@@ -96,6 +97,7 @@ class BestAlsaJackAudioDevice(pt.ITerminalDevice):  # pylint: disable=R0901
         )
 
         playback_interface = parser.get_best_playback_interface()
+        assert playback_interface is not None
         log.debug(playback_interface)
 
         sink = AlsaInterfaceInfo(

@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ class Format(StrEnum):
 
     # DFTODO - we have a bug here.
     # Function indicates to return int, but does return Enum.
-    def get_bit_depth(self) -> int:
+    def get_bit_depth(self) -> BitDepth:
         """Returns the bit depth of a format."""
 
         match self:

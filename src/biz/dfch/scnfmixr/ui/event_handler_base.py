@@ -18,6 +18,7 @@
 from abc import ABC, abstractmethod
 from threading import Event, Lock
 
+from ..public.input import EventMapBase
 from ..system import MessageQueue
 
 
@@ -31,14 +32,20 @@ class EventHandlerBase(ABC):
             event handler.
     """
 
+    _event_map: EventMapBase
+
     stop_processing: Event
     sync_root: Lock
     queue: MessageQueue
     _is_paused: bool
 
-    def __init__(self):
+    def __init__(self, event_map: EventMapBase):
+
+        assert isinstance(event_map, EventMapBase)
 
         super().__init__()
+
+        self._event_map = event_map
 
         self.stop_processing = Event()
         self.sync_root = Lock()

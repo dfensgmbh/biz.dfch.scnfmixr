@@ -30,7 +30,10 @@ from .mixer import JackSignalManager
 from .mixer import DeviceFactory
 from .system import SignalHandler, FuncExecutor
 from .public.input import InputDevice
-from .public.audio import AudioDevice, Format, FileFormat
+from .public.input import MenuProfile
+from .public.audio import AudioDevice
+from .public.audio import Format
+from .public.audio import FileFormat
 from .public.storage.storage_device import StorageDevice
 from .public.system import SystemTime
 from .public.system.messages import SystemMessage
@@ -66,6 +69,7 @@ class App:  # pylint: disable=R0903
         rec_params = app_ctx.recording_parameters
 
         # DFTODO - maybe find something more dynamic here?
+        # Answer (still DFTODO): Use SKIP_... as value and process it like EX2.
         rec_params.skip_rc1 = "--skip-storage1" in sys.argv
         rec_params.skip_rc2 = "--skip-storage2" in sys.argv
 
@@ -85,6 +89,8 @@ class App:  # pylint: disable=R0903
             AudioDevice.LCL: args.LCL,
             AudioDevice.EX1: args.EX1,
             AudioDevice.EX2: args.EX2,
+            AudioDevice.IN1: args.IN1,
+            AudioDevice.IN2: args.IN2,
         }
         app_ctx.storage_device_map = {
             StorageDevice.RC1: args.RC1,
@@ -96,6 +102,7 @@ class App:  # pylint: disable=R0903
             InputDevice.HI3: args.HI3,
         }
         app_ctx.ui_parameters.language = LanguageCode[args.language]
+        app_ctx.ui_parameters.menu_profile = MenuProfile[args.profile]
 
         now = SystemTime.Factory.get().set().now()
         if args.use_current_date:
@@ -108,6 +115,7 @@ class App:  # pylint: disable=R0903
         # Note: Use name from StorageParameters.allowed_usb_ids.
         usb_ids = args.allowed_usb_ids
         if usb_ids:
+            pair = (None, None)
             for usb_id in usb_ids:
                 # Format of usb_id: 'abcd:1234'.
                 segments = usb_id.split(':')

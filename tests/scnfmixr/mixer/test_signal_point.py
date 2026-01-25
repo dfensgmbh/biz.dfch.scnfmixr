@@ -155,13 +155,14 @@ class TestAlsaJackAudioPointController(unittest.TestCase):
            new=MyMockAlsaToJack)
     @patch("biz.dfch.scnfmixr.mixer.alsa_jack_audio_point.JackToAlsa",
            new=MyMockJackToAlsa)
-    def test_with_resouce_manager(self):
+    def test_with_resource_manager(self):
         """Testing with resource manager releases resources."""
 
         card_id = 2
         parser = MockAlsaStreamInfoParser(2)
 
         interface = parser.get_best_capture_interface()
+        assert interface is not None
         source = AlsaInterfaceInfo(
             card_id=card_id,
             interface_id=parser.interface_id,
@@ -171,6 +172,7 @@ class TestAlsaJackAudioPointController(unittest.TestCase):
             sample_rate=SampleRate(interface.get_best_rate()),
         )
         interface = parser.get_best_playback_interface()
+        assert interface is not None
         sink = AlsaInterfaceInfo(
             card_id=card_id,
             interface_id=parser.interface_id,

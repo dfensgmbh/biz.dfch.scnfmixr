@@ -26,6 +26,7 @@ from .public.audio import FileFormat
 from .public.audio import Format
 from .public.audio import SampleRate
 from .public.input import InputDevice
+from .public.input import MenuProfile
 from .public.storage import StorageDevice
 
 
@@ -91,43 +92,59 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
             description=description,
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog=("For more information see "
-                    "https://github.com/dfensgmbh/biz.dfch.scnfmixr/.")
+                    "https://github.com/dfensgmbh/biz.dfch.scnfmixr/."),
         )
 
         parser.add_argument(
             "--version", "-v",
             action="version",
-            version=f"%(prog)s, v{self.version}"
+            version=f"%(prog)s, v{self.version}",
         )
         parser.add_argument(
             "--service", "-s",
             action="store_true",
-            help="Run %(prog)s as service."
+            help="Run %(prog)s as service.",
         )
         parser.add_argument(
             "--language", "-l",
             type=str,
-            choices=[LanguageCode.DEFAULT,
-                     LanguageCode.EN.name, LanguageCode.DE.name,
-                     LanguageCode.FR.name, LanguageCode.IT.name,
-                     ],
+            choices=[
+                LanguageCode.DEFAULT,
+                LanguageCode.EN.name,
+                LanguageCode.DE.name,
+                LanguageCode.FR.name,
+                LanguageCode.IT.name,
+            ],
             default=LanguageCode.DEFAULT.name,
-            help="Select the user interface language."
+            help="Select the user interface language.",
         )
         parser.add_argument(
             "--use-current-date", "-cd",
             action="store_true",
-            help="Use current date."
+            help="Use current date.",
         )
         parser.add_argument(
             "--use-current-time", "-ct",
             action="store_true",
-            help="Use current time."
+            help="Use current time.",
         )
         parser.add_argument(
             "--use-random-name", "-rn",
             action="store_true",
-            help="Use pseudo-random name."
+            help="Use pseudo-random name.",
+        )
+
+        # Profile.
+        parser.add_argument(
+            "--profile", "-p",
+            type=str,
+            choices=[
+                MenuProfile.DEFAULT.name,
+                MenuProfile.RECORDER.name,
+                MenuProfile.PLAYBACK.name,
+            ],
+            default=MenuProfile.DEFAULT.name,
+            help="Select menu profile for user interface.",
         )
 
         # Audio format and audio parameters.
@@ -141,7 +158,7 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
                 FileFormat.MP3.value,
                 FileFormat],
             default=FileFormat.DEFAULT.value,
-            help="Select format of the recording."
+            help="Select format of the recording.",
         )
         parser.add_argument(
             "--sampling-rate", "-r",
@@ -156,21 +173,18 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
                 SampleRate.R88200.value,
                 SampleRate.R96000.value],
             default=SampleRate.DEFAULT.value,
-            help="Select the sampling rate of the recording."
+            help="Select the sampling rate of the recording.",
         )
         parser.add_argument(
             "--bit-depth", "-b",
             type=int,
-            # DFTODO - we have a bug here.
-            # Function indicates to return int, but does return Enum.
             choices=[
-                Format.S16_LE.get_bit_depth().value,  # pylint: disable:E1101
-                Format.S24_3LE.get_bit_depth().value,  # pylint: disable:E1101
-                Format.S32_LE.get_bit_depth().value,  # pylint: disable:E1101
+                Format.S16_LE.get_bit_depth().value,
+                Format.S24_3LE.get_bit_depth().value,
+                Format.S32_LE.get_bit_depth().value,
             ],
-            default=Format.DEFAULT.get_bit_depth()
-            .value,  # pylint: disable:E1101
-            help="Select the bit depth of the recording."
+            default=Format.DEFAULT.get_bit_depth().value,
+            help="Select the bit depth of the recording.",
         )
 
         # Audio devices.
@@ -179,21 +193,35 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
             type=str,
             dest=AudioDevice.LCL.name,
             default=SKIP_USB_PORT,
-            help="Specifies USB port for local audio device."
+            help="Specifies USB port for local audio device.",
+        )
+        parser.add_argument(
+            "--insert1", "-in1",
+            type=str,
+            dest=AudioDevice.IN1.name,
+            default=SKIP_USB_PORT,
+            help="Specifies USB port for audio device insert 1.",
+        )
+        parser.add_argument(
+            "--insert2", "-in2",
+            type=str,
+            dest=AudioDevice.IN2.name,
+            default=SKIP_USB_PORT,
+            help="Specifies USB port for audio device insert 2.",
         )
         parser.add_argument(
             "--external1", "-ex1",
             type=str,
             dest=AudioDevice.EX1.name,
             default=SKIP_USB_PORT,
-            help="Specifies USB port for external audio device 1."
+            help="Specifies USB port for external audio device 1.",
         )
         parser.add_argument(
             "--external2", "-ex2",
             type=str,
             dest=AudioDevice.EX2.name,
             default=SKIP_USB_PORT,
-            help="Specifies USB port for external audio device 2."
+            help="Specifies USB port for external audio device 2.",
         )
 
         # Storage devices.
@@ -202,24 +230,24 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
             type=str,
             dest=StorageDevice.RC1.name,
             default="4-1.3",
-            help="Specifies USB port for storage device 1."
+            help="Specifies USB port for storage device 1.",
         )
         parser.add_argument(
             "--storage2", "-rc2",
             type=str,
             dest=StorageDevice.RC2.name,
             default="4-1.1",
-            help="Specifies USB port for storage device 2."
+            help="Specifies USB port for storage device 2.",
         )
         parser.add_argument(
             "--skip-storage1",
             action="store_true",
-            help="Disable storage device 1."
+            help="Disable storage device 1.",
         )
         parser.add_argument(
             "--skip-storage2",
             action="store_true",
-            help="Disable storage device 2."
+            help="Disable storage device 2.",
         )
 
         # User interaction.
@@ -228,21 +256,21 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
             type=str,
             dest=InputDevice.HI1.name,
             default=SKIP_USB_PORT,
-            help="Specifies USB port for keyboard."
+            help="Specifies USB port for numeric keyboard.",
         )
         parser.add_argument(
             "--input2", "-hi2",
             type=str,
             dest=InputDevice.HI2.name,
             default=SKIP_USB_PORT,
-            help="Specifies USB port for Elgato Streamdeck."
+            help="Specifies USB port for Elgato Streamdeck.",
         )
         parser.add_argument(
             "--input3", "-hi3",
             type=str,
             dest=InputDevice.HI3.name,
             default=SKIP_USB_PORT,
-            help="Specifies USB port for MorningStar MIDI controller."
+            help="Specifies USB port for MorningStar MIDI controller.",
         )
         parser.add_argument(
             "--allowed-storage-usb-ids",
@@ -252,7 +280,7 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
             dest="allowed_usb_ids",
             default=["2009"],
             help=("RC Storage vendor id whitelist; e.g. '2009' [iStorage], "
-                  "'2009:7064' [iStorage datAshur Pro2 64GB].")
+                  "'2009:7064' [iStorage datAshur Pro2 64GB]."),
         )
 
         result = parser.parse_args()

@@ -40,8 +40,11 @@ class TestStreamdeckImageLibrary(unittest.TestCase):
 
     def test_private_ctor_throws(self):
 
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
+
         with self.assertRaises(RuntimeError):
-            _ = StreamdeckImageLibrary(None, None)
+            _ = StreamdeckImageLibrary(None, None, _map, _path)
 
     def test_singleton(self):
 
@@ -50,9 +53,12 @@ class TestStreamdeckImageLibrary(unittest.TestCase):
         code = LanguageCode.EN
 
         with self.assertRaises(AttributeError) as exc:
-            sut = StreamdeckImageLibrary.Factory.get(deck, code)
+            _map = StreamdeckEventMap().get_values()
+            _path = "img"
 
-            other = StreamdeckImageLibrary.Factory.get(deck, code)
+            sut = StreamdeckImageLibrary.Factory.get(deck, code, _map, _path)
+
+            other = StreamdeckImageLibrary.Factory.get(deck, code, _map, _path)
 
             # This statement will raise an `AttributeError`.
             # `Dummy` does not implement `.close()`.
@@ -71,7 +77,9 @@ class TestStreamdeckImageLibrary(unittest.TestCase):
         state = "Main"
 
         with self.assertRaises(AttributeError) as exc:
-            sut = StreamdeckImageLibrary.Factory.get(deck, code)
+            _map = StreamdeckEventMap().get_values()
+            _path = "img"
+            sut = StreamdeckImageLibrary.Factory.get(deck, code, _map, _path)
 
             result = sut.get_key_images(state)
 
@@ -84,7 +92,7 @@ class TestStreamdeckImageLibrary(unittest.TestCase):
         self.assertIn((StreamdeckInput.KEY_00, False), result)
         self.assertIn((StreamdeckInput.KEY_00, True), result)
 
-        for key, value in StreamdeckEventMap.items():
+        for key, value in StreamdeckEventMap().get_values().items():
             result = sut.get_key_images(key)
 
             for input_ in value:

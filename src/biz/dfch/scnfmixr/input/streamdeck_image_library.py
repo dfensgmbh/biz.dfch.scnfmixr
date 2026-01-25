@@ -23,11 +23,12 @@ from typing import ClassVar
 from StreamDeck.Devices.StreamDeck import StreamDeck  # type: ignore
 
 from biz.dfch.i18n.language_code import LanguageCode
-from biz.dfch.logging.log import log
+from biz.dfch.logging import log
 
 from ..public.input.streamdeck_input import StreamdeckInput
+from ..public.input.input_event_map import InputEventMap
+
 from .streamdeck_image_converter import StreamdeckImageConverter
-from ..public.input.streamdeck_event_map import StreamdeckEventMap
 
 
 # pylint: disable=R0903
@@ -42,10 +43,15 @@ class StreamdeckImageLibrary:
 
     _converter: StreamdeckImageConverter
 
+    _event_map_values: dict[str, dict[StreamdeckInput, InputEventMap]]
+    _event_map_image_path: str
+
     def __init__(
         self,
         deck: StreamDeck,
         code: LanguageCode,
+        event_map_values: dict[str, dict[StreamdeckInput, InputEventMap]],
+        event_map_image_path: str,
     ):
 
         if not type(self).Factory._sync_root.locked():
@@ -53,12 +59,23 @@ class StreamdeckImageLibrary:
 
         assert isinstance(deck, StreamDeck)
         assert isinstance(code, LanguageCode)
+        assert isinstance(event_map_values, dict)
+        assert isinstance(
+            event_map_image_path, str) and event_map_image_path.strip()
 
         self._images = {}
         self._cache = {}
         self._sync_root = Lock()
 
-        self._converter = StreamdeckImageConverter(deck, code)
+        self._event_map_values = event_map_values
+        self._event_map_image_path = event_map_image_path
+
+        self._converter = StreamdeckImageConverter(
+            deck,
+            code,
+            self._event_map_values,
+            self._event_map_image_path,
+        )
 
     def _worker(self, state: str) -> dict[tuple[StreamdeckInput, bool], bytes]:
         """Retrieves all images for a given state."""
@@ -80,7 +97,7 @@ class StreamdeckImageLibrary:
 
             image_key_map: dict[tuple[StreamdeckInput, bool], str] = {}
 
-            for key in StreamdeckEventMap[state]:
+            for key in self._event_map_values[state]:
                 log.debug("%s: [key %s]", state, key)
 
                 image_normal = self._converter.get_image(state, key)
@@ -126,6 +143,8 @@ class StreamdeckImageLibrary:
         def get(
             deck: StreamDeck,
             code: LanguageCode,
+            event_map_values: dict[str, dict[StreamdeckInput, InputEventMap]],
+            event_map_image_path: str,
         ) -> StreamdeckImageLibrary:
             """Creates or gets a singleton."""
 
@@ -138,6 +157,12 @@ class StreamdeckImageLibrary:
                     return StreamdeckImageLibrary.Factory.__instance
 
                 StreamdeckImageLibrary.Factory.__instance = (
-                    StreamdeckImageLibrary(deck=deck, code=code))
+                    StreamdeckImageLibrary(
+                        deck=deck,
+                        code=code,
+                        event_map_values=event_map_values,
+                        event_map_image_path=event_map_image_path,
+                    )
+                )
 
             return StreamdeckImageLibrary.Factory.__instance

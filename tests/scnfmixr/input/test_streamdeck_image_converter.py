@@ -52,14 +52,17 @@ class TestStreamdeckImageConverter(unittest.TestCase):
         )
 
         # pylint: disable=W0212
-        StreamdeckEventMap[state] = _streamdeck_event_map_default
+        StreamdeckEventMap().get_values()[state] = _streamdeck_event_map_default
 
         with self.assertRaises(AttributeError) as exc:
 
             device = Dummy()
             deck = StreamDeckOriginalV2(device)
 
-            sut = StreamdeckImageConverter(deck, code)
+            _map = StreamdeckEventMap().get_values()
+            _path = "img"
+
+            sut = StreamdeckImageConverter(deck, code, _map, _path)
 
             image_bytes = sut.get_image(state, key)
             result = sut.get_hash_key(image_bytes)
@@ -83,14 +86,17 @@ class TestStreamdeckImageConverter(unittest.TestCase):
         )
 
         # pylint: disable=W0212
-        StreamdeckEventMap[name] = _streamdeck_event_map_default
+        StreamdeckEventMap().get_values()[name] = _streamdeck_event_map_default
 
         with self.assertRaises(AttributeError) as exc:
 
             device = Dummy()
             deck = StreamDeckOriginalV2(device)
 
-            sut = StreamdeckImageConverter(deck, code)
+            _map = StreamdeckEventMap().get_values()
+            _path = "img"
+
+            sut = StreamdeckImageConverter(deck, code, _map, _path)
 
             image_bytes = sut.get_image_pushed(name, key)
             result = sut.get_hash_key(image_bytes)

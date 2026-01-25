@@ -41,7 +41,10 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
     def test_resolve_invalid_state_and_key_returns_none(self):
 
-        sut = StreamdeckInputResolver()
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
+
+        sut = StreamdeckInputResolver(_map, _path)
 
         key = StreamdeckInput(1)
         name = "invalid-state"
@@ -52,9 +55,12 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
     def test_resolve_valid_state_and_key_returns_valid_input_event_map(self):
 
-        sut = StreamdeckInputResolver()
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
 
-        key = StreamdeckInput(1)
+        sut = StreamdeckInputResolver(_map, _path)
+
+        key = StreamdeckInput(5)
         name = "Main"
         expected = InputEventMap.KEY_1
 
@@ -64,7 +70,10 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
     def test_get_text_with_enter_succeeds(self):
 
-        sut = StreamdeckInputResolver()
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
+
+        sut = StreamdeckInputResolver(_map, _path)
 
         event = InputEventMap.KEY_ENTER
         expected = "ENTER"
@@ -75,10 +84,13 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
     def test_get_text_with_backspace_succeeds(self):
 
-        sut = StreamdeckInputResolver()
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
+
+        sut = StreamdeckInputResolver(_map, _path)
 
         event = InputEventMap.KEY_BACKSPACE
-        expected = "DELETE"
+        expected = "BACKSPACE"
 
         result = sut.get_text(event)
 
@@ -86,7 +98,10 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
     def test_get_text_with_tab_succeeds(self):
 
-        sut = StreamdeckInputResolver()
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
+
+        sut = StreamdeckInputResolver(_map, _path)
 
         event = InputEventMap.KEY_TAB
         expected = "TAB"
@@ -97,7 +112,10 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
     def test_get_text_with_1_succeeds(self):
 
-        sut = StreamdeckInputResolver()
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
+
+        sut = StreamdeckInputResolver(_map, _path)
 
         event = InputEventMap.KEY_1
         expected = "1"
@@ -108,7 +126,10 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
     def test_get_text_with_asterisk_succeeds(self):
 
-        sut = StreamdeckInputResolver()
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
+
+        sut = StreamdeckInputResolver(_map, _path)
 
         event = InputEventMap.KEY_ASTERISK
         expected = "*"
@@ -119,25 +140,34 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
     def test_get_text_with_invalid_input_throws(self):
 
-        sut = StreamdeckInputResolver()
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
+
+        sut = StreamdeckInputResolver(_map, _path)
 
         event = "-1"  # invalid input event
 
         with self.assertRaises(AssertionError):
-            _ = sut.get_text(event)
+            _ = sut.get_text(event)  # type: ignore
 
     def test_get_text_with_none_input_throws(self):
 
-        sut = StreamdeckInputResolver()
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
+
+        sut = StreamdeckInputResolver(_map, _path)
 
         event = None  # invalid input event
 
         with self.assertRaises(AssertionError):
-            _ = sut.get_text(event)
+            _ = sut.get_text(event)  # type: ignore
 
     def test_invalid_state_returns_default(self):
 
-        sut = StreamdeckInputResolver()
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
+
+        sut = StreamdeckInputResolver(_map, _path)
 
         state = "invalid-state-name"
         key = StreamdeckInput.KEY_00
@@ -156,14 +186,17 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
     def test_valid_state_missing_key_returns_default(self):
 
-        sut = StreamdeckInputResolver()
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
+
+        sut = StreamdeckInputResolver(_map, _path)
 
         state = "Test"
         key = StreamdeckInput.KEY_0E
         code = LanguageCode.IT
 
         # pylint: disable=W0212
-        StreamdeckEventMap[state] = _streamdeck_event_map_default
+        StreamdeckEventMap().get_values()[state] = _streamdeck_event_map_default
 
         expected = (
             f"res/img/{code.name}/"
@@ -171,7 +204,8 @@ class TestStreamdeckInputResolver(unittest.TestCase):
             ".png"
         )
 
-        _ = StreamdeckEventMap["Main"].pop(StreamdeckInput.KEY_0E)
+        _ = StreamdeckEventMap().get_values()["Main"].pop(
+            StreamdeckInput.KEY_0E)
         result = sut.get_input_event_image(state, key, code)
 
         self.assertIsInstance(result, Path)
@@ -179,14 +213,17 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
     def test_valid_state_valid_key_missing_image_returns_default(self):
 
-        sut = StreamdeckInputResolver()
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
+
+        sut = StreamdeckInputResolver(_map, _path)
 
         state = "Test"
         key = StreamdeckInput.KEY_02
         code = LanguageCode.EN
 
         # pylint: disable=W0212
-        StreamdeckEventMap[state] = _streamdeck_event_map_default
+        StreamdeckEventMap().get_values()[state] = _streamdeck_event_map_default
 
         expected = (
             f"res/img/{code.name}/"
@@ -201,14 +238,17 @@ class TestStreamdeckInputResolver(unittest.TestCase):
 
     def test_valid_state_valid_key_existing_image_succeeds(self):
 
-        sut = StreamdeckInputResolver()
+        _map = StreamdeckEventMap().get_values()
+        _path = "img"
+
+        sut = StreamdeckInputResolver(_map, _path)
 
         state = "Test"
         key = StreamdeckInput.KEY_00
         code = LanguageCode.EN
 
         # pylint: disable=W0212
-        StreamdeckEventMap[state] = _streamdeck_event_map_default
+        StreamdeckEventMap().get_values()[state] = _streamdeck_event_map_default
 
         expected = (
             f"res/img/{code.name}/"

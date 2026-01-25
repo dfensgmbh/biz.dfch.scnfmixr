@@ -21,10 +21,10 @@ from pathlib import Path
 
 from ...i18n.i18n import I18n
 from ...i18n.language_code import LanguageCode
+from ...logging import log
 
 from ..public.input.input_event_map import InputEventMap
 from ..public.input.streamdeck_input import StreamdeckInput
-from ..public.input.streamdeck_event_map import StreamdeckEventMap
 
 
 class StreamdeckInputResolver:
@@ -33,6 +33,25 @@ class StreamdeckInputResolver:
     """
 
     _RES_IMG_DIR: str = "img"
+
+    _event_map_values: dict[str, dict[StreamdeckInput, InputEventMap]]
+
+    def __init__(
+        self,
+        event_map_values: dict[str, dict[StreamdeckInput, InputEventMap]],
+        event_map_image_path: str,
+    ):
+        """Default ctor."""
+
+        assert isinstance(event_map_values, dict)
+        assert isinstance(
+            event_map_image_path, str) and event_map_image_path.strip()
+
+        self._event_map_values = event_map_values
+        self._event_map_image_path = event_map_image_path
+
+        log.debug("Using event_map_image_path: '%s'.",
+                  self._event_map_image_path)
 
     def resolve(
         self,
@@ -48,7 +67,7 @@ class StreamdeckInputResolver:
                 The name of the input key.
 
         Returns:
-            result(InputEventMap | None):
+            result (InputEventMap | None):
             The InputEventMap associated with the given state and key, or None
             if the state does not exist, the key is not a valid
             StreamdeckInput, or the input is not mapped in that state.
@@ -60,10 +79,10 @@ class StreamdeckInputResolver:
         result: InputEventMap | None = None
 
         # Examine if name is a specified state in StreamdeckEventMap.
-        if state not in StreamdeckEventMap:
+        if state not in self._event_map_values:
             return result
 
-        sd_input_event_map = StreamdeckEventMap[state]
+        sd_input_event_map = self._event_map_values[state]
 
         # Examine if input_ is a specified input for this state.
         if key not in sd_input_event_map:
@@ -136,10 +155,10 @@ class StreamdeckInputResolver:
 
         # Get the resource path for image files.
         res_name = i18n.get_default_res_dirname()
-        image_path = Path(res_name, type(self)._RES_IMG_DIR)
+        image_path = Path(res_name, self._event_map_image_path)
 
         # Examine if name is a specified state in StreamdeckEventMap.
-        if name not in StreamdeckEventMap:
+        if name not in self._event_map_values:
             image_name = "default.png"
             image_partial = i18n.get_resource_path(
                 image_name, code, str(image_path))
@@ -148,7 +167,7 @@ class StreamdeckInputResolver:
             return result
 
         # Get specified keys for this state.
-        state = StreamdeckEventMap[name]
+        state = self._event_map_values[name]
 
         # Examine if key is a specified input for this state.
         if key not in state:

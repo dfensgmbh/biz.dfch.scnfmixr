@@ -17,15 +17,19 @@
 
 from __future__ import annotations
 
+from .event_map_base import EventMapBase
 from .input_device import InputDevice
-from .keyboard_event_map import KeyboardEventMap
 from .input_event_map import InputEventMap
+from .keyboard_event_map import KeyboardEventMap
+from .menu_profile import MenuProfile
 from .streamdeck_input import StreamdeckInput
 from .streamdeck_event_map import StreamdeckEventMap
 
 __all__ = [
+    "EventMapBase",
     "InputDevice",
     "KeyboardEventMap",
+    "MenuProfile",
     "InputEventMap",
     "StreamdeckInput",
     "StreamdeckEventMap",

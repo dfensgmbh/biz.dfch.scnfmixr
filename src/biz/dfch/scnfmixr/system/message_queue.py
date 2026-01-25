@@ -253,7 +253,7 @@ class MessageQueue():  # pylint: disable=R0902
         Args:
             item (Message | Iterable[MessageBase]): Message to publish.
             at_first (bool): True, if the messages should be enqueued at the
-                top of the queueu; false, otherwise (defaulT).
+                top of the queue; false, otherwise (defaulT).
         """
         assert items is not None and isinstance(items, (Iterable, MessageBase))
 
@@ -288,20 +288,20 @@ class MessageQueue():  # pylint: disable=R0902
 
         assert items
 
-        normalised: list[MessageBase] = []
+        normalized: list[MessageBase] = []
 
         for item in items:
 
             assert isinstance(item, (MessageBase, Iterable))
 
             if isinstance(item, MessageBase):
-                normalised.append(item)
+                normalized.append(item)
 
             elif isinstance(item, Iterable):
                 assert all(isinstance(e, MessageBase) for e in item)
-                normalised.extend(item)
+                normalized.extend(item)
 
-        self._publish(normalised, at_first=False)
+        self._publish(normalized, at_first=False)
 
     def publish_first(self, items: MessageBase | Iterable[MessageBase]) -> None:
         """Publishes an item to the top of the respective queue.
@@ -352,9 +352,9 @@ class MessageQueue():  # pylint: disable=R0902
     def register(
             self,
             action: Callable[[MessageBase], None],
-            predicate: Callable[[], bool] | None = None
+            predicate: Callable[[MessageBase], bool] | None = None
     ) -> bool:
-        """Registers a callback on the message queue.
+        """Register a callback on the message queue.
 
         Calling the method with the same action twice will only register the
         callback once.
@@ -365,7 +365,7 @@ class MessageQueue():  # pylint: disable=R0902
                 an action should be invoked.
 
         Returns:
-            bool: True, if the action was sucessfully registered; false,
+            bool: True, if the action was successfully registered; false,
                 otherwise.
         """
 
@@ -394,12 +394,12 @@ class MessageQueue():  # pylint: disable=R0902
         return True
 
     def unregister(self, action: Callable[[MessageBase], None]) -> bool:
-        """Unregisters a callback on the message queue
+        """Unregister a callback on the message queue
 
         Calling the method with the same action twice will return False.
 
         Returns:
-            bool: True, if the action was sucessfully unregistered; false,
+            bool: True, if the action was successfully unregistered; false,
                 otherwise.
         """
 
