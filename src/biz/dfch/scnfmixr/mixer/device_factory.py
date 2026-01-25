@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# pylint: disable=E0110
+
 """Module device_factory."""
 
 from ..alsa_usb import AlsaStreamInfoParser
@@ -27,7 +29,7 @@ from .jack_bus_device import JackBusDevice
 
 
 class DeviceFactory:
-    """Createa audio and mixer devices and device groups."""
+    """Creates audio and mixer devices and device groups."""
 
     @staticmethod
     def create_jack_alsa(
@@ -55,8 +57,7 @@ class DeviceFactory:
         assert isinstance(name, str) and name.strip()
         assert isinstance(channel_count, int) and 0 < channel_count
 
-        result: JackBusDevice = JackBusDevice(name, channel_count) \
-            # pylint: disable=E0110
+        result: JackBusDevice = JackBusDevice(name, channel_count)
 
         return result
 
@@ -66,33 +67,22 @@ class DeviceFactory:
 
         result: list[JackBusDevice] = []
 
-        mx0 = JackBusDevice(MixbusDevice.MX0.name).acquire() \
-            # pylint: disable=E0110
-        mx1 = JackBusDevice(MixbusDevice.MX1.name,  # pylint: disable=E0110
+        mx0 = JackBusDevice(MixbusDevice.MX0.name).acquire()
+        mx1 = JackBusDevice(MixbusDevice.MX1.name,
                             channel_count=len(IsoChannelDry)).acquire()
-        mx2 = JackBusDevice(MixbusDevice.MX2.name,  # pylint: disable=E0110
+        mx2 = JackBusDevice(MixbusDevice.MX2.name,
                             channel_count=len(IsoChannelWet)).acquire()
-        mx3 = JackBusDevice(MixbusDevice.MX3.name).acquire() \
-            # pylint: disable=E0110
-        mx4 = JackBusDevice(MixbusDevice.MX4.name).acquire() \
-            # pylint: disable=E0110
-        mx5 = JackBusDevice(MixbusDevice.MX5.name).acquire() \
-            # pylint: disable=E0110
-        mx6 = JackBusDevice(MixbusDevice.MX6.name).acquire() \
-            # pylint: disable=E0110
+        mx3 = JackBusDevice(MixbusDevice.MX3.name).acquire()
+        mx4 = JackBusDevice(MixbusDevice.MX4.name).acquire()
+        mx5 = JackBusDevice(MixbusDevice.MX5.name).acquire()
+        mx6 = JackBusDevice(MixbusDevice.MX6.name).acquire()
 
-        dr0 = JackBusDevice(MixbusDevice.DR0.name).acquire() \
-            # pylint: disable=E0110
-        wt0 = JackBusDevice(MixbusDevice.WT0.name).acquire() \
-            # pylint: disable=E0110
-        dr1 = JackBusDevice(MixbusDevice.DR1.name).acquire() \
-            # pylint: disable=E0110
-        wt1 = JackBusDevice(MixbusDevice.WT1.name).acquire() \
-            # pylint: disable=E0110
-        dr2 = JackBusDevice(MixbusDevice.DR2.name).acquire() \
-            # pylint: disable=E0110
-        wt2 = JackBusDevice(MixbusDevice.WT2.name).acquire() \
-            # pylint: disable=E0110
+        dr0 = JackBusDevice(MixbusDevice.DR0.name).acquire()
+        wt0 = JackBusDevice(MixbusDevice.WT0.name).acquire()
+        dr1 = JackBusDevice(MixbusDevice.DR1.name).acquire()
+        wt1 = JackBusDevice(MixbusDevice.WT1.name).acquire()
+        dr2 = JackBusDevice(MixbusDevice.DR2.name).acquire()
+        wt2 = JackBusDevice(MixbusDevice.WT2.name).acquire()
 
         dr0.connect_to(mx0.as_sink_set(), ConnectionPolicy.DUAL)
         dr1.connect_to(mx0.as_sink_set(), ConnectionPolicy.DUAL)
