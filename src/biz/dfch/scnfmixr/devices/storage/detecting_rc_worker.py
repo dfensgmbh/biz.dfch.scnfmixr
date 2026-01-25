@@ -95,7 +95,7 @@ class DetectingRcWorker(InterfaceDetectorBase):
 
     def _get_removable_devices(self) -> list[StorageDeviceInfo]:
 
-        result: list[DetectingRcWorker.StorageDeviceInfo] = []
+        result: list[StorageDeviceInfo] = []
 
         def recurse(items):
             """ Finds all items with rm == true.\
