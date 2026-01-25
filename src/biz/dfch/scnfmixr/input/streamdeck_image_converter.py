@@ -31,6 +31,8 @@ from biz.dfch.i18n.language_code import LanguageCode
 from biz.dfch.logging.log import log
 
 from ..public.input.streamdeck_input import StreamdeckInput
+from ..public.input.input_event_map import InputEventMap
+
 from .streamdeck_input_resolver import StreamdeckInputResolver
 
 
@@ -49,17 +51,34 @@ class StreamdeckImageConverter:
 
     _font: ClassVar[ImageFont.FreeTypeFont | None] = None
 
+    _event_map_values: dict[str, dict[StreamdeckInput, InputEventMap]]
+    _event_map_image_path: str
+    _input_resolver: StreamdeckInputResolver
+
     _deck: StreamDeck
     _code: LanguageCode
 
     def __init__(
         self,
         deck: StreamDeck,
-        code: LanguageCode = LanguageCode.DEFAULT
+        code: LanguageCode,
+        event_map_values: dict[str, dict[StreamdeckInput, InputEventMap]],
+        event_map_image_path: str,
     ):
 
         assert isinstance(deck, StreamDeck)
         assert isinstance(code, LanguageCode)
+        assert isinstance(event_map_values, dict)
+        assert isinstance(
+            event_map_image_path, str) and event_map_image_path.strip()
+
+        self._event_map_values = event_map_values
+        self._event_map_image_path = event_map_image_path
+
+        self._input_resolver = StreamdeckInputResolver(
+            self._event_map_values,
+            self._event_map_image_path,
+        )
 
         self._deck = deck
         self._code = code
@@ -139,12 +158,15 @@ class StreamdeckImageConverter:
             color = self.COLOR
         assert color.strip()
 
-        resolver = StreamdeckInputResolver()
         log.debug(
             "Try to get image for '%s:%s' [%s] ...",
             state, key.name,
             self._code)
-        image_path = resolver.get_input_event_image(state, key, self._code)
+        image_path = self._input_resolver.get_input_event_image(
+            state,
+            key,
+            self._code
+        )
         assert Path(image_path).exists
         log.info(
             "Try to get image for '%s:%s' [%s] SUCCEEDED: '%s'.",
@@ -167,8 +189,8 @@ class StreamdeckImageConverter:
             return result
 
         log.debug("Try to get text for '%s:%s' ...", state, key.name)
-        input_event = resolver.resolve(state, key)
-        text = resolver.get_text(input_event, code=self._code)
+        input_event = self._input_resolver.resolve(state, key)
+        text = self._input_resolver.get_text(input_event, code=self._code)
         log.info("Try to get text for '%s:%s' SUCCEEDED: '%s'.",
                  state, key.name, text)
 

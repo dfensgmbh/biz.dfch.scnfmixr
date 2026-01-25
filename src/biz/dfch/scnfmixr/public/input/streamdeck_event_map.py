@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 
 from ...public.input.streamdeck_input import StreamdeckInput
 
+from .event_map_base import EventMapBase
 from .input_event_map import InputEventMap
 
 __all__ = [
@@ -43,7 +44,7 @@ _streamdeck_event_map_default: dict[StreamdeckInput, InputEventMap] = {
     StreamdeckInput.KEY_0E: InputEventMap.KEY_TAB,
 }
 
-StreamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
+_streamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
 
     "InitialiseLcl": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
@@ -232,3 +233,12 @@ StreamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_08: InputEventMap.KEY_ASTERISK,
     },
 }
+
+
+class StreamdeckEventMap(EventMapBase):
+    """
+    Maps Streamdeck event codes to state machine events.
+    """
+
+    def get_values(self) -> dict[str, dict[StreamdeckInput, InputEventMap]]:
+        return _streamdeckEventMap

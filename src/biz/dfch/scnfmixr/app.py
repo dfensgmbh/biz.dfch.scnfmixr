@@ -30,7 +30,10 @@ from .mixer import JackSignalManager
 from .mixer import DeviceFactory
 from .system import SignalHandler, FuncExecutor
 from .public.input import InputDevice
-from .public.audio import AudioDevice, Format, FileFormat
+from .public.input import MenuProfile
+from .public.audio import AudioDevice
+from .public.audio import Format
+from .public.audio import FileFormat
 from .public.storage.storage_device import StorageDevice
 from .public.system import SystemTime
 from .public.system.messages import SystemMessage
@@ -97,6 +100,7 @@ class App:  # pylint: disable=R0903
             InputDevice.HI3: args.HI3,
         }
         app_ctx.ui_parameters.language = LanguageCode[args.language]
+        app_ctx.ui_parameters.menu_profile = MenuProfile[args.profile]
 
         now = SystemTime.Factory.get().set().now()
         if args.use_current_date:

@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,11 +17,14 @@
 
 from enum import StrEnum
 
+from biz.dfch.scnfmixr.public.input.event_map_base import EventMapBase
+
 from .input_event_map import InputEventMap
 
 
-class KeyboardEventMap(StrEnum):
-    """Maps keyboard key codes to state machine events.
+class _KeyboardEventMap(StrEnum):
+    """
+    Maps keyboard key codes to state machine events.
 
     Be cautious when defining entries for `KEY_KPPLUS` and similar. These will
     only work on a numeric keypad and not on the main part of the keyboard (as
@@ -68,3 +71,10 @@ class KeyboardEventMap(StrEnum):
     KEY_BACKSPACE = InputEventMap.KEY_BACKSPACE
 
     KEY_NUMLOCK = "?"
+
+
+class KeyboardEventMap(EventMapBase):
+    """The input event map for HI.1"""
+
+    def get_values(self) -> type[StrEnum]:
+        return _KeyboardEventMap

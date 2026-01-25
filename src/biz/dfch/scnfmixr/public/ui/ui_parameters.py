@@ -20,6 +20,8 @@ from enum import StrEnum, auto
 
 from biz.dfch.i18n import LanguageCode
 
+from ..input.menu_profile import MenuProfile
+
 
 # pylint: disable=R0903
 class UiParameters:
@@ -31,14 +33,17 @@ class UiParameters:
         LANGUAGE = auto()
 
     language: LanguageCode
+    menu_profile: MenuProfile
 
     def __init__(self):
         self.language = LanguageCode.DEFAULT
+        self.menu_profile = MenuProfile.DEFAULT
 
     def __str__(self) -> str:
 
         result = {
-            "language": self.language
+            "language": self.language,
+            "menu_profile": self.menu_profile
         }
 
         return str(result)

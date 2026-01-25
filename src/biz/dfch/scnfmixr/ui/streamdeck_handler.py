@@ -29,6 +29,8 @@ from biz.dfch.i18n.language_code import LanguageCode
 
 from ..input.streamdeck_image_library import StreamdeckImageLibrary
 from ..input.streamdeck_input_resolver import StreamdeckInputResolver
+from ..public.input import EventMapBase
+from ..public.input import InputEventMap
 from ..public.input import StreamdeckInput
 from ..public.system import MessageBase
 from ..public.system.messages import SystemMessage
@@ -44,6 +46,9 @@ class StreamdeckHandler(EventHandlerBase):
 
     _WAIT_INTERVAL_MS: int = 500
     _CODE: LanguageCode = LanguageCode.EN
+
+    _event_map_values: dict[str, dict[StreamdeckInput, InputEventMap]]
+    _event_map_image_path: str
 
     _is_disposed: bool
 
@@ -106,11 +111,18 @@ class StreamdeckHandler(EventHandlerBase):
 
         log.debug("on_shutdown: Stopping COMPLETED.")
 
-    def __init__(self, index: str):
+    def __init__(self, index: str, event_map: EventMapBase):
 
-        super().__init__()
+        super().__init__(event_map)
 
         assert index and index.strip()
+        assert isinstance(event_map, EventMapBase)
+
+        self._event_map_values = cast(
+            dict[str, dict[StreamdeckInput, InputEventMap]],
+            event_map.get_values()
+        )
+        self._event_map_image_path = type(event_map).__name__.lower()
 
         self._is_disposed = False
 
@@ -135,9 +147,15 @@ class StreamdeckHandler(EventHandlerBase):
                 SystemMessage.Shutdown)))
 
         # Initialize image library and resolver.
-        self._resolver = StreamdeckInputResolver()
+        self._resolver = StreamdeckInputResolver(
+            self._event_map_values,
+            self._event_map_image_path,
+        )
         self._library = StreamdeckImageLibrary.Factory.get(
-            self._deck, self._CODE)
+            self._deck,
+            self._CODE,
+            self._event_map_values
+        )
 
     def dispose(self):
         """Dispose method for stopping child process `evtest`."""
@@ -171,8 +189,7 @@ class StreamdeckHandler(EventHandlerBase):
 
         try:
             key = StreamdeckInput(deck_key)
-            key_image_map = self._library.get_key_images(
-                state=self._current_state)
+            key_image_map = self._library.get_key_images(self._current_state)
             if key_image_map is None:
                 log.warning(
                     "_callback: No key_image_map for state '%s' found.",

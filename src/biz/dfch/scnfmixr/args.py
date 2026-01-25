@@ -26,6 +26,7 @@ from .public.audio import FileFormat
 from .public.audio import Format
 from .public.audio import SampleRate
 from .public.input import InputDevice
+from .public.input import MenuProfile
 from .public.storage import StorageDevice
 
 
@@ -133,6 +134,17 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
             help="Use pseudo-random name.",
         )
 
+        # Profile.
+        parser.add_argument(
+            "--profile", "-p",
+            type=str,
+            choices=[
+                MenuProfile.DEFAULT.name,
+                MenuProfile.RECORDER.name,
+                MenuProfile.PLAYBACK.name,
+            ],
+            default=MenuProfile.DEFAULT.name,
+            help="Select menu profile for user interface.",
         )
 
         # Audio format and audio parameters.
