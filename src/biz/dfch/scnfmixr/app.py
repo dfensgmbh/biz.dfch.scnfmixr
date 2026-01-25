@@ -89,6 +89,8 @@ class App:  # pylint: disable=R0903
             AudioDevice.LCL: args.LCL,
             AudioDevice.EX1: args.EX1,
             AudioDevice.EX2: args.EX2,
+            AudioDevice.IN1: args.IN1,
+            AudioDevice.IN2: args.IN2,
         }
         app_ctx.storage_device_map = {
             StorageDevice.RC1: args.RC1,

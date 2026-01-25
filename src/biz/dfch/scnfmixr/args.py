@@ -193,7 +193,21 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
             type=str,
             dest=AudioDevice.LCL.name,
             default=SKIP_USB_PORT,
-            help="Specifies USB port for local audio device."
+            help="Specifies USB port for local audio device.",
+        )
+        parser.add_argument(
+            "--insert1", "-in1",
+            type=str,
+            dest=AudioDevice.IN1.name,
+            default=SKIP_USB_PORT,
+            help="Specifies USB port for audio device insert 1.",
+        )
+        parser.add_argument(
+            "--insert2", "-in2",
+            type=str,
+            dest=AudioDevice.IN2.name,
+            default=SKIP_USB_PORT,
+            help="Specifies USB port for audio device insert 2.",
         )
         parser.add_argument(
             "--external1", "-ex1",
