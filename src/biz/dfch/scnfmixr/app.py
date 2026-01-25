@@ -66,6 +66,7 @@ class App:  # pylint: disable=R0903
         rec_params = app_ctx.recording_parameters
 
         # DFTODO - maybe find something more dynamic here?
+        # Answer (still DFTODO): Use SKIP_... as value and process it like EX2.
         rec_params.skip_rc1 = "--skip-storage1" in sys.argv
         rec_params.skip_rc2 = "--skip-storage2" in sys.argv
 
