@@ -30,6 +30,7 @@ TransitionEventEn: dict[TransitionEvent, str] = {
 Trying to detect input device ONE.
 """,
 
+    # OK
     TransitionEvent.DETECTING_DEVICE_HI1_LEAVE: """
 <<<sound-intro.wav>>>
 """,
@@ -42,8 +43,14 @@ Skipped input device ONE.
     # Menu: Detect HID HI2.
 
     # DFTODO: No audio menu.
+    # OK
     TransitionEvent.DETECTING_DEVICE_HI2_ENTER: """
 Trying to detect input device TWO.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_HI2_LEAVE: """
+<<<sound-intro.wav>>>
 """,
 
     # DFTODO: No audio menu.
