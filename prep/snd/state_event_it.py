@@ -22,6 +22,7 @@ from biz.dfch.scnfmixr.core.state_event import StateEvent
 
 StateEventIt: dict[StateEvent, str] = {
 
+    # OK
     # Detection of local audio device.
     StateEvent.INITIALISE_LCL_ENTER: """
 Il menu "Inizializzazione Dispositivo Locale"  
@@ -34,6 +35,7 @@ Premere "ASTERISCO" per ripetere questo messaggio.
     # OK
     StateEvent.INITIALISE_LCL_LEAVE: """""",  # noqa: E501
 
+    # OK
     # Detection of input device.
     StateEvent.INITIALISE_HI1_ENTER: """
 Il menu "Inizializzazione Dispositivo di Ingresso Uno"  
@@ -46,6 +48,7 @@ Premere "ASTERISCO" per ripetere questo messaggio.
     # OK
     StateEvent.INITIALISE_HI1_LEAVE: """""",  # noqa: E501
 
+    # OK
     StateEvent.SELECT_LANGUAGE_ENTER: """
 Il menu "Selezione Lingua"  
   
@@ -56,6 +59,7 @@ Scegliere "4" per italiano.
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
+    # OK
     StateEvent.INITIALISE_EX1_ENTER: """
 Il menu "Inizializzazione Dispositivo Esterno Uno"  
   
@@ -64,6 +68,7 @@ Premere "2" per saltare il rilevamento del dispositivo.
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
+    # OK
     StateEvent.INITIALISE_EX2_ENTER: """
 Il menu "Inizializzazione Dispositivo Esterno Due"  
   
@@ -72,6 +77,23 @@ Premere "2" per saltare il rilevamento del dispositivo.
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
+    # OK
+    StateEvent.INITIALISE_IN1_ENTER: """
+Menu “Inizializzazione del dispositivo effetti UNO”
+
+Premere “1” per il rilevamento del dispositivo.
+Premere “2” per saltare il rilevamento del dispositivo.
+Premere “ASTERISCO” per ripetere questo messaggio.""",  # noqa: E501
+
+    # OK
+    StateEvent.INITIALISE_IN2_ENTER: """
+Menu “Inizializzazione del dispositivo effetti DUE”
+
+Premere “1” per il rilevamento del dispositivo.
+Premere “2” per saltare il rilevamento del dispositivo.
+Premere “ASTERISCO” per ripetere questo messaggio.""",  # noqa: E501
+
+    # OK
     StateEvent.INITIALISE_RC1_ENTER: """
 Il menu "Inizializzazione Dispositivo di Archiviazione Uno"  
   
@@ -84,6 +106,7 @@ Premere "9" per pulire il dispositivo.
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
+    # OK
     StateEvent.INITIALISE_RC2_ENTER: """
 Il menu "Inizializzazione Dispositivo di Archiviazione Due"  
   
@@ -96,6 +119,7 @@ Premere "9" per pulire il dispositivo.
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
+    # OK
     StateEvent.SET_DATE_ENTER: """
 Il menu "Data"  
   
@@ -113,6 +137,7 @@ zero-tre-due-sette per il 27 marzo del 19 27.
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
+    # OK
     StateEvent.SET_TIME_ENTER: """
 Il menu "Ora"  
   
@@ -128,6 +153,7 @@ uno-quattro-zero-tre per le 2 e 3 minuti del pomeriggio.
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
+    # OK
     StateEvent.SET_NAME_ENTER: """
 Il menu "Nome"  
   
@@ -145,9 +171,7 @@ cinque-sei-quattro-due per zero-otto 15 56 42.
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
-    StateEvent.INIT_AUDIO_LEAVE: """
-""",  # noqa: E501
-
+    # OK
     StateEvent.MAIN_ENTER: """
 Il menu "Principale"  
   
@@ -162,6 +186,7 @@ Premere "9" per arrestare il dispositivo.
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
+    # OK
     StateEvent.SYSTEM_ENTER: """
 Il menu "Sistema"  
   
@@ -175,6 +200,7 @@ Premere "9" per arrestare il dispositivo.
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
+    # OK
     StateEvent.STORAGE_MANAGEMENT_ENTER: """
 Il menu "Archiviazione"  
   
@@ -190,6 +216,7 @@ Premere "9" per pulire il "Dispositivo di Archiviazione Due".
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
+    # OK
     StateEvent.INIT_AUDIO_LEAVE: """
 Sistema audio completamente inizializzato.
 """,  # noqa: E501
