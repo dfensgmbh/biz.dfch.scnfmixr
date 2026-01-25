@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,56 +16,28 @@
 """Module message_queue."""
 
 from __future__ import annotations
+
 from collections.abc import Iterable
-from dataclasses import dataclass
+from threading import Event
+from threading import Lock
+from threading import Thread
 import time
-from typing import (
-    ClassVar,
-    Callable,
-)
-from threading import Event, Lock, Thread
+from typing import Callable
+from typing import ClassVar
 
 from biz.dfch.logging import log
 from biz.dfch.asyn import ConcurrentDoubleSideQueueT
-from ..public.system import (
-    MessageBase,
-)
-from ..public.system import MessagePriority
 
+from ..public.system import MessageBase
+from ..public.system import MessagePriority
+from ..public.system.messages import SystemMessage
+
+from .action_descriptor import ActionDescriptor
+from .timer import Timer
 
 __all__ = [
     "MessageQueue",
 ]
-
-
-@dataclass(frozen=True)
-class ActionDescriptor:
-    """A item in the callback list.
-
-    Attributes:
-        action: The callback to invoke.
-        predicate: The filter to determine, if the callback shall be invoked.
-    """
-
-    action: Callable[[MessageBase], None]
-    predicate: Callable[[MessageBase], bool] | None = None
-
-    def get_key(self, action) -> str:
-        """Gets the full qualified name of the action."""
-
-        code = getattr(action, '__code__', None)
-        if code:
-            result = (
-                f"{action.__module__}."
-                f"{action.__qualname__}@{code.co_filename}:"
-                f"{code.co_firstlineno}"
-            )
-        else:
-            result = (
-                f"{action.__module__}."
-                f"{action.__qualname__}@{id(action)}"
-            )
-        return result
 
 
 class MessageQueue():  # pylint: disable=R0902
@@ -137,6 +109,12 @@ class MessageQueue():  # pylint: disable=R0902
 
         return f"{_type.__module__}.{_type.__qualname__}"
 
+    def _signal_shutdown(self) -> None:
+
+        log.debug("Signal shutdown to worker ...")
+        self._worker_do_stop = True
+        log.info("Signal shutdown to worker COMPLETED.")
+
     def _process_message(
             self,
             message: MessageBase,
@@ -145,6 +123,11 @@ class MessageQueue():  # pylint: disable=R0902
         """Processes a single message."""
 
         assert message and isinstance(message, MessageBase)
+
+        if isinstance(message, SystemMessage.Shutdown):
+            log.debug("Initiating shutdown timer ...")
+            Timer(30).start(self._signal_shutdown)
+            log.info("Initiating shutdown timer COMPLETE.")
 
         for item in callbacks:
 
