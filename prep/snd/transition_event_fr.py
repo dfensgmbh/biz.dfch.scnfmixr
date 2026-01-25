@@ -166,6 +166,53 @@ Effacer appareil clé 2 entrer
 Effacer appareil clé 2 quitter
 """,
 
+    # Menu: Detect IN1.
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN1_ENTER: """
+Tentative de détection de l’appareil d’effet 1.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN1_LEAVE: """
+Appareil d’effet 1 détecté avec succès.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN1_FAILED: """
+La détection de l’appareil d’effet 1 a échoué.
+
+Vérifiez les câbles et le port de connexion.
+""",
+
+    # OK
+    TransitionEvent.SKIPPING_DEVICE_IN1_LEAVE: """
+L’appareil d’effet 1 a été ignoré.
+""",
+
+    # Menu: Detect IN2.
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN2_ENTER: """
+Tentative de détection de l’appareil d’effet 1.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN2_LEAVE: """
+Appareil d’effet 2 détecté avec succès.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN2_FAILED: """
+La détection de l’appareil d’effet 2 a échoué.
+
+Vérifiez les câbles et le port de connexion.
+""",
+
+    # OK
+    TransitionEvent.SKIPPING_DEVICE_IN2_LEAVE: """
+L’appareil d’effet 2 a été ignoré.
+""",
+
+
     # Menu: Select language.
 
     # Menu: Initialise audio.
