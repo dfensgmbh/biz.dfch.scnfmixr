@@ -53,6 +53,18 @@ class TransitionEvent(StrEnum):
     DETECTING_DEVICE_EX2_FAILED = auto()
     SKIPPING_DEVICE_EX2_LEAVE = auto()
 
+    # Menu: Detect Audio IN1.
+    DETECTING_DEVICE_IN1_ENTER = auto()
+    DETECTING_DEVICE_IN1_LEAVE = auto()
+    DETECTING_DEVICE_IN1_FAILED = auto()
+    SKIPPING_DEVICE_IN1_LEAVE = auto()
+
+    # Menu: Detect Audio IN2.
+    DETECTING_DEVICE_IN2_ENTER = auto()
+    DETECTING_DEVICE_IN2_LEAVE = auto()
+    DETECTING_DEVICE_IN2_FAILED = auto()
+    SKIPPING_DEVICE_IN2_LEAVE = auto()
+
     # Menu: Detect storage RC1.
     DETECTING_DEVICE_RC1_ENTER = auto()
     DETECTING_DEVICE_RC1_LEAVE = auto()
