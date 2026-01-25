@@ -36,6 +36,9 @@ class StateEvent(StrEnum):
     INITIALISE_EX1_ENTER = auto()
     INITIALISE_EX2_ENTER = auto()
 
+    INITIALISE_IN1_ENTER = auto()
+    INITIALISE_IN2_ENTER = auto()
+
     INITIALISE_RC1_ENTER = auto()
     INITIALISE_RC2_ENTER = auto()
 

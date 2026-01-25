@@ -75,6 +75,12 @@ Press "2" to skip device detection.
 Press "STAR" to repeat this message.
 """,  # noqa: E501
 
+    StateEvent.INITIALISE_IN1_ENTER: """
+""",  # noqa: E501
+
+    StateEvent.INITIALISE_IN2_ENTER: """
+""",  # noqa: E501
+
     # OK
     StateEvent.INITIALISE_RC1_ENTER: """
 The "Initialise Storage Device One" menu
