@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Module alsa_inferface_info."""
+"""Module alsa_interface_info."""
 
 from dataclasses import dataclass
 

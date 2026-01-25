@@ -155,7 +155,7 @@ class TestAlsaJackAudioPointController(unittest.TestCase):
            new=MyMockAlsaToJack)
     @patch("biz.dfch.scnfmixr.mixer.alsa_jack_audio_point.JackToAlsa",
            new=MyMockJackToAlsa)
-    def test_with_resouce_manager(self):
+    def test_with_resource_manager(self):
         """Testing with resource manager releases resources."""
 
         card_id = 2
