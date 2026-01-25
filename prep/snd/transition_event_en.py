@@ -158,6 +158,52 @@ Check cabling and port location.
 Skipped storage device RC2.
 """,
 
+    # Menu: Detect IN1.
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN1_ENTER: """
+Trying to detect insert ONE.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN1_LEAVE: """
+Successfully detected insert ONE.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN1_FAILED: """
+Insert ONE detection failed.
+
+Check cabling and port location.
+""",
+
+    # OK
+    TransitionEvent.SKIPPING_DEVICE_IN1_LEAVE: """
+Skipped insert ONE.
+""",
+
+    # Menu: Detect IN2.
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN2_ENTER: """
+Trying to detect insert TWO.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN2_LEAVE: """
+Successfully detected insert TWO.
+""",
+
+    # OK
+    TransitionEvent.DETECTING_DEVICE_IN2_FAILED: """
+Insert TWO detection failed.
+
+Check cabling and port location.
+""",
+
+    # OK
+    TransitionEvent.SKIPPING_DEVICE_IN2_LEAVE: """
+Skipped insert TWO.
+""",
+
     # Menu: Initialise audio.
 
     # Menu: Main.
