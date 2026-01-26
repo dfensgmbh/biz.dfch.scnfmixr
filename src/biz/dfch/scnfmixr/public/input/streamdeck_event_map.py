@@ -82,6 +82,18 @@ _streamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_05: InputEventMap.KEY_1,
         StreamdeckInput.KEY_06: InputEventMap.KEY_2,
     },
+    "InitialiseIn1": {
+        StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
+        StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
+        StreamdeckInput.KEY_05: InputEventMap.KEY_1,
+        StreamdeckInput.KEY_06: InputEventMap.KEY_2,
+    },
+    "InitialiseIn2": {
+        StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
+        StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
+        StreamdeckInput.KEY_05: InputEventMap.KEY_1,
+        StreamdeckInput.KEY_06: InputEventMap.KEY_2,
+    },
     "SelectLanguage": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
         StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
