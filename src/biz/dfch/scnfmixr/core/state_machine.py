@@ -46,6 +46,14 @@ from .transitions import SelectingEnglish, SelectingGerman, SelectingFrench, Sel
 from .states import InitialiseLcl
 from .transitions import DetectingLcl, SkippingLcl
 
+from .states import InitialiseIn1
+from .transitions import DetectingIn1
+from .transitions import SkippingIn1
+
+from .states import InitialiseIn2
+from .transitions import DetectingIn2
+from .transitions import SkippingIn2
+
 from .states import InitialiseEx1
 from .transitions import DetectingEx1, SkippingEx1
 
@@ -124,6 +132,8 @@ from .transitions.clear_date_time_name import SystemClearName
 class State(Enum):
     """Names for state menu map."""
     INIT_LCL = auto()
+    INIT_IN1 = auto()
+    INIT_IN2 = auto()
     INIT_EX1 = auto()
     INIT_EX2 = auto()
     INIT_HI1 = auto()
@@ -328,6 +338,12 @@ class StateMachine:
 
         assert State.INIT_EX2 not in menu
         menu[State.INIT_EX2] = InitialiseEx2()
+
+        assert State.INIT_IN1 not in menu
+        menu[State.INIT_IN1] = InitialiseIn1()
+
+        assert State.INIT_IN2 not in menu
+        menu[State.INIT_IN2] = InitialiseIn2()
 
         assert State.LANGUAGE not in menu
         menu[State.LANGUAGE] = SelectLanguage()
@@ -626,6 +642,32 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_EX2]))
         )
+        current: InitialiseIn2 = menu[State.INIT_IN2]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(DetectingIn2(
+                current.Event.DETECT_DEVICE,
+                menu[State.INIT_EX1]))
+            .add_transition(SkippingIn2(
+                current.Event.SKIP_DEVICE,
+                menu[State.INIT_EX1]))
+        )
+        current: InitialiseIn1 = menu[State.INIT_IN1]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(DetectingIn1(
+                current.Event.DETECT_DEVICE,
+                menu[State.INIT_IN2]))
+            .add_transition(SkippingIn1(
+                current.Event.SKIP_DEVICE,
+                menu[State.INIT_IN2]))
+        )
         current: SelectLanguage = menu[State.LANGUAGE]
         (
             current
@@ -634,16 +676,16 @@ class StateMachine:
                 current))
             .add_transition(SelectingEnglish(
                 current.Event.SELECT_ENGLISH,
-                menu[State.INIT_EX1]))
+                menu[State.INIT_IN1]))
             .add_transition(SelectingGerman(
                 current.Event.SELECT_GERMAN,
-                menu[State.INIT_EX1]))
+                menu[State.INIT_IN1]))
             .add_transition(SelectingFrench(
                 current.Event.SELECT_FRENCH,
-                menu[State.INIT_EX1]))
+                menu[State.INIT_IN1]))
             .add_transition(SelectingItalian(
                 current.Event.SELECT_ITALIAN,
-                menu[State.INIT_EX1]))
+                menu[State.INIT_IN1]))
         )
         current: InitialiseHi2 = menu[State.INIT_HI2]
         (

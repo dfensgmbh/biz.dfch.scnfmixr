@@ -32,6 +32,12 @@ from .skipping_ex1 import SkippingEx1
 from .detecting_ex2 import DetectingEx2
 from .skipping_ex2 import SkippingEx2
 
+from .detecting_in1 import DetectingIn1
+from .skipping_in1 import SkippingIn1
+
+from .detecting_in2 import DetectingIn2
+from .skipping_in2 import SkippingIn2
+
 from .detecting_hi1 import DetectingHi1
 from .skipping_hi1 import SkippingHi1
 from .detecting_hi2 import DetectingHi2
@@ -114,6 +120,11 @@ __all__ = [
     "SkippingEx1",
     "DetectingEx2",
     "SkippingEx2",
+
+    "DetectingIn1",
+    "SkippingIn1",
+    "DetectingIn2",
+    "SkippingIn2",
 
     "DetectingHi1",
     "SkippingHi1",

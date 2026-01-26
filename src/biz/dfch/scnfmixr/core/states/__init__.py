@@ -23,6 +23,8 @@ from .initialise_hi1 import InitialiseHi1
 from .initialise_hi2 import InitialiseHi2
 from .initialise_hi3 import InitialiseHi3
 from .select_language import SelectLanguage
+from .initialise_in1 import InitialiseIn1
+from .initialise_in2 import InitialiseIn2
 from .initialise_ex1 import InitialiseEx1
 from .initialise_ex2 import InitialiseEx2
 from .initialise_rc1 import InitialiseRc1
@@ -49,12 +51,14 @@ __all__ = [
     "InitialiseLcl",
 
     "InitialiseHi1",
-    # Currently not used.
     "InitialiseHi2",
     # Currently not used.
     "InitialiseHi3",
 
     "SelectLanguage",
+
+    "InitialiseIn1",
+    "InitialiseIn2",
 
     "InitialiseEx1",
     "InitialiseEx2",
