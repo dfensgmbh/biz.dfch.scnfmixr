@@ -111,9 +111,9 @@ class MessageQueue():  # pylint: disable=R0902
 
     def _signal_shutdown(self) -> None:
 
-        log.debug("Signal shutdown to worker ...")
+        log.debug("Signal shutdown to _worker thread ...")
         self._worker_do_stop = True
-        log.info("Signal shutdown to worker COMPLETED.")
+        log.info("Signal shutdown to _worker thread COMPLETED.")
 
     def _process_message(
             self,
@@ -225,6 +225,8 @@ class MessageQueue():  # pylint: disable=R0902
                           self._EXCEPTION_TIMEOUT_MS,
                           exc_info=True)
                 time.sleep(self._EXCEPTION_TIMEOUT_MS / 1000)
+
+        log.info("_worker: Stopping COMPLETED.")
 
     def _publish(
             self,
