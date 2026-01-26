@@ -44,13 +44,13 @@ class ConnectionPolicy(Enum):
 
             Valid between any combination of points and sets.
 
-            *This is the opposite behaviour of MERGE.*
+            *This is the opposite behavior of MERGE.*
         MERGE: Connects all source points to the first sink point. If source is
             a point, MERGE will behave like MONO.
 
             Valid between any combination of points and sets.
 
-            *This is the opposite behaviour of BCAST.*
+            *This is the opposite behavior of BCAST.*
         TRUNC: Connects as many source points to as many sink points as
             possible. If source count is greater than sink count, not all source
             points will be connected. If source count is less than sink count,

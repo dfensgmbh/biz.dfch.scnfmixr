@@ -22,7 +22,7 @@ __all__ = [
 
 
 class ConnectionInfo:
-    """Information about JACK clients and conections.
+    """Information about JACK clients and connections.
 
     Each key holds an entry in the form `client:port` with port `text_number`.
     Optionally, the `client` segment can have additional '`:`'.
@@ -124,7 +124,7 @@ class ConnectionInfo:
 
     @property
     def clients(self) -> dict[str, list[tuple[str, str]]]:
-        """Returns connecections grouped by client names.
+        """Returns connections grouped by client names.
 
         * `'system'`
             * `'system:capture_1' : 'system:playback_1'`
@@ -187,7 +187,7 @@ class ConnectionInfo:
                     e[self.IDX_CLIENT])[self.IDX_CLIENT] == value]
 
     def is_client(self, value: str) -> bool:
-        """Determines wheter the specified client name (**`system`**) exists.
+        """Determines whether the specified client name (**`system`**) exists.
 
         Args:
             value (str): The client name to match.
@@ -204,7 +204,7 @@ class ConnectionInfo:
             for e in self._values)
 
     def is_entry(self, value: str) -> bool:
-        """Determines wheter the specified entry name (**`system:capture_1`**)
+        """Determines whether the specified entry name (**`system:capture_1`**)
         exists.
 
         Args:
@@ -219,7 +219,7 @@ class ConnectionInfo:
         return any(e[self.IDX_NAME] == value for e in self._values.keys())
 
     def is_source(self, value: str) -> bool:
-        """Determines wheter the specified entry name (**`system:capture_1`**)
+        """Determines whether the specified entry name (**`system:capture_1`**)
         is a source.
 
         Args:
@@ -236,7 +236,7 @@ class ConnectionInfo:
                    for e in self._values.keys())
 
     def is_sink(self, value: str) -> bool:
-        """Determines wheter the specified entry name (**`system:capture_1`**)
+        """Determines whether the specified entry name (**`system:capture_1`**)
         is a sink.
 
         Args:
