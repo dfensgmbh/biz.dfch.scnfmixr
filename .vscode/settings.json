@@ -58,6 +58,7 @@
         "dmask",
         "dphys",
         "DSEA",
+        "dtoverlay",
         "dtparam",
         "ecasound",
         "eeprom",
