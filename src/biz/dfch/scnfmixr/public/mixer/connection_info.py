@@ -446,6 +446,17 @@ class ConnectionInfo:
             for key, values in self._values.items()
         )
 
+    def as_list(self) -> list[str]:
+        """Returns the connection info as a list of strings."""
+
+        result = sorted([
+            f"{key[0]} ({'source' if not key[1] else 'sink'}): "
+            f"{', '.join(values)}"
+            for key, values in self._values.items()
+        ])
+
+        return result
+
     def __repr__(self):
         return self.__str__()
 

@@ -140,11 +140,17 @@ class JackSignalManager(AcquirableManagerMixin):
                 if current == self._info:
                     continue
 
+                info_previous = set(self._info.as_list())
+                items_changed = '\n'.join([
+                    item for item in current.as_list()
+                    if item not in info_previous
+                ])
+
                 self._info = current
 
                 self._mq.publish(
                     Topology.ChangedNotification(self._info))
-                log.debug("Topology changed: %s", self._info)
+                log.debug("Topology changed:\n%s", items_changed)
 
                 self._update_point_state(self._info)
                 self._update_path_state(self._info)
