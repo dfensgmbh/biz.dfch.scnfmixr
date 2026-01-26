@@ -89,7 +89,7 @@ class AlsaStreamInfoParser(MultiLineTextParser):
             interface
             for interface in self.visitor.get_capture_interfaces()
             if interface.bit_depth != 0
-            and 1 <= interface.channel_count <= 2
+            and 1 <= interface.channel_count <= 6
             and any(rate % 16000 == 0 or rate == 44100 for rate in
                     interface.rates)
         ]
@@ -116,7 +116,7 @@ class AlsaStreamInfoParser(MultiLineTextParser):
             interface
             for interface in self.visitor.get_playback_interfaces()
             if interface.bit_depth != 0
-            and 1 <= interface.channel_count <= 2
+            and 1 <= interface.channel_count <= 6
             and any(rate % 16000 == 0 or rate == 44100 for rate in
                     interface.rates)
         ]
