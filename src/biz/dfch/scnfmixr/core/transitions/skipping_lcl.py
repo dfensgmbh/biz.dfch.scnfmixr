@@ -21,7 +21,7 @@ from ..transition_event import TransitionEvent
 
 
 class SkippingLcl(TransitionBase):
-    """Skips LCL audio device initialisation."""
+    """Skips LCL audio device initialization."""
 
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""

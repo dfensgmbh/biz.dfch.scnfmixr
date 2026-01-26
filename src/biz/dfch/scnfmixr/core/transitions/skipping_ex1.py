@@ -21,7 +21,7 @@ from ..transition_event import TransitionEvent
 
 
 class SkippingEx1(TransitionBase):
-    """Skips EX1 audio device initialisation."""
+    """Skips EX1 audio device initialization."""
 
     def __init__(self, event: str, target: StateBase):
         """Default ctor."""

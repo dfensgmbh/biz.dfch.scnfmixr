@@ -38,7 +38,7 @@ class InitialiseAudio(StateBase):
 
         HELP = InputEventMap.KEY_ASTERISK
         INIT_AUDIO = InputEventMap.KEY_1
-        # DFTODO: why would we ever skip audio initialisation?
+        # DFTODO: why would we ever skip audio initialization?
         SKIP_AUDIO = InputEventMap.KEY_2
 
     def __init__(self):
