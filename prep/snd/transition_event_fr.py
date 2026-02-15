@@ -26,9 +26,7 @@ TransitionEventFr: dict[TransitionEvent, str] = {
     # Menu: Detect HID HI1.
 
     TransitionEvent.DETECTING_DEVICE_HI1_ENTER: """
-Détection appareil interface 1 entrer
-
-""",
+Tentative de détection de l'interface UN""",
 
     TransitionEvent.DETECTING_DEVICE_HI1_LEAVE: """
 Détection appareil interface 1 quitter
