@@ -155,7 +155,8 @@ Vérifiez les câbles et le port de connexion.""",
     # Menu: Clean storage RC1.
     # OK
     TransitionEvent.CLEANING_DEVICE_RC1_ENTER: """
-Tentative de suppression des enregistrements du périphérique de mémoire numéro 1.
+Tentative de suppression des enregistrements du périphérique 
+de mémoire numéro 1.
 """,
     # OK
     TransitionEvent.CLEANING_DEVICE_RC1_LEAVE: """
@@ -165,7 +166,8 @@ Suppression des enregistrements du périphérique de mémoire numéro 1 réussi.
     # Menu: Clean storage RC2.
     # OK
     TransitionEvent.CLEANING_DEVICE_RC2_ENTER: """
-Tentative de suppression des enregistrements du périphérique de mémoire numéro 2.
+Tentative de suppression des enregistrements du périphérique 
+de mémoire numéro 2.
 """,
     # OK
     TransitionEvent.CLEANING_DEVICE_RC2_LEAVE: """
@@ -295,7 +297,8 @@ Cela peut prendre quelques secondes.
     # OK
     TransitionEvent.STOPPING_RECORDING_LEAVE: """
 Enregistrement arrêté.
-Vous pouvez maintenant accéder au menu de lecture pour écouter ou supprimer l’enregistrement.
+Vous pouvez maintenant accéder au menu de lecture pour 
+écouter ou supprimer l’enregistrement.
 """,
 
     # No audio menu necessary.
