@@ -24,144 +24,152 @@ from biz.dfch.scnfmixr.core.transition_event import TransitionEvent
 TransitionEventFr: dict[TransitionEvent, str] = {
 
     # Menu: Detect HID HI1.
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_HI1_ENTER: """
-Tentative de détection de l'interface UN""",
+Tentative de détection du périphérique d'entrée UN""",
 
+    # OK
     TransitionEvent.DETECTING_DEVICE_HI1_LEAVE: """
-Détection appareil interface 1 quitter
-""",
+sound-intro.wav""",
 
+    # OK
     TransitionEvent.SKIPPING_DEVICE_HI1_LEAVE: """
-Sauter appareil interface 1 quitter
+Périphérique d'entrée UN ignoré
 """,
 
     # Menu: Detect HID HI2.
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_HI2_ENTER: """
-Détection appareil interface 2 entrer
+Tentative de détection du périphérique d'entrée DEUX"
 """,
 
+    # OK
     TransitionEvent.DETECTING_DEVICE_HI2_LEAVE: """
-Détection appareil interface 2 quitter
+sound-intro.wav
 """,
 
+    # OK
     TransitionEvent.SKIPPING_DEVICE_HI2_LEAVE: """
-Sauter appareil interface 2 quitter
+Périphérique d'entrée DEUX ignoré.
 """,
 
     # Menu: Detect HID HI3.
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_HI3_ENTER: """
-Détection appareil interface 3 entrer
+Tentative de détection du périphérique d'entrée TROIS.
 """,
 
+    # OK
     TransitionEvent.DETECTING_DEVICE_HI3_LEAVE: """
-Détection appareil interface 3 quitter
+sound-intro.wav
 """,
 
+    # OK
     TransitionEvent.SKIPPING_DEVICE_HI3_LEAVE: """
-Sauter appareil interface 3 quitter
+Périphérique d'entrée TROIS ignoré.
 """,
 
     # Menu: Detect Audio LCL.
+    # OK. No audio menu necessary.
 
     TransitionEvent.DETECTING_DEVICE_LCL_ENTER: """
-Détection appareil local entrer
 """,
 
     TransitionEvent.DETECTING_DEVICE_LCL_LEAVE: """
-Détection appareil local quitter
 """,
 
     TransitionEvent.SKIPPING_DEVICE_LCL_LEAVE: """
-Sauter appareil local quitter
 """,
 
     # Menu: Detect Audio EX1.
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_EX1_ENTER: """
-Détection appareil externe 1 entrer
+Tentative de détection du périphérique externe numéro 1.
 """,
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_EX1_LEAVE: """
-Détection appareil externe 1 quitter
+Périphérique externe numéro 1 détecté avec succès.
 """,
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_EX1_FAILED: """
-""",
-
+Échec de la détection du périphérique externe numéro 1.
+Vérifiez les câbles et le port de connexion.""",
+    # OK
     TransitionEvent.SKIPPING_DEVICE_EX1_LEAVE: """
-""",
+Périphérique externe numéro 1 ignoré.""",
 
     # Menu: Detect Audio EX2.
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_EX2_ENTER: """
-Détection appareil externe 2 entrer
+Tentative de détection du périphérique externe numéro 2.
 """,
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_EX2_LEAVE: """
-Détection appareil externe 2 quitter
+Périphérique externe numéro 2 détecté avec succès.
 """,
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_EX2_FAILED: """
+Échec de la détection du périphérique externe numéro 2.
+Vérifiez les câbles et le port de connexion.
 """,
-
+    # OK
     TransitionEvent.SKIPPING_DEVICE_EX2_LEAVE: """
-""",
+Périphérique externe numéro 2 ignoré.""",
 
     # Menu: Detect storage RC1.
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_RC1_ENTER: """
-Détection appareil  clé 1 entrer
+Tentative de détection du périphérique de mémoire numéro 1
 """,
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_RC1_LEAVE: """
-Détection appareil clé 1 quitter
+Périphérique de mémoire numéro 1 détecté avec succès
 """,
-
+    # OK
     TransitionEvent.SKIPPING_DEVICE_RC1_LEAVE: """
-Sauter appareil clé 1 quitter
+Périphérique de mémoire numéro 1 ignoré.
 """,
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_RC1_FAILED: """
-""",
+Échec de la détection du périphérique de mémoire numéro 1.
+Vérifiez les câbles et le port de connexion.""",
 
     # Menu: Detect storage RC2.
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_RC2_ENTER: """
-Détection appareil  clé 2 entrer
+Tentative de détection du périphérique de mémoire numéro 2.
 """,
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_RC2_LEAVE: """
-Détection appareil clé 2 quitter
+Périphérique de mémoire numéro 2 détecté avec succès.
 """,
-
+    # OK
     TransitionEvent.SKIPPING_DEVICE_RC2_LEAVE: """
-Sauter appareil clé 2 quitter
+Périphérique de mémoire numéro 2 ignoré.
 """,
-
+    # OK
     TransitionEvent.DETECTING_DEVICE_RC2_FAILED: """
-""",
+Échec de la détection du périphérique de mémoire numéro 2.
+Vérifiez les câbles et le port de connexion.""",
 
     # Menu: Clean storage RC1.
-
+    # OK
     TransitionEvent.CLEANING_DEVICE_RC1_ENTER: """
-Effacer appareil clé 1 entrer
+Tentative de suppression des enregistrements du périphérique de mémoire numéro 1.
 """,
-
+    # OK
     TransitionEvent.CLEANING_DEVICE_RC1_LEAVE: """
-Effacer appareil clé 1 quitter
+Suppression des enregistrements du périphérique de mémoire numéro 1 réussi.
 """,
 
     # Menu: Clean storage RC2.
-
+    # OK
     TransitionEvent.CLEANING_DEVICE_RC2_ENTER: """
-Effacer appareil clé 2 entrer
+Tentative de suppression des enregistrements du périphérique de mémoire numéro 2.
 """,
-
+    # OK
     TransitionEvent.CLEANING_DEVICE_RC2_LEAVE: """
-Effacer appareil clé 2 quitter
+Suppression des enregistrements du périphérique de mémoire numéro 2 réussi.
 """,
 
     # Menu: Detect IN1.
@@ -214,126 +222,134 @@ L’appareil d’effet 2 a été ignoré.
     # Menu: Select language.
 
     # Menu: Initialise audio.
-
+    # OK
     TransitionEvent.INITIALISING_AUDIO_ENTER: """
-Initialisation audio entrer
+L'audio est en cours d'initialisation.
 """,
-
+    # OK
     TransitionEvent.INITIALISING_AUDIO_LEAVE: """
-Initialisation audio quitter
+L'audio a été initialisé.
 """,
 
     # Menu: Main.
-
+    # OK
     TransitionEvent.STARTING_RECORDING_ENTER: """
-Démarrage enregistrement entrer
+Préparation à l’enregistrement.
 """,
-
+    # OK
     TransitionEvent.STARTING_RECORDING_LEAVE: """
-Démarrage enregistrement quitter
+Enregistrement démarré.
 """,
-
+    # OK
     TransitionEvent.DELETING_LAST_TAKE_ENTER: """
+Tentative de suppression du dernier enregistrement.
 """,
-
+    # OK
     TransitionEvent.DELETING_LAST_TAKE_LEAVE: """
+Suppression du dernier enregistrement réussie.
 """,
 
     # Menu: System.
-
+    # OK
     TransitionEvent.MOUNTING_STORAGE_ENTER: """
-Montage mémoire entrer
+Tentative d'activer le périphérique de mémoire.
 """,
-
+    # OK
     TransitionEvent.MOUNTING_STORAGE_LEAVE: """
-Montage mémoire quitter
+Activation du périphérique réussie.
 """,
-
+    # OK
     TransitionEvent.DISCONNECTING_STORAGE_ENTER: """
-Déconnexion mémoire entrer
+Tentative de déconnection du périphérique de mémoire.
 """,
-
+    # OK
     TransitionEvent.DISCONNECTING_STORAGE_LEAVE: """
-Déconnexion mémoire quitter
+Déconnexion du périphérique de mémoire réussie.
 """,
-
+    # OK
     TransitionEvent.FORMATTING_STORAGE_ENTER: """
-Formater mémoire entrer
+Tentative de formatage du périphérique de mémoire.
+Toutes les données sur ce périphérique seront supprimées.
 """,
-
+    # OK
     TransitionEvent.FORMATTING_STORAGE_LEAVE: """
-Formater mémoire quitter
+Formatage du périphérique de mémoire réussi.
 """,
-
+    # OK
     TransitionEvent.STOPPING_SYSTEM_ENTER: """
-Arrêt système entrer
+Le système est en cours d'arrêt.
 """,
 
     # Menu: OnRecord.
-
+    # OK
     TransitionEvent.HELPING_ONRECORD_LEAVE: """
-""",
-
+Le menu « Enregistrement ».
+Appuyez sur «1» pour arrêter l’enregistrement.
+Appuyez sur «2» pour définir un marqueur de repère.
+Appuyez sur «Étoile» pour répéter ce message.""",
+    # OK
     TransitionEvent.STOPPING_RECORDING_ENTER: """
-Arrêt enregistrement entrer
+Arrêt de l’enregistrement.
+Cela peut prendre quelques secondes.
 """,
-
+    # OK
     TransitionEvent.STOPPING_RECORDING_LEAVE: """
-Arrêt enregistrement quitter
+Enregistrement arrêté.
+Vous pouvez maintenant accéder au menu de lecture pour écouter ou supprimer l’enregistrement.
 """,
 
+    # No audio menu necessary.
     TransitionEvent.SETTING_CUEPOINT_LEAVE: """
-Définition marqueur quitter
 """,
 
+    # No audio menu necessary.
     TransitionEvent.TOGGLING_MUTE_LEAVE: """
-Alternation muet quitter
 """,
 
+    # No audio menu necessary.
     TransitionEvent.SHOWING_STATUS_LEAVE: """
-Afficher statut quitter
 """,
 
     # Menu: Date, Time, Name
 
+    # No audio menu necessary.
     TransitionEvent.PROCESSING_DIGIT_LEAVE: """
-Traitement chiffre quitter
+""",
+    # OK
+    TransitionEvent.PROCESSING_DIGIT0_LEAVE: """zéro
+""",
+    # OK
+    TransitionEvent.PROCESSING_DIGIT1_LEAVE: """un
+""",
+    # OK
+    TransitionEvent.PROCESSING_DIGIT2_LEAVE: """deux
+""",
+    # OK
+    TransitionEvent.PROCESSING_DIGIT3_LEAVE: """trois
+""",
+    # OK
+    TransitionEvent.PROCESSING_DIGIT4_LEAVE: """quatre
+""",
+    # OK
+    TransitionEvent.PROCESSING_DIGIT5_LEAVE: """cinq
+""",
+    # OK
+    TransitionEvent.PROCESSING_DIGIT6_LEAVE: """six
+""",
+    # OK
+    TransitionEvent.PROCESSING_DIGIT7_LEAVE: """sept
+""",
+    # OK
+    TransitionEvent.PROCESSING_DIGIT8_LEAVE: """huit
+""",
+    # OK
+    TransitionEvent.PROCESSING_DIGIT9_LEAVE: """neuf
 """,
 
-    TransitionEvent.PROCESSING_DIGIT0_LEAVE: """
+    TransitionEvent.PROCESSING_DIGIT_OK_LEAVE: """OK
 """,
 
-    TransitionEvent.PROCESSING_DIGIT1_LEAVE: """
-""",
-
-    TransitionEvent.PROCESSING_DIGIT2_LEAVE: """
-""",
-
-    TransitionEvent.PROCESSING_DIGIT3_LEAVE: """
-""",
-
-    TransitionEvent.PROCESSING_DIGIT4_LEAVE: """
-""",
-
-    TransitionEvent.PROCESSING_DIGIT5_LEAVE: """
-""",
-
-    TransitionEvent.PROCESSING_DIGIT6_LEAVE: """
-""",
-
-    TransitionEvent.PROCESSING_DIGIT7_LEAVE: """
-""",
-
-    TransitionEvent.PROCESSING_DIGIT8_LEAVE: """
-""",
-
-    TransitionEvent.PROCESSING_DIGIT9_LEAVE: """
-""",
-
-    TransitionEvent.PROCESSING_DIGIT_OK_LEAVE: """
-""",
-
-    TransitionEvent.PROCESSING_DIGIT_BACKSPACE_LEAVE: """
+    TransitionEvent.PROCESSING_DIGIT_BACKSPACE_LEAVE: """retour arrière
 """,
 
     # Menu: Playback
