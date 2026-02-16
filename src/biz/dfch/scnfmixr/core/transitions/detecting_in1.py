@@ -22,10 +22,13 @@ from ...audio import AudioDeviceInfo
 from ...alsa_usb import AlsaStreamInfoParser
 from ...audio import UsbAudioDeviceNotDetectedError
 from ...mixer import AudioMixer
+from ...mixer.jack_bus_device import JackBusDevice
 from ...public.audio import AudioDevice
 from ...public.mixer import AudioInput, AudioOutput
 from ...public.mixer import ConnectionPolicy
 from ...public.mixer import MixbusDevice
+from ...public.mixer import IsoChannelDry
+from ...public.mixer import IsoChannelWet
 from ...public.system.messages import SystemMessage
 from ...mixer import DeviceFactory
 from ..fsm import UiEventInfo
@@ -80,7 +83,28 @@ class DetectingIn1(TransitionBase):
                 parser=parser
             )
             jack_device.acquire()
-            # mixbus = AudioMixer.Factory.get().mixbus
+
+            mixbus = AudioMixer.Factory.get().mixbus
+            for mixbus_device in mixbus.devices:
+                log.warning("device: '%s'.", mixbus_device.name)
+            dr1 = mixbus.get_device(MixbusDevice.DR1)
+            assert isinstance(dr1, JackBusDevice), type(dr1)
+
+            wt1 = mixbus.get_device(MixbusDevice.WT1)
+            assert isinstance(wt1, JackBusDevice), wt1
+
+            jack_device.connect_to(wt1.as_sink_set(), ConnectionPolicy.DUAL)
+
+            dr1.sources[IsoChannelDry.MST_LEFT].connect_to(
+                jack_device.sinks[2])
+            dr1.sources[IsoChannelDry.MST_RIGHT].connect_to(
+                jack_device.sinks[3])
+
+            jack_device.sources[IsoChannelDry.MST_LEFT].connect_to(
+                wt1.sinks[IsoChannelWet.MST_LEFT])
+            jack_device.sources[IsoChannelDry.MST_RIGHT].connect_to(
+                wt1.sinks[IsoChannelWet.MST_RIGHT])
+
             # channel = mixbus.get_device(MixbusDevice.DR1)
             # assert channel is not None
             # jack_device.connect_to(channel.as_sink_set(), ConnectionPolicy.DUAL)

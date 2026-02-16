@@ -94,15 +94,19 @@ class DeviceFactory:
         mx6.connect_to(mx0.as_sink_set(), ConnectionPolicy.DUAL)
 
         dr0.connect_to(wt0.as_sink_set(), ConnectionPolicy.DUAL)
-        dr1.connect_to(wt1.as_sink_set(), ConnectionPolicy.DUAL)
+
+        # NOTE: This connection will be removed, and created in
+        # SkippingIn2.
         dr2.connect_to(wt2.as_sink_set(), ConnectionPolicy.DUAL)
 
-        dr1.connect_to(mx3.as_sink_set(), ConnectionPolicy.DUAL)
         dr2.connect_to(mx3.as_sink_set(), ConnectionPolicy.DUAL)
+        wt1.connect_to(mx3.as_sink_set(), ConnectionPolicy.DUAL)
+
         dr0.connect_to(mx4.as_sink_set(), ConnectionPolicy.DUAL)
         dr2.connect_to(mx4.as_sink_set(), ConnectionPolicy.DUAL)
+
         dr0.connect_to(mx5.as_sink_set(), ConnectionPolicy.DUAL)
-        dr2.connect_to(mx5.as_sink_set(), ConnectionPolicy.DUAL)
+        wt1.connect_to(mx5.as_sink_set(), ConnectionPolicy.DUAL)
 
         mx0.connect_to(mx1.as_sink_set(), ConnectionPolicy.DUAL)
         dr0.sources[IsoChannelDry.MST_LEFT].connect_to(
