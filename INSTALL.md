@@ -547,7 +547,7 @@ These are the steps for "Hardening" the system:
 
 ## Boot order
 
-Make sure, that the system only starts from internal eMMC.
+Make sure, that the system only starts from internal eMMC. See [BOOT_ORDER](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#BOOT_ORDER) for more information.
 
 NOTE: This is a CM5 "Lite" Compute Module. This Compute Module has integrated eMMC. The external SD card will not operate.
 
