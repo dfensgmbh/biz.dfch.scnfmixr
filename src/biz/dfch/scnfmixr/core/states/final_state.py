@@ -36,11 +36,6 @@ from ...public.system.messages import SystemMessage
 class FinalState(StateBase):
     """Implements FinalState of the application."""
 
-    _SUDO_FULLNAME = "/usr/bin/sudo"
-    _SHUTDOWN_FULLNAME = "/usr/sbin/shutdown"
-    _SHUTDOWN_OPT_HALT = "-h"
-    _SHUTDOWN_OPT_NOW = "now"
-
     class Event(StrEnum):
         """Events for this state."""
 
@@ -89,20 +84,9 @@ class FinalState(StateBase):
     def _shutdown(self, wait_time_ms: int = 10000) -> None:
         """Stop the system."""
 
-        log.debug("Try to stop the system. Waiting '%s' ms ...", wait_time_ms)
+        log.debug("Shutdown in progress. Waiting '%s' ms ...", wait_time_ms)
 
         time.sleep(wait_time_ms / 1000)
-
-        log.debug("Try to stop the system now.")
-        cmd: list[str] = [
-            self._SUDO_FULLNAME,
-            self._SHUTDOWN_FULLNAME,
-            self._SHUTDOWN_OPT_HALT,
-            self._SHUTDOWN_OPT_NOW,
-        ]
-        log.info("Try to stop the system now. Pending ...")
-
-        Process.start(cmd, wait_on_completion=True)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.
