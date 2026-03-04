@@ -166,6 +166,7 @@
         "usbhid",
         "usbid",
         "usermod",
+        "vcgencmd",
         "venv",
         "venvdeb",
         "venvpi",

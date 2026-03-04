@@ -551,11 +551,42 @@ Make sure, that the system only starts from internal eMMC. See [BOOT_ORDER](http
 
 NOTE: This is a CM5 "Lite" Compute Module. This Compute Module has integrated eMMC. The external SD card will not operate.
 
+First, make sure that the `firmware` partition is read-write:
+
+```sh
+sudo mount -o remount,rw /boot/firmware
+```
+
 ```sh
 $ sudo rpi-eeprom-config --edit
 
 [all]  
 BOOT_ORDER=0xf1
+```
+
+## Power settings
+
+First, make sure that the `firmware` partition is read-write:
+
+```sh
+sudo mount -o remount,rw /boot/firmware
+```
+
+```sh
+$ sudo rpi-eeprom-config --edit
+
+[all]  
+PSU_MAX_CURRENT=5000
+```
+
+Make sure that you get this output after you started the CM5 again:
+
+```sh
+$ vcgencmd get_config usb_max_current_enable
+usb_max_current_enable=1
+
+$ vcgencmd get_throttled
+throttled=0x0
 ```
 
 ## `pi` user account
