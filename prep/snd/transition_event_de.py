@@ -339,10 +339,10 @@ Aufnahme gestoppt.
 Sie können jetzt zum Wiedergabemenü gehen und die Aufnahme anhören oder löschen.
 """,
 
-    # No audio menu necessary.
+
     TransitionEvent.SETTING_CUEPOINT_LEAVE: """""",
 
-    # No audio menu necessary.
+
     TransitionEvent.TOGGLING_MUTE_LEAVE: """""",
 
     # No audio menu necessary.
@@ -353,94 +353,82 @@ Sie können jetzt zum Wiedergabemenü gehen und die Aufnahme anhören oder lösc
     # No audio menu necessary.
     TransitionEvent.PROCESSING_DIGIT_LEAVE: """""",
 
-    # No audio menu necessary.
     # OK
     TransitionEvent.PROCESSING_DIGIT0_LEAVE: """
 Null""",
 
-    # No audio menu necessary.
     # OK
     TransitionEvent.PROCESSING_DIGIT1_LEAVE: """
 Eins""",
 
-    # No audio menu necessary.
     # OK
     TransitionEvent.PROCESSING_DIGIT2_LEAVE: """
 Zwei""",
 
-    # No audio menu necessary.
     # OK
     TransitionEvent.PROCESSING_DIGIT3_LEAVE: """
 Drei""",
 
-    # No audio menu necessary.
     # OK
     TransitionEvent.PROCESSING_DIGIT4_LEAVE: """
 Vier""",
 
-    # No audio menu necessary.
     # OK
     TransitionEvent.PROCESSING_DIGIT5_LEAVE: """
 Fünf""",
 
-    # No audio menu necessary.
     # OK
     TransitionEvent.PROCESSING_DIGIT6_LEAVE: """
 Sechs""",
 
-    # No audio menu necessary.
     # OK
     TransitionEvent.PROCESSING_DIGIT7_LEAVE: """
 Sieben""",
 
-    # No audio menu necessary.
     # OK
     TransitionEvent.PROCESSING_DIGIT8_LEAVE: """
 Acht""",
 
-    # No audio menu necessary.
     # OK
     TransitionEvent.PROCESSING_DIGIT9_LEAVE: """
 Neun""",
 
-    # No audio menu necessary.
     # OK
     TransitionEvent.PROCESSING_DIGIT_OK_LEAVE: """""",
 
-    # No audio menu necessary.
     # OK
     TransitionEvent.PROCESSING_DIGIT_BACKSPACE_LEAVE: """""",
 
     # Menu: Playback
 
-    # No audio menu necessary.
+
     TransitionEvent.LEAVING_PLAYBACK_LEAVE: """""",
 
-    # No audio menu necessary.
+
     TransitionEvent.SELECTING_PAUSE_LEAVE: """""",
 
-    # No audio menu necessary.
+
     TransitionEvent.SELECTING_RESUME_LEAVE: """""",
 
-    # No audio menu necessary.
+
     TransitionEvent.JUMPING_CUE_NEXT_LEAVE: """""",
 
-    # No audio menu necessary.
+
     TransitionEvent.JUMPING_CUE_PREVIOUS_LEAVE: """""",
 
-    # No audio menu necessary.
+
     TransitionEvent.SEEKING_NEXT_LEAVE: """""",
 
-    # No audio menu necessary.
+
     TransitionEvent.SEEKING_PREVIOUS_LEAVE: """""",
 
-    # No audio menu necessary.
+
     TransitionEvent.HELPING_PLAYBACK_LEAVE: """""",
 
-    # No audio menu necessary.
+
     TransitionEvent.JUMPING_CLIP_NEXT_LEAVE: """""",
 
-    # No audio menu necessary.
+
     TransitionEvent.JUMPING_CLIP_PREVIOUS_LEAVE: """""",
 
     # No specific menu.
