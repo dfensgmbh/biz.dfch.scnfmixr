@@ -40,7 +40,26 @@ class TestResSndFiles(unittest.TestCase):
         }
         return result
     
-    def _test_lang(self, lang: str):
+    def _test_lang_extra(self, lang: str):
+        base_path = Path(scnfmixr.__file__).resolve().parent
+        left_path: Path = base_path / self.res_dir / self.src_lang
+        right_path: Path = base_path / self.res_dir / lang
+
+        print(left_path)
+        print(right_path)
+        files_left = self._get_filenames(left_path)
+        files_right = self._get_filenames(right_path)
+
+        extra = files_right - files_left
+
+        self.assertFalse(
+            extra,
+            f"[{len(files_left)}:{len(files_right)}:{len(extra)}] "
+            f"[{lang}] "
+            f"Extra files: [{sorted(extra)}]"
+        )
+
+    def _test_lang_missing(self, lang: str):
         base_path = Path(scnfmixr.__file__).resolve().parent
         left_path: Path = base_path / self.res_dir / self.src_lang
         right_path: Path = base_path / self.res_dir / lang
@@ -51,14 +70,6 @@ class TestResSndFiles(unittest.TestCase):
         files_right = self._get_filenames(right_path)
 
         missing = files_left - files_right
-        extra = files_right - files_left
-
-        self.assertFalse(
-            extra,
-            f"[{len(files_left)}:{len(files_right)}:{len(extra)}] "
-            f"[{lang}] "
-            f"Extra files: [{sorted(extra)}]"
-        )
 
         self.assertFalse(
             missing,
@@ -67,17 +78,38 @@ class TestResSndFiles(unittest.TestCase):
             f"Missing files: [{sorted(missing)}]"
         )
 
-    def test_de(self):
+    def test_de_extra(self):
         """Examine resource EN and DE wave sound files."""
 
-        self._test_lang("de")
+        lang = "de"
+        self._test_lang_extra(lang)
 
-    def test_fr(self):
+    def test_de_missing(self):
+        """Examine resource EN and DE wave sound files."""
+
+        lang = "de"
+        self._test_lang_missing(lang)
+
+    def test_fr_extra(self):
         """Examine resource EN and FR wave sound files."""
 
-        self._test_lang("fr")
+        lang = "fr"
+        self._test_lang_extra(lang)
 
-    def test_it(self):
+    def test_fr_missing(self):
+        """Examine resource EN and FR wave sound files."""
+
+        lang = "fr"
+        self._test_lang_missing(lang)
+
+    def test_it_extra(self):
         """Examine resource EN and IT wave sound files."""
 
-        self._test_lang("it")
+        lang = "it"
+        self._test_lang_extra(lang)
+
+    def test_it_missing(self):
+        """Examine resource EN and IT wave sound files."""
+
+        lang = "it"
+        self._test_lang_missing(lang)
