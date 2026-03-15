@@ -216,7 +216,7 @@ class AudioMenu(IAcquirable):
         log.debug("_on_state_enter ...")
         result = self._client.load_menu_queue(lambda e: e in message.path)
         if 0 >= len(result):
-            log.warning("_on_state_enter: no file found.")
+            log.warning("_on_state_enter: no file found ['%s'].", message.path)
             return
 
         log.info("_on_state_enter [%s].", result)
@@ -248,7 +248,7 @@ class AudioMenu(IAcquirable):
         self._client.clear()
         result = self._client.load_menu_queue(lambda e: e in message.path)
         if 0 >= len(result):
-            log.warning("_on_state_leave: no file found.")
+            log.warning("_on_state_leave: no file found ['%s'].", message.path)
             return
 
         log.info("_on_state_leave [%s].", result)
@@ -266,7 +266,8 @@ class AudioMenu(IAcquirable):
         log.debug("_on_transition_enter ...")
         result = self._client.load_menu_queue(lambda e: e in message.path)
         if 0 >= len(result):
-            log.warning("_on_transition_enter: no file found.")
+            log.warning(
+                "_on_transition_enter: no file found ['%s'].", message.path)
             return
 
         log.info("_on_transition_enter [%s].", result)
@@ -285,7 +286,8 @@ class AudioMenu(IAcquirable):
         self._client.clear()
         result = self._client.load_menu_queue(lambda e: e in message.path)
         if 0 >= len(result):
-            log.warning("_on_transition_leave: no file found.")
+            log.warning(
+                "_on_transition_leave: no file found ['%s'].", message.path)
             return
 
         log.info("_on_transition_leave [%s].", result)
