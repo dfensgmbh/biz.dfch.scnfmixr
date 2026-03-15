@@ -43,7 +43,6 @@ class MediaPlayerClient(IAcquirable):
     _type: MediaPlayerType
     _sync_root: Lock
     _is_acquired: bool
-    _resource_files: list[str]
 
     _env: dict[str, str]
 
@@ -54,7 +53,6 @@ class MediaPlayerClient(IAcquirable):
         self._type = _type
         self._sync_root = Lock()
         self._is_acquired = False
-        self._resource_files = []
 
         self._env = {
             self._MPD_HOST_ENV_NAME: MediaPlayerType.get_value(_type),
@@ -91,9 +89,7 @@ class MediaPlayerClient(IAcquirable):
         ]
         result, _ = self._invoke(cmd)
 
-        self._resource_files = result
-
-        return self._resource_files
+        return result
 
     def load_menu_queue(
             self,
@@ -106,6 +102,8 @@ class MediaPlayerClient(IAcquirable):
         result: list[str] = []
 
         for file in self._get_resource_files():
+            if predicate is None:
+                continue
             if not predicate(file):
                 continue
 
@@ -147,6 +145,8 @@ class MediaPlayerClient(IAcquirable):
         files, _ = self._invoke(cmd)
 
         for file in sorted(files, reverse=True):
+            if predicate is None:
+                continue
             if not predicate(file):
                 continue
 
