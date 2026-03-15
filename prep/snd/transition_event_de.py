@@ -174,30 +174,6 @@ Erkennung des Speichergerät RC2 fehlgeschlagen.
 Speichergerät RC2 wurde übersprungen.
 """,
 
-    # Menu: Clean storage RC1.
-
-    # OK
-    TransitionEvent.CLEANING_DEVICE_RC1_ENTER: """
-Versuche, Aufnahmen vom Speichergerät RC1 zu löschen.
-""",
-
-    # OK
-    TransitionEvent.CLEANING_DEVICE_RC1_LEAVE: """
-Löschen der Aufnahmen vom Speichergerät RC1 erfolgreich.
-""",
-
-    # Menu: Clean storage RC2.
-
-    # OK
-    TransitionEvent.CLEANING_DEVICE_RC2_ENTER: """
-Versuche, Aufnahmen vom Speichergerät RC2 zu löschen.
-""",
-
-    # OK
-    TransitionEvent.CLEANING_DEVICE_RC2_LEAVE: """
-Löschen der Aufnahmen vom Speichergerät RC2 erfolgreich.
-""",
-
 
     # Menu: Detect IN1.
     # OK
@@ -247,17 +223,7 @@ Effektgerät 2 wurde übersprungen.
 
     # Menu: Initialise audio.
 
-    # OK
-    TransitionEvent.INITIALISING_AUDIO_ENTER: """
-Audio wird initialisiert
-""",
-
-    # OK
-    TransitionEvent.INITIALISING_AUDIO_LEAVE: """
-Audio ist initialisiert
-""",
-
-    # Menu: Main.
+   # Menu: Main.
 
     # OK
     TransitionEvent.STARTING_RECORDING_ENTER: """
@@ -279,7 +245,59 @@ Versuche, die letzte Aufnahme zu löschen.
 Löschen der letzten Aufnahme erfolgreich.
 """,
 
+
+
+    # Menu: Clean storage RC1.
+
+    # OK
+    TransitionEvent.CLEANING_DEVICE_RC1_ENTER: """
+Versuche, Aufnahmen vom Speichergerät RC1 zu löschen.
+""",
+
+    # OK
+    TransitionEvent.CLEANING_DEVICE_RC1_LEAVE: """
+Löschen der Aufnahmen vom Speichergerät RC1 erfolgreich.
+""",
+
+    # Menu: Clean storage RC2.
+
+    # OK
+    TransitionEvent.CLEANING_DEVICE_RC2_ENTER: """
+Versuche, Aufnahmen vom Speichergerät RC2 zu löschen.
+""",
+
+    # OK
+    TransitionEvent.CLEANING_DEVICE_RC2_LEAVE: """
+Löschen der Aufnahmen vom Speichergerät RC2 erfolgreich.
+""",
+
+
+
+
+
+    # OK
+    TransitionEvent.INITIALISING_AUDIO_ENTER: """
+Audio wird initialisiert
+""",
+
+    # OK
+    TransitionEvent.INITIALISING_AUDIO_LEAVE: """
+Audio ist initialisiert
+""",
+
+ 
     # Menu: System.
+    # OK
+    TransitionEvent.FORMATTING_STORAGE_ENTER: """
+Versuche das Speichergerät zu formatieren.
+Alle Daten auf diesem Speichergerät werden gelöscht.
+""",
+
+    # OK
+    TransitionEvent.FORMATTING_STORAGE_LEAVE: """
+Formatieren des Speichergeräts erfolgreich.
+""",
+
 
     # OK
     TransitionEvent.MOUNTING_STORAGE_ENTER: """
@@ -301,16 +319,7 @@ Versuche das Speichergerät zu trennen.
 Speichergerät erfolgreich getrennt.
 """,
 
-    # OK
-    TransitionEvent.FORMATTING_STORAGE_ENTER: """
-Versuche das Speichergerät zu formatieren.
-Alle Daten auf diesem Speichergerät werden gelöscht.
-""",
 
-    # OK
-    TransitionEvent.FORMATTING_STORAGE_LEAVE: """
-Formatieren des Speichergeräts erfolgreich.
-""",
 
     # OK
     TransitionEvent.STOPPING_SYSTEM_ENTER: """
