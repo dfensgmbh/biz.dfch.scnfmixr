@@ -83,6 +83,7 @@ class MediaPlayerClient(IAcquirable):
             self._MPC_FULLNAME,
             MediaPlayerCommand.UPDATE,
         ]
+        result, _ = self._invoke(cmd)
 
         cmd = [
             self._MPC_FULLNAME,
