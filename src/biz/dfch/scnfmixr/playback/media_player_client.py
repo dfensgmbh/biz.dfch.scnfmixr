@@ -79,8 +79,10 @@ class MediaPlayerClient(IAcquirable):
     def _get_resource_files(self) -> list[str]:
         """Loads all resources files."""
 
-        if 0 < len(self._resource_files):
-            return self._resource_files
+        cmd = [
+            self._MPC_FULLNAME,
+            MediaPlayerCommand.UPDATE,
+        ]
 
         cmd = [
             self._MPC_FULLNAME,
