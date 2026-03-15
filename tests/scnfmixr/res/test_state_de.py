@@ -13,10 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Module test_state_de."""
-
 # pylint: disable=C0112,C0116
 # mypy: disable-error-code=annotation-unchecked
+
+"""Module test_state_de."""
 
 import unittest
 
