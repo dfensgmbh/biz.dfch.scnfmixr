@@ -13,6 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# pylint: disable=C0103
+# pylint: disable=C0114
+# pylint: disable=C0115
+# pylint: disable=C0116
+# pylint: disable=C0301
+
 import unittest
 from unittest.mock import MagicMock, mock_open, patch
 
@@ -27,7 +33,11 @@ class MainTest(unittest.TestCase):
     expected_builtins_open = "This is a mock file content"
 
     @patch("os.path.isfile", return_value=True)
-    @patch("builtins.open", new_callable=mock_open, read_data=expected_builtins_open)
+    @patch(
+        "builtins.open",
+        new_callable=mock_open,
+        read_data=expected_builtins_open
+    )
     def test_read_first_file(self, mock_builtin_opens, mock_os_path_isfile):
 
         # Act
@@ -37,11 +47,12 @@ class MainTest(unittest.TestCase):
         self.assertEqual(result, self.expected_builtins_open)
 
         mock_os_path_isfile.assert_called_once_with("arbitrary_file.txt")
-        mock_builtin_opens.assert_called_once_with("arbitrary_file.txt", "r")
+        mock_builtin_opens.assert_called_once_with(
+            "arbitrary_file.txt", "r", encoding='utf-8')
 
     @patch("os.path.isfile", return_value=True)
-    @patch("builtins.open", new_callable=mock_open, read_data=expected_builtins_open)
-    def test_get_usbid_returns_usbid(self, mock_builtins_open, mock_os_path_isfile):
+    @patch("builtins.open", new_callable=mock_open, read_data=expected_builtins_open)  # noqa: E501
+    def test_get_usbid_returns_usbid(self, mock_builtins_open, mock_os_path_isfile):  # noqa: E501
 
         expected_idVendor = "1234"
         expected_idProduct = "ABCD"
