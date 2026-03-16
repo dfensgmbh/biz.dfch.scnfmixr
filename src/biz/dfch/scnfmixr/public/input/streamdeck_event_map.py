@@ -174,8 +174,6 @@ _streamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
         StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
         StreamdeckInput.KEY_05: InputEventMap.KEY_1,
-        StreamdeckInput.KEY_06: InputEventMap.KEY_2,
-        StreamdeckInput.KEY_07: InputEventMap.KEY_3,
         StreamdeckInput.KEY_0A: InputEventMap.KEY_4,
         StreamdeckInput.KEY_09: InputEventMap.KEY_5,
         StreamdeckInput.KEY_0B: InputEventMap.KEY_6,

@@ -75,8 +75,6 @@ from .processing_digit import (
 from .initializing_audio import InitializingAudio
 from .starting_recording_mixes import (
     StartingRecordingMx0,
-    StartingRecordingMx1,
-    StartingRecordingMx2,
 )
 from .stopping_recording import StoppingRecording
 from .stopping_system import StoppingSystem
@@ -146,10 +144,6 @@ __all__ = [
 
     "InitializingAudio",
 
-    "StartingRecordingMx0",
-    "StartingRecordingMx1",
-    "StartingRecordingMx2",
-
     "MountingStorage",
     "DisconnectingStorage",
     "FormattingStorage",
@@ -158,8 +152,6 @@ __all__ = [
     "StoppingSystem",
 
     "StartingRecordingMx0",
-    "StartingRecordingMx1",
-    "StartingRecordingMx2",
     "StoppingRecording",
     "TogglingMute",
     "SettingCuePoint",
