@@ -40,6 +40,7 @@ from .transitions import ReturningTrue
 from .transitions import StoppingSystem, DisconnectingStorage
 
 from .states import SelectLanguage
+from .states import ChangeLanguage
 from .transitions import SelectingEnglish, SelectingGerman, SelectingFrench, SelectingItalian \
     # pylint: disable=C0301  # noqa: E501
 
@@ -142,6 +143,7 @@ class State(Enum):
     INIT_RC1 = auto()
     INIT_RC2 = auto()
     LANGUAGE = auto()
+    CHANGE_LANGUAGE = auto()
     SET_DATE = auto()
     SET_TIME = auto()
     SET_NAME = auto()
@@ -348,6 +350,9 @@ class StateMachine:
         assert State.LANGUAGE not in menu
         menu[State.LANGUAGE] = SelectLanguage()
 
+        assert State.CHANGE_LANGUAGE not in menu
+        menu[State.CHANGE_LANGUAGE] = ChangeLanguage()
+
         assert State.INIT_RC1 not in menu
         menu[State.INIT_RC1] = InitialiseRc1()
 
@@ -405,8 +410,8 @@ class StateMachine:
                 current.Event.SELECT_MAIN,
                 menu[State.MAIN]))
             .add_transition(ReturningTrue(
-                current.Event.SELECT_LANGUAGE,
-                menu[State.LANGUAGE]))
+                current.Event.CHANGE_LANGUAGE,
+                menu[State.CHANGE_LANGUAGE]))
             .add_transition(ReturningTrue(
                 current.Event.SELECT_STORAGE,
                 menu[State.STORAGE]))
@@ -686,6 +691,25 @@ class StateMachine:
             .add_transition(SelectingItalian(
                 current.Event.SELECT_ITALIAN,
                 menu[State.INIT_IN1]))
+        )
+        current: ChangeLanguage = menu[State.CHANGE_LANGUAGE]
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(SelectingEnglish(
+                current.Event.SELECT_ENGLISH,
+                menu[State.SYSTEM]))
+            .add_transition(SelectingGerman(
+                current.Event.SELECT_GERMAN,
+                menu[State.SYSTEM]))
+            .add_transition(SelectingFrench(
+                current.Event.SELECT_FRENCH,
+                menu[State.SYSTEM]))
+            .add_transition(SelectingItalian(
+                current.Event.SELECT_ITALIAN,
+                menu[State.SYSTEM]))
         )
         current: InitialiseHi2 = menu[State.INIT_HI2]
         (

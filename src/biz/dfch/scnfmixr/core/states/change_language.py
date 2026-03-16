@@ -13,39 +13,43 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Module system_menu."""
+"""Module implementing LanguageSelection of the application."""
 
 from __future__ import annotations
 from enum import StrEnum
 
+from biz.dfch.logging import log
+
 from ...public.input import InputEventMap
+from ...app import ApplicationContext
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
 from ..state_event import StateEvent
 
 
-class System(StateBase):
-    """Implements the System menu of the application."""
+class ChangeLanguage(StateBase):
+    """
+    Implements change of language in the SYSTEM menu.
+    """
 
     class Event(StrEnum):
         """Events for this state."""
 
         HELP = InputEventMap.KEY_ASTERISK
-        SELECT_MAIN = InputEventMap.KEY_1
-        CHANGE_LANGUAGE = InputEventMap.KEY_2
-        SELECT_STORAGE = InputEventMap.KEY_3
-        SET_DATE = InputEventMap.KEY_4
-        SET_TIME = InputEventMap.KEY_6
-        STOP_SYSTEM = InputEventMap.KEY_9
+        SELECT_ENGLISH = InputEventMap.KEY_1
+        SELECT_GERMAN = InputEventMap.KEY_2
+        SELECT_FRENCH = InputEventMap.KEY_3
+        SELECT_ITALIAN = InputEventMap.KEY_4
 
     def __init__(self):
         """Default ctor."""
 
         super().__init__(
-            info_enter=UiEventInfo(StateEvent.SYSTEM_ENTER, True),
+            info_enter=UiEventInfo(
+                StateEvent.SELECT_LANGUAGE_ENTER, True),
             info_leave=UiEventInfo(
-                StateEvent.SWALLOW_STATE_ENTER_LEAVE, False),
+                StateEvent.SWALLOW_STATE_ENTER_LEAVE, True),
         )
 
     def on_enter(self, ctx: ExecutionContext) -> None:
@@ -56,6 +60,14 @@ class System(StateBase):
         """
 
         assert ctx and isinstance(ctx, ExecutionContext)
+
+        app_ctx = ApplicationContext.Factory.get()
+
+        # At this point, there is already a selected language. I do nothing
+        # and just log the currently selected language.
+        log.debug("Currently selected language: '%s' [%s].",
+                  app_ctx.ui_parameters.language.name,
+                  app_ctx.ui_parameters.language.value)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

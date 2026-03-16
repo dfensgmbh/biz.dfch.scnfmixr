@@ -102,6 +102,14 @@ _streamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_07: InputEventMap.KEY_3,
         StreamdeckInput.KEY_08: InputEventMap.KEY_4,
     },
+    "ChangeLanguage": {
+        StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
+        StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
+        StreamdeckInput.KEY_05: InputEventMap.KEY_1,
+        StreamdeckInput.KEY_06: InputEventMap.KEY_2,
+        StreamdeckInput.KEY_07: InputEventMap.KEY_3,
+        StreamdeckInput.KEY_08: InputEventMap.KEY_4,
+    },
     "InitialiseRc1": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
         StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,

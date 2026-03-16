@@ -23,6 +23,7 @@ from .initialise_hi1 import InitialiseHi1
 from .initialise_hi2 import InitialiseHi2
 from .initialise_hi3 import InitialiseHi3
 from .select_language import SelectLanguage
+from .change_language import ChangeLanguage
 from .initialise_in1 import InitialiseIn1
 from .initialise_in2 import InitialiseIn2
 from .initialise_ex1 import InitialiseEx1
@@ -56,6 +57,7 @@ __all__ = [
     "InitialiseHi3",
 
     "SelectLanguage",
+    "ChangeLanguage",
 
     "InitialiseIn1",
     "InitialiseIn2",
