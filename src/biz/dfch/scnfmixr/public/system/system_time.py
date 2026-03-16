@@ -59,9 +59,12 @@ class SystemTime:  # pylint: disable=R0903
 
         assert value is None or value and isinstance(value, datetime)
 
-        log.debug("Adjusting datetime '%s' [delta %s] ...",
-                  self._get_current_datetime().isoformat(),
-                  self._delta)
+        log.debug(
+            "Adjusting datetime '%s' [delta %s] with value '%s' ...",
+            self._get_current_datetime().isoformat(),
+            self._delta,
+            value,
+        )
 
         now = self._get_current_datetime()
         if value is None:
@@ -69,16 +72,19 @@ class SystemTime:  # pylint: disable=R0903
         else:
             self._delta = now - value
 
-        log.info("Adjusting datetime '%s' [delta %s] OK.",
-                 self._get_current_datetime().isoformat(),
-                 self._delta)
+        log.info(
+            "Adjusting datetime '%s' [delta %s] with value '%s' OK.",
+            self._get_current_datetime().isoformat(),
+            self._delta,
+            value,
+        )
 
         return self
 
     def now(self) -> datetime:
         """Returns the (time corrected) current datetime."""
 
-        result = self._get_current_datetime() + self._delta
+        result = self._get_current_datetime() - self._delta
 
         return result
 
