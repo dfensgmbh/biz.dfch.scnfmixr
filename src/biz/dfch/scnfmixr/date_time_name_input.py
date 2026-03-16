@@ -62,10 +62,6 @@ class DateTimeNameInput():
 
         return str(result)
 
-    def get_datetime(self) -> datetime:
-        """Returns the date and time."""
-        return datetime.datetime.combine(self._date, self._time)
-
     def get_date(self) -> datetime.date:
         """Returns the date."""
         return self._date
@@ -96,7 +92,7 @@ class DateTimeNameInput():
         st = SystemTime.Factory.get()
         st.set(datetime.datetime.combine(st.now().date(), value))
 
-    def get_name(self) -> datetime.time:
+    def get_name(self) -> str:
         """Returns the name."""
         return self._name
 
