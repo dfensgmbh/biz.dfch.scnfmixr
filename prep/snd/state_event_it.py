@@ -176,8 +176,8 @@ Premere "ASTERISCO" per ripetere questo messaggio.
 Il menu "Principale"  
   
 Premere "1" per avviare una registrazione stereo.  
-Premere "2" per avviare una registrazione dry iso e stereo.  
-Premere "3" per avviare una registrazione wet iso, dry iso e stereo.  
+    # Premere "2" per avviare una registrazione dry iso e stereo.  
+    # Premere "3" per avviare una registrazione wet iso, dry iso e stereo.  
 Premere "4" per avviare la riproduzione.  
 Premere "5" per andare al menu "Sistema".  
 Premere "6" per impostare un nuovo nome per la prossima registrazione.  
