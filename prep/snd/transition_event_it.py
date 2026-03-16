@@ -155,21 +155,21 @@ Dispositivo di Archiviazione 2 saltato.
     # Menu: Clean storage RC1.
     # OK
     TransitionEvent.CLEANING_DEVICE_RC1_ENTER: """
-Tentativo di pulizia delle registrazioni dal Dispositivo di Archiviazione 1.
+Tentativo di cancellazione delle registrazioni dal Dispositivo di Archiviazione 1.
 """,
     # OK
     TransitionEvent.CLEANING_DEVICE_RC1_LEAVE: """
-Pulizia delle registrazioni dal Dispositivo di Archiviazione 1 riuscita.
+Cancellazione delle registrazioni dal Dispositivo di Archiviazione 1 riuscita.
 """,
 
     # Menu: Clean storage RC2.
     # OK
     TransitionEvent.CLEANING_DEVICE_RC2_ENTER: """
-Tentativo di pulizia delle registrazioni dal Dispositivo di Archiviazione 2.
+Tentativo di cancellazione delle registrazioni dal Dispositivo di Archiviazione 2.
 """,
     # OK
     TransitionEvent.CLEANING_DEVICE_RC2_LEAVE: """
-Pulizia delle registrazioni dal Dispositivo di Archiviazione 2 riuscita.
+Cancellazione delle registrazioni dal Dispositivo di Archiviazione 2 riuscita.
 """,
 
     # Menu: Detect IN1.
