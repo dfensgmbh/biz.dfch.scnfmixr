@@ -24,18 +24,3 @@ class StartingRecordingMx0(StartingRecording):
 
     def __init__(self, event, target):
         super().__init__(event, target, [MixbusDevice.MX0])
-
-
-class StartingRecordingMx1(StartingRecording):
-    """Starts a recording for MX0, MX1"""
-
-    def __init__(self, event, target):
-        super().__init__(event, target, [MixbusDevice.MX0, MixbusDevice.MX1])
-
-
-class StartingRecordingMx2(StartingRecording):
-    """Starts a recording for MX0, MX1, MX2."""
-
-    def __init__(self, event, target):
-        super().__init__(event, target, [
-            MixbusDevice.MX0, MixbusDevice.MX1, MixbusDevice.MX2])

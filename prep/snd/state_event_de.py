@@ -174,8 +174,8 @@ Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 "Hauptmenü"
 
 Wählen Sie "1", um eine Stereoaufnahme zu starten.
-Wählen Sie "2", um eine "dry iso"-Aufnahme mit einer zusätzlichen Stereoaufnahme zu starten.
-Wählen Sie "3", um "wet iso"-Aufnahme und eine "dry iso"-Aufnahme mit einer zusätzlichen Stereoaufnahme zu starten.
+    # Wählen Sie "2", um eine "dry iso"-Aufnahme mit einer zusätzlichen Stereoaufnahme zu starten.
+    # Wählen Sie "3", um "wet iso"-Aufnahme und eine "dry iso"-Aufnahme mit einer zusätzlichen Stereoaufnahme zu starten.
 Wählen Sie "4", um die Wiedergabe zu starten.
 Wählen Sie "5", um zum "System-Menü" zu gelangen.
 Wählen Sie "6", um einen neuen Namen für Ihre nächste Aufnahme festzulegen.

@@ -174,8 +174,8 @@ Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 Menu "Principal"
 
 Appuyez sur "1" pour démarrer un enregistrement stéréo.
-Appuyez sur "2" pour démarrer un enregistrement "dry iso" et un enregistrement stéréo.
-Appuyez sur "3" pour démarrer un enregistrement "wet iso", un enregistrement "dry iso" et un enregistrement stéréo.
+    # Appuyez sur "2" pour démarrer un enregistrement "dry iso" et un enregistrement stéréo.
+    # Appuyez sur "3" pour démarrer un enregistrement "wet iso", un enregistrement "dry iso" et un enregistrement stéréo.
 Appuyez sur "4" pour démarrer la lecture.
 Appuyez sur "5" pour accéder au menu "Système".
 Appuyez sur "6" pour attribuer un nouveau nom à votre prochain enregistrement.
