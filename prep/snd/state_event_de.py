@@ -96,10 +96,10 @@ Menü zur "Initialisierung des Speichergeräts EINS"
 
 Wählen Sie "1" für die Geräteerkennung.
 Wählen Sie "2", um die Geräteerkennung zu überspringen.
-Wählen Sie "6", um das Gerät zu formatieren.
-Wählen Sie "7", um das Gerät zu verbinden.
-Wählen Sie "8", um das Gerät zu trennen.
-Wählen Sie "9", um das Gerät zu säubern.
+    # Wählen Sie "6", um das Gerät zu formatieren.
+    # Wählen Sie "7", um das Gerät zu verbinden.
+    # Wählen Sie "8", um das Gerät zu trennen.
+    # Wählen Sie "9", um das Gerät zu säubern.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 """,  # noqa: E501
 
@@ -109,10 +109,10 @@ Menü zur "Initialisierung des Speichergeräts ZWEI"
 
 Wählen Sie "1" für die Geräteerkennung.
 Wählen Sie "2", um die Geräteerkennung zu überspringen.
-Wählen Sie "6", um das Gerät zu formatieren.
-Wählen Sie "7", um das Gerät zu verbinden.
-Wählen Sie "8", um das Gerät zu trennen.
-Wählen Sie "9", um das Gerät zu säubern.
+    # Wählen Sie "6", um das Gerät zu formatieren.
+    # Wählen Sie "7", um das Gerät zu verbinden.
+    # Wählen Sie "8", um das Gerät zu trennen.
+    # Wählen Sie "9", um das Gerät zu säubern.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 """,  # noqa: E501
 
