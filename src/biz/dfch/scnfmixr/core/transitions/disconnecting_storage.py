@@ -43,7 +43,10 @@ class DisconnectingStorage(TransitionBase):
                 TransitionEvent.DISCONNECTING_STORAGE_LEAVE, False),
             target_state=target)
 
-    def invoke(self, _) -> bool:
+    def invoke(self, ctx) -> bool:
+
+        _ = ctx
+
         result = DisconnectingStorage.disconnect()
 
         return result
