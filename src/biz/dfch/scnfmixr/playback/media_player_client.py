@@ -128,7 +128,12 @@ class MediaPlayerClient(IAcquirable):
     ) -> list[str]:
         """Loads the playback queue based on the result of the predicate."""
 
-        assert predicate is None or predicate and callable(predicate)
+        def returns_true(_: str) -> bool:
+            return True
+        if predicate is None:
+            log.debug("load_playback_queue: no predicate specified.")
+            predicate = returns_true
+        assert callable(predicate)
 
         result: list[str] = []
 
@@ -144,10 +149,15 @@ class MediaPlayerClient(IAcquirable):
         ]
         files, _ = self._invoke(cmd)
 
+        log.debug("load_playback_queue: [%s]", files)
+
         for file in sorted(files, reverse=True):
-            if predicate is None:
-                continue
-            if not predicate(file):
+            predicate_result = predicate(file)
+            log.debug(
+                "load_playback_queue: processing file '%s' [predicate: %s] ...",
+                file,
+                predicate_result)
+            if not predicate_result:
                 continue
 
             cmd = [
@@ -377,7 +387,7 @@ class MediaPlayerClient(IAcquirable):
         return self._is_acquired
 
     @is_acquired.setter
-    def is_acquired(self, value):
+    def is_acquired(self, value):  # type:ignore
 
         assert isinstance(value, bool)
 

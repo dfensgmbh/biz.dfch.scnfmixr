@@ -53,7 +53,7 @@ class MediaPlayerType(StrEnum):
         if not hasattr(os, 'getuid'):
             raise EnvironmentError()
 
-        uid = os.getuid()  # pylint: disable=E1101
+        uid = os.getuid()  # pylint: disable=E1101  # type: ignore
         base_path = f"/run/user/{uid}"
 
         return f"{base_path}/{key.value}"
