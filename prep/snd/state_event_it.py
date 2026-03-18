@@ -99,10 +99,10 @@ Il menu "Inizializzazione Dispositivo di Archiviazione Uno"
   
 Premere "1" per il rilevamento del dispositivo.  
 Premere "2" per saltare il rilevamento del dispositivo.  
-Premere "6" per formattare il dispositivo.  
-Premere "7" per montare il dispositivo.  
-Premere "8" per smontare il dispositivo.  
-Premere "9" per cancelare il dispositivo.  
+    # Premere "6" per formattare il dispositivo.  
+    # Premere "7" per montare il dispositivo.  
+    # Premere "8" per smontare il dispositivo.  
+    # Premere "9" per cancelare il dispositivo.  
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
@@ -112,10 +112,10 @@ Il menu "Inizializzazione Dispositivo di Archiviazione Due"
   
 Premere "1" per il rilevamento del dispositivo.  
 Premere "2" per saltare il rilevamento del dispositivo.  
-Premere "6" per formattare il dispositivo.  
-Premere "7" per montare il dispositivo.  
-Premere "8" per smontare il dispositivo.  
-Premere "9" per cancelare il dispositivo.  
+    # Premere "6" per formattare il dispositivo.  
+    # Premere "7" per montare il dispositivo.  
+    # Premere "8" per smontare il dispositivo.  
+    # Premere "9" per cancelare il dispositivo.  
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 

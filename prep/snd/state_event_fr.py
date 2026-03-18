@@ -97,10 +97,10 @@ Menu "initialiser le périphérique de mémoire numéro 1"
 
 Appuyez sur "1" pour détecter le périphérique.
 Appuyez sur "2" pour ignorer la détection du périphérique.
-Appuyez sur "6" pour formater le périphérique.
-Appuyez sur "7" pour connecter le périphérique.
-Appuyez sur "8" pour déconnecter le périphérique.
-Appuyez sur "9" pour effacer le périphérique.
+    # Appuyez sur "6" pour formater le périphérique.
+    # Appuyez sur "7" pour connecter le périphérique.
+    # Appuyez sur "8" pour déconnecter le périphérique.
+    # Appuyez sur "9" pour effacer le périphérique.
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 
@@ -110,10 +110,10 @@ Menu "initialiser le périphérique de mémoire numéro 2"
 
 Appuyez sur "1" pour détecter le périphérique.
 Appuyez sur "2" pour ignorer la détection du périphérique.
-Appuyez sur "6" pour formater le périphérique.
-Appuyez sur "7" pour connecter le périphérique.
-Appuyez sur "8" pour déconnecter le périphérique.
-Appuyez sur "9" pour effacer le périphérique.
+    # Appuyez sur "6" pour formater le périphérique.
+    # Appuyez sur "7" pour connecter le périphérique.
+    # Appuyez sur "8" pour déconnecter le périphérique.
+    # Appuyez sur "9" pour effacer le périphérique.
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
 

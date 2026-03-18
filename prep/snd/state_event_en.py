@@ -97,10 +97,10 @@ The "Initialise Storage Device One" menu
 
 Press "1" for device detection.
 Press "2" to skip device detection.
-Press "6" to format the device.
-Press "7" to mount the device.
-Press "8" to unmount the device.
-Press "9" to clean the device.
+    # Press "6" to format the device.
+    # Press "7" to mount the device.
+    # Press "8" to unmount the device.
+    # Press "9" to clean the device.
 Press "STAR" to repeat this message.
 """,  # noqa: E501
 
@@ -110,10 +110,10 @@ The "Initialise Storage Device Two" menu
 
 Press "1" for device detection.
 Press "2" to skip device detection.
-Press "6" to format the device.
-Press "7" to mount the device.
-Press "8" to unmount the device.
-Press "9" to clean the device.
+    # Press "6" to format the device.
+    # Press "7" to mount the device.
+    # Press "8" to unmount the device.
+    # Press "9" to clean the device.
 Press "STAR" to repeat this message.
 """,  # noqa: E501
 
