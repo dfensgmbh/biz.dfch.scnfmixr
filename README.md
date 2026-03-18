@@ -1,6 +1,6 @@
 [![scnfmixr: v4.0.0](https://img.shields.io/badge/scnfmixr-v4.0.0-blue.svg)](https://github.com/dfensgmbh/biz.dfch.scnfmixr/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue.svg)
+![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue.svg)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=bugs)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
