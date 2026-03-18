@@ -41,7 +41,6 @@ class InitialiseRc1(StateBase):
         HELP = InputEventMap.KEY_ASTERISK
         DETECT_DEVICE = InputEventMap.KEY_1
         SKIP_DEVICE = InputEventMap.KEY_2
-        FORMAT_DEVICE = InputEventMap.KEY_6
 
     def __init__(self):
         """Default ctor."""
