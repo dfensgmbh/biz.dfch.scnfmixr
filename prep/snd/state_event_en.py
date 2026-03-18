@@ -174,8 +174,8 @@ Press "STAR" to repeat this message.
 The "Main" menu
 
 Press "1" to start a stereo recording.
-Press "2" to start a dry iso and a stereo recording.
-Press "3" to start a wet iso, dry iso and stereo recording.
+    # Press "2" to start a dry iso and a stereo recording.
+    # Press "3" to start a wet iso, dry iso and stereo recording.
 Press "4" to start playback.
 Press "5" to go to the "System" menu.
 Press "6" to set a new name for your next recording.

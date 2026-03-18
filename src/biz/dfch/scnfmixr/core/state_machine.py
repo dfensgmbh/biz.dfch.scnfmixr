@@ -40,6 +40,7 @@ from .transitions import ReturningTrue
 from .transitions import StoppingSystem, DisconnectingStorage
 
 from .states import SelectLanguage
+from .states import ChangeLanguage
 from .transitions import SelectingEnglish, SelectingGerman, SelectingFrench, SelectingItalian \
     # pylint: disable=C0301  # noqa: E501
 
@@ -67,12 +68,14 @@ from .states import InitialiseHi2
 from .transitions import DetectingHi2, SkippingHi2
 
 from .states import InitialiseRc1
-from .transitions import DetectingRc1, SkippingRc1, CleaningRc1, MountingRc1, UnmountingRc1 \
-    # pylint: disable=C0301  # noqa: E501
+from .transitions import DetectingRc1
+from .transitions import SkippingRc1
+from .transitions import CleaningRc1
 
 from .states import InitialiseRc2
-from .transitions import DetectingRc2, SkippingRc2, CleaningRc2, MountingRc2, UnmountingRc2 \
-    # pylint: disable=C0301  # noqa: E501
+from .transitions import DetectingRc2
+from .transitions import SkippingRc2
+from .transitions import CleaningRc2
 
 from .states import SetDate, SetTime, SetName
 from .transitions import ProcessingDigit0
@@ -94,8 +97,6 @@ from .transitions import InitializingAudio
 from .states import Main
 from .transitions.starting_recording_mixes import (
     StartingRecordingMx0,
-    StartingRecordingMx1,
-    StartingRecordingMx2,
 )
 from .transitions.deleting_last_take import DeletingLastTake
 
@@ -142,6 +143,7 @@ class State(Enum):
     INIT_RC1 = auto()
     INIT_RC2 = auto()
     LANGUAGE = auto()
+    CHANGE_LANGUAGE = auto()
     SET_DATE = auto()
     SET_TIME = auto()
     SET_NAME = auto()
@@ -183,8 +185,8 @@ class StateMachine:
         self._message_queue = MessageQueue.Factory.get()
         self._do_cancel_worker = False
         self._thread = threading.Thread(target=self._worker, daemon=True)
-        self._ctx = None
-        self._fsm = None
+        self._ctx = None  # type: ignore
+        self._fsm = None  # type: ignore
         self._message_queue.register(self._on_message, lambda e: isinstance(
             e,
             (SystemMessage.InputEvent, SystemMessage.Shutdown)))
@@ -348,6 +350,9 @@ class StateMachine:
         assert State.LANGUAGE not in menu
         menu[State.LANGUAGE] = SelectLanguage()
 
+        assert State.CHANGE_LANGUAGE not in menu
+        menu[State.CHANGE_LANGUAGE] = ChangeLanguage()
+
         assert State.INIT_RC1 not in menu
         menu[State.INIT_RC1] = InitialiseRc1()
 
@@ -388,14 +393,16 @@ class StateMachine:
         menu[State.FINAL] = FinalState()
 
         # Define Transitions
-        current: FinalState = menu[State.FINAL]
+        current = menu[State.FINAL]
+        assert isinstance(current, FinalState)
         (
             current
             .add_transition(ReturningTrue(
                 current.Event.HELP,
                 current))
         )
-        current: System = menu[State.SYSTEM]
+        current = menu[State.SYSTEM]
+        assert isinstance(current, System)
         (
             current
             .add_transition(ReturningTrue(
@@ -405,8 +412,8 @@ class StateMachine:
                 current.Event.SELECT_MAIN,
                 menu[State.MAIN]))
             .add_transition(ReturningTrue(
-                current.Event.SELECT_LANGUAGE,
-                menu[State.LANGUAGE]))
+                current.Event.CHANGE_LANGUAGE,
+                menu[State.CHANGE_LANGUAGE]))
             .add_transition(ReturningTrue(
                 current.Event.SELECT_STORAGE,
                 menu[State.STORAGE]))
@@ -420,7 +427,8 @@ class StateMachine:
                 current.Event.STOP_SYSTEM,
                 menu[State.FINAL]))
         )
-        current: OnRecord = menu[State.ON_RECORD]
+        current = menu[State.ON_RECORD]
+        assert isinstance(current, OnRecord)
         (
             current
             .add_transition(HelpingOnRecord(
@@ -439,7 +447,8 @@ class StateMachine:
                 current.Event.SHOW_STATUS,
                 current))
         )
-        current: StorageManagement = menu[State.STORAGE]
+        current = menu[State.STORAGE]
+        assert isinstance(current, StorageManagement)
         (
             current
             .add_transition(ReturningTrue(
@@ -470,7 +479,8 @@ class StateMachine:
                 current.Event.CLEAN_RC2,
                 current))
         )
-        current: Main = menu[State.MAIN]
+        current = menu[State.MAIN]
+        assert isinstance(current, Main)
         (
             current
             .add_transition(ReturningTrue(
@@ -481,12 +491,6 @@ class StateMachine:
                 menu[State.SYSTEM]))
             .add_transition(StartingRecordingMx0(
                 current.Event.START_RECORDING_MX0,
-                menu[State.ON_RECORD]))
-            .add_transition(StartingRecordingMx1(
-                current.Event.START_RECORDING_MX1,
-                menu[State.ON_RECORD]))
-            .add_transition(StartingRecordingMx2(
-                current.Event.START_RECORDING_MX2,
                 menu[State.ON_RECORD]))
             .add_transition(DeletingLastTake(
                 current.Event.DELETE_LAST_TAKE,
@@ -501,7 +505,8 @@ class StateMachine:
                 current.Event.STOP_SYSTEM,
                 menu[State.FINAL]))
         )
-        current: InitialiseAudio = menu[State.INIT_AUDIO]
+        current = menu[State.INIT_AUDIO]
+        assert isinstance(current, InitialiseAudio)
         (
             current
             .add_transition(ReturningTrue(
@@ -512,7 +517,8 @@ class StateMachine:
             .add_transition(InitializingAudio(current.Event.SKIP_AUDIO,
                                               menu[State.SYSTEM]))
         )
-        current: SetName = menu[State.SET_NAME]
+        current = menu[State.SET_NAME]
+        assert isinstance(current, SetName)
         (
             current
             .add_transition(ReturningTrue(current.Event.HELP, current))
@@ -534,7 +540,8 @@ class StateMachine:
                 current.Event.JUMP_NEXT,
                 menu[State.INIT_AUDIO]))
         )
-        current: SetTime = menu[State.SET_TIME]
+        current = menu[State.SET_TIME]
+        assert isinstance(current, SetTime)
         (
             current
             .add_transition(ReturningTrue(current.Event.HELP, current))
@@ -556,7 +563,8 @@ class StateMachine:
                 current.Event.JUMP_NEXT,
                 menu[State.SET_NAME]))
         )
-        current: SetDate = menu[State.SET_DATE]
+        current = menu[State.SET_DATE]
+        assert isinstance(current, SetDate)
         (
             current
             .add_transition(ReturningTrue(current.Event.HELP, current))
@@ -578,7 +586,8 @@ class StateMachine:
                 current.Event.JUMP_NEXT,
                 menu[State.SET_TIME]))
         )
-        current: InitialiseRc2 = menu[State.INIT_RC2]
+        current = menu[State.INIT_RC2]
+        assert isinstance(current, InitialiseRc2)
         (
             current
             .add_transition(ReturningTrue(
@@ -590,33 +599,23 @@ class StateMachine:
             .add_transition(SkippingRc2(
                 current.Event.SKIP_DEVICE,
                 menu[State.SET_DATE]))
-            .add_transition(CleaningRc2(
-                current.Event.CLEAN_DEVICE,
-                current))
-            .add_transition(MountingRc2(
-                current.Event.MOUNT_DEVICE,
-                current))
-            .add_transition(UnmountingRc2(
-                current.Event.UNMOUNT_DEVICE,
-                current))
         )
-        current: InitialiseRc1 = menu[State.INIT_RC1]
+        current = menu[State.INIT_RC1]
+        assert isinstance(current, InitialiseRc1)
         (
             current
-            .add_transition(ReturningTrue(current.Event.HELP,
-                                          current))
-            .add_transition(DetectingRc1(current.Event.DETECT_DEVICE,
-                                         menu[State.INIT_RC2]))
-            .add_transition(SkippingRc1(current.Event.SKIP_DEVICE,
-                                        menu[State.INIT_RC2]))
-            .add_transition(CleaningRc1(current.Event.CLEAN_DEVICE,
-                                        current))
-            .add_transition(MountingRc1(current.Event.MOUNT_DEVICE,
-                                        current))
-            .add_transition(UnmountingRc1(current.Event.UNMOUNT_DEVICE,
-                                          current))
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(DetectingRc1(
+                current.Event.DETECT_DEVICE,
+                menu[State.INIT_RC2]))
+            .add_transition(SkippingRc1(
+                current.Event.SKIP_DEVICE,
+                menu[State.INIT_RC2]))
         )
-        current: InitialiseEx2 = menu[State.INIT_EX2]
+        current = menu[State.INIT_EX2]
+        assert isinstance(current, InitialiseEx2)
         (
             current
             .add_transition(ReturningTrue(
@@ -629,7 +628,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_RC1]))
         )
-        current: InitialiseEx1 = menu[State.INIT_EX1]
+        current = menu[State.INIT_EX1]
+        assert isinstance(current, InitialiseEx1)
         (
             current
             .add_transition(ReturningTrue(
@@ -642,7 +642,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_EX2]))
         )
-        current: InitialiseIn2 = menu[State.INIT_IN2]
+        current = menu[State.INIT_IN2]
+        assert isinstance(current, InitialiseIn2)
         (
             current
             .add_transition(ReturningTrue(
@@ -655,7 +656,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_EX1]))
         )
-        current: InitialiseIn1 = menu[State.INIT_IN1]
+        current = menu[State.INIT_IN1]
+        assert isinstance(current, InitialiseIn1)
         (
             current
             .add_transition(ReturningTrue(
@@ -668,7 +670,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_IN2]))
         )
-        current: SelectLanguage = menu[State.LANGUAGE]
+        current = menu[State.LANGUAGE]
+        assert isinstance(current, SelectLanguage)
         (
             current
             .add_transition(ReturningTrue(
@@ -687,7 +690,28 @@ class StateMachine:
                 current.Event.SELECT_ITALIAN,
                 menu[State.INIT_IN1]))
         )
-        current: InitialiseHi2 = menu[State.INIT_HI2]
+        current = menu[State.CHANGE_LANGUAGE]
+        assert isinstance(current, ChangeLanguage)
+        (
+            current
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(SelectingEnglish(
+                current.Event.SELECT_ENGLISH,
+                menu[State.SYSTEM]))
+            .add_transition(SelectingGerman(
+                current.Event.SELECT_GERMAN,
+                menu[State.SYSTEM]))
+            .add_transition(SelectingFrench(
+                current.Event.SELECT_FRENCH,
+                menu[State.SYSTEM]))
+            .add_transition(SelectingItalian(
+                current.Event.SELECT_ITALIAN,
+                menu[State.SYSTEM]))
+        )
+        current = menu[State.INIT_HI2]
+        assert isinstance(current, InitialiseHi2)
         (
             current
             .add_transition(ReturningTrue(
@@ -700,7 +724,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.LANGUAGE]))
         )
-        current: InitialiseHi1 = menu[State.INIT_HI1]
+        current = menu[State.INIT_HI1]
+        assert isinstance(current, InitialiseHi1)
         (
             current
             .add_transition(ReturningTrue(
@@ -713,7 +738,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_HI2]))
         )
-        current: InitialiseLcl = menu[State.INIT_LCL]
+        current = menu[State.INIT_LCL]
+        assert isinstance(current, InitialiseLcl)
         (
             current
             .add_transition(ReturningTrue(
@@ -726,7 +752,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_HI1]))
         )
-        current: PlaybackPaused = menu[State.PLAYBACK_PAUSED]
+        current = menu[State.PLAYBACK_PAUSED]
+        assert isinstance(current, PlaybackPaused)
         (
             current
             .add_transition(HelpingPlayback(
@@ -739,7 +766,8 @@ class StateMachine:
                 current.Event.MENU,
                 menu[State.MAIN]))
         )
-        current: Playback = menu[State.PLAYBACK]
+        current = menu[State.PLAYBACK]
+        assert isinstance(current, Playback)
         (
             current
             .add_transition(HelpingPlayback(

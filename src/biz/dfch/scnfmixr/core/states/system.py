@@ -33,7 +33,7 @@ class System(StateBase):
 
         HELP = InputEventMap.KEY_ASTERISK
         SELECT_MAIN = InputEventMap.KEY_1
-        SELECT_LANGUAGE = InputEventMap.KEY_2
+        CHANGE_LANGUAGE = InputEventMap.KEY_2
         SELECT_STORAGE = InputEventMap.KEY_3
         SET_DATE = InputEventMap.KEY_4
         SET_TIME = InputEventMap.KEY_6

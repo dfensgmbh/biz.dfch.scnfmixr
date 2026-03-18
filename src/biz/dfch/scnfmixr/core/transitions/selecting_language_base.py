@@ -53,7 +53,9 @@ class SelectingLanguageBase(TransitionBase):
         self._language = language
         self._app_ctx = ApplicationContext.Factory.get()
 
-    def invoke(self, _) -> bool:
+    def invoke(self, ctx) -> bool:
+
+        _ = ctx
 
         previous = self._app_ctx.ui_parameters.language
         self._app_ctx.ui_parameters.language = self._language

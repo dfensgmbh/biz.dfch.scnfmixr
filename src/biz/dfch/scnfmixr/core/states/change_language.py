@@ -13,42 +13,41 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Module initialise_rc1."""
+"""Module implementing LanguageSelection of the application."""
 
 from __future__ import annotations
 from enum import StrEnum
 
 from biz.dfch.logging import log
+
 from ...public.input import InputEventMap
 from ...app import ApplicationContext
-from ...public.storage import StorageDevice
-from ...public.system.messages import SystemMessage
 from ..fsm import UiEventInfo
 from ..fsm import ExecutionContext
 from ..fsm import StateBase
 from ..state_event import StateEvent
 
 
-class InitialiseRc1(StateBase):
-    """Storage Device RC1 Detection.
-
-    Detects the storage device (USB iStorage Memory Stick).
+class ChangeLanguage(StateBase):
+    """
+    Implements change of language in the SYSTEM menu.
     """
 
     class Event(StrEnum):
         """Events for this state."""
 
         HELP = InputEventMap.KEY_ASTERISK
-        DETECT_DEVICE = InputEventMap.KEY_1
-        SKIP_DEVICE = InputEventMap.KEY_2
-        FORMAT_DEVICE = InputEventMap.KEY_6
+        SELECT_ENGLISH = InputEventMap.KEY_1
+        SELECT_GERMAN = InputEventMap.KEY_2
+        SELECT_FRENCH = InputEventMap.KEY_3
+        SELECT_ITALIAN = InputEventMap.KEY_4
 
     def __init__(self):
         """Default ctor."""
 
         super().__init__(
             info_enter=UiEventInfo(
-                StateEvent.INITIALISE_RC1_ENTER, True),
+                StateEvent.SELECT_LANGUAGE_ENTER, True),
             info_leave=UiEventInfo(
                 StateEvent.SWALLOW_STATE_ENTER_LEAVE, True),
         )
@@ -62,22 +61,13 @@ class InitialiseRc1(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        device = StorageDevice.RC1
-        if ApplicationContext.Factory.get().recording_parameters.skip_rc1:
-            log.info("Skipping device '%s' ...", device.name)
-            msg = SystemMessage.InputEvent(InitialiseRc1.Event.SKIP_DEVICE)
-            ctx.events.publish_first(msg)
-            return
+        app_ctx = ApplicationContext.Factory.get()
 
-        if ctx.error:
-            return
-
-        log.info("Enqueueing event: '%s' [%s].",
-                 InitialiseRc1.Event.DETECT_DEVICE.name,
-                 InitialiseRc1.Event.DETECT_DEVICE.value)
-
-        msg = SystemMessage.InputEvent(InitialiseRc1.Event.DETECT_DEVICE)
-        ctx.events.publish_first(msg)
+        # At this point, there is already a selected language. I do nothing
+        # and just log the currently selected language.
+        log.debug("Currently selected language: '%s' [%s].",
+                  app_ctx.ui_parameters.language.name,
+                  app_ctx.ui_parameters.language.value)
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.

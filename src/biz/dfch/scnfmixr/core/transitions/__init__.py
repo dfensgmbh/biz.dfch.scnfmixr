@@ -48,13 +48,9 @@ from .skipping_hi3 import SkippingHi3
 from .detecting_rc1 import DetectingRc1
 from .skipping_rc1 import SkippingRc1
 from .cleaning_rc1 import CleaningRc1
-from .mounting_rc1 import MountingRc1
-from .unmounting_rc1 import UnmountingRc1
 from .detecting_rc2 import DetectingRc2
 from .skipping_rc2 import SkippingRc2
 from .cleaning_rc2 import CleaningRc2
-from .mounting_rc2 import MountingRc2
-from .unmounting_rc2 import UnmountingRc2
 
 from .processing_digit import (
     ProcessingDigit,
@@ -75,8 +71,6 @@ from .processing_digit import (
 from .initializing_audio import InitializingAudio
 from .starting_recording_mixes import (
     StartingRecordingMx0,
-    StartingRecordingMx1,
-    StartingRecordingMx2,
 )
 from .stopping_recording import StoppingRecording
 from .stopping_system import StoppingSystem
@@ -136,19 +130,11 @@ __all__ = [
     "DetectingRc1",
     "SkippingRc1",
     "CleaningRc1",
-    "MountingRc1",
-    "UnmountingRc1",
     "DetectingRc2",
     "SkippingRc2",
     "CleaningRc2",
-    "MountingRc2",
-    "UnmountingRc2",
 
     "InitializingAudio",
-
-    "StartingRecordingMx0",
-    "StartingRecordingMx1",
-    "StartingRecordingMx2",
 
     "MountingStorage",
     "DisconnectingStorage",
@@ -158,8 +144,6 @@ __all__ = [
     "StoppingSystem",
 
     "StartingRecordingMx0",
-    "StartingRecordingMx1",
-    "StartingRecordingMx2",
     "StoppingRecording",
     "TogglingMute",
     "SettingCuePoint",
