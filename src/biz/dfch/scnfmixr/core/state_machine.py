@@ -183,8 +183,8 @@ class StateMachine:
         self._message_queue = MessageQueue.Factory.get()
         self._do_cancel_worker = False
         self._thread = threading.Thread(target=self._worker, daemon=True)
-        self._ctx = None
-        self._fsm = None
+        self._ctx = None  # type: ignore
+        self._fsm = None  # type: ignore
         self._message_queue.register(self._on_message, lambda e: isinstance(
             e,
             (SystemMessage.InputEvent, SystemMessage.Shutdown)))
@@ -391,14 +391,16 @@ class StateMachine:
         menu[State.FINAL] = FinalState()
 
         # Define Transitions
-        current: FinalState = menu[State.FINAL]
+        current = menu[State.FINAL]
+        assert isinstance(current, FinalState)
         (
             current
             .add_transition(ReturningTrue(
                 current.Event.HELP,
                 current))
         )
-        current: System = menu[State.SYSTEM]
+        current = menu[State.SYSTEM]
+        assert isinstance(current, System)
         (
             current
             .add_transition(ReturningTrue(
@@ -423,7 +425,8 @@ class StateMachine:
                 current.Event.STOP_SYSTEM,
                 menu[State.FINAL]))
         )
-        current: OnRecord = menu[State.ON_RECORD]
+        current = menu[State.ON_RECORD]
+        assert isinstance(current, OnRecord)
         (
             current
             .add_transition(HelpingOnRecord(
@@ -442,7 +445,8 @@ class StateMachine:
                 current.Event.SHOW_STATUS,
                 current))
         )
-        current: StorageManagement = menu[State.STORAGE]
+        current = menu[State.STORAGE]
+        assert isinstance(current, StorageManagement)
         (
             current
             .add_transition(ReturningTrue(
@@ -473,7 +477,8 @@ class StateMachine:
                 current.Event.CLEAN_RC2,
                 current))
         )
-        current: Main = menu[State.MAIN]
+        current = menu[State.MAIN]
+        assert isinstance(current, Main)
         (
             current
             .add_transition(ReturningTrue(
@@ -498,7 +503,8 @@ class StateMachine:
                 current.Event.STOP_SYSTEM,
                 menu[State.FINAL]))
         )
-        current: InitialiseAudio = menu[State.INIT_AUDIO]
+        current = menu[State.INIT_AUDIO]
+        assert isinstance(current, InitialiseAudio)
         (
             current
             .add_transition(ReturningTrue(
@@ -509,7 +515,8 @@ class StateMachine:
             .add_transition(InitializingAudio(current.Event.SKIP_AUDIO,
                                               menu[State.SYSTEM]))
         )
-        current: SetName = menu[State.SET_NAME]
+        current = menu[State.SET_NAME]
+        assert isinstance(current, SetName)
         (
             current
             .add_transition(ReturningTrue(current.Event.HELP, current))
@@ -531,7 +538,8 @@ class StateMachine:
                 current.Event.JUMP_NEXT,
                 menu[State.INIT_AUDIO]))
         )
-        current: SetTime = menu[State.SET_TIME]
+        current = menu[State.SET_TIME]
+        assert isinstance(current, SetTime)
         (
             current
             .add_transition(ReturningTrue(current.Event.HELP, current))
@@ -553,7 +561,8 @@ class StateMachine:
                 current.Event.JUMP_NEXT,
                 menu[State.SET_NAME]))
         )
-        current: SetDate = menu[State.SET_DATE]
+        current = menu[State.SET_DATE]
+        assert isinstance(current, SetDate)
         (
             current
             .add_transition(ReturningTrue(current.Event.HELP, current))
@@ -575,7 +584,8 @@ class StateMachine:
                 current.Event.JUMP_NEXT,
                 menu[State.SET_TIME]))
         )
-        current: InitialiseRc2 = menu[State.INIT_RC2]
+        current = menu[State.INIT_RC2]
+        assert isinstance(current, InitialiseRc2)
         (
             current
             .add_transition(ReturningTrue(
@@ -597,7 +607,8 @@ class StateMachine:
                 current.Event.UNMOUNT_DEVICE,
                 current))
         )
-        current: InitialiseRc1 = menu[State.INIT_RC1]
+        current = menu[State.INIT_RC1]
+        assert isinstance(current, InitialiseRc1)
         (
             current
             .add_transition(ReturningTrue(current.Event.HELP,
@@ -613,7 +624,8 @@ class StateMachine:
             .add_transition(UnmountingRc1(current.Event.UNMOUNT_DEVICE,
                                           current))
         )
-        current: InitialiseEx2 = menu[State.INIT_EX2]
+        current = menu[State.INIT_EX2]
+        assert isinstance(current, InitialiseEx2)
         (
             current
             .add_transition(ReturningTrue(
@@ -626,7 +638,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_RC1]))
         )
-        current: InitialiseEx1 = menu[State.INIT_EX1]
+        current = menu[State.INIT_EX1]
+        assert isinstance(current, InitialiseEx1)
         (
             current
             .add_transition(ReturningTrue(
@@ -639,7 +652,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_EX2]))
         )
-        current: InitialiseIn2 = menu[State.INIT_IN2]
+        current = menu[State.INIT_IN2]
+        assert isinstance(current, InitialiseIn2)
         (
             current
             .add_transition(ReturningTrue(
@@ -652,7 +666,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_EX1]))
         )
-        current: InitialiseIn1 = menu[State.INIT_IN1]
+        current = menu[State.INIT_IN1]
+        assert isinstance(current, InitialiseIn1)
         (
             current
             .add_transition(ReturningTrue(
@@ -665,7 +680,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_IN2]))
         )
-        current: SelectLanguage = menu[State.LANGUAGE]
+        current = menu[State.LANGUAGE]
+        assert isinstance(current, SelectLanguage)
         (
             current
             .add_transition(ReturningTrue(
@@ -684,7 +700,8 @@ class StateMachine:
                 current.Event.SELECT_ITALIAN,
                 menu[State.INIT_IN1]))
         )
-        current: ChangeLanguage = menu[State.CHANGE_LANGUAGE]
+        current = menu[State.CHANGE_LANGUAGE]
+        assert isinstance(current, ChangeLanguage)
         (
             current
             .add_transition(ReturningTrue(
@@ -703,7 +720,8 @@ class StateMachine:
                 current.Event.SELECT_ITALIAN,
                 menu[State.SYSTEM]))
         )
-        current: InitialiseHi2 = menu[State.INIT_HI2]
+        current = menu[State.INIT_HI2]
+        assert isinstance(current, InitialiseHi2)
         (
             current
             .add_transition(ReturningTrue(
@@ -716,7 +734,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.LANGUAGE]))
         )
-        current: InitialiseHi1 = menu[State.INIT_HI1]
+        current = menu[State.INIT_HI1]
+        assert isinstance(current, InitialiseHi1)
         (
             current
             .add_transition(ReturningTrue(
@@ -729,7 +748,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_HI2]))
         )
-        current: InitialiseLcl = menu[State.INIT_LCL]
+        current = menu[State.INIT_LCL]
+        assert isinstance(current, InitialiseLcl)
         (
             current
             .add_transition(ReturningTrue(
@@ -742,7 +762,8 @@ class StateMachine:
                 current.Event.SKIP_DEVICE,
                 menu[State.INIT_HI1]))
         )
-        current: PlaybackPaused = menu[State.PLAYBACK_PAUSED]
+        current = menu[State.PLAYBACK_PAUSED]
+        assert isinstance(current, PlaybackPaused)
         (
             current
             .add_transition(HelpingPlayback(
@@ -755,7 +776,8 @@ class StateMachine:
                 current.Event.MENU,
                 menu[State.MAIN]))
         )
-        current: Playback = menu[State.PLAYBACK]
+        current = menu[State.PLAYBACK]
+        assert isinstance(current, Playback)
         (
             current
             .add_transition(HelpingPlayback(
