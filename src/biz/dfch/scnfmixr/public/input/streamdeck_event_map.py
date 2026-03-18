@@ -116,9 +116,6 @@ _streamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_05: InputEventMap.KEY_1,
         StreamdeckInput.KEY_06: InputEventMap.KEY_2,
         StreamdeckInput.KEY_0A: InputEventMap.KEY_6,
-        StreamdeckInput.KEY_0B: InputEventMap.KEY_7,
-        StreamdeckInput.KEY_0C: InputEventMap.KEY_8,
-        StreamdeckInput.KEY_0D: InputEventMap.KEY_9,
     },
     "InitialiseRc2": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
@@ -126,9 +123,6 @@ _streamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_05: InputEventMap.KEY_1,
         StreamdeckInput.KEY_06: InputEventMap.KEY_2,
         StreamdeckInput.KEY_0A: InputEventMap.KEY_6,
-        StreamdeckInput.KEY_0B: InputEventMap.KEY_7,
-        StreamdeckInput.KEY_0C: InputEventMap.KEY_8,
-        StreamdeckInput.KEY_0D: InputEventMap.KEY_9,
     },
     "SetDate": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,

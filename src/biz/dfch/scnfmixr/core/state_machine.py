@@ -68,12 +68,14 @@ from .states import InitialiseHi2
 from .transitions import DetectingHi2, SkippingHi2
 
 from .states import InitialiseRc1
-from .transitions import DetectingRc1, SkippingRc1, CleaningRc1, MountingRc1, UnmountingRc1 \
-    # pylint: disable=C0301  # noqa: E501
+from .transitions import DetectingRc1
+from .transitions import SkippingRc1
+from .transitions import CleaningRc1
 
 from .states import InitialiseRc2
-from .transitions import DetectingRc2, SkippingRc2, CleaningRc2, MountingRc2, UnmountingRc2 \
-    # pylint: disable=C0301  # noqa: E501
+from .transitions import DetectingRc2
+from .transitions import SkippingRc2
+from .transitions import CleaningRc2
 
 from .states import SetDate, SetTime, SetName
 from .transitions import ProcessingDigit0
@@ -597,32 +599,20 @@ class StateMachine:
             .add_transition(SkippingRc2(
                 current.Event.SKIP_DEVICE,
                 menu[State.SET_DATE]))
-            .add_transition(CleaningRc2(
-                current.Event.CLEAN_DEVICE,
-                current))
-            .add_transition(MountingRc2(
-                current.Event.MOUNT_DEVICE,
-                current))
-            .add_transition(UnmountingRc2(
-                current.Event.UNMOUNT_DEVICE,
-                current))
         )
         current = menu[State.INIT_RC1]
         assert isinstance(current, InitialiseRc1)
         (
             current
-            .add_transition(ReturningTrue(current.Event.HELP,
-                                          current))
-            .add_transition(DetectingRc1(current.Event.DETECT_DEVICE,
-                                         menu[State.INIT_RC2]))
-            .add_transition(SkippingRc1(current.Event.SKIP_DEVICE,
-                                        menu[State.INIT_RC2]))
-            .add_transition(CleaningRc1(current.Event.CLEAN_DEVICE,
-                                        current))
-            .add_transition(MountingRc1(current.Event.MOUNT_DEVICE,
-                                        current))
-            .add_transition(UnmountingRc1(current.Event.UNMOUNT_DEVICE,
-                                          current))
+            .add_transition(ReturningTrue(
+                current.Event.HELP,
+                current))
+            .add_transition(DetectingRc1(
+                current.Event.DETECT_DEVICE,
+                menu[State.INIT_RC2]))
+            .add_transition(SkippingRc1(
+                current.Event.SKIP_DEVICE,
+                menu[State.INIT_RC2]))
         )
         current = menu[State.INIT_EX2]
         assert isinstance(current, InitialiseEx2)
