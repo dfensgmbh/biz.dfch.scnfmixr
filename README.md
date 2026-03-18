@@ -86,7 +86,7 @@ admin@scnfmixr:~ $ python -m unittest discover -v -s tests -t . -p test_MyModule
 
 # Hardware and Software Requirements
 
-The programme is intended to run on a Raspberry Pi 5 with a Raspberry Pi OS '[Bookworm](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/)'. It is tested under the following version:
+The programme is intended to run on a Raspberry Pi 5 with a Raspberry Pi OS '[Trixie](https://www.raspberrypi.com/news/trixie-the-new-version-of-raspberry-pi-os/)'. It is tested under the following version:
 
 `Linux scnfmixr 6.12.25+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.25-1+rpt1 (2025-04-30) aarch64 GNU/Linux`
 
