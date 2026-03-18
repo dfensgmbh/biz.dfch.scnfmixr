@@ -102,7 +102,7 @@ Premere "2" per saltare il rilevamento del dispositivo.
 Premere "6" per formattare il dispositivo.  
 Premere "7" per montare il dispositivo.  
 Premere "8" per smontare il dispositivo.  
-Premere "9" per pulire il dispositivo.  
+Premere "9" per cancelare il dispositivo.  
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
@@ -115,7 +115,7 @@ Premere "2" per saltare il rilevamento del dispositivo.
 Premere "6" per formattare il dispositivo.  
 Premere "7" per montare il dispositivo.  
 Premere "8" per smontare il dispositivo.  
-Premere "9" per pulire il dispositivo.  
+Premere "9" per cancelare il dispositivo.  
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
@@ -126,13 +126,9 @@ Il menu "Data"
 Inserire una data di 8 cifre iniziando con l'anno di 4 cifre, seguito dal mese di 2 cifre e dal giorno di 2 cifre.  
   
 Per cancellare una cifra, premere il tasto "BACK-SPACE".  
-Quando si è finito di inserire il valore, o per ricominciare dall'inizio, premere il tasto "INVIO" o "RETURN".  
+Quando si è finito di inserire il valore, o per ricominciare dall'inizio, premere il tasto "INVIO" o "ENTER".  
   
-Esempio:  
-  
-uno-nove-due-sette  
-  
-zero-tre-due-sette per il 27 marzo del 19 27.  
+    # Esempio:  uno-nove-due-sette  zero-tre-due-sette per il 27 marzo del 19 27.  
   
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
@@ -144,11 +140,9 @@ Il menu "Ora"
 Inserire un orario di 4 cifre iniziando con le ore di 2 cifre in formato 24 ore, seguite dai minuti di 2 cifre.  
   
 Per cancellare una cifra, premere il tasto "BACK-SPACE".  
-Quando si è finito di inserire il valore, o per ricominciare dall'inizio, premere il tasto "INVIO" o "RETURN".  
+Quando si è finito di inserire il valore, o per ricominciare dall'inizio, premere il tasto "INVIO" o "ENTER".  
   
-Esempio:  
-  
-uno-quattro-zero-tre per le 2 e 3 minuti del pomeriggio.  
+    # Esempio:  uno-quattro-zero-tre per le 2 e 3 minuti del pomeriggio.  
   
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
@@ -162,11 +156,7 @@ Inserire un nome di 8 cifre utilizzato come nome univoco nella registrazione.
 Per cancellare una cifra, premere il tasto "BACK-SPACE".  
 Quando si è finito di inserire il valore, o per ricominciare dall'inizio, premere il tasto "INVIO" o "RETURN".  
   
-Esempio:  
-  
-zero-otto-uno-cinque  
-  
-cinque-sei-quattro-due per zero-otto 15 56 42.  
+    # Esempio:  zero-otto-uno-cinque  cinque-sei-quattro-due per zero-otto 15 56 42.  
   
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
@@ -210,8 +200,8 @@ Premere "3" per rilevare il "Dispositivo di Archiviazione Due".
 Premere "4" per formattare il "Dispositivo di Archiviazione Uno".  
 Premere "5" per andare al menu "Sistema".  
 Premere "6" per formattare il "Dispositivo di Archiviazione Due".  
-Premere "7" per pulire il "Dispositivo di Archiviazione Uno".  
-Premere "9" per pulire il "Dispositivo di Archiviazione Due".  
+Premere "7" per cancelare il "Dispositivo di Archiviazione Uno".  
+Premere "9" per cancelare il "Dispositivo di Archiviazione Due".  
   
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
