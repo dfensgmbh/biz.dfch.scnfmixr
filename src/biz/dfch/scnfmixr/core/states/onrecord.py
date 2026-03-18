@@ -32,8 +32,6 @@ class OnRecord(StateBase):
         HELP = InputEventMap.KEY_ASTERISK
         STOP_RECORDING = InputEventMap.KEY_1
         SET_CUE = InputEventMap.KEY_2
-        TOGGLE_MUTE = InputEventMap.KEY_3
-        SHOW_STATUS = InputEventMap.KEY_4
 
     def __init__(self):
         """Default ctor."""

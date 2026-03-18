@@ -83,8 +83,6 @@ from .formatting_storage import (
 )
 
 from .setting_cuepoint import SettingCuePoint
-from .toggling_mute import TogglingMute
-from .showing_status import ShowingStatus
 
 from .selecting_pause import SelectingPause, SelectingResume
 from .leaving_playback import LeavingPlayback
@@ -145,9 +143,7 @@ __all__ = [
 
     "StartingRecordingMx0",
     "StoppingRecording",
-    "TogglingMute",
     "SettingCuePoint",
-    "ShowingStatus",
     "HelpingOnRecord",
 
     "ProcessingDigit",

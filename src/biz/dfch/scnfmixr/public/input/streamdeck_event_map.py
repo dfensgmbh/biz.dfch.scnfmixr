@@ -185,7 +185,6 @@ _streamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
         StreamdeckInput.KEY_06: InputEventMap.KEY_1,
         StreamdeckInput.KEY_05: InputEventMap.KEY_2,
-        StreamdeckInput.KEY_0A: InputEventMap.KEY_4,
     },
     "InitialiseAudio": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,

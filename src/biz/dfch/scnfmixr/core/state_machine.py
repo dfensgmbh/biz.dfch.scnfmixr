@@ -104,8 +104,6 @@ from .states import OnRecord
 from .transitions import (
     StoppingRecording,
     SettingCuePoint,
-    TogglingMute,
-    ShowingStatus,
     HelpingOnRecord,
 )
 
@@ -439,12 +437,6 @@ class StateMachine:
                 menu[State.MAIN]))
             .add_transition(SettingCuePoint(
                 current.Event.SET_CUE,
-                current))
-            .add_transition(TogglingMute(
-                current.Event.TOGGLE_MUTE,
-                current))
-            .add_transition(ShowingStatus(
-                current.Event.SHOW_STATUS,
                 current))
         )
         current = menu[State.STORAGE]
