@@ -104,12 +104,12 @@ sudo reboot
 ## Hardware
 
 * The OS is running on a [Raspberry Pi 5 8GB](https://www.raspberrypi.com/products/raspberry-pi-5/?variant=raspberry-pi-5-8gb) with its original power supply.
-* The board is mounted in a aluminum case with passive cooling, such as [Ridged Armour Case for Raspberry Pi 5](https://thepihut.com/products/ridged-armour-case-for-raspberry-pi-5).
-* Additional USB ports are made available via an [ICY BOX IB-AC618 7-port USB 3.0 powered USB adapter (gen1)](https://icybox.de/product/hubs/IB-AC618) (USB-A to USB-B, power supply `12V @3A`).
+* The Compute Module 5 is mounted on the official CM5IO development board and installed in the official CM5IO case.
+* Additional USB ports are made available via the official Raspberry Pi USB Hub.
 
 ### Pi USB Port Layout
 
-The internal USB ports of the Pi 5 have the following numbering:
+The internal USB ports of the Pi 5 (not the Compute Module 5) have the following numbering:
 
 | Port  | Type  | USB id  | Path  | Remark  |
 |---------------|----------|--------|--------------------------------|---------------------------------|
