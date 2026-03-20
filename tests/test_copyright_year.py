@@ -100,5 +100,6 @@ class TestCopyright(unittest.TestCase):
             print(f"{full_name}")
             self._process_file(full_name)
 
+
 if __name__ == "__main__":
     unittest.main()
