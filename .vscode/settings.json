@@ -143,6 +143,7 @@
         "pyinstaller",
         "pyproject",
         "pytest",
+        "pythonsecurity",
         "qjackctl",
         "raspi",
         "reexec",
