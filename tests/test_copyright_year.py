@@ -18,6 +18,8 @@
 # pylint: disable=C0116
 # pylint: disable=C0301
 
+# NOSONAR(pythonsecurity:S2083)
+
 """Module update copyright."""
 
 from pathlib import Path
