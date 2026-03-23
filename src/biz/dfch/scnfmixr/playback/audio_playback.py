@@ -312,6 +312,7 @@ class AudioPlayback(IAcquirable):
         """PlaybackStopCommand"""
 
         assert isinstance(message, msgt.PlaybackStopCommand)
+        assert isinstance(self._client, MediaPlayerClient), type(self._client)
 
         self._client.release()
         self._is_playing = False
@@ -320,6 +321,7 @@ class AudioPlayback(IAcquirable):
         """PauseResumeCommand"""
 
         assert isinstance(message, msgt.PauseResumeCommand)
+        assert isinstance(self._client, MediaPlayerClient), type(self._client)
 
         with self._sync_root:
             is_currently_playing = self._is_playing
@@ -334,6 +336,7 @@ class AudioPlayback(IAcquirable):
         """SeekNextCommand"""
 
         assert isinstance(message, msgt.SeekNextCommand)
+        assert isinstance(self._client, MediaPlayerClient), type(self._client)
 
         if not self._is_playing:
             return
@@ -346,6 +349,7 @@ class AudioPlayback(IAcquirable):
         """SeekPreviousCommand"""
 
         assert isinstance(message, msgt.SeekPreviousCommand)
+        assert isinstance(self._client, MediaPlayerClient), type(self._client)
 
         if not self._is_playing:
             return
@@ -356,6 +360,7 @@ class AudioPlayback(IAcquirable):
         """ClipStartCommand"""
 
         assert isinstance(message, msgt.ClipStartCommand)
+        assert isinstance(self._client, MediaPlayerClient), type(self._client)
 
         if not self._is_playing:
             return
@@ -366,6 +371,7 @@ class AudioPlayback(IAcquirable):
         """ClipEndCommand"""
 
         assert isinstance(message, msgt.ClipEndCommand)
+        assert isinstance(self._client, MediaPlayerClient), type(self._client)
 
         if not self._is_playing:
             return
@@ -376,6 +382,7 @@ class AudioPlayback(IAcquirable):
         """ClipNextCommand"""
 
         assert isinstance(message, msgt.ClipNextCommand)
+        assert isinstance(self._client, MediaPlayerClient), type(self._client)
 
         if not self._is_playing:
             return
@@ -388,6 +395,7 @@ class AudioPlayback(IAcquirable):
         """ClipPreviousCommand"""
 
         assert isinstance(message, msgt.ClipPreviousCommand)
+        assert isinstance(self._client, MediaPlayerClient), type(self._client)
 
         if not self._is_playing:
             return
@@ -400,6 +408,7 @@ class AudioPlayback(IAcquirable):
         """CuePointNextCommand"""
 
         assert isinstance(message, msgt.CuePointNextCommand)
+        assert isinstance(self._client, MediaPlayerClient), type(self._client)
 
         if not self._is_playing:
             return
@@ -440,6 +449,7 @@ class AudioPlayback(IAcquirable):
         """CuePointPreviousCommand"""
 
         assert isinstance(message, msgt.CuePointPreviousCommand)
+        assert isinstance(self._client, MediaPlayerClient), type(self._client)
 
         if not self._is_playing:
             return
