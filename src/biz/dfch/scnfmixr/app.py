@@ -46,7 +46,7 @@ class App:  # pylint: disable=R0903
     _VERSION_REQUIRED_MINOR = 11
 
     # Note: also adjust in pyproject.toml
-    _VERSION = "4.0.0"
+    _VERSION = "4.3.0"
     _PROG_NAME = "scnfmixr"
 
     _signal_handler: SignalHandler
@@ -128,6 +128,7 @@ class App:  # pylint: disable=R0903
 
                 app_ctx.storage_parameters.allowed_usb_ids.append(pair)
 
+        log.info("Version: %s", self._VERSION)
         log.info("Snd map: '%s'.", app_ctx.audio_device_map)
         log.info("Sto map: '%s'.", app_ctx.storage_device_map)
         log.info("Inp map: '%s'.", app_ctx.input_device_map)
