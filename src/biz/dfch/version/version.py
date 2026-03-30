@@ -21,7 +21,7 @@ import sys
 class Version:
     """Version class ensuring minimum Python interpreter version."""
 
-    def ensure_minimum_version(self, major: int = 3, minor: int = 11) -> None:
+    def ensure_minimum_version(self, major: int, minor: int) -> None:
         """Ensures the currently running Python interpreter runs at least the
         specified version.
 
