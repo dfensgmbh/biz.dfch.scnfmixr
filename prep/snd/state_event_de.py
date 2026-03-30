@@ -125,11 +125,11 @@ Geben Sie ein achtstelliges Datum ein, beginnend mit den 4 Ziffern des Jahres, g
 Um eine Ziffer zu löschen, drücken Sie die "RÜCK-TASTE" oder "BACK-SPACE" Taste.
 Wenn Sie die Eingabe des Wertes abgeschlossen haben, oder von vorne beginnen möchten, drücken Sie die "EINGABE-TASTE" oder "ENTER" Taste.
 
-Beispiel:
+    # Beispiel:
 
-Eins-Neun-Zwei-Sieben
+    # Eins-Neun-Zwei-Sieben
 
-Null-Drei-Zwei-Sieben für den Siebenundzwanzigsten März 19 27.
+    # Null-Drei-Zwei-Sieben für den Siebenundzwanzigsten März 19 27.
 
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 """,  # noqa: E501
@@ -144,9 +144,9 @@ Geben Sie eine vierstellige Uhrzeit ein, beginnend mit den 2 Ziffern im 24 Stund
 Um eine Ziffer zu löschen, drücken Sie die "RÜCK-TASTE" oder "BACK-SPACE" Taste.
 Wenn Sie die Eingabe des Wertes abgeschlossen haben, oder von vorne beginnen möchten, drücken Sie die "EINGABE-TASTE" oder "ENTER" Taste.
 
-Beispiel:
+    # Beispiel:
 
-Eins-Vier-Null-Drei für 14 Uhr und 3 Minuten.
+    # Eins-Vier-Null-Drei für 14 Uhr und 3 Minuten.
 
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 """,  # noqa: E501
@@ -158,13 +158,13 @@ Menü "Dateiname"
 Geben Sie einen achtstelligen Namen ein, der als eindeutiger Name in Ihrer Aufzeichnung verwendet wird.
 
 Um eine Ziffer zu löschen, drücken Sie die "RÜCK-TASTE" oder "BACK-SPACE" Taste.
-Wenn Sie die Eingabe des Wertes abgeschlossen haben, oder von vorne beginnen möchten, drücken Sie die "EINGABE-TASTE" oder "ENTER" Taste.
+Wenn Sie die Eingabe des Wertes abgeschlossen haben, drücken Sie die "EINGABE-TASTE" oder "ENTER" Taste.
 
-Beispiel:
+    # Beispiel:
 
-Null-Acht-Eins-Fünf
+    # Null-Acht-Eins-Fünf
 
-Fünf-Sechs-Vier-Zwei für Null-Acht 15 56 42.
+    # Fünf-Sechs-Vier-Zwei für Null-Acht 15 56 42.
 
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 """,  # noqa: E501
@@ -186,7 +186,7 @@ Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 
     # OK
     StateEvent.SYSTEM_ENTER: """
-Menü "System"
+Systemmenü
 
 Wählen Sie "1", um zum "Hauptmenü" zu gelangen.
 Wählen Sie "2", um die Sprache auszuwählen.

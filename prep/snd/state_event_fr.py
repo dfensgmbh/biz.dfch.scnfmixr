@@ -126,11 +126,11 @@ Entrez une date à 8 chiffres en commençant par les 4 chiffres de l'année, sui
 Pour supprimer un chiffre, appuyez sur la touche "BACK-SPACE" ou "RETOUR ARRIÈRE".
 Lorsque vous avez terminé de saisir la valeur, ou pour recommencer depuis le début, appuyez sur la touche "ENTER" ou "ENTRÉE".
 
-Exemple :
+    # Exemple :
 
-un-neuf-deux-sept
+    # un-neuf-deux-sept
 
-zéro-trois-deux-sept pour le 27 mars 1927.
+    # zéro-trois-deux-sept pour le 27 mars 1927.
 
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
@@ -144,9 +144,9 @@ Entrez une heure à 4 chiffres en commençant par les 2 chiffres des heures, sui
 Pour supprimer un chiffre, appuyez sur la touche "BACK-SPACE" ou "RETOUR ARRIÈRE".
 Lorsque vous avez terminé de saisir la valeur ou pour recommencer depuis le début, appuyez sur la touche "ENTER" ou "ENTRÉE".
 
-Exemple :
+    # Exemple :
 
-un-quatre-zéro-trois pour 2 heures et 3 minutes de l'après-midi.
+    # un-quatre-zéro-trois pour 2 heures et 3 minutes de l'après-midi.
 
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501
@@ -160,11 +160,11 @@ Entrez un nom à 8 chiffres qui servira de nom unique pour votre enregistrement.
 Pour supprimer un chiffre, appuyez sur la touche "BACK-SPACE" ou "RETOUR ARRIÈRE".
 Lorsque vous avez terminé de saisir la valeur ou pour recommencer depuis le début, appuyez sur la touche "ENTER" ou "ENTRÉE".
 
-Exemple :
+    # Exemple :
 
-zéro-huit-un-cinq
+    # zéro-huit-un-cinq
 
-cinq-six-quatre-deux pour zéro-huit 15 56 42.
+    # cinq-six-quatre-deux pour zéro-huit 15 56 42.
 
 Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 """,  # noqa: E501

@@ -124,13 +124,13 @@ The "Date" menu
 Enter an 8 digit date starting with the 4 digit year, followed by a 2 digit month and a 2 digit day.
 
 To delete a digit, press the "BACK-SPACE" key.
-When you are finished entering the value, or to start from the start again, press the "ENTER" or "RETURN" key.
+When you are finished entering the value, press the "ENTER" or "RETURN" key.
 
-Example:
+    # Example:
 
-one-nine-two-seven
+    # one-nine-two-seven
 
-zero-three-two-seven for the 27th of March in 19 27.
+    # zero-three-two-seven for the 27th of March in 19 27.
 
 Press "STAR" to repeat this message.
 """,  # noqa: E501
@@ -142,11 +142,11 @@ The "Time" menu
 Enter a 4 digit time starting with the 2 digit 24 hours, followed by the 2 digit minutes.
 
 To delete a digit, press the "BACK-SPACE" key.
-When you are finished entering the value, or to start from the start again, press the "ENTER" or "RETURN" key.
+When you are finished entering the value, press the "ENTER" or "RETURN" key.
 
-Example:
+    # Example:
 
-one-four-zero-three for 3 minutes after 2 o'clock in the afternoon.
+    # one-four-zero-three for 3 minutes after 2 o'clock in the afternoon.
 
 Press "STAR" to repeat this message.
 """,  # noqa: E501
@@ -158,13 +158,13 @@ The "Name" menu
 Enter an 8 digit name used as the unique name in your recording.
 
 To delete a digit, press the "BACK-SPACE" key.
-When you are finished entering the value, or to start from the start again, press the "ENTER" or "RETURN" key.
+When you are finished entering the value, press the "ENTER" or "RETURN" key.
 
-Example:
+    # Example:
 
-zero-eight-one-five
+    # zero-eight-one-five
 
-five-six-four-two for zero-eight 15 56 42.
+    # five-six-four-two for zero-eight 15 56 42.
 
 Press "STAR" to repeat this message.
 """,  # noqa: E501
