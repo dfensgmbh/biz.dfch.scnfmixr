@@ -21,6 +21,7 @@ from enum import StrEnum
 from biz.dfch.logging import log
 from ...public.input import InputEventMap
 from ...app import ApplicationContext
+from ...public import SKIP_USB_PORT
 from ...public.storage import StorageDevice
 from ...public.system.messages import SystemMessage
 from ..fsm import UiEventInfo
@@ -62,7 +63,9 @@ class InitialiseRc1(StateBase):
         assert ctx and isinstance(ctx, ExecutionContext)
 
         device = StorageDevice.RC1
-        if ApplicationContext.Factory.get().recording_parameters.skip_rc1:
+        app_ctx = ApplicationContext.Factory.get()
+        value = app_ctx.storage_device_map[device]
+        if SKIP_USB_PORT == value:
             log.info("Skipping device '%s' ...", device.name)
             msg = SystemMessage.InputEvent(InitialiseRc1.Event.SKIP_DEVICE)
             ctx.events.publish_first(msg)

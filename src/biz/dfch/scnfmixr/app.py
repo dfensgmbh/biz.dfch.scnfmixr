@@ -15,8 +15,6 @@
 
 """Main app module."""
 
-import sys
-
 from biz.dfch.i18n import LanguageCode
 from biz.dfch.logging import log
 from biz.dfch.version import Version
@@ -67,12 +65,6 @@ class App:  # pylint: disable=R0903
         app_ctx = ApplicationContext.Factory.get()
 
         rec_params = app_ctx.recording_parameters
-
-        # DFTODO - maybe find something more dynamic here?
-        # Answer (still DFTODO): Use SKIP_... as value and process it like EX2.
-        rec_params.skip_rc1 = "--skip-storage1" in sys.argv
-        rec_params.skip_rc2 = "--skip-storage2" in sys.argv
-
         rec_params.file_format = FileFormat(args.file_format)
         rec_params.sampling_rate = args.sampling_rate
         match args.bit_depth:
