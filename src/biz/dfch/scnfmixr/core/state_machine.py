@@ -101,6 +101,7 @@ from .transitions.starting_recording_mixes import (
 
 from .states import DeletingLastTakeConfirmation
 from .transitions import ConfirmingDeletingLastTake
+from .transitions import DismissingDeletingLastTake
 
 from .states import OnRecord
 from .transitions import (
@@ -511,7 +512,7 @@ class StateMachine:
             .add_transition(ConfirmingDeletingLastTake(
                 current.Event.OK,
                 menu[State.MAIN]))
-            .add_transition(ReturningTrue(
+            .add_transition(DismissingDeletingLastTake(
                 current.Event.CANCEL,
                 menu[State.MAIN]))
         )

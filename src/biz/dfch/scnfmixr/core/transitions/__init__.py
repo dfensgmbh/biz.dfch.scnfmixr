@@ -97,6 +97,7 @@ from .seeking_next import SeekingNext
 from .helping_menu import HelpingPlayback, HelpingOnRecord
 
 from .confirming_deleting_last_take import ConfirmingDeletingLastTake
+from .dismissing_deleting_last_take import DismissingDeletingLastTake
 
 __all__ = [
     "ReturningTrue",
@@ -175,4 +176,5 @@ __all__ = [
     "HelpingPlayback",
 
     "ConfirmingDeletingLastTake",
+    "DismissingDeletingLastTake",
 ]

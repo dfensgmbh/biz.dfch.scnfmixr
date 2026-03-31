@@ -20,8 +20,9 @@ from ..transition_event import TransitionEvent
 
 
 # pylint: disable=R0903
-class ReturningTrue(TransitionBase):
-    """Noop: this transition does nothing and returns True."""
+class DismissingDeletingLastTake(TransitionBase):
+    """This transition does nothing and returns True.
+    It is only used to play a specific sound."""
 
     def __init__(self, event: str, target: StateBase):
 
@@ -30,8 +31,10 @@ class ReturningTrue(TransitionBase):
 
         super().__init__(
             event,
-            info_enter=None,
-            info_leave=UiEventInfo(TransitionEvent.RETURNING_TRUE_LEAVE, False),
+            info_enter=UiEventInfo(
+                TransitionEvent.DISMISSING_DELETING_LAST_TAKE_ENTER, False),
+            info_leave=UiEventInfo(
+                TransitionEvent.DISMISSING_DELETING_LAST_TAKE_LEAVE, False),
             target_state=target)
 
     def invoke(self, ctx):
