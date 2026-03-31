@@ -481,7 +481,7 @@ Note: naming for the executable does not have to follow [SemVer](http://semver.o
 
 # Detecting the Elgato Streamdeck MK.2
 
-The system works with the Elgato Streamdeck MK.2 device (and only this device). This device has 15 buttons. The button in the upper left corner has id 0 and the button in the lower right corner has id 14.
+The system works with the Elgato Streamdeck MK.2 device (and only this device). This device has 15 buttons. The button in the upper left corner has id 0 (0x00) and the button in the lower right corner has id 14 (0X0E).
 
 * [HID API](https://docs.elgato.com/streamdeck/hid/)
 * [Stream Deck Module 15 and 32 Keys](https://docs.elgato.com/streamdeck/hid/module-15_32)
@@ -632,6 +632,53 @@ We need to install:
   # Pillow>=9.0.0
   pip install -r requirements.txt
   ```
+
+## Adding icons for menus
+
+When you use the Elgato Streamdeck with the scnfmixr, you must define entries in `StreamdeckEventMap` (in `streamdeck_event_map.py`) for each menu. Each entry for a menu is related to an `InputEventMap` key (in `input_event_map.py`). Here is an example for the menu `OnRecord`:
+
+```py
+"OnRecord": {
+    StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
+    StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
+    StreamdeckInput.KEY_06: InputEventMap.KEY_1,
+    StreamdeckInput.KEY_05: InputEventMap.KEY_2,
+},
+```
+
+The key in this map (`StreamdeckInput.KEY_nn`) is the hexadecimal number for the that starts with 0x00 in the upper left corner and increments horizontally until 0x0E in the lower right corner. The value in this map is the `Event` in the menu class:
+
+```py
+class OnRecord(StateBase):
+    class Event(StrEnum):
+        """Events for this state."""
+
+        HELP = InputEventMap.KEY_ASTERISK
+        STOP_RECORDING = InputEventMap.KEY_1
+        SET_CUE = InputEventMap.KEY_2
+```
+
+For each entry for each menu in `StreamdeckEventMap` you must supply an image file in `PNG` format. The naming convention for each file is: `<menu name>-<key>-<arbitrary text suffix>.png` (case-sensitive). For each image that you do not supply, a default image for that menu is used: `<menu name>-default.png`. The image for `SET_CUE` in the `OnRecord` menu uses `KEY_05` in the `StreamdeckEventMap`. Thus, the image name is `OnRecord-KEY_05-set_cue.png`. `set_cue` is an arbitrary suffix that helps to identify the meaning of the image. All images names load at startup. When you add an image after startup, the program does not use the image.
+
+There is only one version of images for all languages. The location for the images is:
+```py
+src/biz/dfch/scnfmixr/res/streamdeckeventmap/EN
+```
+
+For preparation, we first keep the images in these folders. This is not really consistent nor does it make total sense:
+```py
+prep/img/
+```
+
+For tests, we keep the images in these folders: 
+```py
+res/img/EN/
+```
+
+# State machine and adding menus
+
+The program uses a finite state machine (FSM) with states and transitions. Each state in the FSM is a menu for the human interaction device (HID). Each transition in the FSM is an action for that menu.
+Example: with HI2 (the Elgato Streamdeck) each transition is a button on the screen.
 
 # Notes and Observations
 

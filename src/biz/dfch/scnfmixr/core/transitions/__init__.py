@@ -96,6 +96,7 @@ from .seeking_previous import SeekingPrevious
 from .seeking_next import SeekingNext
 from .helping_menu import HelpingPlayback, HelpingOnRecord
 
+from .confirming_deleting_last_take import ConfirmingDeletingLastTake
 
 __all__ = [
     "ReturningTrue",
@@ -172,4 +173,6 @@ __all__ = [
     "SeekingPrevious",
     "SeekingNext",
     "HelpingPlayback",
+
+    "ConfirmingDeletingLastTake",
 ]

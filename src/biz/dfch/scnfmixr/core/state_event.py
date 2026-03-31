@@ -49,6 +49,7 @@ class StateEvent(StrEnum):
     INIT_AUDIO_LEAVE = auto()
 
     MAIN_ENTER = auto()
+    DELETING_LAST_TAKE_CONFIRMATION_ENTER = auto()
 
     SYSTEM_ENTER = auto()
 

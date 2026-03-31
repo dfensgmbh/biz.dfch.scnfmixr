@@ -27,10 +27,9 @@ from ..transition_event import TransitionEvent
 
 
 # pylint: disable=R0903
-class DeletingLastTake(TransitionBase):
-    """This transition deletes the last take (in any).
-
-    NOTE: At this time, the transition does nothing.
+class ConfirmingDeletingLastTake(TransitionBase):
+    """
+    This transition removes the last recording (if there is any).
     """
 
     def __init__(self, event: str, target: StateBase):
@@ -41,9 +40,9 @@ class DeletingLastTake(TransitionBase):
         super().__init__(
             event,
             info_enter=UiEventInfo(
-                TransitionEvent.DELETING_LAST_TAKE_ENTER, False),
+                TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_ENTER, False),
             info_leave=UiEventInfo(
-                TransitionEvent.DELETING_LAST_TAKE_LEAVE, False),
+                TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_LEAVE, False),
             target_state=target)
 
     def invoke(self, ctx):

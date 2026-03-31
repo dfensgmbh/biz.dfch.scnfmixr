@@ -180,6 +180,10 @@ _streamdeckEventMap: dict[str, dict[StreamdeckInput, InputEventMap]] = {
         StreamdeckInput.KEY_0C: InputEventMap.KEY_7,
         StreamdeckInput.KEY_0E: InputEventMap.KEY_9,
     },
+    "DeletingLastTakeConfirmation": {
+        StreamdeckInput.KEY_06: InputEventMap.KEY_1,
+        StreamdeckInput.KEY_08: InputEventMap.KEY_2,
+    },
     "OnRecord": {
         StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
         StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,

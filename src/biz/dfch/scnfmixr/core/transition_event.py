@@ -95,6 +95,10 @@ class TransitionEvent(StrEnum):
     DELETING_LAST_TAKE_ENTER = auto()
     DELETING_LAST_TAKE_LEAVE = auto()
 
+    # Menu: DeletingLastTakeConfirmation.
+    CONFIRMING_DELETING_LAST_TAKE_ENTER = auto()
+    CONFIRMING_DELETING_LAST_TAKE_LEAVE = auto()
+
     # Menu: System.
     MOUNTING_STORAGE_ENTER = auto()
     MOUNTING_STORAGE_LEAVE = auto()
