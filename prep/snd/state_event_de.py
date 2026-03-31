@@ -184,11 +184,11 @@ Wählen Sie "9", um das Gerät zu stoppen.
 Wählen Sie "STERN", um diese Nachricht zu wiederholen.
 """,  # noqa: E501
 
-    # NOK
+    # OK
     StateEvent.DELETING_LAST_TAKE_CONFIRMATION_ENTER: """
-Wollen Sie die letzte Aufnahme zu löschen?
-wählen Sie 1, um zu bestätigen.
-wählen Sie 2, um abzubrechen.
+Wollen Sie die letzte Aufnahme wirklich löschen?
+wählen Sie 1, um das Löschen zu bestätigen.
+wählen Sie 2, um das Löschen abzubrechen.
 """,  # noqa: E501
 
     # OK

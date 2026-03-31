@@ -184,11 +184,11 @@ Press "9" to stop the device.
 Press "STAR" to repeat this message.
 """,  # noqa: E501
 
-    # NOK
+    # OK
     StateEvent.DELETING_LAST_TAKE_CONFIRMATION_ENTER: """
 Do you want to delete the last recording?
-Press 1 to confirm.
-Press 2 to cancel.
+Press 1 to confirm the deletion.
+Press 2 to cancel the deletion.
 """,  # noqa: E501
 
     # OK

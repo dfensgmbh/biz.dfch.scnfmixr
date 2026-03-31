@@ -244,23 +244,23 @@ Enregistrement démarré.
 """,
 
     # Menu: DeletingLastTakeConfirmation.
-    # NOK
+    # OK
     TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_ENTER: """
-Tentative de suppression du dernier enregistrement.
+
 """,
-    # NOK
+    # OK
     TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_LEAVE: """
 Suppression du dernier enregistrement réussie.
 """,
 
-    # NOK
+    # OK
     TransitionEvent.DISMISSING_DELETING_LAST_TAKE_ENTER: """
-NEW TEXT HERE
+
 """,
 
-    # NOK
+    # OK
     TransitionEvent.DISMISSING_DELETING_LAST_TAKE_LEAVE: """
-NEW TEXT HERE
+Suppression annulée.
 """,
 
     # Menu: System.

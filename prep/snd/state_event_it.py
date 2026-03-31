@@ -177,7 +177,7 @@ Premere "ASTERISCO" per ripetere questo messaggio.
 
 """,  # noqa: E501
 
-    # NOK
+    # OK
     StateEvent.DELETING_LAST_TAKE_CONFIRMATION_ENTER: """
 Tentativo di eliminare l’ultima registrazione.
 Press 1 to confirm.

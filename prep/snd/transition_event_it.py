@@ -240,23 +240,23 @@ Registrazione avviata.
 """,
 
     # Menu: DeletingLastTakeConfirmation.
-    # NOK
+    # OK
     TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_ENTER: """
-Tentativo di eliminare l’ultima registrazione.
+
 """,
-    # NOK
+    # OK
     TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_LEAVE: """
 Eliminazione dell’ultima registrazione riuscita.
 """,
 
-    # NOK
+    # OK
     TransitionEvent.DISMISSING_DELETING_LAST_TAKE_ENTER: """
-NEW TEXT HERE
+
 """,
 
-    # NOK
+    # OK
     TransitionEvent.DISMISSING_DELETING_LAST_TAKE_LEAVE: """
-NEW TEXT HERE
+Cancellazione interrotta.
 """,
 
     # Menu: System.

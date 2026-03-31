@@ -185,12 +185,11 @@ Appuyez sur la touche "ASTÉRISQUE" pour répéter ce message.
 
 """,  # noqa: E501
 
-    # NOK
+    # OK
     StateEvent.DELETING_LAST_TAKE_CONFIRMATION_ENTER: """
-Est-ce que c'est Jean-Pierre Frommage?
-Tentative de suppression du dernier enregistrement.
-Press 1 to confirm.
-Press 2 to cancel.
+Voulez-vous supprimer le dernier enregistrement ?
+Appuyez sur "1" pour confirmer la suppression.
+Appuyez sur "2" pour annuler la suppression.
 """,  # noqa: E501
 
     # OK

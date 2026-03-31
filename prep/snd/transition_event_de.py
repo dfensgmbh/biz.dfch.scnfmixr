@@ -223,7 +223,7 @@ Effektgerät 2 wurde übersprungen.
 
     # Menu: Initialise audio.
 
-   # Menu: Main.
+    # Menu: Main.
 
     # OK
     TransitionEvent.STARTING_RECORDING_ENTER: """
@@ -236,24 +236,24 @@ Aufnahme gestartet.
 """,
 
     # Menu: DeletingLastTakeConfirmation.
-    # NOK
+    # OK
     TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_ENTER: """
-Versuche, die letzte Aufnahme zu löschen.
+
 """,
 
-    # NOK
+    # OK
     TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_LEAVE: """
 Löschen der letzten Aufnahme erfolgreich.
 """,
 
-    # NOK
+    # OK
     TransitionEvent.DISMISSING_DELETING_LAST_TAKE_ENTER: """
-NEW TEXT HERE
+
 """,
 
-    # NOK
+    # OK
     TransitionEvent.DISMISSING_DELETING_LAST_TAKE_LEAVE: """
-NEW TEXT HERE
+Löschen abgebrochen.
 """,
 
     # Menu: Clean storage RC1.
@@ -294,7 +294,7 @@ Audio wird initialisiert
 Audio ist initialisiert
 """,
 
- 
+
     # Menu: System.
     # OK
     TransitionEvent.FORMATTING_STORAGE_ENTER: """
