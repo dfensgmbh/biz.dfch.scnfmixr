@@ -31,8 +31,8 @@ class DeletingLastTakeConfirmation(StateBase):
     class Event(StrEnum):
         """Events for this state."""
 
-        OK = InputEventMap.KEY_6
-        CANCEL = InputEventMap.KEY_8
+        OK = InputEventMap.KEY_1
+        CANCEL = InputEventMap.KEY_2
 
     def __init__(self):
         """Default ctor."""
