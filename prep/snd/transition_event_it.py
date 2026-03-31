@@ -238,13 +238,25 @@ Preparazione alla registrazione.
     TransitionEvent.STARTING_RECORDING_LEAVE: """
 Registrazione avviata.
 """,
-    # OK
-    TransitionEvent.DELETING_LAST_TAKE_ENTER: """
+
+    # Menu: DeletingLastTakeConfirmation.
+    # NOK
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_ENTER: """
 Tentativo di eliminare l’ultima registrazione.
 """,
-    # OK
-    TransitionEvent.DELETING_LAST_TAKE_LEAVE: """
+    # NOK
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_LEAVE: """
 Eliminazione dell’ultima registrazione riuscita.
+""",
+
+    # NOK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_ENTER: """
+NEW TEXT HERE
+""",
+
+    # NOK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_LEAVE: """
+NEW TEXT HERE
 """,
 
     # Menu: System.

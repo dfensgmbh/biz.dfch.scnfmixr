@@ -224,12 +224,25 @@ Preparing for recording.
 Recording started.
 """,
 
-    TransitionEvent.DELETING_LAST_TAKE_ENTER: """
+    # Menu: DeletingLastTakeConfirmation.
+    # NOK
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_ENTER: """
 Trying to delete last recording.
 """,
 
-    TransitionEvent.DELETING_LAST_TAKE_LEAVE: """
+    # NOK
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_LEAVE: """
 Trying to delete last recording succeeded.
+""",
+
+    # NOK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_ENTER: """
+NEW TEXT HERE
+""",
+
+    # NOK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_LEAVE: """
+NEW TEXT HERE
 """,
 
     # Menu: System.

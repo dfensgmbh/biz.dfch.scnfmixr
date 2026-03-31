@@ -92,8 +92,6 @@ class TransitionEvent(StrEnum):
     # Menu: Main.
     STARTING_RECORDING_ENTER = auto()
     STARTING_RECORDING_LEAVE = auto()
-    DELETING_LAST_TAKE_ENTER = auto()
-    DELETING_LAST_TAKE_LEAVE = auto()
 
     # Menu: DeletingLastTakeConfirmation.
     CONFIRMING_DELETING_LAST_TAKE_ENTER = auto()

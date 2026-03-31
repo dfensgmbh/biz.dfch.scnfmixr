@@ -174,6 +174,14 @@ Premere "6" per impostare un nuovo nome per la prossima registrazione.
 Premere "7" per eliminare l'ultima registrazione.  
 Premere "9" per arrestare il dispositivo.  
 Premere "ASTERISCO" per ripetere questo messaggio.
+
+""",  # noqa: E501
+
+    # NOK
+    StateEvent.DELETING_LAST_TAKE_CONFIRMATION_ENTER: """
+Tentativo di eliminare l’ultima registrazione.
+Press 1 to confirm.
+Press 2 to cancel.
 """,  # noqa: E501
 
     # OK

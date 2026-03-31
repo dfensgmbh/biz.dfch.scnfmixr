@@ -235,17 +235,26 @@ Aufnahme wird vorbereitet.
 Aufnahme gestartet.
 """,
 
-    # OK
-    TransitionEvent.DELETING_LAST_TAKE_ENTER: """
+    # Menu: DeletingLastTakeConfirmation.
+    # NOK
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_ENTER: """
 Versuche, die letzte Aufnahme zu löschen.
 """,
 
-    # OK
-    TransitionEvent.DELETING_LAST_TAKE_LEAVE: """
+    # NOK
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_LEAVE: """
 Löschen der letzten Aufnahme erfolgreich.
 """,
 
+    # NOK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_ENTER: """
+NEW TEXT HERE
+""",
 
+    # NOK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_LEAVE: """
+NEW TEXT HERE
+""",
 
     # Menu: Clean storage RC1.
 
