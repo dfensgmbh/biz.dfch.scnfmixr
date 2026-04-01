@@ -43,6 +43,7 @@ class TestJackConnection2(unittest.TestCase):
         sut = JackConnection.Factory.create(source, sink)
 
         self.assertIsNotNone(sut)
+        assert sut is not None
         self.assertTrue(sut.is_connected)
 
     @patch("biz.dfch.scnfmixr.jack_commands.jack_connection.Process",
@@ -58,7 +59,7 @@ class TestJackConnection2(unittest.TestCase):
 
     @patch("biz.dfch.scnfmixr.jack_commands.jack_connection.Process",
            new=MockProcessJackConnectSucceeds)
-    def test_disconnect_succeds(self):
+    def test_disconnect_succeeds(self):
         """Disconnecting a session succeeds."""
 
         source = "Alsa:LCL-I:capture_1"
@@ -67,6 +68,7 @@ class TestJackConnection2(unittest.TestCase):
         sut = JackConnection.Factory.create(source, sink)
 
         self.assertIsNotNone(sut)
+        assert sut is not None
         self.assertTrue(sut.is_connected)
 
         result = sut.disconnect()
@@ -83,6 +85,7 @@ class TestJackConnection2(unittest.TestCase):
         sut = JackConnection.Factory.create(source, sink)
 
         self.assertIsNotNone(sut)
+        assert sut is not None
         self.assertTrue(sut.is_connected)
 
         result = sut.disconnect()
@@ -91,7 +94,7 @@ class TestJackConnection2(unittest.TestCase):
     @patch("biz.dfch.scnfmixr.jack_commands.jack_connection.Process",
            new=MockProcessJackDisconnectFails)
     def test_check_connection_returns_true(self):
-        """Checking a non-existing connection succeds."""
+        """Checking a non-existing connection succeeds."""
         self.skipTest("Not yet implemented.")
 
         source = "Alsa:LCL-I:capture_1"

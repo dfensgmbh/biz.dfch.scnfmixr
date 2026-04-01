@@ -60,7 +60,7 @@ class TestAudioMixer(unittest.TestCase):
 
         self.assertFalse(result)
 
-    def test_initialise_succeds(self):
+    def test_initialise_succeeds(self):
         """Initializing succeeds."""
 
         sut = AudioMixer.Factory.get()
