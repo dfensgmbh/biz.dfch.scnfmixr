@@ -13,10 +13,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# pylint: disable=C0114
+# pylint: disable=C0115
+# pylint: disable=C0116
+# pylint: disable=W0212
+
 import datetime
+from datetime import timedelta
+import time
 import unittest
 
 from biz.dfch.scnfmixr.date_time_name_input import DateTimeNameInput
+from biz.dfch.scnfmixr.public.system.system_time import SystemTime
 
 
 class TestDateTimeNameInput(unittest.TestCase):
@@ -82,7 +90,7 @@ class TestDateTimeNameInput(unittest.TestCase):
         self.assertEqual(datetime.time(12, 34), sut.get_time())
 
     def test_sending_backspace_removes_char_from_time(self):
-        """Sending a backspace removes a character from timestring."""
+        """Sending a backspace removes a character from time string."""
 
         sut = DateTimeNameInput()
 
@@ -180,3 +188,215 @@ class TestDateTimeNameInput(unittest.TestCase):
         self.assertTrue(sut.is_valid_name)
 
         self.assertEqual("19270327", sut.get_name())
+
+    def test_later_1(self):
+
+        # Real current system time.
+        now = datetime.datetime.now()
+        expected = now + timedelta(days=1, hours=1)
+        st = SystemTime.Factory.get()
+
+        sut = DateTimeNameInput()
+
+        # Get and set date.
+        result = sut.get_date()
+        self.assertEqual(result, None)
+
+        sut.set_date(expected.date())
+
+        result = sut.get_date()
+        print(result)
+        result = st.now()
+        print(result)
+
+        # Get and set time.
+        result = sut.get_time()
+        self.assertEqual(result, None)
+
+        sut.set_time(expected.time())
+
+        result = sut.get_time()
+        print(result)
+        result = st.now()
+        print(result)
+
+        is_almost_equal = abs(expected - result) <= timedelta(seconds=1)
+
+        self.assertTrue(is_almost_equal, (expected, result))
+
+    def test_later_2(self):
+
+        # Real current system time.
+        now = datetime.datetime.now()
+        expected = now + timedelta(days=0, hours=1)
+        st = SystemTime.Factory.get()
+
+        sut = DateTimeNameInput()
+
+        # Get and set date.
+        result = sut.get_date()
+        self.assertEqual(result, None)
+
+        sut.set_date(expected.date())
+
+        result = sut.get_date()
+        print(result)
+        result = st.now()
+        print(result)
+
+        # Get and set time.
+        result = sut.get_time()
+        self.assertEqual(result, None)
+
+        sut.set_time(expected.time())
+
+        result = sut.get_time()
+        print(result)
+        result = st.now()
+        print(result)
+
+        is_almost_equal = abs(expected - result) <= timedelta(seconds=1)
+
+        self.assertTrue(is_almost_equal, (expected, result))
+
+    def test_earlier_1(self):
+
+        # Real current system time.
+        now = datetime.datetime.now()
+        expected = now + timedelta(days=-1, hours=-1)
+        st = SystemTime.Factory.get()
+
+        sut = DateTimeNameInput()
+
+        # Get and set date.
+        result = sut.get_date()
+        self.assertEqual(result, None)
+
+        sut.set_date(expected.date())
+
+        result = sut.get_date()
+        print(result)
+        result = st.now()
+        print(result)
+
+        # Get and set time.
+        result = sut.get_time()
+        self.assertEqual(result, None)
+
+        sut.set_time(expected.time())
+
+        result = sut.get_time()
+        print(result)
+        result = st.now()
+        print(result)
+
+        is_almost_equal = abs(expected - result) <= timedelta(seconds=1)
+
+        self.assertTrue(is_almost_equal, (expected, result))
+
+    def test_earlier_2(self):
+
+        # Real current system time.
+        now = datetime.datetime.now()
+        expected = now + timedelta(days=-1, hours=1)
+        st = SystemTime.Factory.get()
+
+        sut = DateTimeNameInput()
+
+        # Get and set date.
+        result = sut.get_date()
+        self.assertEqual(result, None)
+
+        sut.set_date(expected.date())
+
+        result = sut.get_date()
+        print(result)
+        result = st.now()
+        print(result)
+
+        # Get and set time.
+        result = sut.get_time()
+        self.assertEqual(result, None)
+
+        sut.set_time(expected.time())
+
+        result = sut.get_time()
+        print(result)
+        result = st.now()
+        print(result)
+
+        is_almost_equal = abs(expected - result) <= timedelta(seconds=1)
+
+        self.assertTrue(is_almost_equal, (expected, result))
+
+    def test_earlier_3(self):
+
+        # Real current system time.
+        now = datetime.datetime.now()
+        expected = now + timedelta(days=0, hours=-1)
+        st = SystemTime.Factory.get()
+
+        sut = DateTimeNameInput()
+
+        # Get and set date.
+        result = sut.get_date()
+        self.assertEqual(result, None)
+
+        sut.set_date(expected.date())
+
+        result = sut.get_date()
+        print(result)
+        result = st.now()
+        print(result)
+
+        # Get and set time.
+        result = sut.get_time()
+        self.assertEqual(result, None)
+
+        sut.set_time(expected.time())
+
+        result = sut.get_time()
+        print(result)
+        result = st.now()
+        print(result)
+
+        is_almost_equal = abs(expected - result) <= timedelta(seconds=1)
+
+        self.assertTrue(is_almost_equal, (expected, result))
+
+    def test_later_fails(self):
+
+        # Real current system time.
+        now = datetime.datetime.now()
+        expected = now + timedelta(days=1, hours=1)
+        st = SystemTime.Factory.get()
+
+        sut = DateTimeNameInput()
+
+        # Get and set date.
+        result = sut.get_date()
+        self.assertEqual(result, None)
+
+        sut.set_date(expected.date())
+
+        result = sut.get_date()
+        print(result)
+        result = st.now()
+        print(result)
+
+        # Get and set time.
+        result = sut.get_time()
+        self.assertEqual(result, None)
+
+        sut.set_time(expected.time())
+
+        time.sleep(1.1)
+
+        result = sut.get_time()
+        print(result)
+        result = st.now()
+        print(result)
+
+        is_almost_equal = abs(expected - result) <= timedelta(seconds=1)
+
+        self.assertFalse(is_almost_equal, (expected, result))
