@@ -18,6 +18,8 @@
 """Testing JACK connections via MultiLineTextParser. Platform dependent."""
 
 import re
+from typing import Callable
+from typing import cast
 import unittest
 
 from text import MultiLineTextParser
@@ -110,7 +112,7 @@ system:playback_8
         }
 
         parser = MultiLineTextParser(indent=" ", length=2, dic=dic)
-        parser.parse(text, is_regex=True)
+        parser.parse(list(text), is_regex=True)
 
     def test_parsing_connections_succeeds(self) -> None:
         """Parsing the connections of a port succeeds."""
@@ -271,9 +273,10 @@ ecasound:MX4-O_6
         parser = MultiLineTextParser(
             indent=" ",
             length=3,
-            dic=dic,
+            dic=cast(
+                dict[str, Callable[[MultiLineTextParserContext], bool]], dic),
             default=visitor.process_default)
-        parser.parse(text, is_regex=True)
+        parser.parse(list(text), is_regex=True)
 
         result = visitor.items
         self.assertIsNotNone(result)
