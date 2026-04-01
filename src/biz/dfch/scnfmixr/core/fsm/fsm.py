@@ -47,7 +47,7 @@ class Fsm:
         current_state (State): The current state of the state machine.
     """
 
-    _message_queue = MessageQueue
+    _message_queue: MessageQueue
     _initial_state: StateBase
     _current_state: StateBase
     _previous_state: StateBase
@@ -284,13 +284,13 @@ class Fsm:
         if not self._is_started:
             log.warning(
                 "Stopping state machine FAILED: Already stopped [1].")
-            return False
+            return
 
         with self._sync_root:
             if not self._is_started:
                 log.warning(
                     "Stopping state machine FAILED: Already stopped [2].")
-                return False
+                return
 
             self._is_started = False
 
@@ -298,7 +298,7 @@ class Fsm:
             SystemMessage.StateMachine.StateMachineStopped())
         log.info("Stopping state machine OK.")
 
-        return True
+        return
 
     def restart(self) -> None:
         """Stops and starts the state machine. Only starts the state machine if
