@@ -241,14 +241,15 @@ class AudioPlayback(IAcquirable):
         def _retry_action(items: list[str]) -> bool:
 
             assert self._client is not None
+            items.clear()
 
             mount_point = MountPoint.RC1.name.lower()
-            items = self._load_playback_queue(self._client, mount_point)
+            items.extend(self._load_playback_queue(self._client, mount_point))
 
             if 0 == len(items):
                 mount_point = MountPoint.RC2.name.lower()
-                items = self._load_playback_queue(
-                    self._client, mount_point)
+                items.extend(self._load_playback_queue(
+                    self._client, mount_point))
 
             return 0 != len(items)
 
