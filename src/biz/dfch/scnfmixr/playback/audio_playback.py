@@ -248,11 +248,10 @@ class AudioPlayback(IAcquirable):
                 "Publish message to return to 'Main' menu."
             )
 
-            self._client.release()
-
             from ..core.states import Playback  # pylint: disable=C0415
-            msg = SystemMessage.InputEvent(Playback.Event.MENU)
-            self._mq.publish_first(msg)
+            msg_stop = msgt.PlaybackStopCommand()
+            msg_menu = SystemMessage.InputEvent(Playback.Event.MENU)
+            self._mq.publish(msg_stop, msg_menu)
 
             return
 
