@@ -84,7 +84,7 @@ class ProcessingDigit(TransitionBase):
 
         message = f"Invalid source: '{ctx.source}'."
         log.error(message)
-        raise ValueError(message)
+        return False
 
 
 class ProcessingDigit0(ProcessingDigit):
