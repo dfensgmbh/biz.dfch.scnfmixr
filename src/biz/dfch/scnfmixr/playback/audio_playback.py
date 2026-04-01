@@ -257,7 +257,6 @@ class AudioPlayback(IAcquirable):
         Retry(
             base_wait_time_interval_ms=500,
             spin_attempts=5,
-            description="load_playback_queue",
         ).invoke(_retry_action)
 
         if 0 == len(_queued_items):
