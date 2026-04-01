@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# NOSONAR(python:S3516)
+
 """Testing JACK connections via MultiLineTextParser. Platform dependent."""
 
 import re
