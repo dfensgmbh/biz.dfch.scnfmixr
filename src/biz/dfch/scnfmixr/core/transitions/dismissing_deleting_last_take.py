@@ -37,7 +37,7 @@ class DismissingDeletingLastTake(TransitionBase):
                 TransitionEvent.DISMISSING_DELETING_LAST_TAKE_LEAVE, False),
             target_state=target)
 
-    def invoke(self, ctx):
+    def invoke(self, ctx) -> bool:
         _ = ctx
 
         return True

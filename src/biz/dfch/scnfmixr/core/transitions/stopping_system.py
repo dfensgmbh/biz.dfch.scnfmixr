@@ -39,7 +39,8 @@ class StoppingSystem(TransitionBase):
             info_leave=None,
             target_state=target)
 
-    def invoke(self, _):
+    def invoke(self, ctx) -> bool:
+        _ = ctx
 
         time.sleep(1)
 

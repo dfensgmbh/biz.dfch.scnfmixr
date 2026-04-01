@@ -39,7 +39,7 @@ class JumpingClipStart(TransitionBase):  # pylint: disable=R0903
             info_leave=None,
             target_state=target)
 
-    def invoke(self, ctx: ExecutionContext):
+    def invoke(self, ctx: ExecutionContext) -> bool:
 
         assert isinstance(ctx, ExecutionContext)
 

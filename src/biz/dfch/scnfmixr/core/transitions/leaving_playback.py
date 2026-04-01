@@ -42,7 +42,7 @@ class LeavingPlayback(TransitionBase):  # pylint: disable=R0903
                 TransitionEvent.LEAVING_PLAYBACK_LEAVE, False),
             target_state=target)
 
-    def invoke(self, ctx: ExecutionContext):
+    def invoke(self, ctx: ExecutionContext) -> bool:
 
         assert isinstance(ctx, ExecutionContext)
 

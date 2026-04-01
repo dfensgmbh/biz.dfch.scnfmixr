@@ -26,7 +26,8 @@ from ..fsm import TransitionBase
 class SystemClearDate(TransitionBase):
     """SystemClearDate transition."""
 
-    def invoke(self, _):
+    def invoke(self, ctx) -> bool:
+        _ = ctx
 
         app_ctx = ApplicationContext.Factory.get()
 
@@ -42,7 +43,8 @@ class SystemClearDate(TransitionBase):
 class SystemClearTime(TransitionBase):
     """SystemClearTime transition."""
 
-    def invoke(self, _):
+    def invoke(self, ctx) -> bool:
+        _ = ctx
 
         app_ctx = ApplicationContext.Factory.get()
 
@@ -58,7 +60,8 @@ class SystemClearTime(TransitionBase):
 class SystemClearName(TransitionBase):
     """SystemClearName transition."""
 
-    def invoke(self, _):
+    def invoke(self, ctx) -> bool:
+        _ = ctx
 
         app_ctx = ApplicationContext.Factory.get()
 

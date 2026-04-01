@@ -49,7 +49,6 @@ class FormattingStorage(TransitionBase):
         self._device = device
 
     def invoke(self, ctx) -> bool:
-
         _ = ctx
 
         result = False

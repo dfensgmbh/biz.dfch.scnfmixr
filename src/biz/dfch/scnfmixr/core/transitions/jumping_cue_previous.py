@@ -42,7 +42,7 @@ class JumpingCuePrevious(TransitionBase):  # pylint: disable=R0903
                 TransitionEvent.JUMPING_CUE_PREVIOUS_LEAVE, False),
             target_state=target)
 
-    def invoke(self, ctx: ExecutionContext):
+    def invoke(self, ctx: ExecutionContext) -> bool:
 
         assert isinstance(ctx, ExecutionContext)
 

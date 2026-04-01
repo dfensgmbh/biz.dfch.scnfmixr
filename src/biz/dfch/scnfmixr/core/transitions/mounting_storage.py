@@ -38,5 +38,6 @@ class MountingStorage(TransitionBase):
                 TransitionEvent.MOUNTING_STORAGE_LEAVE, False),
             target_state=target)
 
-    def invoke(self, _):
+    def invoke(self, ctx):
+        _ = ctx
         return True

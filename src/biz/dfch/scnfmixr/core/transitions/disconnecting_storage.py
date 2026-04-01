@@ -44,7 +44,6 @@ class DisconnectingStorage(TransitionBase):
             target_state=target)
 
     def invoke(self, ctx) -> bool:
-
         _ = ctx
 
         result = DisconnectingStorage.disconnect()

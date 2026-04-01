@@ -56,7 +56,8 @@ class StartingRecording(TransitionBase):
 
         self._devices = devices
 
-    def invoke(self, _):
+    def invoke(self, ctx) -> bool:
+        _ = ctx
 
         app_ctx = ApplicationContext.Factory.get()
         base_name = app_ctx.date_time_name_input.get_name()
@@ -105,9 +106,9 @@ class StartingRecording(TransitionBase):
             result = sync.invoke(
                 msgt.RecordingStartCommand(items))
 
-        if result:
-            log.info("Waiting for recording to start OK.")
-        else:
+        if not result:
             log.error("Waiting for recording to start FAILED.")
+            return False
 
-        return result
+        log.info("Waiting for recording to start OK.")
+        return True

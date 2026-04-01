@@ -43,7 +43,8 @@ class CleaningRc2(TransitionBase):
                 TransitionEvent.CLEANING_DEVICE_RC2_LEAVE, False),
             target_state=target)
 
-    def invoke(self, _):
+    def invoke(self, ctx) -> bool:
+        _ = ctx
 
         device = StorageDevice.RC2
 
