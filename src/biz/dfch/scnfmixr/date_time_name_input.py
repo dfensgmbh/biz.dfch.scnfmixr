@@ -29,7 +29,9 @@ class DateTimeNameInput():
     TIME_LENGTH = 4
     NAME_LENGTH = 8
 
+    # DFTODO: use value from input_event_map.py
     _EVENT_BACKSPACE = "£"
+    # DFTODO: use value from input_event_map.py
     _EVENT_ENTER = "!"
 
     _date: datetime.date
@@ -44,9 +46,9 @@ class DateTimeNameInput():
 
     def __init__(self):
 
-        self._date = None
-        self._time = None
-        self._name = None
+        self._date = None  # type:ignore
+        self._time = None  # type:ignore
+        self._name = None  # type:ignore
         self._date_string = ""
         self._time_string = ""
         self._name_string = ""
@@ -62,10 +64,6 @@ class DateTimeNameInput():
 
         return str(result)
 
-    def get_datetime(self) -> datetime:
-        """Returns the date and time."""
-        return datetime.datetime.combine(self._date, self._time)
-
     def get_date(self) -> datetime.date:
         """Returns the date."""
         return self._date
@@ -73,7 +71,8 @@ class DateTimeNameInput():
     def set_date(self, value: datetime.date) -> None:
         """Sets the date."""
 
-        assert value is not None and isinstance(value, datetime.date)
+        assert value is not None
+        assert isinstance(value, datetime.date), type(value)
 
         self._date_string = ""
         self._date = value
@@ -88,7 +87,8 @@ class DateTimeNameInput():
     def set_time(self, value: datetime.time) -> None:
         """Sets the time."""
 
-        assert value is not None and isinstance(value, datetime.time)
+        assert value is not None
+        assert isinstance(value, datetime.time), type(value)
 
         self._time_string = ""
         self._time = value
@@ -96,7 +96,7 @@ class DateTimeNameInput():
         st = SystemTime.Factory.get()
         st.set(datetime.datetime.combine(st.now().date(), value))
 
-    def get_name(self) -> datetime.time:
+    def get_name(self) -> str:
         """Returns the name."""
         return self._name
 
@@ -135,19 +135,19 @@ class DateTimeNameInput():
         """Clears the date."""
 
         self._date_string = ""
-        self._date = None
+        self._date = None  # type:ignore
 
     def clear_time(self) -> None:
         """Clears the time."""
 
         self._time_string = ""
-        self._time = None
+        self._time = None  # type:ignore
 
     def clear_name(self) -> None:
         """Clears the name."""
 
         self._name_string = ""
-        self._name = None
+        self._name = None  # type:ignore
 
     def reset(self) -> None:
         """Resets all data."""
@@ -216,7 +216,7 @@ class DateTimeNameInput():
 
         digit = int(value)
         self._date_string = f"{self._date_string}{digit}"
-        self._date = None
+        self._date = None  # type:ignore
 
         return True
 
@@ -245,7 +245,7 @@ class DateTimeNameInput():
 
         digit = int(value)
         self._time_string = f"{self._time_string}{digit}"
-        self._time = None
+        self._time = None  # type:ignore
 
         return True
 
@@ -274,6 +274,6 @@ class DateTimeNameInput():
 
         digit = int(value)
         self._name_string = f"{self._name_string}{digit}"
-        self._name = None
+        self._name = None  # type:ignore
 
         return True

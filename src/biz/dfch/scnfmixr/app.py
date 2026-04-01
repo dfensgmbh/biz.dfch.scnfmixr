@@ -96,7 +96,7 @@ class App:  # pylint: disable=R0903
         app_ctx.ui_parameters.language = LanguageCode[args.language]
         app_ctx.ui_parameters.menu_profile = MenuProfile[args.profile]
 
-        now = SystemTime.Factory.get().set().now()
+        now = SystemTime.Factory.get().now()
         if args.use_current_date:
             app_ctx.date_time_name_input.set_date(now.date())
         if args.use_current_time:

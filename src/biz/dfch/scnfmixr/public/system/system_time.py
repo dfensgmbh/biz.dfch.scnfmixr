@@ -16,7 +16,7 @@
 """Module system_time."""
 
 from __future__ import annotations
-from datetime import datetime
+from datetime import datetime, date, time
 from datetime import timedelta
 from threading import Lock
 from typing import ClassVar
@@ -39,9 +39,9 @@ class SystemTime:  # pylint: disable=R0903
         if not SystemTime.Factory._sync_root.locked():
             raise RuntimeError("Private ctor. Use Factory instead.")
 
-        self._delta = timedelta(0)
+        self._delta = timedelta()
 
-    def _get_current_datetime(self) -> datetime:
+    def _get_internal_system_current_datetime(self) -> datetime:
         """Internal: gets the current datetime of the underlying system."""
 
         return datetime.now()
@@ -57,40 +57,47 @@ class SystemTime:  # pylint: disable=R0903
             SystemTime: The same instance.
         """
 
+        now = self._get_internal_system_current_datetime()
+
         assert value is None or value and isinstance(value, datetime)
 
-        log.debug("Adjusting datetime '%s' [delta %s] ...",
-                  self._get_current_datetime().isoformat(),
-                  self._delta)
+        log.debug(
+            "Adjusting datetime '%s' [delta %s] with value '%s' ...",
+            now.isoformat(),
+            self._delta,
+            value,
+        )
 
-        now = self._get_current_datetime()
         if value is None:
             self._delta = timedelta()
         else:
             self._delta = now - value
 
-        log.info("Adjusting datetime '%s' [delta %s] OK.",
-                 self._get_current_datetime().isoformat(),
-                 self._delta)
+        log.info(
+            "Adjusting datetime '%s' [delta %s] with value '%s' OK.",
+            now.isoformat(),
+            self._delta,
+            value,
+        )
 
         return self
 
     def now(self) -> datetime:
-        """Returns the (time corrected) current datetime."""
+        """Returns the (date and time corrected) current datetime."""
 
-        result = self._get_current_datetime() + self._delta
+        result = self._get_internal_system_current_datetime() - self._delta
 
         return result
 
-    def get_date(self) -> datetime.date:
-        """Gets the (time corrected) current time."""
+    def get_date(self) -> date:
+        """Gets the (date and time corrected) current date."""
+
+        return self.now().date()
+
+    def get_time(self) -> time:
+        """Gets the (date and time corrected) current time."""
 
         return self.now().time()
-
-    def get_time(self) -> datetime.time:
-        """Gets the (time corrected) current time."""
-
-        self.now().date()
 
     class Factory:
         """Factory class for creating `SystemTime` singleton."""
