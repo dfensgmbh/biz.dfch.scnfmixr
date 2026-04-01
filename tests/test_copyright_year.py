@@ -18,7 +18,7 @@
 # pylint: disable=C0116
 # pylint: disable=C0301
 
-# NOSONAR(pythonsecurity:S2083)
+# NOSONAR(python:S2083)
 
 """Module update copyright."""
 
@@ -70,7 +70,7 @@ class TestCopyright(unittest.TestCase):
         path.write_text(
             "\n".join(lines) + "\n",
             encoding="utf-8"
-        )  # NOSONAR(pythonsecurity:S2083)
+        )  # NOSONAR(python:S2083)
 
     def test_update_copyright_year(self):
 

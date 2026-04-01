@@ -80,13 +80,6 @@ class DetectingIn2(TransitionBase):
                 parser=parser
             )
             jack_device.acquire()
-            # mixbus = AudioMixer.Factory.get().mixbus
-            # channel = mixbus.get_device(MixbusDevice.DR1)
-            # assert channel is not None
-            # jack_device.connect_to(channel.as_sink_set(), ConnectionPolicy.DUAL)
-            # bus = mixbus.get_device(MixbusDevice.MX4)
-            # assert bus is not None
-            # bus.connect_to(jack_device.as_sink_set(), ConnectionPolicy.DUAL)
 
             log.debug("Detecting '%s' on '%s' OK.", device, value)
 

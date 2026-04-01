@@ -96,4 +96,4 @@ class TestStreamdeckImageLibrary(unittest.TestCase):
             result = sut.get_key_images(key)
 
             for input_ in value:
-                self.assertTrue((input_, True) in result)
+                self.assertIn(input_, result, (input_, result))

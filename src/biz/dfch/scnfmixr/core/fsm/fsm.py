@@ -300,8 +300,6 @@ class Fsm:
             SystemMessage.StateMachine.StateMachineStopped())
         log.info("Stopping state machine OK.")
 
-        return
-
     def restart(self) -> None:
         """Stops and starts the state machine. Only starts the state machine if
         the state machine was not already started.

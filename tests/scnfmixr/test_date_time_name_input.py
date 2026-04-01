@@ -172,7 +172,7 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         # Get and set date.
         result = sut.get_date()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
         sut.set_date(expected.date())
 
@@ -183,7 +183,7 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         # Get and set time.
         result = sut.get_time()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
         sut.set_time(expected.time())
 
@@ -218,7 +218,7 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         # Get and set time.
         result = sut.get_time()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
         sut.set_time(expected.time())
 
@@ -242,7 +242,7 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         # Get and set date.
         result = sut.get_date()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
         sut.set_date(expected.date())
 
@@ -253,7 +253,7 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         # Get and set time.
         result = sut.get_time()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
         sut.set_time(expected.time())
 
@@ -277,7 +277,7 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         # Get and set date.
         result = sut.get_date()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
         sut.set_date(expected.date())
 
@@ -288,7 +288,7 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         # Get and set time.
         result = sut.get_time()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
         sut.set_time(expected.time())
 
@@ -312,7 +312,7 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         # Get and set date.
         result = sut.get_date()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
         sut.set_date(expected.date())
 
@@ -323,7 +323,7 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         # Get and set time.
         result = sut.get_time()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
         sut.set_time(expected.time())
 
@@ -347,7 +347,7 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         # Get and set date.
         result = sut.get_date()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
         sut.set_date(expected.date())
 
@@ -358,7 +358,7 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         # Get and set time.
         result = sut.get_time()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
         sut.set_time(expected.time())
 

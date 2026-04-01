@@ -218,8 +218,6 @@ class DateTimeNameInput():
         self._date_string = f"{self._date_string}{digit}"
         self._date = None  # type:ignore
 
-        return
-
     def add_to_time(self, value: str) -> None:
         """Adds digits to a time string."""
 
@@ -247,8 +245,6 @@ class DateTimeNameInput():
         self._time_string = f"{self._time_string}{digit}"
         self._time = None  # type:ignore
 
-        return
-
     def add_to_name(self, value: str) -> None:
         """Adds digits to a name string."""
 
@@ -275,5 +271,3 @@ class DateTimeNameInput():
         digit = int(value)
         self._name_string = f"{self._name_string}{digit}"
         self._name = None  # type:ignore
-
-        return

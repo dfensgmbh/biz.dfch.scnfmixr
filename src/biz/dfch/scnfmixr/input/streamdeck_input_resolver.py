@@ -152,6 +152,7 @@ class StreamdeckInputResolver:
         i18n = I18n.Factory.get()
 
         result: Path = Path("")
+        _ = result
 
         # Get the resource path for image files.
         res_name = i18n.get_default_res_dirname()
