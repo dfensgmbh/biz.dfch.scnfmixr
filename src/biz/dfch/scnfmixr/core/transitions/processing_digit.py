@@ -68,16 +68,19 @@ class ProcessingDigit(TransitionBase):
         app_ctx = ApplicationContext.Factory.get()
 
         if SetDate.__name__ == ctx.source:
-            log.debug("Processing date ...")
-            return app_ctx.date_time_name_input.add_to_date(ctx.event)
+            log.debug("Processing date [%s] ...", ctx.event)
+            app_ctx.date_time_name_input.add_to_date(ctx.event)
+            return True
 
         if SetTime.__name__ == ctx.source:
-            log.debug("Processing time ...")
-            return app_ctx.date_time_name_input.add_to_time(ctx.event)
+            log.debug("Processing time [%s] ...", ctx.event)
+            app_ctx.date_time_name_input.add_to_time(ctx.event)
+            return True
 
         if SetName.__name__ == ctx.source:
-            log.debug("Processing name ...")
-            return app_ctx.date_time_name_input.add_to_name(ctx.event)
+            log.debug("Processing name [%s] ...", ctx.event)
+            app_ctx.date_time_name_input.add_to_name(ctx.event)
+            return True
 
         message = f"Invalid source: '{ctx.source}'."
         log.error(message)

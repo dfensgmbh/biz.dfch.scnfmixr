@@ -35,9 +35,8 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         sut = DateTimeNameInput()
 
-        result = sut.add_to_date("1")
+        sut.add_to_date("1")
 
-        self.assertTrue(result)
         self.assertEqual("1", sut._date_string)
 
     def test_adding_invalid_input_to_date_succeeds(self):
@@ -46,16 +45,15 @@ class TestDateTimeNameInput(unittest.TestCase):
         sut = DateTimeNameInput()
 
         with self.assertRaises(AssertionError):
-            _ = sut.add_to_date("D")
+            sut.add_to_date("D")
 
     def test_adding_valid_input_to_time_succeeds(self):
         """Adding a valid character to the time succeeds."""
 
         sut = DateTimeNameInput()
 
-        result = sut.add_to_time("1")
+        sut.add_to_time("1")
 
-        self.assertTrue(result)
         self.assertEqual("1", sut._time_string)
 
     def test_adding_invalid_input_to_time_succeeds(self):
@@ -64,27 +62,22 @@ class TestDateTimeNameInput(unittest.TestCase):
         sut = DateTimeNameInput()
 
         with self.assertRaises(AssertionError):
-            _ = sut.add_to_time("D")
+            sut.add_to_time("D")
 
     def test_adding_valid_time_to_time_succeeds(self):
         """Adding a valid time to the time succeeds."""
 
         sut = DateTimeNameInput()
 
-        result = sut.add_to_time("1")
-        self.assertTrue(result)
-        result = sut.add_to_time("2")
-        self.assertTrue(result)
-        result = sut.add_to_time("3")
-        self.assertTrue(result)
-        result = sut.add_to_time("4")
-        self.assertTrue(result)
+        sut.add_to_time("1")
+        sut.add_to_time("2")
+        sut.add_to_time("3")
+        sut.add_to_time("4")
 
         self.assertEqual("1234", sut._time_string)
         self.assertFalse(sut.is_valid_time)
 
-        result = sut.add_to_time("!")
-        self.assertTrue(result)
+        sut.add_to_time("!")
         self.assertTrue(sut.is_valid_time)
 
         self.assertEqual(datetime.time(12, 34), sut.get_time())
@@ -94,19 +87,16 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         sut = DateTimeNameInput()
 
-        result = sut.add_to_time("1")
-        self.assertTrue(result)
+        sut.add_to_time("1")
         self.assertEqual("1", sut._time_string)
-        result = sut.add_to_time("2")
-        self.assertTrue(result)
+        sut.add_to_time("2")
         self.assertEqual("12", sut._time_string)
-        result = sut.add_to_time("3")
-        self.assertTrue(result)
+        sut.add_to_time("3")
         self.assertEqual("123", sut._time_string)
 
         self.assertFalse(sut.is_valid_time)
 
-        result = sut.add_to_time(sut._EVENT_BACKSPACE)
+        sut.add_to_time(sut._EVENT_BACKSPACE)
 
         self.assertEqual("12", sut._time_string)
         self.assertFalse(sut.is_valid_time)
@@ -116,35 +106,26 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         sut = DateTimeNameInput()
 
-        result = sut.add_to_date("1")
-        self.assertTrue(result)
+        sut.add_to_date("1")
         self.assertEqual("1", sut._date_string)
-        result = sut.add_to_date("9")
-        self.assertTrue(result)
+        sut.add_to_date("9")
         self.assertEqual("19", sut._date_string)
-        result = sut.add_to_date("2")
-        self.assertTrue(result)
+        sut.add_to_date("2")
         self.assertEqual("192", sut._date_string)
-        result = sut.add_to_date("7")
-        self.assertTrue(result)
+        sut.add_to_date("7")
         self.assertEqual("1927", sut._date_string)
-        result = sut.add_to_date("0")
-        self.assertTrue(result)
+        sut.add_to_date("0")
         self.assertEqual("19270", sut._date_string)
-        result = sut.add_to_date("3")
-        self.assertTrue(result)
+        sut.add_to_date("3")
         self.assertEqual("192703", sut._date_string)
-        result = sut.add_to_date("2")
-        self.assertTrue(result)
+        sut.add_to_date("2")
         self.assertEqual("1927032", sut._date_string)
-        result = sut.add_to_date("7")
-        self.assertTrue(result)
+        sut.add_to_date("7")
         self.assertEqual("19270327", sut._date_string)
 
         self.assertFalse(sut.is_valid_date)
 
-        result = sut.add_to_date("!")
-        self.assertTrue(result)
+        sut.add_to_date("!")
 
         self.assertTrue(sut.is_valid_date)
 
@@ -155,35 +136,26 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         sut = DateTimeNameInput()
 
-        result = sut.add_to_name("1")
-        self.assertTrue(result)
+        sut.add_to_name("1")
         self.assertEqual("1", sut._name_string)
-        result = sut.add_to_name("9")
-        self.assertTrue(result)
+        sut.add_to_name("9")
         self.assertEqual("19", sut._name_string)
-        result = sut.add_to_name("2")
-        self.assertTrue(result)
+        sut.add_to_name("2")
         self.assertEqual("192", sut._name_string)
-        result = sut.add_to_name("7")
-        self.assertTrue(result)
+        sut.add_to_name("7")
         self.assertEqual("1927", sut._name_string)
-        result = sut.add_to_name("0")
-        self.assertTrue(result)
+        sut.add_to_name("0")
         self.assertEqual("19270", sut._name_string)
-        result = sut.add_to_name("3")
-        self.assertTrue(result)
+        sut.add_to_name("3")
         self.assertEqual("192703", sut._name_string)
-        result = sut.add_to_name("2")
-        self.assertTrue(result)
+        sut.add_to_name("2")
         self.assertEqual("1927032", sut._name_string)
-        result = sut.add_to_name("7")
-        self.assertTrue(result)
+        sut.add_to_name("7")
         self.assertEqual("19270327", sut._name_string)
 
         self.assertFalse(sut.is_valid_name)
 
-        result = sut.add_to_name("!")
-        self.assertTrue(result)
+        sut.add_to_name("!")
 
         self.assertTrue(sut.is_valid_name)
 

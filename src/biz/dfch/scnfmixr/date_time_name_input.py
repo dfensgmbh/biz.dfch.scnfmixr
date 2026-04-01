@@ -191,7 +191,7 @@ class DateTimeNameInput():
         except Exception:  # pylint: disable=W0718
             return None
 
-    def add_to_date(self, value: str) -> bool:
+    def add_to_date(self, value: str) -> None:
         """Adds digits to a date string."""
 
         assert not self.is_valid_date
@@ -203,24 +203,24 @@ class DateTimeNameInput():
         if self._EVENT_BACKSPACE == value:
             if self._date_string is not None and self._date_string.strip():
                 self._date_string = self._date_string[:-1]
-            return True
+            return
 
         if self._EVENT_ENTER == value:
             result = self._validate_date(self._date_string)
             self._date_string = ""
             if result is None:
-                return True
+                return
 
             self.set_date(result)
-            return True
+            return
 
         digit = int(value)
         self._date_string = f"{self._date_string}{digit}"
         self._date = None  # type:ignore
 
-        return True
+        return
 
-    def add_to_time(self, value: str) -> bool:
+    def add_to_time(self, value: str) -> None:
         """Adds digits to a time string."""
 
         assert not self.is_valid_time
@@ -232,24 +232,24 @@ class DateTimeNameInput():
         if self._EVENT_BACKSPACE == value:
             if self._time_string is not None and self._time_string.strip():
                 self._time_string = self._time_string[:-1]
-            return True
+            return
 
         if self._EVENT_ENTER == value:
             result = self._validate_time(self._time_string)
             self._time_string = ""
             if result is None:
-                return True
+                return
 
             self.set_time(result)
-            return True
+            return
 
         digit = int(value)
         self._time_string = f"{self._time_string}{digit}"
         self._time = None  # type:ignore
 
-        return True
+        return
 
-    def add_to_name(self, value: str) -> bool:
+    def add_to_name(self, value: str) -> None:
         """Adds digits to a name string."""
 
         assert not self.is_valid_name
@@ -261,19 +261,19 @@ class DateTimeNameInput():
         if self._EVENT_BACKSPACE == value:
             if self._name_string is not None and self._name_string.strip():
                 self._name_string = self._name_string[:-1]
-            return True
+            return
 
         if self._EVENT_ENTER == value:
             result = self._validate_name(self._name_string)
             self._name_string = ""
             if result is None:
-                return True
+                return
 
             self._name = result
-            return True
+            return
 
         digit = int(value)
         self._name_string = f"{self._name_string}{digit}"
         self._name = None  # type:ignore
 
-        return True
+        return
