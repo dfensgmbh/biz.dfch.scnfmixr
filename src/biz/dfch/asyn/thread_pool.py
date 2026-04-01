@@ -49,7 +49,6 @@ class ThreadPool:  # pylint: disable=R0903
 
         __thread_pools: ClassVar[dict[str, ThreadPool]] = {}
 
-        __instance: ClassVar[ThreadPool | None] = None
         _sync_root: ClassVar[threading.Lock] = threading.Lock()
 
         @staticmethod

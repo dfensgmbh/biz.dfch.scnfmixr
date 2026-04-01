@@ -28,6 +28,8 @@ __all__ = ["AlsaStreamInfoVisitor"]
 class AlsaStreamInfoVisitor:
     """ALSA stream info visitor."""
 
+    _FORMAT_STRING: str = "#%s [%s>%s] %s '%s'"
+
     _playback_interfaces: list[AlsaStreamInterfaceInfo]
     _capture_interfaces: list[AlsaStreamInterfaceInfo]
     _current_interfaces: list[AlsaStreamInterfaceInfo]
@@ -127,7 +129,7 @@ class AlsaStreamInfoVisitor:
         self._current_interface.format = result
 
         log.info(
-            "#%s [%s>%s] %s '%s'",
+            self._FORMAT_STRING,
             ctx.line,
             ctx.level_previous,
             ctx.level,
@@ -151,7 +153,7 @@ class AlsaStreamInfoVisitor:
         self._current_interface.channel_count = int(result)
 
         log.info(
-            "#%s [%s>%s] %s '%s'",
+            self._FORMAT_STRING,
             ctx.line,
             ctx.level_previous,
             ctx.level,
@@ -184,7 +186,7 @@ class AlsaStreamInfoVisitor:
                 int(result.split(_delimiter)[0].strip())]
 
         log.info(
-            "#%s [%s>%s] %s '%s'",
+            self._FORMAT_STRING,
             ctx.line,
             ctx.level_previous,
             ctx.level,
@@ -208,7 +210,7 @@ class AlsaStreamInfoVisitor:
         self._current_interface.bit_depth = int(result)
 
         log.info(
-            "#%s [%s>%s] %s '%s'",
+            self._FORMAT_STRING,
             ctx.line,
             ctx.level_previous,
             ctx.level,
@@ -235,7 +237,7 @@ class AlsaStreamInfoVisitor:
             rate.strip() for rate in result.split(_space)]
 
         log.info(
-            "#%s [%s>%s] %s '%s'",
+            self._FORMAT_STRING,
             ctx.line,
             ctx.level_previous,
             ctx.level,

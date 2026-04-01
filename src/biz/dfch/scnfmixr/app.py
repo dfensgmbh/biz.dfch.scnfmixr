@@ -74,8 +74,6 @@ class App:  # pylint: disable=R0903
                 rec_params.format = Format.S24_3LE
             case 32:
                 rec_params.format = Format.S32_LE
-            case points:
-                rec_params.format = Format.S24_3LE
 
         app_ctx.audio_device_map = {
             AudioDevice.LCL: args.LCL,

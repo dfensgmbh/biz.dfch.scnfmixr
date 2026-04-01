@@ -34,7 +34,7 @@ class AlsaStreamInterfaceInfo:
     """
 
     state: AlsaStreamInfoVisitorState = AlsaStreamInfoVisitorState.DEFAULT
-    format: str = None
+    format: str | None = None
     channel_count: int = 0
     bit_depth: int = 0
     map: list[str] = field(default_factory=list)

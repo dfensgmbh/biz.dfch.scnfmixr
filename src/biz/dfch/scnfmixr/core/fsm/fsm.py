@@ -47,6 +47,8 @@ class Fsm:
         current_state (State): The current state of the state machine.
     """
 
+    _MESSAGE_STOP_SIGNAL_DETECTED = "Stop signal detected."
+
     _message_queue: MessageQueue
     _initial_state: StateBase
     _current_state: StateBase
@@ -257,7 +259,7 @@ class Fsm:
 
         if ctx.signal_stop.is_set():
             ctx.signal_stop.clear()
-            log.info("Stop signal detected.")
+            log.info(self._MESSAGE_STOP_SIGNAL_DETECTED)
 
             self.stop()
 
@@ -329,8 +331,8 @@ class Fsm:
 
     def process_invoke_enter(
             self,
-            source: str,
-            error: str
+            source: str | None,
+            error: str | None
     ) -> ExecutionContext:
         """Process log and message notification for StateMachineEnter."""
 
@@ -429,7 +431,7 @@ class Fsm:
 
             if ctx.signal_stop.is_set():
                 ctx.signal_stop.clear()
-                log.info("Stop signal detected.")
+                log.info(self._MESSAGE_STOP_SIGNAL_DETECTED)
 
                 self.stop()
 
@@ -466,7 +468,7 @@ class Fsm:
 
                 if ctx.signal_stop.is_set():
                     ctx.signal_stop.clear()
-                    log.info("Stop signal detected.")
+                    log.info(self._MESSAGE_STOP_SIGNAL_DETECTED)
 
                     self.stop()
 
@@ -491,7 +493,7 @@ class Fsm:
 
             if ctx.signal_stop.is_set():
                 ctx.signal_stop.clear()
-                log.info("Stop signal detected.")
+                log.info(self._MESSAGE_STOP_SIGNAL_DETECTED)
 
                 self.stop()
                 # Do not return False here, as the transition itself succeeded.
@@ -504,7 +506,7 @@ class Fsm:
 
             if ctx.signal_stop.is_set():
                 ctx.signal_stop.clear()
-                log.info("Stop signal detected.")
+                log.info(self._MESSAGE_STOP_SIGNAL_DETECTED)
 
                 self.stop()
                 # Do not return False here, as the transition itself succeeded.
