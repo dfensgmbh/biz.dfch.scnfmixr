@@ -86,9 +86,6 @@ class StateBase:
         assert transition is not None
         assert isinstance(transition, TransitionBase)
         assert transition not in self.transitions
-        # assert not any(type(t).__name__ == type(
-        #     transition).__name__ for t in self.transitions), \
-        #     f"Duplicate transition: '{transition.__class__.__name__}'."
         assert not any(t.event == transition.event for t in self.transitions), \
             f"Duplicate event: '{transition.event}' in " \
             f"'{transition.__class__.__name__}'."

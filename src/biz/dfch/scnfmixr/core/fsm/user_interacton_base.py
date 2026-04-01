@@ -37,10 +37,3 @@ class UserInteractionBase(ABC):
     @abstractmethod
     def _on_message(self, message: MessageBase) -> None:
         """Message handler."""
-
-    # @abstractmethod
-    # def update(self, item: UiEventInfo) -> None:
-    #     """Updates the presentation layer."""
-
-    #     assert item
-    #     assert isinstance(item, UiEventInfo)

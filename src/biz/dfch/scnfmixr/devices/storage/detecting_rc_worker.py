@@ -175,7 +175,6 @@ class DetectingRcWorker(InterfaceDetectorBase):
         candidates: list[UdevadmInfoVisitor.Data] = []
 
         devices = glob.glob(self._DEV_STORAGE_PATH_GLOB)
-        # devices = [d.name for d in self._get_removable_devices()]
         for full_name in devices:
 
             log.debug("Retrieving udevadm info of device '%s' ...",

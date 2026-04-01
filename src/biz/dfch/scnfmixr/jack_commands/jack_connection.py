@@ -293,7 +293,6 @@ class JackConnection:
             self._sink,
         ]
 
-        # msg = "cannot connect client, already connected?"
         msg = "cannot disconnect client, already disconnected?"
 
         _, text = Process.communicate(cmd, max_wait_time=0.25)

@@ -84,8 +84,6 @@ class SelectLanguage(StateBase):
                 msg = SystemMessage.InputEvent(
                     SelectLanguage.Event.SELECT_ITALIAN)
                 ctx.events.publish_first(msg)
-            case _:
-                pass
 
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.
