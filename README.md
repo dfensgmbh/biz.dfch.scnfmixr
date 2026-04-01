@@ -675,6 +675,10 @@ For tests, we keep the images in these folders:
 res/img/EN/
 ```
 
+## Image source and resolution
+
+Images for the Streamdeck have a resolution of 512px * 512px. We use images from [Fluent UI System Icons](https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE). These images are in SVG. We convert them to PNG with [Paint.NET](https://www.getpaint.net/) and the [Scalable-Vector-Graphics-Plugin-for-Paint.NET](https://github.com/otuncelli/Scalable-Vector-Graphics-Plugin-for-Paint.NET) plugin. (Install the plugin into the `FileTypes` folder.)
+
 # State machine and adding menus
 
 The program uses a finite state machine (FSM) with states and transitions. Each state in the FSM is a menu for the human interaction device (HID). Each transition in the FSM is an action for that menu.
