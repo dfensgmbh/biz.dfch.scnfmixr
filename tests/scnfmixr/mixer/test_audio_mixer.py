@@ -18,9 +18,6 @@
 import unittest
 
 from biz.dfch.scnfmixr.mixer import AudioMixer
-from biz.dfch.scnfmixr.mixer import AudioMixerState
-from biz.dfch.scnfmixr.mixer import AudioMixerConfiguration
-from biz.dfch.scnfmixr.public.mixer import Connection
 
 
 class TestAudioMixer(unittest.TestCase):
@@ -48,8 +45,8 @@ class TestAudioMixer(unittest.TestCase):
 
         self.assertTrue(result)
 
-    def test_start_returns_false_when_not_initialised(self):
-        """start returns false when not initialised.
+    def test_start_returns_false_when_not_initialized(self):
+        """start returns false when not initialized.
 
         This is a problematic test, as it depends on a state.
         """

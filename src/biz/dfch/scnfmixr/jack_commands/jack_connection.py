@@ -191,7 +191,7 @@ class JackConnection:
 
     @staticmethod
     def get_connections2() -> dict[str, list[str]]:
-        """Gets connnections."""
+        """Get connections."""
 
         cmd: list[str] = [
             JackConnection._JACK_LSP_FULLNAME,
@@ -213,7 +213,7 @@ class JackConnection:
 
     @staticmethod
     def get_connections3() -> dict[tuple[str, bool], list[str]]:
-        """Gets connnections with source and sink information.
+        """Get connections with source and sink information.
 
         Use `ConnectionInfo` to process the result of this method.
 
@@ -299,12 +299,12 @@ class JackConnection:
         return msg not in text
 
     def is_connected(self) -> bool:
-        """Determines whether a connection exists of not."""
+        """Determine whether a connection exists or not."""
         return JackConnection.check_connection(self._source, self._sink)
 
     @staticmethod
     def check_connection(source: str, sink: str) -> bool:
-        """Determines whether a connection exists of not."""
+        """Determine whether a connection exists or not."""
 
         assert isinstance(source, str) and source.strip()
         assert isinstance(sink, str) and sink.strip()
