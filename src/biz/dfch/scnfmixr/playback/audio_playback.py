@@ -242,6 +242,20 @@ class AudioPlayback(IAcquirable):
             mount_point = MountPoint.RC2.name.lower()
             _queued_items = load_playback_queue(self._client, mount_point)
 
+        if 0 == len(_queued_items):
+            log.info(
+                "Currently no queued items. "
+                "Publish message to return to 'Main' menu."
+            )
+
+            self._client.release()
+
+            from ..core.states import Playback  # pylint: disable=C0415
+            msg = SystemMessage.InputEvent(Playback.Event.MENU)
+            self._mq.publish_first(msg)
+
+            return
+
         assert isinstance(_queued_items, list)
         log.debug("Currently queued items: [%s]", _queued_items)
 
