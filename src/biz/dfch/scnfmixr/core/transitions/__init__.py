@@ -74,7 +74,6 @@ from .starting_recording_mixes import (
 )
 from .stopping_recording import StoppingRecording
 from .stopping_system import StoppingSystem
-from .mounting_storage import MountingStorage
 from .disconnecting_storage import DisconnectingStorage
 from .formatting_storage import (
     FormattingStorage,
@@ -136,7 +135,6 @@ __all__ = [
 
     "InitializingAudio",
 
-    "MountingStorage",
     "DisconnectingStorage",
     "FormattingStorage",
     "FormattingStorageRc1",

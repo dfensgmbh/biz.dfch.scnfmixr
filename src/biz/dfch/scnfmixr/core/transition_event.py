@@ -100,8 +100,6 @@ class TransitionEvent(StrEnum):
     DISMISSING_DELETING_LAST_TAKE_LEAVE = auto()
 
     # Menu: System.
-    MOUNTING_STORAGE_ENTER = auto()
-    MOUNTING_STORAGE_LEAVE = auto()
     DISCONNECTING_STORAGE_ENTER = auto()
     DISCONNECTING_STORAGE_LEAVE = auto()
     FORMATTING_STORAGE_ENTER = auto()

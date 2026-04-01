@@ -326,16 +326,6 @@ Trying to clean recordings from storage device RC2 succeeded.
     TransitionEvent.INITIALISING_AUDIO_LEAVE: """""",
 
     # DFTODO: No audio menu.
-    TransitionEvent.MOUNTING_STORAGE_ENTER: """
-Trying to mount storage device RC1.
-""",
-
-    # DFTODO: No audio menu.
-    TransitionEvent.MOUNTING_STORAGE_LEAVE: """
-Trying to mount storage device RC1 succeeded.
-""",
-
-    # DFTODO: No audio menu.
     TransitionEvent.DISCONNECTING_STORAGE_ENTER: """
 Trying to mount storage device RC2.
 """,

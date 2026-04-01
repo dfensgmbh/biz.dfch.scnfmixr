@@ -265,14 +265,6 @@ Suppression annulée.
 
     # Menu: System.
     # OK
-    TransitionEvent.MOUNTING_STORAGE_ENTER: """
-Tentative d'activer le périphérique de mémoire.
-""",
-    # OK
-    TransitionEvent.MOUNTING_STORAGE_LEAVE: """
-Activation du périphérique réussie.
-""",
-    # OK
     TransitionEvent.DISCONNECTING_STORAGE_ENTER: """
 Tentative de déconnection du périphérique de mémoire.
 """,

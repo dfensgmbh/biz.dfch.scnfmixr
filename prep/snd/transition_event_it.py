@@ -261,14 +261,6 @@ Cancellazione interrotta.
 
     # Menu: System.
     # OK
-    TransitionEvent.MOUNTING_STORAGE_ENTER: """
-Tentativo di attivare il Dispositivo di Archiviazione.
-""",
-    # OK
-    TransitionEvent.MOUNTING_STORAGE_LEAVE: """
-Attivazione del Dispositivo di Archiviazione riuscita.
-""",
-    # OK
     TransitionEvent.DISCONNECTING_STORAGE_ENTER: """
 Tentativo di scollegare il Dispositivo di Archiviazione.
 """,

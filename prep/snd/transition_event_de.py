@@ -307,17 +307,6 @@ Alle Daten auf diesem Speichergerät werden gelöscht.
 Formatieren des Speichergeräts erfolgreich.
 """,
 
-
-    # OK
-    TransitionEvent.MOUNTING_STORAGE_ENTER: """
-Versuche das Speichergerät zu aktivieren.
-""",
-
-    # OK
-    TransitionEvent.MOUNTING_STORAGE_LEAVE: """
-Speichergerät erfolgreich aktiviert.
-""",
-
     # OK
     TransitionEvent.DISCONNECTING_STORAGE_ENTER: """
 Versuche das Speichergerät zu trennen.
