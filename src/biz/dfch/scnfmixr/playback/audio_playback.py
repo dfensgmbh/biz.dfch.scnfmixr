@@ -23,7 +23,7 @@ import time
 from typing import ClassVar, Callable, Any
 
 from biz.dfch.logging import log
-from biz.dfch.asyn import ConcurrentDoubleSideQueueT, Process
+from biz.dfch.asyn import ConcurrentDoubleSideQueueT, Process, Retry
 
 from text import MultiLineTextParser
 
@@ -210,6 +210,25 @@ class AudioPlayback(IAcquirable):
                     type(message).__name__,
                     message.name)
 
+    # Load audio files from only the first available storage device
+    # RC1 or RC2.
+    def _load_playback_queue(
+        self,
+        client: MediaPlayerClient,
+        mount_point: str
+    ) -> list[str]:
+        """Internal method to load the playback queue."""
+
+        log.debug("Enumerating items from '%s' ...", mount_point)
+        result = client.load_playback_queue(
+            lambda e: e.lower().startswith(mount_point) and
+            FileName.is_valid_filename(e.removeprefix(
+                mount_point).strip(os.sep)))
+        assert isinstance(result, list)
+        log.debug("Enumerating items from '%s' OK. [%s]", mount_point,
+                  len(result))
+        return result
+
     def _on_playback_start(self, message: msgt.PlaybackStartCommand) -> None:
         """PlaybackStartCommand"""
 
@@ -219,28 +238,27 @@ class AudioPlayback(IAcquirable):
         self._client.acquire()
         self._client.set_repeat(True)
 
-        # Load audio files from only the first available storage device
-        # RC1 or RC2.
-        def load_playback_queue(
-            client: MediaPlayerClient,
-            mount_point: str
-        ) -> list[str]:
-            log.debug("Enumerating items from '%s' ...", mount_point)
-            _queued_items = client.load_playback_queue(
-                lambda e: e.lower().startswith(mount_point) and
-                FileName.is_valid_filename(e.removeprefix(
-                    mount_point).strip(os.sep)))
-            assert isinstance(_queued_items, list)
-            log.debug("Enumerating items from '%s' OK. [%s]", mount_point,
-                      len(_queued_items))
-            return _queued_items
+        _queued_items: list[str] = []
 
-        mount_point = MountPoint.RC1.name.lower()
-        _queued_items = load_playback_queue(self._client, mount_point)
+        def _retry_action() -> bool:
 
-        if 0 == len(_queued_items):
-            mount_point = MountPoint.RC2.name.lower()
-            _queued_items = load_playback_queue(self._client, mount_point)
+            assert self._client is not None
+
+            mount_point = MountPoint.RC1.name.lower()
+            _queued_items = self._load_playback_queue(self._client, mount_point)
+
+            if 0 == len(_queued_items):
+                mount_point = MountPoint.RC2.name.lower()
+                _queued_items = self._load_playback_queue(
+                    self._client, mount_point)
+
+            return 0 != len(_queued_items)
+
+        Retry(
+            base_wait_time_interval_ms=500,
+            spin_attempts=5,
+            description="load_playback_queue",
+        ).invoke(_retry_action)
 
         if 0 == len(_queued_items):
             log.info(
