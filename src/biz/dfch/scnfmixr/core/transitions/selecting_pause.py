@@ -43,7 +43,7 @@ class SelectingPause(TransitionBase):  # pylint: disable=R0903
                 TransitionEvent.SELECTING_PAUSE_LEAVE, False),
             target_state=target)
 
-    def invoke(self, ctx: ExecutionContext):
+    def invoke(self, ctx: ExecutionContext) -> bool:
 
         assert isinstance(ctx, ExecutionContext)
 
@@ -67,7 +67,7 @@ class SelectingResume(TransitionBase):  # pylint: disable=R0903
                 TransitionEvent.SELECTING_RESUME_LEAVE, False),
             target_state=target)
 
-    def invoke(self, ctx: ExecutionContext):
+    def invoke(self, ctx: ExecutionContext) -> bool:
 
         assert isinstance(ctx, ExecutionContext)
 

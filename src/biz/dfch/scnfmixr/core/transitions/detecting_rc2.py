@@ -45,7 +45,7 @@ class DetectingRc2(TransitionBase):
                 TransitionEvent.DETECTING_DEVICE_RC2_LEAVE, False),
             target_state=target)
 
-    def invoke(self, ctx):
+    def invoke(self, ctx) -> bool:
 
         assert isinstance(ctx, ExecutionContext)
 

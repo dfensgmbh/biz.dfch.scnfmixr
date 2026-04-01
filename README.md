@@ -1,6 +1,6 @@
 [![scnfmixr: v4.0.0](https://img.shields.io/badge/scnfmixr-v4.0.0-blue.svg)](https://github.com/dfensgmbh/biz.dfch.scnfmixr/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue.svg)
+![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue.svg)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=dfensgmbh_biz.dfch.PhoneTap&metric=bugs)](https://sonarcloud.io/summary/new_code?id=dfensgmbh_biz.dfch.PhoneTap)
@@ -86,7 +86,7 @@ admin@scnfmixr:~ $ python -m unittest discover -v -s tests -t . -p test_MyModule
 
 # Hardware and Software Requirements
 
-The programme is intended to run on a Raspberry Pi 5 with a Raspberry Pi OS '[Bookworm](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/)'. It is tested under the following version:
+The programme is intended to run on a Raspberry Pi 5 with a Raspberry Pi OS '[Trixie](https://www.raspberrypi.com/news/trixie-the-new-version-of-raspberry-pi-os/)'. It is tested under the following version:
 
 `Linux scnfmixr 6.12.25+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.25-1+rpt1 (2025-04-30) aarch64 GNU/Linux`
 
@@ -104,12 +104,12 @@ sudo reboot
 ## Hardware
 
 * The OS is running on a [Raspberry Pi 5 8GB](https://www.raspberrypi.com/products/raspberry-pi-5/?variant=raspberry-pi-5-8gb) with its original power supply.
-* The board is mounted in a aluminum case with passive cooling, such as [Ridged Armour Case for Raspberry Pi 5](https://thepihut.com/products/ridged-armour-case-for-raspberry-pi-5).
-* Additional USB ports are made available via an [ICY BOX IB-AC618 7-port USB 3.0 powered USB adapter (gen1)](https://icybox.de/product/hubs/IB-AC618) (USB-A to USB-B, power supply `12V @3A`).
+* The Compute Module 5 is mounted on the official CM5IO development board and installed in the official CM5IO case.
+* Additional USB ports are made available via the official Raspberry Pi USB Hub.
 
 ### Pi USB Port Layout
 
-The internal USB ports of the Pi 5 have the following numbering:
+The internal USB ports of the Pi 5 (not the Compute Module 5) have the following numbering:
 
 | Port  | Type  | USB id  | Path  | Remark  |
 |---------------|----------|--------|--------------------------------|---------------------------------|
@@ -481,7 +481,7 @@ Note: naming for the executable does not have to follow [SemVer](http://semver.o
 
 # Detecting the Elgato Streamdeck MK.2
 
-The system works with the Elgato Streamdeck MK.2 device (and only this device). This device has 15 buttons. The button in the upper left corner has id 0 and the button in the lower right corner has id 14.
+The system works with the Elgato Streamdeck MK.2 device (and only this device). This device has 15 buttons. The button in the upper left corner has id 0 (0x00) and the button in the lower right corner has id 14 (0X0E).
 
 * [HID API](https://docs.elgato.com/streamdeck/hid/)
 * [Stream Deck Module 15 and 32 Keys](https://docs.elgato.com/streamdeck/hid/module-15_32)
@@ -632,6 +632,57 @@ We need to install:
   # Pillow>=9.0.0
   pip install -r requirements.txt
   ```
+
+## Adding icons for menus
+
+When you use the Elgato Streamdeck with the scnfmixr, you must define entries in `StreamdeckEventMap` (in `streamdeck_event_map.py`) for each menu. Each entry for a menu is related to an `InputEventMap` key (in `input_event_map.py`). Here is an example for the menu `OnRecord`:
+
+```py
+"OnRecord": {
+    StreamdeckInput.KEY_00: InputEventMap.KEY_ASTERISK,
+    StreamdeckInput.KEY_04: InputEventMap.KEY_ASTERISK,
+    StreamdeckInput.KEY_06: InputEventMap.KEY_1,
+    StreamdeckInput.KEY_05: InputEventMap.KEY_2,
+},
+```
+
+The key in this map (`StreamdeckInput.KEY_nn`) is the hexadecimal number for the that starts with 0x00 in the upper left corner and increments horizontally until 0x0E in the lower right corner. The value in this map is the `Event` in the menu class:
+
+```py
+class OnRecord(StateBase):
+    class Event(StrEnum):
+        """Events for this state."""
+
+        HELP = InputEventMap.KEY_ASTERISK
+        STOP_RECORDING = InputEventMap.KEY_1
+        SET_CUE = InputEventMap.KEY_2
+```
+
+For each entry for each menu in `StreamdeckEventMap` you must supply an image file in `PNG` format. The naming convention for each file is: `<menu name>-<key>-<arbitrary text suffix>.png` (case-sensitive). For each image that you do not supply, a default image for that menu is used: `<menu name>-default.png`. The image for `SET_CUE` in the `OnRecord` menu uses `KEY_05` in the `StreamdeckEventMap`. Thus, the image name is `OnRecord-KEY_05-set_cue.png`. `set_cue` is an arbitrary suffix that helps to identify the meaning of the image. All images names load at startup. When you add an image after startup, the program does not use the image.
+
+There is only one version of images for all languages. The location for the images is:
+```py
+src/biz/dfch/scnfmixr/res/streamdeckeventmap/EN
+```
+
+For preparation, we first keep the images in these folders. This is not really consistent nor does it make total sense:
+```py
+prep/img/
+```
+
+For tests, we keep the images in these folders: 
+```py
+res/img/EN/
+```
+
+## Image source and resolution
+
+Images for the Streamdeck have a resolution of 512px * 512px. We use images from [Fluent UI System Icons](https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE). These images are in SVG. We convert them to PNG with [Paint.NET](https://www.getpaint.net/) and the [Scalable-Vector-Graphics-Plugin-for-Paint.NET](https://github.com/otuncelli/Scalable-Vector-Graphics-Plugin-for-Paint.NET) plugin. (Install the plugin into the `FileTypes` folder.)
+
+# State machine and adding menus
+
+The program uses a finite state machine (FSM) with states and transitions. Each state in the FSM is a menu for the human interaction device (HID). Each transition in the FSM is an action for that menu.
+Example: with HI2 (the Elgato Streamdeck) each transition is a button on the screen.
 
 # Notes and Observations
 

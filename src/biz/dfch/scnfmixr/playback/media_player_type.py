@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ class MediaPlayerType(StrEnum):
         if not hasattr(os, 'getuid'):
             raise EnvironmentError()
 
-        uid = os.getuid()  # pylint: disable=E1101
+        uid = os.getuid()  # pylint: disable=E1101  # type: ignore
         base_path = f"/run/user/{uid}"
 
         return f"{base_path}/{key.value}"

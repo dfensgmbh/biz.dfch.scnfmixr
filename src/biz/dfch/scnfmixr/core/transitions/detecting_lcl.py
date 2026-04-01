@@ -51,7 +51,8 @@ class DetectingLcl(TransitionBase):  # pylint: disable=R0903
                 TransitionEvent.DETECTING_DEVICE_LCL_LEAVE, False),
             target_state=target_state)
 
-    def invoke(self, _):
+    def invoke(self, ctx) -> bool:
+        _ = ctx
 
         app_ctx = ApplicationContext.Factory.get()
 

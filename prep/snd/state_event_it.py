@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -99,10 +99,10 @@ Il menu "Inizializzazione Dispositivo di Archiviazione Uno"
   
 Premere "1" per il rilevamento del dispositivo.  
 Premere "2" per saltare il rilevamento del dispositivo.  
-Premere "6" per formattare il dispositivo.  
-Premere "7" per montare il dispositivo.  
-Premere "8" per smontare il dispositivo.  
-Premere "9" per cancelare il dispositivo.  
+    # Premere "6" per formattare il dispositivo.  
+    # Premere "7" per montare il dispositivo.  
+    # Premere "8" per smontare il dispositivo.  
+    # Premere "9" per cancelare il dispositivo.  
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
@@ -112,10 +112,10 @@ Il menu "Inizializzazione Dispositivo di Archiviazione Due"
   
 Premere "1" per il rilevamento del dispositivo.  
 Premere "2" per saltare il rilevamento del dispositivo.  
-Premere "6" per formattare il dispositivo.  
-Premere "7" per montare il dispositivo.  
-Premere "8" per smontare il dispositivo.  
-Premere "9" per cancelare il dispositivo.  
+    # Premere "6" per formattare il dispositivo.  
+    # Premere "7" per montare il dispositivo.  
+    # Premere "8" per smontare il dispositivo.  
+    # Premere "9" per cancelare il dispositivo.  
 Premere "ASTERISCO" per ripetere questo messaggio.
 """,  # noqa: E501
 
@@ -174,6 +174,14 @@ Premere "6" per impostare un nuovo nome per la prossima registrazione.
 Premere "7" per eliminare l'ultima registrazione.  
 Premere "9" per arrestare il dispositivo.  
 Premere "ASTERISCO" per ripetere questo messaggio.
+
+""",  # noqa: E501
+
+    # OK
+    StateEvent.DELETING_LAST_TAKE_CONFIRMATION_ENTER: """
+Tentativo di eliminare l’ultima registrazione.
+Press 1 to confirm.
+Press 2 to cancel.
 """,  # noqa: E501
 
     # OK

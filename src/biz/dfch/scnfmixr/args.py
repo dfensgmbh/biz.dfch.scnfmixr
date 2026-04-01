@@ -229,25 +229,15 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
             "--storage1", "-rc1",
             type=str,
             dest=StorageDevice.RC1.name,
-            default="4-1.3",
+            default=SKIP_USB_PORT,
             help="Specifies USB port for storage device 1.",
         )
         parser.add_argument(
             "--storage2", "-rc2",
             type=str,
             dest=StorageDevice.RC2.name,
-            default="4-1.1",
+            default=SKIP_USB_PORT,
             help="Specifies USB port for storage device 2.",
-        )
-        parser.add_argument(
-            "--skip-storage1",
-            action="store_true",
-            help="Disable storage device 1.",
-        )
-        parser.add_argument(
-            "--skip-storage2",
-            action="store_true",
-            help="Disable storage device 2.",
         )
 
         # User interaction.

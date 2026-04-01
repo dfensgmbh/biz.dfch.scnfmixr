@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ from .set_name import SetName
 from .initialise_audio import InitialiseAudio
 
 from .main import Main
+from .deleting_last_take_confirmation import DeletingLastTakeConfirmation
 from .onrecord import OnRecord
 
 from .playback import Playback, PlaybackPaused
@@ -83,4 +84,6 @@ __all__ = [
     "StorageManagement",
 
     "FinalState",
+
+    "DeletingLastTakeConfirmation",
 ]

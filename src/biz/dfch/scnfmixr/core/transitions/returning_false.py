@@ -35,5 +35,7 @@ class ReturningFalse(TransitionBase):
                 TransitionEvent.RETURNING_FALSE_LEAVE, False),
             target_state=target)
 
-    def invoke(self, _):
+    def invoke(self, ctx) -> bool:
+        _ = ctx
+
         return False

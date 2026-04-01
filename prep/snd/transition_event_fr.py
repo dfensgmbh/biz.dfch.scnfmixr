@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -242,24 +242,28 @@ Préparation à l’enregistrement.
     TransitionEvent.STARTING_RECORDING_LEAVE: """
 Enregistrement démarré.
 """,
+
+    # Menu: DeletingLastTakeConfirmation.
     # OK
-    TransitionEvent.DELETING_LAST_TAKE_ENTER: """
-Tentative de suppression du dernier enregistrement.
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_ENTER: """
+
 """,
     # OK
-    TransitionEvent.DELETING_LAST_TAKE_LEAVE: """
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_LEAVE: """
 Suppression du dernier enregistrement réussie.
 """,
 
+    # OK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_ENTER: """
+
+""",
+
+    # OK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_LEAVE: """
+Suppression annulée.
+""",
+
     # Menu: System.
-    # OK
-    TransitionEvent.MOUNTING_STORAGE_ENTER: """
-Tentative d'activer le périphérique de mémoire.
-""",
-    # OK
-    TransitionEvent.MOUNTING_STORAGE_LEAVE: """
-Activation du périphérique réussie.
-""",
     # OK
     TransitionEvent.DISCONNECTING_STORAGE_ENTER: """
 Tentative de déconnection du périphérique de mémoire.

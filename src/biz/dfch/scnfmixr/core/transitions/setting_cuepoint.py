@@ -45,7 +45,8 @@ class SettingCuePoint(TransitionBase):
 
         self._mq = MessageQueue.Factory.get()
 
-    def invoke(self, _):
+    def invoke(self, ctx) -> bool:
+        _ = ctx
 
         self._mq.publish(
             AudioRecorder.RecordingCuePointCommand(

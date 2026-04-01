@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -54,7 +54,6 @@ class SelectingLanguageBase(TransitionBase):
         self._app_ctx = ApplicationContext.Factory.get()
 
     def invoke(self, ctx) -> bool:
-
         _ = ctx
 
         previous = self._app_ctx.ui_parameters.language

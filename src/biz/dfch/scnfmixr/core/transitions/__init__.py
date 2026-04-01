@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -74,7 +74,6 @@ from .starting_recording_mixes import (
 )
 from .stopping_recording import StoppingRecording
 from .stopping_system import StoppingSystem
-from .mounting_storage import MountingStorage
 from .disconnecting_storage import DisconnectingStorage
 from .formatting_storage import (
     FormattingStorage,
@@ -83,8 +82,6 @@ from .formatting_storage import (
 )
 
 from .setting_cuepoint import SettingCuePoint
-from .toggling_mute import TogglingMute
-from .showing_status import ShowingStatus
 
 from .selecting_pause import SelectingPause, SelectingResume
 from .leaving_playback import LeavingPlayback
@@ -98,6 +95,8 @@ from .seeking_previous import SeekingPrevious
 from .seeking_next import SeekingNext
 from .helping_menu import HelpingPlayback, HelpingOnRecord
 
+from .confirming_deleting_last_take import ConfirmingDeletingLastTake
+from .dismissing_deleting_last_take import DismissingDeletingLastTake
 
 __all__ = [
     "ReturningTrue",
@@ -136,7 +135,6 @@ __all__ = [
 
     "InitializingAudio",
 
-    "MountingStorage",
     "DisconnectingStorage",
     "FormattingStorage",
     "FormattingStorageRc1",
@@ -145,9 +143,7 @@ __all__ = [
 
     "StartingRecordingMx0",
     "StoppingRecording",
-    "TogglingMute",
     "SettingCuePoint",
-    "ShowingStatus",
     "HelpingOnRecord",
 
     "ProcessingDigit",
@@ -176,4 +172,7 @@ __all__ = [
     "SeekingPrevious",
     "SeekingNext",
     "HelpingPlayback",
+
+    "ConfirmingDeletingLastTake",
+    "DismissingDeletingLastTake",
 ]

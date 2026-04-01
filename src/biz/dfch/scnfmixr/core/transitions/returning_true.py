@@ -34,5 +34,7 @@ class ReturningTrue(TransitionBase):
             info_leave=UiEventInfo(TransitionEvent.RETURNING_TRUE_LEAVE, False),
             target_state=target)
 
-    def invoke(self, _):
+    def invoke(self, ctx):
+        _ = ctx
+
         return True

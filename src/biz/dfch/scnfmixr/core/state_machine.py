@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -98,14 +98,15 @@ from .states import Main
 from .transitions.starting_recording_mixes import (
     StartingRecordingMx0,
 )
-from .transitions.deleting_last_take import DeletingLastTake
+
+from .states import DeletingLastTakeConfirmation
+from .transitions import ConfirmingDeletingLastTake
+from .transitions import DismissingDeletingLastTake
 
 from .states import OnRecord
 from .transitions import (
     StoppingRecording,
     SettingCuePoint,
-    TogglingMute,
-    ShowingStatus,
     HelpingOnRecord,
 )
 
@@ -150,6 +151,7 @@ class State(Enum):
     INIT_AUDIO = auto()
     SYSTEM = auto()
     MAIN = auto()
+    DELETING_LAST_TAKE_CONFIRMATION = auto()
     ON_RECORD = auto()
     PLAYBACK = auto()
     PLAYBACK_PAUSED = auto()
@@ -368,6 +370,10 @@ class StateMachine:
         assert State.SET_NAME not in menu
         menu[State.SET_NAME] = SetName()
 
+        assert State.DELETING_LAST_TAKE_CONFIRMATION not in menu
+        menu[State.DELETING_LAST_TAKE_CONFIRMATION] = \
+            DeletingLastTakeConfirmation()
+
         assert State.MAIN not in menu
         menu[State.MAIN] = Main()
 
@@ -440,12 +446,6 @@ class StateMachine:
             .add_transition(SettingCuePoint(
                 current.Event.SET_CUE,
                 current))
-            .add_transition(TogglingMute(
-                current.Event.TOGGLE_MUTE,
-                current))
-            .add_transition(ShowingStatus(
-                current.Event.SHOW_STATUS,
-                current))
         )
         current = menu[State.STORAGE]
         assert isinstance(current, StorageManagement)
@@ -492,9 +492,9 @@ class StateMachine:
             .add_transition(StartingRecordingMx0(
                 current.Event.START_RECORDING_MX0,
                 menu[State.ON_RECORD]))
-            .add_transition(DeletingLastTake(
+            .add_transition(ReturningTrue(
                 current.Event.DELETE_LAST_TAKE,
-                current))
+                menu[State.DELETING_LAST_TAKE_CONFIRMATION]))
             .add_transition(ReturningTrue(
                 current.Event.START_PLAYBACK,
                 menu[State.PLAYBACK]))
@@ -504,6 +504,17 @@ class StateMachine:
             .add_transition(StoppingSystem(
                 current.Event.STOP_SYSTEM,
                 menu[State.FINAL]))
+        )
+        current = menu[State.DELETING_LAST_TAKE_CONFIRMATION]
+        assert isinstance(current, DeletingLastTakeConfirmation)
+        (
+            current
+            .add_transition(ConfirmingDeletingLastTake(
+                current.Event.OK,
+                menu[State.MAIN]))
+            .add_transition(DismissingDeletingLastTake(
+                current.Event.CANCEL,
+                menu[State.MAIN]))
         )
         current = menu[State.INIT_AUDIO]
         assert isinstance(current, InitialiseAudio)

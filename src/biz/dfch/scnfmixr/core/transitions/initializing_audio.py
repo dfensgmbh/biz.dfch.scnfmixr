@@ -48,7 +48,7 @@ class InitializingAudio(TransitionBase):
 
         self._app_ctx = ApplicationContext.Factory.get()
 
-    def invoke(self, ctx: ExecutionContext):
+    def invoke(self, ctx: ExecutionContext) -> bool:
 
         assert ctx
 

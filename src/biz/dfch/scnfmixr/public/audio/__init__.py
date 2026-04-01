@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 
 from __future__ import annotations
 
-from .alsa_inferface_info import AlsaInterfaceInfo
+from .alsa_interface_info import AlsaInterfaceInfo
 from .audio_device import AudioDevice
 from .audio_device_map import AudioDeviceMap
 from .bit_depth import BitDepth

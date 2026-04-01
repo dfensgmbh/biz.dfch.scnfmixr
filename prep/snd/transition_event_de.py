@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -223,7 +223,7 @@ Effektgerät 2 wurde übersprungen.
 
     # Menu: Initialise audio.
 
-   # Menu: Main.
+    # Menu: Main.
 
     # OK
     TransitionEvent.STARTING_RECORDING_ENTER: """
@@ -235,17 +235,26 @@ Aufnahme wird vorbereitet.
 Aufnahme gestartet.
 """,
 
+    # Menu: DeletingLastTakeConfirmation.
     # OK
-    TransitionEvent.DELETING_LAST_TAKE_ENTER: """
-Versuche, die letzte Aufnahme zu löschen.
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_ENTER: """
+
 """,
 
     # OK
-    TransitionEvent.DELETING_LAST_TAKE_LEAVE: """
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_LEAVE: """
 Löschen der letzten Aufnahme erfolgreich.
 """,
 
+    # OK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_ENTER: """
 
+""",
+
+    # OK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_LEAVE: """
+Löschen abgebrochen.
+""",
 
     # Menu: Clean storage RC1.
 
@@ -285,7 +294,7 @@ Audio wird initialisiert
 Audio ist initialisiert
 """,
 
- 
+
     # Menu: System.
     # OK
     TransitionEvent.FORMATTING_STORAGE_ENTER: """
@@ -296,17 +305,6 @@ Alle Daten auf diesem Speichergerät werden gelöscht.
     # OK
     TransitionEvent.FORMATTING_STORAGE_LEAVE: """
 Formatieren des Speichergeräts erfolgreich.
-""",
-
-
-    # OK
-    TransitionEvent.MOUNTING_STORAGE_ENTER: """
-Versuche das Speichergerät zu aktivieren.
-""",
-
-    # OK
-    TransitionEvent.MOUNTING_STORAGE_LEAVE: """
-Speichergerät erfolgreich aktiviert.
 """,
 
     # OK

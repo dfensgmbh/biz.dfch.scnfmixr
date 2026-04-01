@@ -41,7 +41,8 @@ class StoppingRecording(TransitionBase):
                 TransitionEvent.STOPPING_RECORDING_LEAVE, False),
             target_state=target)
 
-    def invoke(self, _):
+    def invoke(self, ctx) -> bool:
+        _ = ctx
 
         log.debug("Waiting for recording to stop ...")
 
@@ -53,9 +54,9 @@ class StoppingRecording(TransitionBase):
                 msgt.RecordingStopCommand(),
                 10)
 
-        if result:
-            log.info("Waiting for recording to stop OK.")
-        else:
+        if not result:
             log.error("Waiting for recording to stop FAILED.")
+            return False
 
-        return result
+        log.info("Waiting for recording to stop OK.")
+        return True

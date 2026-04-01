@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,8 +32,6 @@ class OnRecord(StateBase):
         HELP = InputEventMap.KEY_ASTERISK
         STOP_RECORDING = InputEventMap.KEY_1
         SET_CUE = InputEventMap.KEY_2
-        TOGGLE_MUTE = InputEventMap.KEY_3
-        SHOW_STATUS = InputEventMap.KEY_4
 
     def __init__(self):
         """Default ctor."""

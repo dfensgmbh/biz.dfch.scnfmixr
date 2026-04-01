@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -224,12 +224,25 @@ Preparing for recording.
 Recording started.
 """,
 
-    TransitionEvent.DELETING_LAST_TAKE_ENTER: """
-Trying to delete last recording.
+    # Menu: DeletingLastTakeConfirmation.
+    # OK
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_ENTER: """
+
 """,
 
-    TransitionEvent.DELETING_LAST_TAKE_LEAVE: """
-Trying to delete last recording succeeded.
+    # OK
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_LEAVE: """
+Deletion of the last recording succeeded.
+""",
+
+    # OK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_ENTER: """
+
+""",
+
+    # OK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_LEAVE: """
+Deletion canceled.
 """,
 
     # Menu: System.
@@ -311,16 +324,6 @@ Trying to clean recordings from storage device RC2 succeeded.
 
     # OK. No audio menu necessary.
     TransitionEvent.INITIALISING_AUDIO_LEAVE: """""",
-
-    # DFTODO: No audio menu.
-    TransitionEvent.MOUNTING_STORAGE_ENTER: """
-Trying to mount storage device RC1.
-""",
-
-    # DFTODO: No audio menu.
-    TransitionEvent.MOUNTING_STORAGE_LEAVE: """
-Trying to mount storage device RC1 succeeded.
-""",
 
     # DFTODO: No audio menu.
     TransitionEvent.DISCONNECTING_STORAGE_ENTER: """

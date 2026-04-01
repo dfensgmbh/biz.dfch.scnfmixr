@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -92,12 +92,14 @@ class TransitionEvent(StrEnum):
     # Menu: Main.
     STARTING_RECORDING_ENTER = auto()
     STARTING_RECORDING_LEAVE = auto()
-    DELETING_LAST_TAKE_ENTER = auto()
-    DELETING_LAST_TAKE_LEAVE = auto()
+
+    # Menu: DeletingLastTakeConfirmation.
+    CONFIRMING_DELETING_LAST_TAKE_ENTER = auto()
+    CONFIRMING_DELETING_LAST_TAKE_LEAVE = auto()
+    DISMISSING_DELETING_LAST_TAKE_ENTER = auto()
+    DISMISSING_DELETING_LAST_TAKE_LEAVE = auto()
 
     # Menu: System.
-    MOUNTING_STORAGE_ENTER = auto()
-    MOUNTING_STORAGE_LEAVE = auto()
     DISCONNECTING_STORAGE_ENTER = auto()
     DISCONNECTING_STORAGE_LEAVE = auto()
     FORMATTING_STORAGE_ENTER = auto()

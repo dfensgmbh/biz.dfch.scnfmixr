@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -238,24 +238,28 @@ Preparazione alla registrazione.
     TransitionEvent.STARTING_RECORDING_LEAVE: """
 Registrazione avviata.
 """,
+
+    # Menu: DeletingLastTakeConfirmation.
     # OK
-    TransitionEvent.DELETING_LAST_TAKE_ENTER: """
-Tentativo di eliminare l’ultima registrazione.
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_ENTER: """
+
 """,
     # OK
-    TransitionEvent.DELETING_LAST_TAKE_LEAVE: """
+    TransitionEvent.CONFIRMING_DELETING_LAST_TAKE_LEAVE: """
 Eliminazione dell’ultima registrazione riuscita.
 """,
 
+    # OK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_ENTER: """
+
+""",
+
+    # OK
+    TransitionEvent.DISMISSING_DELETING_LAST_TAKE_LEAVE: """
+Cancellazione interrotta.
+""",
+
     # Menu: System.
-    # OK
-    TransitionEvent.MOUNTING_STORAGE_ENTER: """
-Tentativo di attivare il Dispositivo di Archiviazione.
-""",
-    # OK
-    TransitionEvent.MOUNTING_STORAGE_LEAVE: """
-Attivazione del Dispositivo di Archiviazione riuscita.
-""",
     # OK
     TransitionEvent.DISCONNECTING_STORAGE_ENTER: """
 Tentativo di scollegare il Dispositivo di Archiviazione.

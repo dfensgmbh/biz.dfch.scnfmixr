@@ -1,4 +1,4 @@
-# Copyright (c) 2025 d-fens GmbH, http://d-fens.ch
+# Copyright (c) 2025 - 2026 d-fens GmbH, http://d-fens.ch
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,8 +14,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """Main app module."""
-
-import sys
 
 from biz.dfch.i18n import LanguageCode
 from biz.dfch.logging import log
@@ -46,7 +44,7 @@ class App:  # pylint: disable=R0903
     _VERSION_REQUIRED_MINOR = 11
 
     # Note: also adjust in pyproject.toml
-    _VERSION = "4.0.0"
+    _VERSION = "4.5.0"
     _PROG_NAME = "scnfmixr"
 
     _signal_handler: SignalHandler
@@ -67,12 +65,6 @@ class App:  # pylint: disable=R0903
         app_ctx = ApplicationContext.Factory.get()
 
         rec_params = app_ctx.recording_parameters
-
-        # DFTODO - maybe find something more dynamic here?
-        # Answer (still DFTODO): Use SKIP_... as value and process it like EX2.
-        rec_params.skip_rc1 = "--skip-storage1" in sys.argv
-        rec_params.skip_rc2 = "--skip-storage2" in sys.argv
-
         rec_params.file_format = FileFormat(args.file_format)
         rec_params.sampling_rate = args.sampling_rate
         match args.bit_depth:
@@ -128,6 +120,7 @@ class App:  # pylint: disable=R0903
 
                 app_ctx.storage_parameters.allowed_usb_ids.append(pair)
 
+        log.info("Version: %s", self._VERSION)
         log.info("Snd map: '%s'.", app_ctx.audio_device_map)
         log.info("Sto map: '%s'.", app_ctx.storage_device_map)
         log.info("Inp map: '%s'.", app_ctx.input_device_map)
