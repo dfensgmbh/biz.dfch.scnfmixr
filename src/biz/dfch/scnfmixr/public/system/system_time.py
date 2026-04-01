@@ -16,7 +16,7 @@
 """Module system_time."""
 
 from __future__ import annotations
-from datetime import datetime
+from datetime import datetime, date, time
 from datetime import timedelta
 from threading import Lock
 from typing import ClassVar
@@ -88,15 +88,15 @@ class SystemTime:  # pylint: disable=R0903
 
         return result
 
-    def get_date(self) -> datetime.date:
+    def get_date(self) -> date:
+        """Gets the (time corrected) current time."""
+
+        return self.now().date()
+
+    def get_time(self) -> time:
         """Gets the (time corrected) current time."""
 
         return self.now().time()
-
-    def get_time(self) -> datetime.time:
-        """Gets the (time corrected) current time."""
-
-        self.now().date()
 
     class Factory:
         """Factory class for creating `SystemTime` singleton."""
