@@ -259,20 +259,6 @@ class AudioPlayback(IAcquirable):
             spin_attempts=5,
         ).invoke(_retry_action, _queued_items)
 
-        if 0 == len(_queued_items):
-            log.info(
-                "Currently no queued items. "
-                "Publish message to return to 'Main' menu."
-            )
-
-            from ..core.states import Playback  # pylint: disable=C0415
-            msg_stop = msgt.PlaybackStopCommand()
-            msg_menu = SystemMessage.InputEvent(Playback.Event.MENU)
-            self._mq.publish(msg_stop, msg_menu)
-
-            return
-
-        assert isinstance(_queued_items, list)
         log.debug("Currently queued items: [%s]", _queued_items)
 
         for item in _queued_items:
