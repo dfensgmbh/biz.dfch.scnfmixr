@@ -238,26 +238,25 @@ class AudioPlayback(IAcquirable):
         self._client.acquire()
         self._client.set_repeat(True)
 
-        _queued_items: list[str] = []
-
-        def _retry_action() -> bool:
+        def _retry_action(items: list[str]) -> bool:
 
             assert self._client is not None
 
             mount_point = MountPoint.RC1.name.lower()
-            _queued_items = self._load_playback_queue(self._client, mount_point)
+            items = self._load_playback_queue(self._client, mount_point)
 
-            if 0 == len(_queued_items):
+            if 0 == len(items):
                 mount_point = MountPoint.RC2.name.lower()
-                _queued_items = self._load_playback_queue(
+                items = self._load_playback_queue(
                     self._client, mount_point)
 
-            return 0 != len(_queued_items)
+            return 0 != len(items)
 
+        _queued_items: list[str] = []
         Retry(
             base_wait_time_interval_ms=500,
             spin_attempts=5,
-        ).invoke(_retry_action)
+        ).invoke(_retry_action, _queued_items)
 
         if 0 == len(_queued_items):
             log.info(
