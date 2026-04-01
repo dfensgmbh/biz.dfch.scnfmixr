@@ -287,11 +287,16 @@ class AudioPlayback(IAcquirable):
 
         visitor = MetaflacVisitor()
         dic = {
-            MetaflacVisitor.METADATA_BLOCK: visitor.process_metadata_block,
-            MetaflacVisitor.STREAM_INFO: visitor.process_stream_info,
-            MetaflacVisitor.SAMPLE_RATE: visitor.process_sample_rate,
-            MetaflacVisitor.SEEK_TABLE: visitor.process_seek_table,
-            MetaflacVisitor.SEEK_POINT: visitor.process_seek_point,
+            str(MetaflacVisitor.Key.METADATA_BLOCK):
+                visitor.process_metadata_block,
+            str(MetaflacVisitor.Key.STREAM_INFO):
+                visitor.process_stream_info,
+            str(MetaflacVisitor.Key.SAMPLE_RATE):
+                visitor.process_sample_rate,
+            str(MetaflacVisitor.Key.SEEK_TABLE):
+                visitor.process_seek_table,
+            str(MetaflacVisitor.Key.SEEK_POINT):
+                visitor.process_seek_point,
         }
 
         parser = MultiLineTextParser(

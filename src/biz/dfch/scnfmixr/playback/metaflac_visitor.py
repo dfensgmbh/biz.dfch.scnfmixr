@@ -15,6 +15,7 @@
 
 """Module metaflac_visitor."""
 
+from enum import StrEnum
 import re
 
 from biz.dfch.logging import log
@@ -27,11 +28,13 @@ class MetaflacVisitor:
     Works with metaflac **v1.4.2**.
     """
 
-    METADATA_BLOCK = "METADATA block #"
-    STREAM_INFO = "type: 0 (STREAMINFO)"
-    SAMPLE_RATE = "sample_rate: "
-    SEEK_TABLE = "type: 3 (SEEKTABLE)"
-    SEEK_POINT = "point "
+    class Key(StrEnum):
+        """Define keywords of FLAC header."""
+        METADATA_BLOCK = "METADATA block #"
+        STREAM_INFO = "type: 0 (STREAMINFO)"
+        SAMPLE_RATE = "sample_rate: "
+        SEEK_TABLE = "type: 3 (SEEKTABLE)"
+        SEEK_POINT = "point "
 
     _is_in_stream_info: bool
     _is_in_seek_table: bool
