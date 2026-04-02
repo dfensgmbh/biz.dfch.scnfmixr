@@ -59,7 +59,7 @@ class StartingPlayback(TransitionBase):  # pylint: disable=R0903
         ) as sync:
             result = sync.invoke(
                 msgt.PlaybackStartCommand(),
-                3.5)
+                3.0)
         result = bool(result)
 
         if not result:
