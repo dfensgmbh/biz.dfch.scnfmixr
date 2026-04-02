@@ -500,14 +500,10 @@ class AudioMixer:
         _ = JackClient.get()
 
         self._set_state(AudioMixerState.STARTED)
-        result = True
 
-        if result:
-            log.info("Starting OK.")
-        else:
-            log.error("Starting FAILED.")
+        log.info("Starting OK.")
 
-        return result
+        return True
 
     def stop(self) -> bool:
         """Stops the audio mixer.
@@ -545,14 +541,10 @@ class AudioMixer:
         self._mix_bus.stop()
 
         self._set_state(AudioMixerState.STOPPED)
-        result = True
 
-        if result:
-            log.info("Stopping OK.")
-        else:
-            log.error("Stopping FAILED.")
+        log.info("Stopping OK.")
 
-        return result
+        return True
 
     def restart(self) -> bool:
         """Restarts the audio mixer.
