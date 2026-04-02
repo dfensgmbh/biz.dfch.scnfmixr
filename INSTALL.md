@@ -558,10 +558,10 @@ sudo mount -o remount,rw /boot/firmware
 ```
 
 ```sh
-$ sudo rpi-eeprom-config --edit
+sudo rpi-eeprom-config --edit
 
-[all]  
-BOOT_ORDER=0xf1
+[all]
+BOOT_ORDER=0xf16
 ```
 
 ## Power settings
@@ -842,3 +842,81 @@ c967a17818f509f06e85921c604b8fe93f0ff98048253658e0182bc2c4e4bf8a  rpiboot_setup.
 ```sh
 Raspberry Pi Imager v1.9.6
 ```
+
+# Checklist to install a new system
+
+# Install new eMMC
+ 
+1. Start with NVMe
+Mount the NVMe disk in the case.
+
+2. Connect with Putty
+
+3. Write image to disk
+cd Desktop
+./write.sh
+
+4. Change EEPROM BOOT_ORDER and PSU_MAX_CURRENT
+sudo mount -o remount,rw /boot/firmware
+sudo rpi-eeprom-config --edit
+
+BOOT_ORDER=0xf16
+PSU_MAX_CURRENT=5000
+ 
+Make sure, there is a "NEWLINE" after "5000".
+Do this step in parallel to the previous step.
+
+5. Set USB maximum current to "1"
+vcgencmd get_config usb_max_current_enable
+echo "usb_max_current_enable=1" | sudo tee -a /boot/firmware/config.txt
+vcgencmd get_config usb_max_current_enable
+
+6. When write is complete, stop the system.
+sudo poweroff
+
+7. Remove NMVe Disk
+WARNING: When you remove the NVMe disk, make sure the system has no power.
+ 
+8. Start the system
+
+9. Connect with Putty
+
+10. Make disk writable
+sudo mkdir -p /mnt/writable_disk
+sudo mount /dev/mmcblk0p2 /mnt/writable_disk/
+sudo mount -o remount,rw /dev/mmcblk0p2 /mnt/writable_disk/
+
+11. Stop scnfmixr service
+systemctl --user stop scnfmixr.service
+
+12. Write scnfmixr service with WinSCP
+  * Use Transfer Settings __pycache__.
+
+13. Change ExecStart
+nano /mnt/writable_disk/home/admin/.config/systemd/user/scnfmixr.service
+
+ExecStart=/home/admin/PhoneTap/venvpi/bin/python3 -m biz -s -ex1 2-1.1 -hi2 2-1.4 -lcl 4-1 -rc1 3-1.2 -rc2 3-1.3 --allowed-storage-usb-ids 2009 2d9b 0781:5591
+
+Remove all other "ExecStart" entries.
+
+14. When write scnfmixr.service (in WinSCP) is complete, refresh WinSCP and make sure there is no "app.log".
+
+15. Stop the system
+sudo poweroff
+
+16. Connect these devices:
+  * LCL
+  * HI2
+  * EX1
+  * RC1
+  * RC2.
+
+17. Remove the power button from the IO Board
+
+Remove the grey power button with a "Knipex Schrägabschneider".
+
+17. Start the system
+
+18. Make sure, the system operates correctly.
+
+19. Do the test procedure "NNN".
