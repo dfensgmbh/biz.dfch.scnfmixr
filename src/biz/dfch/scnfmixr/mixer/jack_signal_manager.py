@@ -217,7 +217,6 @@ class JackSignalManager(AcquirableManagerMixin):
                         self._mq.publish(Topology.PathZombieNotification(key))
                         log.warning(
                             "Path '%s' is REMOVED, but still active.", key)
-                    continue
 
         log.info("Updating signal path states OK.")
 
@@ -264,7 +263,6 @@ class JackSignalManager(AcquirableManagerMixin):
                         self._mq.publish(Topology.PointZombieNotification(key))
                         log.warning(
                             "Point '%s' is REMOVED, but still active.", key)
-                    continue
 
         log.info("Updating signal point states OK.")
 
@@ -473,10 +471,7 @@ class JackSignalManager(AcquirableManagerMixin):
         """Message handler."""
 
         if isinstance(message, SystemMessage.Shutdown):
-
             self.release()
-
-            return
 
     @property
     def is_acquired(self):

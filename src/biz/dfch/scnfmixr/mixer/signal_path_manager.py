@@ -205,19 +205,11 @@ class SignalPathManager:
             item = next((e for e in self._items if e.conn == conn), None)
             assert item
 
-        # if self._is_active(conn):
-        #     return True
-
-        # self._sync_root.acquire_lock()
-
-        #     if self._is_active(conn):
-        #         return True
-
     def remove(
             self,
             conn: SignalPathManager.Connection,
     ) -> bool:
-        """Removes a connection from the manager."""
+        """Remove a connection from the manager."""
 
         assert isinstance(conn, SignalPathManager.Connection)
         assert isinstance(conn.source, IConnectableSourcePoint)
