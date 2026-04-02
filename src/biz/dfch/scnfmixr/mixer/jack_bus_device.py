@@ -190,9 +190,7 @@ class JackBusDevice(IConnectableDevice, AcquirableDeviceMixin):
         self._process = None
 
     def _on_message(self, message):
-
-        if isinstance(message, Topology.PointLostNotification):
-            pass
+        _ = message
 
     def connect_to(self, other, policy=ConnectionPolicy.DEFAULT):
 

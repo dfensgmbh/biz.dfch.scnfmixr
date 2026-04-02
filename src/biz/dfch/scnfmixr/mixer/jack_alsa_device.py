@@ -253,7 +253,7 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
 
             point.release()
 
-            for _, value in self._mgr.path_information.items():
+            for value in self._mgr.path_information.values():
                 _, path = value
                 if (
                     path.source.name != point.name
@@ -284,7 +284,7 @@ class JackAlsaDevice(AlsaDevice, AcquirableDeviceMixin):
 
             point.release()
 
-            for _, value in self._mgr.path_information.items():
+            for value in self._mgr.path_information.values():
                 _, path = value
                 if (
                     path.source.name != point.name
