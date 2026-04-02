@@ -86,11 +86,11 @@ class DisconnectingStorage(TransitionBase):
                     continue
 
             result = result and op.poweroff()
-            if result:
-                log.info("Powering off storage device '%s' OK.",
-                         device.name)
-            else:
+            if not result:
                 log.error("Powering off storage device '%s' FAILED.",
                           device.name)
+                return False
 
-        return result
+            log.info("Powering off storage device '%s' OK.",
+                     device.name)
+            return True
