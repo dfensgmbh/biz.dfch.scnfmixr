@@ -20,7 +20,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "scnfmixr"
 # Note: also adjust in app.py
-version = "4.6.1"
+version = "4.6.2"
 description = "Secure Conference Mixer and Recorder running on Raspberry Pi OS (Pi 5)"
 authors = [
     { name = "Ronald Rink, d-fens GmbH" }
