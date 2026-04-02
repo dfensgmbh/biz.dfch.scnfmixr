@@ -53,7 +53,7 @@ class TestStateBase(unittest.TestCase):
             target_state=arbitrary_state
         )
 
-        assert sut is not None
+        self.assertIsInstance(sut, TestStateBase.ArbitraryTransition)
 
     def test_initialising_target_state_none_throws(self):
         """`target_state` must not be `None`."""

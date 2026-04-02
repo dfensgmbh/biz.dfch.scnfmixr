@@ -113,7 +113,6 @@ class MultiLineTextParser:
 
             # Find function to call on keyword.
             func = None
-            # TODO: fix incompatible assignment.
             ctx.keyword = None
             for key in sorted(self.dic.keys(), key=len, reverse=True):
 

@@ -33,5 +33,7 @@ class MultiLineTextParserContext:
     line: int = 0
     level: int = 0
     level_previous: int = 0
+    # DFTODO: Correct type hint or use different default value.
     keyword: str = None
+    # DFTODO: Correct type hint or use different default value.
     text: str = None

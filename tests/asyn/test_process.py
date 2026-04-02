@@ -154,7 +154,7 @@ class TestProcess(unittest.TestCase):
         self.assertFalse(sut.is_running)
 
         result = sut.stdout
-        self.assertTrue(0 < len(result))
+        self.assertLess(0, len(result))
 
         result = sut.stdout
         self.assertEqual(0, len(result))
@@ -178,7 +178,7 @@ class TestProcess(unittest.TestCase):
         self.assertFalse(sut.is_running)
 
         result = sut.stderr
-        self.assertTrue(0 < len(result))
+        self.assertLess(0, len(result))
 
         result = sut.stderr
         self.assertEqual(0, len(result))
@@ -222,7 +222,7 @@ class TestProcess(unittest.TestCase):
         self.assertFalse(sut.is_running)
 
         result = sut.output
-        self.assertTrue(0 < len(result))
+        self.assertLess(0, len(result))
 
         result = sut.output
         self.assertEqual(0, len(result))
@@ -316,7 +316,7 @@ class TestProcess(unittest.TestCase):
 
         stdout, _ = Process.communicate(cmd, stdin)
 
-        self.assertTrue("jack_transport>" in stdout[0])
+        self.assertIn("jack_transport>", stdout[0])
         self.assertEqual(2, len(stdout), stdout)
 
     def test_stdin_without_input_succeeds(self):
@@ -329,6 +329,6 @@ class TestProcess(unittest.TestCase):
             "/usr/bin/jack_lsp",
         ]
 
-        stdout, stderr = Process.communicate(cmd)
+        stdout, _ = Process.communicate(cmd)
 
-        self.assertTrue("system:capture_1" in stdout[0])
+        self.assertIn("system:capture_1", stdout[0])

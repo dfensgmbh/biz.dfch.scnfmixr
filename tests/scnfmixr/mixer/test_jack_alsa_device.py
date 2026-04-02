@@ -344,29 +344,3 @@ class TestJackAlsaDevice(unittest.TestCase):
              f"{device_name}-O:playback_1"), mock[6])
 
         self.assertEqual(("DeviceRemovedNotification", device_name), mock[7])
-
-    @patch("biz.dfch.scnfmixr.mixer.jack_alsa_device.AlsaToJack",
-           new=MockAlsaToJack)
-    @patch("biz.dfch.scnfmixr.mixer.jack_alsa_device.JackToAlsa",
-           new=MockJackToAlsa)
-    @patch("biz.dfch.scnfmixr.mixer.jack_alsa_device.MessageQueue",
-           new=MockMessageQueue)
-    @patch("biz.dfch.scnfmixr.mixer.jack_alsa_device.MessageQueue",
-           new=MockMessageQueue)
-    def test_connect_to_succeeds(self):
-        """test"""
-
-        self.skipTest(1)
-
-        # logical_name = "LCL"
-        # device_name = f"Alsa:{logical_name}"
-        # card_id = 0
-        # device_id = 0
-
-        # mock = MockMessageQueue.result
-        # mock.clear()
-
-        # sut = JackAlsaDevice(logical_name, card_id, device_id,
-        #                      MockAlsaStreamInfoParser(card_id))
-
-        # sut.connect_to()

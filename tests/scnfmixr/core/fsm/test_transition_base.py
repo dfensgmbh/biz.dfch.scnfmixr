@@ -71,7 +71,7 @@ class TestTransitionBase(unittest.TestCase):
             target_state=arbitrary_state
         )
 
-        assert sut is not None
+        self.assertIsInstance(sut, TestTransitionBase.ArbitraryTransition)
 
     def test_initializing_target_state_none_throws(self):
         """`target_state` must not be `None`."""
@@ -125,7 +125,7 @@ class TestTransitionBase(unittest.TestCase):
             target_state=arbitrary_state
         )
 
-        assert sut is not None
+        self.assertIsInstance(sut, TestTransitionBase.ArbitraryTransition)
 
         with self.assertRaises(AssertionError):
             sut.invoke(ctx=None)

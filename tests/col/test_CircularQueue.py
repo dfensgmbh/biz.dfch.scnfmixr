@@ -39,17 +39,18 @@ class TestCircularQueue(unittest.TestCase):
         with self.assertRaises(AssertionError):
             sut.enqueue(None)
 
-    def test_enqueing_more_items_than_max_size_removes_oldest_item(self):
-        """Enqueuing more items than the maximum size configured will overwrite older items."""
+    def test_enqueuing_more_items_than_max_size_removes_oldest_item(self):
+        """Enqueuing more items than the maximum size configured will overwrite
+        older items."""
 
         expected_item = "item2"
         expected_size = 3
 
         sut = CircularQueue(expected_size)
 
-        result = sut.enqueue("item1")
-        result = sut.enqueue(expected_item)
-        result = sut.enqueue("item3")
+        sut.enqueue("item1")
+        sut.enqueue(expected_item)
+        sut.enqueue("item3")
         result = sut.enqueue("item4")
 
         self.assertEqual(expected_size, len(sut))

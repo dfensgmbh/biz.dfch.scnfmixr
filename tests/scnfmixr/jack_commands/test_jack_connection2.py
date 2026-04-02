@@ -140,8 +140,8 @@ class TestJackConnection2(unittest.TestCase):
         expected = "Alsa:EX2-O:playback_2"
 
         result = JackConnection.get_connections2()
-        self.assertTrue(source in result)
-        self.assertFalse(expected in result[source], result[source])
+        self.assertIn(source, result)
+        self.assertNotIn(expected, result[source], result[source])
 
     @patch("biz.dfch.scnfmixr.jack_commands.jack_connection.Process",
            new=MockProcessGetConnections2)
@@ -155,78 +155,78 @@ class TestJackConnection2(unittest.TestCase):
         self.assertEqual(16, len(result), result)
 
         key = 'system:capture_1'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(0, len(result[key]), (key, result[key]))
 
         key = 'system:capture_2'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(0, len(result[key]), (key, result[key]))
 
         key = 'system:playback_1'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(0, len(result[key]), (key, result[key]))
 
         key = 'system:playback_2'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(0, len(result[key]), (key, result[key]))
 
         key = 'Alsa:LCL-I:capture_2'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(0, len(result[key]), (key, result[key]))
 
         key = 'Alsa:EX1-I:capture_1'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(0, len(result[key]), (key, result[key]))
 
         key = 'Alsa:EX1-I:capture_2'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(0, len(result[key]), (key, result[key]))
 
         key = 'Alsa:EX2-I:capture_2'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(0, len(result[key]), (key, result[key]))
 
         key = 'Alsa:EX2-I:capture_1'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(0, len(result[key]), (key, result[key]))
 
         key = 'Alsa:EX2-O:playback_1'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(0, len(result[key]), (key, result[key]))
 
         key = 'Alsa:EX2-O:playback_2'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(0, len(result[key]), (key, result[key]))
 
         key = 'Alsa:LCL-O:playback_1'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(1, len(result[key]), (key, result[key]))
         value = 'Alsa:LCL-I:capture_1'
-        self.assertTrue(value in result[key], (value, result[key]))
+        self.assertIn(value, result[key], (value, result[key]))
 
         key = 'Alsa:LCL-O:playback_2'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(1, len(result[key]), (key, result[key]))
         value = 'Alsa:LCL-I:capture_1'
-        self.assertTrue(value in result[key], (value, result[key]))
+        self.assertIn(value, result[key], (value, result[key]))
 
         key = 'Alsa:EX1-O:playback_2'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(1, len(result[key]), (key, result[key]))
         value = 'Alsa:LCL-I:capture_1'
-        self.assertTrue(value in result[key], (value, result[key]))
+        self.assertIn(value, result[key], (value, result[key]))
 
         key = 'Alsa:LCL-I:capture_1'
-        self.assertTrue(key in result)
+        self.assertIn(key, result)
         self.assertEqual(4, len(result[key]), (key, result[key]))
         value = 'Alsa:LCL-O:playback_1'
-        self.assertTrue(value in result[key], (value, result[key]))
+        self.assertIn(value, result[key], (value, result[key]))
         value = 'Alsa:LCL-O:playback_2'
-        self.assertTrue(value in result[key], (value, result[key]))
+        self.assertIn(value, result[key], (value, result[key]))
         value = 'Alsa:EX1-O:playback_1'
-        self.assertTrue(value in result[key], (value, result[key]))
+        self.assertIn(value, result[key], (value, result[key]))
         value = 'Alsa:EX1-O:playback_2'
-        self.assertTrue(value in result[key], (value, result[key]))
+        self.assertIn(value, result[key], (value, result[key]))
 
     @patch("biz.dfch.scnfmixr.jack_commands.jack_connection.Process",
            new=MockProcessGetConnections3)
