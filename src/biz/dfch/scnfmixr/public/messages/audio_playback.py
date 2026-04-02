@@ -18,9 +18,9 @@
 from __future__ import annotations
 
 from ..system import (
-    # NotificationMedium,
     CommandMedium,
     MessageBase,
+    NotificationMedium,
 )
 
 
@@ -31,11 +31,23 @@ __all__ = [
 
 
 class IAudioPlaybackMessage(MessageBase):
-    """Base type for all audio mixer messages."""
+    """Base type for all audio playback messages."""
 
 
 class AudioPlayback:
     """AudioPlayback messages."""
+
+    class StartingNotification(NotificationMedium, IAudioPlaybackMessage):
+        """Status Starting."""
+
+    class StartedNotification(NotificationMedium, IAudioPlaybackMessage):
+        """Status Started."""
+
+    class StoppingNotification(NotificationMedium, IAudioPlaybackMessage):
+        """Status Stopping."""
+
+    class StoppedNotification(NotificationMedium, IAudioPlaybackMessage):
+        """Status Stopped."""
 
     class PlaybackStartCommand(CommandMedium, IAudioPlaybackMessage):
         """PlaybackStopCommand"""

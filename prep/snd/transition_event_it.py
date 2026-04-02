@@ -354,8 +354,10 @@ registrazione.
 
     # Menu: Playback
 
-    # No audio menu necessary.
-    TransitionEvent.LEAVING_PLAYBACK_LEAVE: """""",
+    # OK. No audio necessary.
+    TransitionEvent.STOPPING_PLAYBACK_LEAVE: """""",
+    # Ok. No audio necessary.
+    TransitionEvent.STARTING_PLAYBACK_LEAVE: """""",
 
     # No audio menu necessary.
     TransitionEvent.SELECTING_PAUSE_LEAVE: """""",

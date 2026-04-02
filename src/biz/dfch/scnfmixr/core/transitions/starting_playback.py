@@ -13,9 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Module leaving_playback."""
+"""Module starting_playback."""
 
-from ...public.messages.audio_playback import AudioPlayback
+from biz.dfch.logging import log
+
+from ...playback.audio_playback import AudioPlayback as AudioPlayer
+from ...public.messages import AudioPlayback as msgt
+from ...system import FuncExecutor
 from ..fsm import TransitionBase
 from ..fsm import StateBase
 from ..fsm import UiEventInfo
@@ -23,12 +27,12 @@ from ..fsm import ExecutionContext
 from ..transition_event import TransitionEvent
 
 __all__ = [
-    "LeavingPlayback",
+    "StartingPlayback",
 ]
 
 
-class LeavingPlayback(TransitionBase):  # pylint: disable=R0903
-    """Leaves the playback player."""
+class StartingPlayback(TransitionBase):  # pylint: disable=R0903
+    """Start the playback player."""
 
     def __init__(self, event: str, target: StateBase):
 
@@ -39,13 +43,28 @@ class LeavingPlayback(TransitionBase):  # pylint: disable=R0903
             event,
             info_enter=None,
             info_leave=UiEventInfo(
-                TransitionEvent.LEAVING_PLAYBACK_LEAVE, False),
+                TransitionEvent.STARTING_PLAYBACK_LEAVE, False),
             target_state=target)
 
     def invoke(self, ctx: ExecutionContext) -> bool:
 
         assert isinstance(ctx, ExecutionContext)
 
-        ctx.events.publish(AudioPlayback.PlaybackStopCommand())
+        AudioPlayer.Factory.get()
 
+        with FuncExecutor(
+            lambda e: isinstance(e, msgt.StartedNotification),
+            lambda e: isinstance(
+                e, (msgt.StartedNotification, msgt.PlaybackStopCommand))
+        ) as sync:
+            result = sync.invoke(
+                msgt.PlaybackStartCommand(),
+                10)
+        result = bool(result)
+
+        if not result:
+            log.error("Waiting for playback to start FAILED.")
+            return False
+
+        log.info("Waiting for playback to start OK.")
         return True

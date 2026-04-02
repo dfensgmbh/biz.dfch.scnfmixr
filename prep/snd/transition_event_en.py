@@ -386,8 +386,10 @@ Trying to mount storage device RC2 succeeded.
     # OK. No audio menu necessary.
     TransitionEvent.PROCESSING_DIGIT_BACKSPACE_LEAVE: """""",
 
-    # OK. No audio menu necessary.
-    TransitionEvent.LEAVING_PLAYBACK_LEAVE: """""",
+    # OK. No audio necessary.
+    TransitionEvent.STOPPING_PLAYBACK_LEAVE: """""",
+    # Ok. No audio necessary.
+    TransitionEvent.STARTING_PLAYBACK_LEAVE: """""",
 
     # OK. No audio menu necessary.
     TransitionEvent.SELECTING_PAUSE_LEAVE: """""",

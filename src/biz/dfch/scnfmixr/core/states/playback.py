@@ -82,19 +82,6 @@ class Playback(StateBase):
 
         assert ctx and isinstance(ctx, ExecutionContext)
 
-        # Do not initialize upon entering from self.
-        if self == ctx.previous:
-            return
-        # Do not initialize upon transitioning from SelectingPause.
-        if SelectingResume.__name__ == ctx.source:
-            return
-
-        # get / acquire are idempotent - safe to call them multiple times.
-        AudioPlayer.Factory.get()
-
-        # The start message shall be sent nevertheless.
-        ctx.events.publish(AudioPlayback.PlaybackStartCommand())
-
     def on_leave(self, ctx: ExecutionContext) -> None:
         """Invoked upon leaving the state.
 

@@ -122,7 +122,8 @@ from .transitions import (
     JumpingClipNext,
     JumpingCuePrevious,
     JumpingCueNext,
-    LeavingPlayback,
+    StartingPlayback,
+    StoppingPlayback,
     HelpingPlayback,
 )
 
@@ -495,7 +496,7 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.DELETE_LAST_TAKE,
                 menu[State.DELETING_LAST_TAKE_CONFIRMATION]))
-            .add_transition(ReturningTrue(
+            .add_transition(StartingPlayback(
                 current.Event.START_PLAYBACK,
                 menu[State.PLAYBACK]))
             .add_transition(SystemClearName(
@@ -773,7 +774,7 @@ class StateMachine:
             .add_transition(SelectingResume(
                 current.Event.PAUSE_RESUME,
                 menu[State.PLAYBACK]))
-            .add_transition(LeavingPlayback(
+            .add_transition(StoppingPlayback(
                 current.Event.MENU,
                 menu[State.MAIN]))
         )
@@ -784,7 +785,7 @@ class StateMachine:
             .add_transition(HelpingPlayback(
                 current.Event.HELP,
                 current))
-            .add_transition(LeavingPlayback(
+            .add_transition(StoppingPlayback(
                 current.Event.MENU,
                 menu[State.MAIN]))
             .add_transition(SelectingPause(

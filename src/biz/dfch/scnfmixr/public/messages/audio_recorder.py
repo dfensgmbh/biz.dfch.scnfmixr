@@ -21,9 +21,9 @@ import time
 
 from ..storage import FileName
 from ..system import (
+    CommandMedium,
     NotificationHigh,
     NotificationMedium,
-    CommandMedium,
 )
 
 

@@ -84,7 +84,8 @@ from .formatting_storage import (
 from .setting_cuepoint import SettingCuePoint
 
 from .selecting_pause import SelectingPause, SelectingResume
-from .leaving_playback import LeavingPlayback
+from .starting_playback import StartingPlayback
+from .stopping_playback import StoppingPlayback
 from .jumping_clip_start import JumpingClipStart
 from .jumping_clip_end import JumpingClipEnd
 from .jumping_clip_previous import JumpingClipPrevious
@@ -162,7 +163,8 @@ __all__ = [
 
     "SelectingPause",
     "SelectingResume",
-    "LeavingPlayback",
+    "StartingPlayback",
+    "StoppingPlayback",
     "JumpingClipStart",
     "JumpingClipEnd",
     "JumpingClipPrevious",

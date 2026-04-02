@@ -408,9 +408,10 @@ Neun""",
 
     # Menu: Playback
 
-
-    TransitionEvent.LEAVING_PLAYBACK_LEAVE: """""",
-
+    # OK. No audio necessary.
+    TransitionEvent.STOPPING_PLAYBACK_LEAVE: """""",
+    # Ok. No audio necessary.
+    TransitionEvent.STARTING_PLAYBACK_LEAVE: """""",
 
     TransitionEvent.SELECTING_PAUSE_LEAVE: """""",
 

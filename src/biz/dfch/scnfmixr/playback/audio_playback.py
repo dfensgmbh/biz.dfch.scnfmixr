@@ -234,6 +234,8 @@ class AudioPlayback(IAcquirable):
 
         assert isinstance(message, msgt.PlaybackStartCommand)
 
+        self._mq.publish(msgt.StartingNotification())
+
         self._client = MediaPlayerClient(MediaPlayerType.PLAYBACK)
         self._client.acquire()
         self._client.set_repeat(True)
@@ -261,6 +263,12 @@ class AudioPlayback(IAcquirable):
 
         log.debug("Currently queued items: [%s]", _queued_items)
 
+        if 0 == len(_queued_items):
+            log.info("Currently no queued items. Signal to stop playback.")
+
+            self._mq.publish(msgt.PlaybackStopCommand())
+            return
+
         for item in _queued_items:
 
             fullname = self.get_fullname(item)
@@ -274,6 +282,8 @@ class AudioPlayback(IAcquirable):
 
         self._client.start()
         self._is_playing = True
+
+        self._mq.publish(msgt.StartedNotification())
 
     def get_fullname(self, value: str) -> str:
         """Returns the full path based on value from `MountPoint`."""
@@ -335,8 +345,12 @@ class AudioPlayback(IAcquirable):
         assert isinstance(message, msgt.PlaybackStopCommand)
         assert isinstance(self._client, MediaPlayerClient), type(self._client)
 
+        self._mq.publish(msgt.StoppingNotification())
+
         self._client.release()
         self._is_playing = False
+
+        self._mq.publish(msgt.StoppedNotification())
 
     def _on_playback_pause(self, message: msgt.PauseResumeCommand) -> None:
         """PauseResumeCommand"""

@@ -92,6 +92,7 @@ class TransitionEvent(StrEnum):
     # Menu: Main.
     STARTING_RECORDING_ENTER = auto()
     STARTING_RECORDING_LEAVE = auto()
+    STARTING_PLAYBACK_LEAVE = auto()
 
     # Menu: DeletingLastTakeConfirmation.
     CONFIRMING_DELETING_LAST_TAKE_ENTER = auto()
@@ -130,7 +131,7 @@ class TransitionEvent(StrEnum):
     PROCESSING_DIGIT_BACKSPACE_LEAVE = auto()
 
     # Menu: Playback
-    LEAVING_PLAYBACK_LEAVE = auto()
+    STOPPING_PLAYBACK_LEAVE = auto()
     SELECTING_PAUSE_LEAVE = auto()
     SELECTING_RESUME_LEAVE = auto()
     JUMPING_CUE_NEXT_LEAVE = auto()
