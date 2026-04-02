@@ -13,8 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# NOSONAR(python:S3516)
-
 """Testing JACK connections via MultiLineTextParser. Platform dependent."""
 
 import re
@@ -39,8 +37,14 @@ class TestJackConnection(unittest.TestCase):
             self.has_section_processed = False
             self.items = []
 
-        def process_port(self, ctx: MultiLineTextParserContext) -> bool:
+        def process_port(  # NOSONAR python:S3516
+            self,
+            ctx: MultiLineTextParserContext
+        ) -> bool:
             """Process the specified port.
+
+            This method must always returns `True`. This is because, `True`
+            shows the caller to continue the operation.
 
             Args:
                 ctx (MultiLineTextParserContext): The parser context.

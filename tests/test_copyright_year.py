@@ -18,8 +18,6 @@
 # pylint: disable=C0116
 # pylint: disable=C0301
 
-# NOSONAR(python:S2083)
-
 """Module update copyright."""
 
 from pathlib import Path
@@ -67,10 +65,10 @@ class TestCopyright(unittest.TestCase):
         if not updated:
             return
         lines[0] = updated
-        path.write_text(
+        path.write_text(  # NOSONAR python:S2083
             "\n".join(lines) + "\n",
             encoding="utf-8"
-        )  # NOSONAR(python:S2083)
+        )
 
     def test_update_copyright_year(self):
 
