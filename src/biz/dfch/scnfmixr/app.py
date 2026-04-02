@@ -152,7 +152,7 @@ class App:  # pylint: disable=R0903
             for point in _dr0_sources:
                 log.debug("Point '%s'.", point.name)
 
-            points = [e
+            points = [e  # NOSONAR python:S1854
                       for e in mixer.mixbus.get_device(
                           "Mixbus:MX0").as_sink_set().points if e.name]
             for point in points:
