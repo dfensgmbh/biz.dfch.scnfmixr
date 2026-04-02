@@ -207,7 +207,7 @@ class TestDateTimeNameInput(unittest.TestCase):
 
         # Get and set date.
         result = sut.get_date()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
         sut.set_date(expected.date())
 
