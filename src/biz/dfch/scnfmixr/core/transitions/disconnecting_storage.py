@@ -54,11 +54,12 @@ class DisconnectingStorage(TransitionBase):
     def disconnect() -> bool:
         """Disconnects and powers off any connected storage devices."""
 
-        result = True
+        result: bool = True
 
         app_ctx = ApplicationContext.Factory.get()
 
         for device in StorageDevice:
+            unmount_result = True
 
             addr = app_ctx.storage_device_map.get(device, None)
             if addr is None:
@@ -76,21 +77,33 @@ class DisconnectingStorage(TransitionBase):
 
             if op.is_mounted:
 
-                result = result and op.unmount()
-                if result:
+                log.debug("Unmounting storage device '%s' ...",
+                          device.name)
+                unmount_result = unmount_result and op.unmount()
+                if unmount_result:
                     log.info("Unmounting storage device '%s' OK.",
                              device.name)
                 else:
                     log.error("Unmounting storage device '%s' FAILED.",
                               device.name)
                     continue
+            else:
+                log.debug("Device '%s' not mounted.",
+                          device.name)
 
-            result = result and op.poweroff()
-            if not result:
+            log.debug("Powering off storage device '%s' ...",
+                      device.name)
+            poweroff_result = op.poweroff()
+            if not poweroff_result:
                 log.error("Powering off storage device '%s' FAILED.",
                           device.name)
-                return False
+                result = False
+                continue
 
             log.info("Powering off storage device '%s' OK.",
                      device.name)
-            return True
+            result = result and True
+            continue
+
+        # Return the combined result for all storage devices.
+        return result
