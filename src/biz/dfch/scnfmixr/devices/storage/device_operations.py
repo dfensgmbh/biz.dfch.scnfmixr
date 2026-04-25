@@ -100,8 +100,8 @@ class DeviceOperations:
         assert value and isinstance(value, StorageDeviceInfo)
 
         self._device_info = value
-        self._uid = os.getuid()  # pylint: disable=E1101
-        self._gid = os.getgid()  # pylint: disable=E1101
+        self._uid = os.getuid()  # pylint: disable=E1101  # type: ignore
+        self._gid = os.getgid()  # pylint: disable=E1101  # type: ignore
 
     @property
     def is_mounted(self) -> bool:
@@ -122,6 +122,7 @@ class DeviceOperations:
             bool: True, if operation was successful; false, otherwise.
         """
 
+        assert self._device_info.mount_point is not None
         cmd: list[str] = [
             self._SUDO_FULLNAME,
             self._MOUNT_FULLNAME,
@@ -147,6 +148,7 @@ class DeviceOperations:
                       self._device_info.full_name)
             return False
 
+        assert self._device_info.mount_point is not None
         log.debug("Try to retrieve files from '%s' [%s] ...",
                   self._device_info.full_name,
                   self._device_info.mount_point)
