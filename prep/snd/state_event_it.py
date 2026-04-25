@@ -121,12 +121,12 @@ Premere "ASTERISCO" per ripetere questo messaggio.
 
     # OK
     StateEvent.SET_DATE_ENTER: """
-Il menu "Data"  
+Menu "Data"  
   
 Inserire una data di 8 cifre iniziando con l'anno di 4 cifre, seguito dal mese di 2 cifre e dal giorno di 2 cifre.  
   
 Per cancellare una cifra, premere il tasto "BACK-SPACE".  
-Quando si è finito di inserire il valore, o per ricominciare dall'inizio, premere il tasto "INVIO" o "ENTER".  
+Quando si è finito di inserire il valore, o per ricominciare dall'inizio, premere il tasto "ENTER".  
   
     # Esempio:  uno-nove-due-sette  zero-tre-due-sette per il 27 marzo del 19 27.  
   
@@ -163,7 +163,7 @@ Premere "ASTERISCO" per ripetere questo messaggio.
 
     # OK
     StateEvent.MAIN_ENTER: """
-Il menu "Principale"  
+Menu "Principale"  
   
 Premere "1" per avviare una registrazione stereo.  
     # Premere "2" per avviare una registrazione dry iso e stereo.  
