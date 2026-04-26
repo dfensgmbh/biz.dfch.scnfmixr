@@ -1,5 +1,5 @@
 # Set the image filename here  
-IMAGE="scnfmixr-v4.7.0.img.zst"
+IMAGE="scnfmixr-v4.8.0.img.zst"
 
 # 0) Identify and sanity-check
 lsblk -f /dev/mmcblk0

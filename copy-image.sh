@@ -1,4 +1,4 @@
-IMAGE="scnfmixr-v4.7.0.img.zst"
+IMAGE="scnfmixr-v4.8.0.img.zst"
 TARGET="scnfmixr.img.zst"
 
 # Create a temporary mount point
