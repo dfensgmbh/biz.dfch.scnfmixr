@@ -32,6 +32,7 @@ from .public.input import MenuProfile
 from .public.audio import AudioDevice
 from .public.audio import Format
 from .public.audio import FileFormat
+from .public.mixer import MixbusDevice
 from .public.storage.storage_device import StorageDevice
 from .public.system import SystemTime
 from .public.system.messages import SystemMessage
@@ -67,6 +68,9 @@ class App:  # pylint: disable=R0903
         rec_params = app_ctx.recording_parameters
         rec_params.file_format = FileFormat(args.file_format)
         rec_params.sampling_rate = args.sampling_rate
+        rec_params.targets = [
+            MixbusDevice[name] for name in args.record_targets
+        ]
         match args.bit_depth:
             case 16:
                 rec_params.format = Format.S16_LE

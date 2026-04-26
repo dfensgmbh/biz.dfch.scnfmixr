@@ -96,7 +96,7 @@ from .transitions import InitializingAudio
 
 from .states import Main
 from .transitions.starting_recording_mixes import (
-    StartingRecordingMx0,
+    StartingRecordingMixes,
 )
 
 from .states import DeletingLastTakeConfirmation
@@ -490,7 +490,7 @@ class StateMachine:
             .add_transition(ReturningTrue(
                 current.Event.MENU,
                 menu[State.SYSTEM]))
-            .add_transition(StartingRecordingMx0(
+            .add_transition(StartingRecordingMixes(
                 current.Event.START_RECORDING_MX0,
                 menu[State.ON_RECORD]))
             .add_transition(ReturningTrue(

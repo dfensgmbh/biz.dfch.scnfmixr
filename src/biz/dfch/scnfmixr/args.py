@@ -27,6 +27,7 @@ from .public.audio import Format
 from .public.audio import SampleRate
 from .public.input import InputDevice
 from .public.input import MenuProfile
+from .public.mixer import MixbusDevice
 from .public.storage import StorageDevice
 
 
@@ -72,6 +73,15 @@ class Arguments():
         raise argparse.ArgumentTypeError(
             f"'{value}' is not valid. Format: "
             f"'^[0-9a-fA-F]{4}(:[0-9a-fA-F]{4})?$'.")
+
+    def _validate_record_targets(self, value: str) -> str:
+        valid_keys = [e.name for e in MixbusDevice]
+        if value not in valid_keys:
+            raise argparse.ArgumentTypeError(
+                f"Invalid mixbus device '{value}'. "
+                f"Valid options: {', '.join(valid_keys)}"
+            )
+        return value
 
     def get(self) -> argparse.Namespace:
         """Returns an instance to the argument parser.
@@ -271,6 +281,18 @@ Copyright 2024-2026 d-fens GmbH. Licensed under GPLv3.
             default=["2d9b"],
             help=("RC Storage vendor id whitelist; e.g. '2d9b' [iStorage], "
                   "'2d9b:8064' [iStorage datAshur Pro2 64GB]."),
+        )
+
+        parser.add_argument(
+            "-t", "--record-targets",
+            type=self._validate_record_targets,
+            nargs="*",
+            dest="record_targets",
+            default=[MixbusDevice.MX0.name],
+            help=(
+                f"Mixbus devices to record. Valid values: "
+                f"{', '.join(e.name for e in MixbusDevice)}."
+            ),
         )
 
         result = parser.parse_args()

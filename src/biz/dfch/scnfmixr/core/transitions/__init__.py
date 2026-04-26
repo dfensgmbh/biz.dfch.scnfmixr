@@ -70,7 +70,7 @@ from .processing_digit import (
 
 from .initializing_audio import InitializingAudio
 from .starting_recording_mixes import (
-    StartingRecordingMx0,
+    StartingRecordingMixes,
 )
 from .stopping_recording import StoppingRecording
 from .stopping_system import StoppingSystem
@@ -142,7 +142,7 @@ __all__ = [
     "FormattingStorageRc2",
     "StoppingSystem",
 
-    "StartingRecordingMx0",
+    "StartingRecordingMixes",
     "StoppingRecording",
     "SettingCuePoint",
     "HelpingOnRecord",

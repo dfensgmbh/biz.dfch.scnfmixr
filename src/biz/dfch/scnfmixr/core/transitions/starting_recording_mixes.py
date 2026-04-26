@@ -15,12 +15,16 @@
 
 """Module starting_recording_mixes."""
 
-from biz.dfch.scnfmixr.public.mixer import MixbusDevice
+from ...app import ApplicationContext
+
 from .starting_recording import StartingRecording
 
 
-class StartingRecordingMx0(StartingRecording):
-    """Starts a recording for MX0."""
+class StartingRecordingMixes(StartingRecording):
+    """Starts a recording specified MixBusDevice from `--record-target`."""
 
     def __init__(self, event, target):
-        super().__init__(event, target, [MixbusDevice.MX0])
+        app_ctx = ApplicationContext.Factory.get()
+        targets = app_ctx.recording_parameters.targets
+
+        super().__init__(event, target, targets)

@@ -15,9 +15,12 @@
 
 """Recording parameters set by the user."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-from ..public.audio import FileFormat, Format, SampleRate
+from ..public.audio import FileFormat
+from ..public.audio import Format
+from ..public.audio import SampleRate
+from ..public.mixer import MixbusDevice
 
 
 @dataclass
@@ -28,8 +31,10 @@ class RecordingParameters:
         format (str): The format and codec of the recording.
         sampling_rate (int): The sampling rate of the recording.
         bit_depth (int): Bits per sample of the recording.
+        targets (list[MixbusDevice]): The mixbus devices to record.
     """
 
     file_format: FileFormat = FileFormat.DEFAULT
     format: Format = Format.DEFAULT
     sampling_rate: int = SampleRate.DEFAULT
+    targets: list[MixbusDevice] = field(default_factory=list)
