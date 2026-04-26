@@ -18,9 +18,13 @@ Description=scnfmixr (Secure Conference Mixer and Recorder)
 After=sound.target
 
 [Service]
-#ExecStart=/home/admin/scnfmixr/venvpi/bin/python3 -m biz -s -l EN --allowed-storage-usb-ids 2009 058f:6387 --use-current-date --use-current-time --use-random-name
-ExecStart=/home/admin/scnfmixr/venvpi/bin/python3 -m biz -s --allowed-storage-usb-ids 2009 058f:6387
-WorkingDirectory=/home/admin/scnfmixr/src
+# PLY (playback) configuration
+#ExecStart=/home/admin/biz.dfch.scnfmixr/venvpi/bin/python3 -m biz -s -hi2 2-1.4 -lcl 4-1 -rc1 3-1.2 --allowed-storage-usb-ids 2d9b:8064
+# LIN (Lingua) configuration
+#ExecStart=/home/admin/biz.dfch.scnfmixr/venvpi/bin/python3 -m biz -s -ex1 2-1.1 -ex2 4-1.1 -hi2 2-1.4 -lcl 4-1.4 -rc1 3-1.2 -rc2 3-1.3 -in1 4-1.2 --allowed-storage-usb-ids 2d9b:8064
+# REC (recorder) configuration
+ExecStart=/home/admin/biz.dfch.scnfmixr/venvpi/bin/python3 -m biz -s -ex1 2-1.1 -hi2 2-1.4 -lcl 4-1 -rc1 3-1.2 -rc2 3-1.3 --allowed-storage-usb-ids 2d9b:8064
+WorkingDirectory=/home/admin/biz.dfch.scnfmixr/src
 StandardOutput=journal
 StandardError=journal
 LimitRTPRIO=95

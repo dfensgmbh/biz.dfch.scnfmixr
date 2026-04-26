@@ -1,0 +1,60 @@
+# 20-usb-device-whitelist.rules
+# Allow only the USB devices that are listed below.
+# Any other USB device is immediately unbound from the kernel driver.
+
+# ----------------------------
+# 1. Allowlist (by VID:PID)
+# ----------------------------
+
+# Linux Foundation root hubs
+SUBSYSTEM=="usb", ATTR{idVendor}=="1d6b", ATTR{idProduct}=="0002", GOTO="usb_whitelist_end"
+SUBSYSTEM=="usb", ATTR{idVendor}=="1d6b", ATTR{idProduct}=="0003", GOTO="usb_whitelist_end"
+
+# Raspberry Pi USB3 HUBs
+SUBSYSTEM=="usb", ATTR{idVendor}=="2e8a", ATTR{idProduct}=="000d", GOTO="usb_whitelist_end"
+SUBSYSTEM=="usb", ATTR{idVendor}=="2e8a", ATTR{idProduct}=="000e", GOTO="usb_whitelist_end"
+
+# EPOS EXPAND 40T (DSEA A/S), LCL
+SUBSYSTEM=="usb", ATTR{idVendor}=="1395", ATTR{idProduct}=="0386", GOTO="usb_whitelist_end"
+
+# Homertech USB Keyboard, HI1
+SUBSYSTEM=="usb", ATTR{idVendor}=="276d", ATTR{idProduct}=="ffe3", GOTO="usb_whitelist_end"
+
+# Elgato Stream Deck MK.2, HI2
+SUBSYSTEM=="usb", ATTR{idVendor}=="0fd9", ATTR{idProduct}=="0080", GOTO="usb_whitelist_end"
+
+# iStorage datAshur PRO2, RC1, RC2
+SUBSYSTEM=="usb", ATTR{idVendor}=="2d9b", ATTR{idProduct}=="8064", GOTO="usb_whitelist_end"
+
+# C-Media Audio Adapter (Unitek Y-247A), EX1, EX2
+SUBSYSTEM=="usb", ATTR{idVendor}=="0d8c", ATTR{idProduct}=="0014", GOTO="usb_whitelist_end"
+
+# Genesys Logic Hub (part of Pi Keyboard)
+SUBSYSTEM=="usb", ATTR{idVendor}=="05e3", ATTR{idProduct}=="0610", GOTO="usb_whitelist_end"
+
+# Holtek RPI Wired Keyboard 5
+SUBSYSTEM=="usb", ATTR{idVendor}=="04d9", ATTR{idProduct}=="0006", GOTO="usb_whitelist_end"
+
+# PI Engineering, Inc. XK-24 HID
+SUBSYSTEM=="usb", ATTR{idVendor}=="05f3", ATTR{idProduct}=="0405", GOTO="usb_whitelist_end"
+
+# Roland Corp. VT-4
+SUBSYSTEM=="usb", ATTR{idVendor}=="0582", ATTR{idProduct}=="021a", GOTO="usb_whitelist_end"
+
+# Allow any USB Mass Storage device (class 08) regardless of VID:PID
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{bDeviceClass}=="08", GOTO="usb_whitelist_end"
+
+# Allow USB devices where any interface is Mass Storage (class 08)
+# (covers composite devices that expose storage as one of their interfaces)
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ATTR{bInterfaceClass}=="08", GOTO="usb_whitelist_end"
+
+# ---------------------------------
+# 2. Default DENY: unbind everything else
+# ---------------------------------
+# For any USB device (not interface) that reaches here (i.e. not whitelisted),
+# unbind it from the USB core driver and log the event.
+
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="add", \
+  RUN+="/bin/sh -c 'echo -n %k > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-whitelist \"BLOCKED USB device: %k VID=%s{idVendor} PID=%s{idProduct}\"'"
+
+LABEL="usb_whitelist_end"

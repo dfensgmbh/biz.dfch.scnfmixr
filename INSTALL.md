@@ -670,6 +670,10 @@ $ sudo systemctl disable --now NetworkManager.service
 
 ```sh
 sudo nano /etc/udev/rules.d/10-usb-network-blacklist.rules
+
+# On overlay-fs:
+# sudo mount -o remount,rw /media/root-ro
+# sudo nano /media/root-ro/etc/udev/rules.d/10-usb-network-blacklist.rules
 ```
 
 ```sh
@@ -677,10 +681,12 @@ sudo nano /etc/udev/rules.d/10-usb-network-blacklist.rules
 # Block any USB device exposing a network-related interface (CDC / wireless).
 
 # Match USB interfaces with Communication (0x02) class
-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", ATTR{bInterfaceClass}=="02", RUN+="/bin/sh -c 'echo -n %k > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-net-deny \"BLOCKED USB network-like interface: %k (class=02)\"'"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", ATTR{bInterfaceClass}=="02", \
+  RUN+="/bin/sh -c 'echo -n %b > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-net-deny \"BLOCKED USB network-like interface: %k on device %b (class=02)\"'"
 
 # Match USB interfaces with Wireless Controller (0x0e) class
-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", ATTR{bInterfaceClass}=="0e", RUN+="/bin/sh -c 'echo -n %k > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-net-deny \"BLOCKED USB network-like interface: %k (class=0e)\"'"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", ATTR{bInterfaceClass}=="0e", \
+  RUN+="/bin/sh -c 'echo -n %b > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-net-deny \"BLOCKED USB network-like interface: %k on device %b (class=0e)\"'"
 
 ```
 
@@ -688,11 +694,15 @@ SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", ATTR{bInterfaceC
 
 ```sh
 $ sudo nano /etc/udev/rules.d/20-usb-device-whitelist.rules
+
+# On overlay-fs:
+# sudo mount -o remount,rw /media/root-ro
+# sudo nano /media/root-ro/etc/udev/rules.d/20-usb-device-whitelist.rules
 ```
 
 ```sh
 # 20-usb-device-whitelist.rules
-# Allow only the USB devices that are listed below are allowed.
+# Allow only the USB devices that are listed below.
 # Any other USB device is immediately unbound from the kernel driver.
 
 # ----------------------------
@@ -728,16 +738,26 @@ SUBSYSTEM=="usb", ATTR{idVendor}=="05e3", ATTR{idProduct}=="0610", GOTO="usb_whi
 # Holtek RPI Wired Keyboard 5
 SUBSYSTEM=="usb", ATTR{idVendor}=="04d9", ATTR{idProduct}=="0006", GOTO="usb_whitelist_end"
 
-#  PI Engineering, Inc. XK-24 HID
+# PI Engineering, Inc. XK-24 HID
 SUBSYSTEM=="usb", ATTR{idVendor}=="05f3", ATTR{idProduct}=="0405", GOTO="usb_whitelist_end"
+
+# Roland Corp. VT-4
+SUBSYSTEM=="usb", ATTR{idVendor}=="0582", ATTR{idProduct}=="021a", GOTO="usb_whitelist_end"
+
+# Allow any USB Mass Storage device (class 08) regardless of VID:PID
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{bDeviceClass}=="08", GOTO="usb_whitelist_end"
+
+# Allow USB devices where any interface is Mass Storage (class 08)
+# (covers composite devices that expose storage as one of their interfaces)
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ATTR{bInterfaceClass}=="08", GOTO="usb_whitelist_end"
 
 # ---------------------------------
 # 2. Default DENY: unbind everything else
 # ---------------------------------
-# For any USB *device* (not interface) that reaches here (i.e. not whitelisted),
+# For any USB device (not interface) that reaches here (i.e. not whitelisted),
 # unbind it from the USB core driver and log the event.
 
-SUBSYSTEM=="usb", DEVTYPE=="usb_device", ACTION=="add", \
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="add", \
   RUN+="/bin/sh -c 'echo -n %k > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-whitelist \"BLOCKED USB device: %k VID=%s{idVendor} PID=%s{idProduct}\"'"
 
 LABEL="usb_whitelist_end"
@@ -748,6 +768,10 @@ LABEL="usb_whitelist_end"
 
 ```sh
 sudo nano /etc/udev/rules.d/15-usb-class-blacklist.rules
+
+# On overlay-fs:
+# sudo mount -o remount,rw /media/root-ro
+# sudo nano /media/root-ro/etc/udev/rules.d/15-usb-class-blacklist.rules
 ```
 
 ```sh
@@ -759,7 +783,13 @@ sudo nano /etc/udev/rules.d/15-usb-class-blacklist.rules
 SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{bDeviceClass}=="09", GOTO="usb_class_deny_end"
 
 # For interfaces: allow only 01, 03, 08, 09
-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", ATTR{bInterfaceClass}!="01", ATTR{bInterfaceClass}!="03", ATTR{bInterfaceClass}!="08", ATTR{bInterfaceClass}!="09", RUN+="/bin/sh -c 'echo -n %k > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-class-deny \"BLOCKED USB device with disallowed interface class: %k\"'"
+# Use %b (parent device bus path) not %k (interface name) for unbind
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", \
+  ATTR{bInterfaceClass}!="01", \
+  ATTR{bInterfaceClass}!="03", \
+  ATTR{bInterfaceClass}!="08", \
+  ATTR{bInterfaceClass}!="09", \
+  RUN+="/bin/sh -c 'echo -n %b > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-class-deny \"BLOCKED USB interface class: %k on device %b\"'"
 
 LABEL="usb_class_deny_end"
 

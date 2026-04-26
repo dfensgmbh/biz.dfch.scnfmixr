@@ -1,0 +1,10 @@
+# 10-usb-network-blacklist.rules
+# Block any USB device exposing a network-related interface (CDC / wireless).
+
+# Match USB interfaces with Communication (0x02) class
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", ATTR{bInterfaceClass}=="02", \
+  RUN+="/bin/sh -c 'echo -n %b > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-net-deny \"BLOCKED USB network-like interface: %k on device %b (class=02)\"'"
+
+# Match USB interfaces with Wireless Controller (0x0e) class
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", ATTR{bInterfaceClass}=="0e", \
+  RUN+="/bin/sh -c 'echo -n %b > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-net-deny \"BLOCKED USB network-like interface: %k on device %b (class=0e)\"'"

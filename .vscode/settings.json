@@ -43,6 +43,7 @@
         "ccze",
         "cmdline",
         "connecto",
+        "conv",
         "cuepoint",
         "cuesheet",
         "dataclasses",
@@ -135,6 +136,7 @@
         "onrecord",
         "Panayiotis",
         "Paratype",
+        "partprobe",
         "pipewire",
         "plugdev",
         "pluggy",
@@ -191,7 +193,8 @@
         "xput",
         "xputs",
         "zita",
-        "zram"
+        "zram",
+        "zstd"
     ],
     "sonarlint.connectedMode.project": {
         "connectionId": "dfensgmbh",

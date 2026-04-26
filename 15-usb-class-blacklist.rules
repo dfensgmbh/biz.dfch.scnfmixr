@@ -1,0 +1,17 @@
+# 15-usb-class-blacklist.rules
+# Block any USB device that exposes an interface class OTHER than:
+#   01 (Audio), 03 (HID), 08 (Mass Storage), 09 (Hub)
+
+# Allow hubs (class 09) at device level - they are infrastructure
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{bDeviceClass}=="09", GOTO="usb_class_deny_end"
+
+# For interfaces: allow only 01, 03, 08, 09
+# Use %b (parent device bus path) not %k (interface name) for unbind
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", \
+  ATTR{bInterfaceClass}!="01", \
+  ATTR{bInterfaceClass}!="03", \
+  ATTR{bInterfaceClass}!="08", \
+  ATTR{bInterfaceClass}!="09", \
+  RUN+="/bin/sh -c 'echo -n %b > /sys/bus/usb/drivers/usb/unbind; /usr/bin/logger -t usb-class-deny \"BLOCKED USB interface class: %k on device %b\"'"
+
+LABEL="usb_class_deny_end"
