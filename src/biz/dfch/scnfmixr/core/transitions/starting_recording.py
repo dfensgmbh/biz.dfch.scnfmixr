@@ -59,6 +59,10 @@ class StartingRecording(TransitionBase):
     def invoke(self, ctx) -> bool:
         _ = ctx
 
+        if 0 == len(self._devices):
+            log.error("No recording targets specified. Cannot record.")
+            return False
+
         app_ctx = ApplicationContext.Factory.get()
         base_name = app_ctx.date_time_name_input.get_name()
         now = SystemTime.Factory.get().now()
