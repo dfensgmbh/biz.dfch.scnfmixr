@@ -19,7 +19,7 @@ After=sound.target
 
 [Service]
 # PLY (playback) configuration
-#ExecStart=/home/admin/biz.dfch.scnfmixr/venvpi/bin/python3 -m biz -s -hi2 2-1.4 -lcl 4-1 -rc1 3-1.2 -t --allowed-storage-usb-ids 2d9b:8064
+#ExecStart=/home/admin/biz.dfch.scnfmixr/venvpi/bin/python3 -m biz -s -hi2 2-1.4 -lcl 4-1 -rc1 3-1.2 -t --use-current-date --use-current-time --use-random-name --allowed-storage-usb-ids 2d9b:8064
 # LIN (Lingua) configuration
 #ExecStart=/home/admin/biz.dfch.scnfmixr/venvpi/bin/python3 -m biz -s -ex1 2-1.1 -ex2 4-1.1 -hi2 2-1.4 -lcl 4-1.4 -rc1 3-1.2 -rc2 3-1.3 -in1 4-1.2 -t MX0 MX1 MX2 --allowed-storage-usb-ids 2d9b:8064
 # REC (recorder) configuration
