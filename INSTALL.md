@@ -637,31 +637,30 @@ NOTE: USB storage devices load with `noexec,nodev,nosuid`
 ## Disable wired network connection `eth0`
 
 ```sh
-$ sudo nano /etc/systemd/system/disable-eth0.service
-
-[Unit]
-Description=Disable eth0 at boot
-After=network-pre.target
-Wants=network-pre.target
-
-[Service]
-Type=oneshot
-ExecStart=/sbin/ip link set dev eth0 down
-
-[Install]
-WantedBy=multi-user.target
-
-$ sudo systemctl daemon-reload
-$ sudo systemctl enable disable-eth0.service
-
-$ sudo systemctl disable --now NetworkManager.service 2>/dev/null || true
-$ sudo systemctl disable --now systemd-networkd.service 2>/dev/null || true
+$ sudo nano /etc/NetworkManager/conf.d/unmanaged-eth0.conf
 ```
 
-Also make sure, that the "SSH Server" is set to OFF.
+```
+[keyfile]
+unmanaged-devices=interface-name:eth0
+```
+
+```
+$ sudo reboot
+```
+
+### Disable when overlay-fs is active
 
 ```sh
-$ sudo systemctl disable --now NetworkManager.service
+sudo nano /mnt/writable_disk/etc/NetworkManager/conf.d/unmanaged-eth0.conf
+```
+
+```
+<same service as above>
+```
+
+```
+$ sudo reboot
 ```
 
 ## Allow only specific USB devices
@@ -934,6 +933,8 @@ Remove all other "ExecStart" entries.
 15. Stop the system
 sudo poweroff
 
+NOTE: When you stop the system with `sudo poweroff` it can take more than 3 minutes before the system starts again.
+
 16. Connect these devices:
   * LCL
   * HI2
@@ -943,7 +944,7 @@ sudo poweroff
 
 17. Remove the power button from the IO Board
 
-Remove the grey power button with a "Knipex Schrägabschneider".
+NOTE: Remove the grey power button with a "Knipex Schrägabschneider".
 
 17. Start the system
 
