@@ -874,7 +874,7 @@ Raspberry Pi Imager v1.9.6
 
 # Checklist to install a new system
 
-# Install new eMMC
+## Install new eMMC
  
 1. Start with NVMe
 Mount the NVMe disk in the case.
@@ -951,3 +951,184 @@ NOTE: Remove the grey power button with a "Knipex Schrägabschneider".
 18. Make sure, the system operates correctly.
 
 19. Do the test procedure "NNN".
+
+## Deployment of "Golden Image"
+
+|   | 1                  | 2                | 3                   | 4                      |
+|---|--------------------|------------------|---------------------|------------------------|
+| A | old                |                  | new                 |                        |
+| B | Console 1          | Console 2        | Enable network 1    | Enable network 2       |
+| C | Enable writable 1  | Enable writable 2| Enable writable 3   | Stop scnfmixr.service  |
+| D | ExecStart          | IP address       | Write Image to eMMC | Reboot                 |
+| E | Prepare boot order | Edit boot order  | BOOT ORDER FINAL    | USB CURRENT            |
+| F |                    |                  | BOOT ORDER USB      |                        |
+
+**Explanation:**  
+- <B3>: "Enable network 1"
+
+### Use cases
+
+#### Login to "Golden Image"  
+
+<A3> <A4>
+
+#### Login to Deployment OS on USB memory stick or existing scnfmixr  
+
+<A1> <A2>
+
+#### Prepare system with overlay-fs for changes
+
+<C1> <C2> <C3> <C4>
+
+* The last command stops the `scnfmixr.service`. This takes 90 seconds. Change to a different console after that to continue your work.
+
+#### Change to console 1
+
+<B1>
+
+#### Change to console 2
+
+<B2>
+
+#### Change boot order
+
+<E1> <E2>
+
+Then change settings with <E3> and <E4> or <F3>.
+
+<E3>: insert the boot order to NVMe -- > SD/eMMC -- > retry
+<F3>: insert the boot order to USB -- > NVMe -- > SD/eMMC -- > retry
+<E4>: add setting for USB PSU at 5A
+
+#### Restart system
+
+<D4>
+
+NOTE: stop `scnfmixr.service` with <C4> before you restart the system. This will save time when the system stops.
+
+#### Write "Golden Image" to eMMC
+
+<D3>
+
+This will write the "Golden Image" directly to the eMMC storage device. You must restart the system after that. Also adjust the boot order if you want to start from the eMMC storage device after you have written "Golden Image" to it.
+
+### Deploy a "Golden Image" on an existing system
+
+ 1) Connect the USB storage device with "Golden Image".
+ 2) Connect the monitor with an HDMI cable.
+ 3) Connect the Raspberry keyboard and X-Keys keyboard.
+ 4) Connect the power cord and start system.
+ 5) Login to system.
+    * <A3> <A4>
+ 6) Prepare system for changes.
+    * <C1> <C2> <C3> <C4>
+    NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
+ 7) Change to console 2.
+    * <B2>
+ 8) Login to system.
+    * <A3> <A4>
+ 9) Change boot order.
+    * <E1> <E2>
+    * Remove existing entry BOOT_ORDER with CTRL+K.
+    * Add BOOT_ORDER.
+    * <F3>
+    * Save file and exit with CTRL+O und CTRL+X.
+    * Examine that the flash operation is "SUCCESSFUL".
+10) Change to console 1.
+    * <B1>
+11) Restart the system.
+    * <D4>
+    NOTE: If the `scnfmixr.service` has not stopped, wait until it has stopped. The system stops will then stop and start again.
+12) Continue with procedure 'Deploy a "Golden Image" on a new system' step (5).
+
+### Change files on an existing system
+
+ 1) Connect the USB storage device with "Golden Image".
+ 2) Connect the monitor with an HDMI cable.
+ 3) Connect the Raspberry keyboard and X-Keys keyboard.
+ 4) Connect the power cord and start system.
+ 5) Connect a network cable to the system.
+ 6) Login to system.
+    * <A3> <A4>
+ 7) Prepare system for changes.
+    * <C1> <C2> <C3> <C4>
+    NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
+ 8) Change to console 2.
+    * <B2>
+ 9) Login to system.
+    * <A3> <A4>
+10) Enable network.
+    * <B3> <B4>
+11) Show IP configuration and record IP address.
+    * <D2>
+12) Use the IP address from the previous step and continue with procedure 'Changing files with WinSCP'. After you finished that procedure continue with step (13).
+
+### Deploy a "Golden Image" on a new system
+
+ 1) Connect the USB storage device with "Golden Image".
+ 2) Connect the monitor with an HDMI cable.
+ 3) Connect the Raspberry keyboard and X-Keys keyboard.
+ 4) Connect the power cord and start system.
+ 5) Login to system.
+    * <A1> <A2>
+ 6) Write "Golden Image" from USB storage device to eMMC storage device.
+    * <D3>
+ 7) Change to console 2.
+    * <B2>
+ 8) Login to system.
+    * <A1> <A2>
+ 9) Change boot order.
+    * <E1> <E2>
+    * Remove existing entry BOOT_ORDER with CTRL+K.
+    * Add BOOT_ORDER and PSU_MAX_CURRENT.
+    * <E3> <E4>
+    * Save file and exit with CTRL+O und CTRL+X.
+    * Examine that the flash operation is "SUCCESSFUL".
+10) Change to console 1.
+    * <B1>
+11) Wait until the write operation is completed.
+    NOTE: The write operation will take approximately 85 seconds.
+12) Restart the system.
+    * <D4>
+    NOTE: Keep the USB storage device in the system.
+---
+13) Login to system.
+    * <A3> <A4>
+    NOTE: If we can login to the system successfully, we show that the system does not start from USB any more.
+14) Prepare system for changes.
+    * <C1> <C2> <C3> <C4>
+    NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
+15) Change to console 2.
+    * <B2>
+16) If the system is a "REC" system continue with step (22).
+17) Change ExecStart.
+    * <D1>
+    NOTE: This will start the text editor with the start configuration of the `scnfmixr.service`.
+18) Comment out the line that starts with `ExecStart` and insert "#" at the start of the line.
+19) When the system is "playback system" ("PLY"), find the line that starts with `#ExecStart=` after the line that contains "PLY". Remove the "#" at the start of the line.
+20) When the system is "multi-phone system with insert" ("LIN"), find the line that starts with `#ExecStart=` after the line that contains "LIN". Remove the "#" at the start of the line.
+21) Save the changes you made and exit the editor with CTRL+O CTRL+X.
+22) Change to console 1.
+    * <B1>
+23) Remove the USB storage device.
+24) Restart the system.
+    * <D4>
+    NOTE: If the `scnfmixr.service` has not stopped, wait until it has stopped. The system stops will then stop and start again.
+---
+25) Login to system.
+    * <A3> <A4>
+26) Prepare system for changes.
+    * <C1> <C2> <C3> <C4>
+    NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
+27) Change to console 2.
+    * <B2>
+28) Open ExecStart.
+    * <D1>
+    NOTE: This will start the text editor with the start configuration of the `scnfmixr.service`.
+29) Make sure that the correct `ExecStart=` line is active.
+30) Change to console 1.
+    * <B1>
+31) Restart the system.
+    * <D4>
+    NOTE: If the `scnfmixr.service` has not stopped, wait until it has stopped. The system stops will then stop and start again.
+32) When the system starts again, remove the power cord from the system.
