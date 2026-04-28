@@ -1103,7 +1103,7 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
 16) If the system is a "REC" system continue with step (22).
 17) Change ExecStart.
     * **D1**
-    NOTE: This will start the text editor with the start configuration of the `scnfmixr.service`.
+    * NOTE: This will start the text editor with the start configuration of the `scnfmixr.service`.
 18) Comment out the line that starts with `ExecStart` and insert "#" at the start of the line.
 19) When the system is "playback system" ("PLY"), find the line that starts with `#ExecStart=` after the line that contains "PLY". Remove the "#" at the start of the line.
 20) When the system is "multi-phone system with insert" ("LIN"), find the line that starts with `#ExecStart=` after the line that contains "LIN". Remove the "#" at the start of the line.
@@ -1124,7 +1124,7 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
     * **B2**
 28) Open ExecStart.
     * **D1**
-    NOTE: This will start the text editor with the start configuration of the `scnfmixr.service`.
+    * NOTE: This will start the text editor with the start configuration of the `scnfmixr.service`.
 29) Make sure that the correct `ExecStart=` line is active.
 30) Change to console 1.
     * **B1**
