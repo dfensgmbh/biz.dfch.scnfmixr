@@ -1032,7 +1032,7 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
     * Remove existing entry BOOT_ORDER with CTRL+K.
     * Add BOOT_ORDER.
     * **F3**
-    * Save file and exit with CTRL+O und CTRL+X.
+    * Save file and exit with CTRL+O, ENTER und CTRL+X.
     * Examine that the flash operation is "SUCCESSFUL".
 10) Change to console 1.
     * **B1**
@@ -1082,7 +1082,7 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
     * Remove existing entry BOOT_ORDER with CTRL+K.
     * Add BOOT_ORDER and PSU_MAX_CURRENT.
     * **E3** **E4**
-    * Save file and exit with CTRL+O und CTRL+X.
+    * Save file and exit with CTRL+O, ENTER und CTRL+X.
     * Examine that the flash operation is "SUCCESSFUL".
 10) Change to console 1.
     * **B1**
@@ -1107,7 +1107,7 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
 18) Comment out the line that starts with `ExecStart` and insert "#" at the start of the line.
 19) When the system is "playback system" ("PLY"), find the line that starts with `#ExecStart=` after the line that contains "PLY". Remove the "#" at the start of the line.
 20) When the system is "multi-phone system with insert" ("LIN"), find the line that starts with `#ExecStart=` after the line that contains "LIN". Remove the "#" at the start of the line.
-21) Save the changes you made and exit the editor with CTRL+O CTRL+X.
+21) Save the changes you made and exit the editor with CTRL+O, ENTER und CTRL+X.
 22) Change to console 1.
     * **B1**
 23) Remove the USB storage device.
