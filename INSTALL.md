@@ -1022,7 +1022,7 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
     * **A3** **A4**
  6) Prepare system for changes.
     * **C1** **C2** **C3** **C4**
-    NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
+    * NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
  7) Change to console 2.
     * **B2**
  8) Login to system.
@@ -1038,7 +1038,7 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
     * **B1**
 11) Restart the system.
     * **D4**
-    NOTE: If the `scnfmixr.service` has not stopped, wait until it has stopped. The system stops will then stop and start again.
+    * NOTE: If the `scnfmixr.service` has not stopped, wait until it has stopped. The system stops will then stop and start again.
 12) Continue with procedure 'Deploy a "Golden Image" on a new system' step (5).
 
 ### Change files on an existing system
@@ -1052,7 +1052,7 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
     * **A3** **A4**
  7) Prepare system for changes.
     * **C1** **C2** **C3** **C4**
-    NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
+    * NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
  8) Change to console 2.
     * **B2**
  9) Login to system.
@@ -1087,17 +1087,17 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
 10) Change to console 1.
     * **B1**
 11) Wait until the write operation is completed.
-    NOTE: The write operation will take approximately 85 seconds.
+    * NOTE: The write operation will take approximately 85 seconds.
 12) Restart the system.
     * **D4**
-    NOTE: Keep the USB storage device in the system.
+    * NOTE: Keep the USB storage device in the system.
 ---
 13) Login to system.
     * **A3** **A4**
-    NOTE: If we can login to the system successfully, we show that the system does not start from USB any more.
+    * NOTE: If we can login to the system successfully, we show that the system does not start from USB any more.
 14) Prepare system for changes.
     * **C1** **C2** **C3** **C4**
-    NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
+    * NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
 15) Change to console 2.
     * **B2**
 16) If the system is a "REC" system continue with step (22).
@@ -1113,13 +1113,13 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
 23) Remove the USB storage device.
 24) Restart the system.
     * **D4**
-    NOTE: If the `scnfmixr.service` has not stopped, wait until it has stopped. The system stops will then stop and start again.
+    * NOTE: If the `scnfmixr.service` has not stopped, wait until it has stopped. The system stops will then stop and start again.
 ---
 25) Login to system.
     * **A3** **A4**
 26) Prepare system for changes.
     * **C1** **C2** **C3** **C4**
-    NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
+    * NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
 27) Change to console 2.
     * **B2**
 28) Open ExecStart.
@@ -1130,5 +1130,5 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
     * **B1**
 31) Restart the system.
     * **D4**
-    NOTE: If the `scnfmixr.service` has not stopped, wait until it has stopped. The system stops will then stop and start again.
+    * NOTE: If the `scnfmixr.service` has not stopped, wait until it has stopped. The system stops will then stop and start again.
 32) When the system starts again, remove the power cord from the system.
