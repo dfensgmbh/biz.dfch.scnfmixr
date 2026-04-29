@@ -145,7 +145,9 @@ class KeyboardHandler(EventHandlerBase):
         if key not in self._event_map_values.__members__:
             return result
 
-        result = self._event_map_values[key].value
+        # SonarCloud warns with: python:S5864
+        # This seems to be a false positive. Thus, we ignore this warning.
+        result = self._event_map_values[key].value  # type: ignore
 
         return result
 
