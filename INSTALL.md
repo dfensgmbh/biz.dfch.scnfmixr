@@ -1135,4 +1135,4 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
 31) Restart the system.
     * **D4**
     * NOTE: If the `scnfmixr.service` has not stopped, wait until it has stopped. The system stops will then stop and start again.
-32) When you see the 3 Raspberry images, remove the power cord from the system.
+32) When you see the 4 Raspberry images, remove the power cord from the system.
