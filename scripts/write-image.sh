@@ -1,5 +1,5 @@
 # Set the image filename here  
-IMAGE="scnfmixr-v4.8.1.img.zst"
+IMAGE="scnfmixr-v4.8.2.img.zst"
 
 # PRE) Verify checksum before writing (must match the .sha256 file from the source)
 sha256sum -c "${IMAGE}.sha256"

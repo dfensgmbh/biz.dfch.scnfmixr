@@ -1,4 +1,4 @@
-[![scnfmixr: v4.8.1](https://img.shields.io/badge/scnfmixr-v4.8.1-blue.svg)](https://github.com/dfensgmbh/biz.dfch.scnfmixr/)
+[![scnfmixr: v4.8.2](https://img.shields.io/badge/scnfmixr-v4.8.2-blue.svg)](https://github.com/dfensgmbh/biz.dfch.scnfmixr/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue.svg)
 
