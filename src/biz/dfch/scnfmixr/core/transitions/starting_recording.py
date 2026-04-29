@@ -71,13 +71,24 @@ class StartingRecording(TransitionBase):
 
         AudioRecorder.Factory.get()
 
+        log.debug("Processing mixbus [count: %s] ...", len(self._devices))
         for mixbus_device in self._devices:
 
             files: list[FileName] = []
 
+            log.debug("Processing mixbus '%s' ...", mixbus_device.name)
+
             suffix = mixbus_device.name
             for device, device_info in \
                     app_ctx.storage_configuration_map.items():
+
+                if not isinstance(device_info.mount_point, str):
+                    log.debug(
+                        "Processing mixbus '%s': "
+                        "'%s' has no mount point. Skipping ...",
+                        mixbus_device.name,
+                        device.name)
+                    continue
 
                 file = FileName(
                     path_name=device_info.mount_point,
