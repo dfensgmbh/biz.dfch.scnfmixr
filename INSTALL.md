@@ -954,14 +954,14 @@ NOTE: Remove the grey power button with a "Knipex Schrägabschneider".
 
 ## Deployment of "Golden Image"
 
-|   | 1                  | 2                | 3                   | 4                      |
-|---|--------------------|------------------|---------------------|------------------------|
-| A | old                |                  | new                 |                        |
-| B | Console 1          | Console 2        | Enable network 1    | Enable network 2       |
-| C | Enable writable 1  | Enable writable 2| Enable writable 3   | Stop scnfmixr.service  |
-| D | ExecStart          | IP address       | Write Image to eMMC | Reboot                 |
-| E | Prepare boot order | Edit boot order  | BOOT ORDER FINAL    | USB CURRENT            |
-| F |                    |                  | BOOT ORDER USB      |                        |
+|   | 1                  | 2                | 3                   | 4                      |   |
+|---|--------------------|------------------|---------------------|------------------------|---|
+| A | old                |                  | new                 |                        | A |
+| B | Console 1          | Console 2        | Enable network 1    | Enable network 2       | B |
+| C | Enable writable 1  | Enable writable 2| Enable writable 3   | Stop scnfmixr.service  | C |
+| D | ExecStart          | IP address       | Write Image to eMMC | Reboot                 | D |
+| E | Prepare boot order | Edit boot order  | BOOT ORDER FINAL    | USB CURRENT            | E |
+| F | Show log           |                  | BOOT ORDER USB      |                        | F |
 
 **Explanation:**  
 - **B3**: "Enable network 1"
@@ -1098,9 +1098,11 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
 14) Prepare system for changes.
     * **C1** **C2** **C3** **C4**
     * NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
-15) Change to console 2.
+15) If the system is a "REC" system continue with step (23).
+16) Change to console 2.
     * **B2**
-16) If the system is a "REC" system continue with step (22).
+16A) Login to system.
+    * **A3** **A4**
 17) Change ExecStart.
     * **D1**
     * NOTE: This will start the text editor with the start configuration of the `scnfmixr.service`.
@@ -1122,13 +1124,15 @@ This will write the "Golden Image" directly to the eMMC storage device. You must
     * NOTE: The last command will stop the `scnfmixr.service`. This will take 90s.
 27) Change to console 2.
     * **B2**
+27A) Login to system.
+    * **A3** **A4**
 28) Open ExecStart.
     * **D1**
     * NOTE: This will start the text editor with the start configuration of the `scnfmixr.service`.
-29) Make sure that the correct `ExecStart=` line is active.
+29) Make sure that the correct `ExecStart=` line is active and exit the editor with CTRL+X.
 30) Change to console 1.
     * **B1**
 31) Restart the system.
     * **D4**
     * NOTE: If the `scnfmixr.service` has not stopped, wait until it has stopped. The system stops will then stop and start again.
-32) When the system starts again, remove the power cord from the system.
+32) When you see the 3 Raspberry images, remove the power cord from the system.
