@@ -103,7 +103,6 @@ class DisconnectingStorage(TransitionBase):
             log.info("Powering off storage device '%s' OK.",
                      device.name)
             result = result and True
-            continue
 
         # Return the combined result for all storage devices.
         return result
