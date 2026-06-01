@@ -671,8 +671,8 @@ $ sudo reboot
 sudo nano /etc/udev/rules.d/10-usb-network-blacklist.rules
 
 # On overlay-fs:
-# sudo mount -o remount,rw /media/root-ro
-# sudo nano /media/root-ro/etc/udev/rules.d/10-usb-network-blacklist.rules
+# sudo mount -o remount,rw /mnt/writable_disk
+# sudo nano /mnt/writable_disk/etc/udev/rules.d/10-usb-network-blacklist.rules
 ```
 
 ```sh
@@ -695,8 +695,8 @@ SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ACTION=="add", ATTR{bInterfaceC
 $ sudo nano /etc/udev/rules.d/20-usb-device-whitelist.rules
 
 # On overlay-fs:
-# sudo mount -o remount,rw /media/root-ro
-# sudo nano /media/root-ro/etc/udev/rules.d/20-usb-device-whitelist.rules
+# sudo mount -o remount,rw /mnt/writable_disk
+# sudo nano /mnt/writable_disk/etc/udev/rules.d/20-usb-device-whitelist.rules
 ```
 
 ```sh
@@ -743,6 +743,9 @@ SUBSYSTEM=="usb", ATTR{idVendor}=="05f3", ATTR{idProduct}=="0405", GOTO="usb_whi
 # Roland Corp. VT-4
 SUBSYSTEM=="usb", ATTR{idVendor}=="0582", ATTR{idProduct}=="021a", GOTO="usb_whitelist_end"
 
+# DSEA A/S EPOS IMPACT 60
+SUBSYSTEM=="usb", ATTR{idVendor}=="1395", ATTR{idProduct}=="0291", GOTO="usb_whitelist_end"
+
 # Allow any USB Mass Storage device (class 08) regardless of VID:PID
 SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{bDeviceClass}=="08", GOTO="usb_whitelist_end"
 
@@ -769,8 +772,8 @@ LABEL="usb_whitelist_end"
 sudo nano /etc/udev/rules.d/15-usb-class-blacklist.rules
 
 # On overlay-fs:
-# sudo mount -o remount,rw /media/root-ro
-# sudo nano /media/root-ro/etc/udev/rules.d/15-usb-class-blacklist.rules
+# sudo mount -o remount,rw /mnt/writable_disk
+# sudo nano /mnt/writable_disk/etc/udev/rules.d/15-usb-class-blacklist.rules
 ```
 
 ```sh
